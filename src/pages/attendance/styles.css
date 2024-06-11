@@ -1,0 +1,28 @@
+.summary_container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #cfd8dc;
+  border-radius: 6px;
+  padding: 4px;
+}
+.attendance_summarybutton {
+  margin: 0px 4px;
+  border: none !important;
+}
+.attendance_activesummarybutton {
+  background-color: white !important;
+  border: none !important;
+}
+.attendance_summarybutton:hover {
+  border: none !important;
+  color: black !important;
+  background-color: #c3cbcf !important;
+}
+.attendance_summarybutton:active {
+  border: none !important;
+  color: black !important;
+}
+.attendance_activesummarybutton:hover {
+  border: none !important;
+  color: black !important;
+}

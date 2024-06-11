@@ -1,0 +1,26 @@
+/* Workplace.css */
+.ant-slider-mark-text {
+    font-size: 14px; /* Adjust font size as needed */
+    height: 20px; /* Adjust height of tick mark */
+}
+
+/* Custom styles for individual tick marks */
+.ant-slider-mark-text[data-value="0"] {
+    color: #f00; /* Color for tick mark at value 0 */
+}
+
+.ant-slider-mark-text[data-value="25"] {
+    color: #ff0; /* Color for tick mark at value 25 */
+}
+
+.ant-slider-mark-text[data-value="50"] {
+    color: #0f0; /* Color for tick mark at value 50 */
+}
+
+.ant-slider-mark-text[data-value="75"] {
+    color: #00f; /* Color for tick mark at value 75 */
+}
+
+.ant-slider-mark-text[data-value="100"] {
+    color: #08f; /* Color for tick mark at value 100 */
+}
