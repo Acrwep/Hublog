@@ -1,56 +1,123 @@
-import React,{useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import { MdSettings } from "react-icons/md";
-import Userdesignation from './Userdesignation';
-import Team from './team/Team';
-import Workplace from './Workplace';
+import Userdesignation from "./Userdesignation";
+import { FiUser, FiCoffee } from "react-icons/fi";
+import { MdAccessTime } from "react-icons/md";
+import { SiWorkplace } from "react-icons/si";
+import { IoRocketOutline } from "react-icons/io5";
+import { HiOutlineMail } from "react-icons/hi";
+import { HiOutlineBellAlert } from "react-icons/hi2";
+import { LuGoal, LuUsers } from "react-icons/lu";
+import { VscShield } from "react-icons/vsc";
+import { Row, Col } from "antd";
+import Team from "./team/Team";
+import Workplace from "./Workplace";
+import "./styles.css";
 
 const Setting = () => {
-
+  const settingsList = [
+    {
+      id: 1,
+      name: "Users & Designations",
+      icon: <FiUser size={21} />,
+    },
+    { id: 2, name: "Teams", icon: <LuUsers size={21} /> },
+    { id: 3, name: "Roles", icon: <MdAccessTime size={21} /> },
+    { id: 4, name: "Workplace", icon: <SiWorkplace size={21} /> },
+    { id: 5, name: "Shifts", icon: <MdAccessTime size={21} /> },
+    { id: 6, name: "Breaks", icon: <FiCoffee size={21} /> },
+    { id: 7, name: "Productivity Rules", icon: <IoRocketOutline size={21} /> },
+    { id: 8, name: "Alert Rules", icon: <HiOutlineBellAlert size={21} /> },
+    { id: 9, name: "Email Reports", icon: <HiOutlineMail size={21} /> },
+    { id: 10, name: "Goals", icon: <LuGoal size={21} /> },
+    { id: 11, name: "Compliance", icon: <VscShield size={21} /> },
+  ];
   const [activePage, setActivePage] = useState(1);
 
-  const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
+  const handlePageChange = (id) => {
+    setActivePage(id === activePage ? null : id);
   };
 
- 
-
-
-
   return (
-    <div className="p-8 max-sm:p-0">
-      <div className='flex justify-start items-center'>
-        <MdSettings className='text-2xl text-orange-600' />
-        <h2 className="text-xl font-bold ml-2">Setting</h2>
-      </div>
+    // <div className="p-8 max-sm:p-0">
+    //   <div className="flex justify-start items-center">
+    //     <MdSettings className="text-2xl text-orange-600" />
+    //     <h2 className="text-xl font-bold ml-2">Setting</h2>
+    //   </div>
 
-      <div className='grid grid-cols-4 shadow-md gap-3 '>
-        <div className=' col-span-1 shadow-lg p-4 h-auto'>
-          {/* <div className='flex justify-around items-center p-1'>
-            <RiUser3Fill className='text-5xl' />
-            <div className=''>
-              <p className='text-[20px]'>Emplyee Name</p>
-              <p>employee@gmail.com</p>
-            </div>
-          </div> */}
-          <hr />
-          <ul className='flex flex-col justify-center items-start p-5'>
-            <li onClick={() => handlePageChange(1)} className={`m-2 p-1 cursor-pointer ${activePage === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>
-              User & Designations</li>
-            <li onClick={() => handlePageChange(2)} className={`m-2 p-1 cursor-pointer ${activePage === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Teams</li>
-            <li onClick={() => handlePageChange(3)} className={`m-2 p-1 cursor-pointer ${activePage === 3 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Workplace</li>
-            <li onClick={() => handlePageChange(4)} className={`m-2 p-1 cursor-pointer ${activePage === 4 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Shifts</li>
-            <li onClick={() => handlePageChange(5)} className={`m-2 p-1 cursor-pointer ${activePage === 5 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Breaks</li>
-            <li onClick={() => handlePageChange(6)} className={`m-2 p-1 cursor-pointer ${activePage === 6 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Productivity Rules</li>
-            <li onClick={() => handlePageChange(7)} className={`m-2 p-1 cursor-pointer ${activePage === 7 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Alert Rules</li>
-            <li onClick={() => handlePageChange(8)} className={`m-2 p-1 cursor-pointer ${activePage === 8 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Email Reports</li>
-            <li onClick={() => handlePageChange(9)} className={`m-2 p-1 cursor-pointer ${activePage === 9 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Compliance</li>
-          </ul>
-        </div>
-        <div className='col-span-3 shadow-lg'>
+    //   <div className="grid grid-cols-4 shadow-md gap-3 ">
+    //     <div className=" col-span-1 shadow-lg p-4 h-auto">
+    //       <div className="settings_sidebarContainer">
+    //         {settingsList.map((item) => (
+    //           <div
+    //             className={
+    //               item.id === activePage
+    //                 ? "settings_activelistContainer"
+    //                 : "settings_inactivelistContainer"
+    //             }
+    //             onClick={() => handlePageChange(item.id)}
+    //           >
+    //             {item.icon}
+    //             <p
+    //               className={
+    //                 item.id === activePage ? "" : "settings_inactivelisttext"
+    //               }
+    //             >
+    //               {item.name}
+    //             </p>
+    //           </div>
+    //         ))}
+    //       </div>
+    //     </div>
+    //     <div className="col-span-3 shadow-lg">
+    //       {activePage === 1 && (
+    //         <div>
+    //           <Userdesignation />
+    //         </div>
+    //       )}
+    //       {activePage === 2 && (
+    //         <div>
+    //           <Team />
+    //         </div>
+    //       )}
+    //       {activePage === 3 && (
+    //         <div>
+    //           <Workplace />
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
+    // </div>
+    <div>
+      <Row className="settings_rowcontainer">
+        <Col span={6} className="settinglist_columnOneContainer">
+          <div className="settings_sidebarContainer">
+            {settingsList.map((item) => (
+              <div
+                className={
+                  item.id === activePage
+                    ? "settings_activelistContainer"
+                    : "settings_inactivelistContainer"
+                }
+                onClick={() => handlePageChange(item.id)}
+              >
+                {item.icon}
+                <p
+                  className={
+                    item.id === activePage ? "" : "settings_inactivelisttext"
+                  }
+                >
+                  {item.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Col>
+
+        <Col span={18} className="settinglist_columnContainer">
           {activePage === 1 && (
             <div>
               <Userdesignation />
-              {/* Add your content for page 1 here */}
             </div>
           )}
           {activePage === 2 && (
@@ -63,13 +130,10 @@ const Setting = () => {
               <Workplace />
             </div>
           )}
- 
-
-        </div>
-
-      </div>
+        </Col>
+      </Row>
     </div>
-  )
-}
+  );
+};
 
-export default Setting
+export default Setting;

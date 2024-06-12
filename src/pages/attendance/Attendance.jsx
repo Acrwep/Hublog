@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { MdRefresh, MdDownload } from "react-icons/md";
 
 import Dropdown from "../../components/dropdown/Dropdown";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import DateRangePicker from "../../components/dateRangePicker/DatePicker";
 
 import { TbCirclesFilled } from "react-icons/tb";
@@ -28,8 +29,12 @@ const Attendance = () => {
     <div className="p-8 max-sm:p-0">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
-          <TbCirclesFilled className="text-2xl text-blue-600" />
-          <h2 className="text-xl font-bold ml-2">Attendance</h2>
+          <div className="attendance_iconContainer">
+            <TbCirclesFilled size={20} className="attendance_icon" />
+          </div>
+          <h2 className="text-xl font-bold ml-4" style={{ fontSize: "25px" }}>
+            Attendance
+          </h2>
         </div>
         {/* <ul className="flex w-96 shadow-lg rounded">
           <li
@@ -99,14 +104,16 @@ const Attendance = () => {
           <div>
             <DateRangePicker />
           </div>
-          <div>
-            <button className="text-blue-500 p-1 m-1 border border-black rounded-lg">
-              <MdDownload />
-            </button>
-            <button className="text-blue-500 p-1 border border-black rounded-md">
-              <MdRefresh />
-            </button>
-          </div>
+          <Tooltip placement="top" title="Download PDF">
+            <Button className="dashboard_download_button">
+              <DownloadOutlined className="download_icon" />
+            </Button>
+          </Tooltip>
+          <Tooltip placement="top" title="Refresh">
+            <Button className="dashboard_refresh_button">
+              <RedoOutlined className="refresh_icon" />
+            </Button>
+          </Tooltip>
         </div>
       </div>
       <div>

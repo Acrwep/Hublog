@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { MdRefresh, MdDownload } from "react-icons/md";
 import DateRangePicker from "../../components/dateRangePicker/DatePicker";
-import { DatePicker } from 'antd';
+import { DatePicker } from "antd";
 import { MdScreenshotMonitor } from "react-icons/md";
 import Avatar from "react-avatar";
 import MWService from "../../components/MWService";
@@ -33,6 +33,7 @@ const Screenshots = () => {
       organizationId: userLoginDetail.organizationId,
     })
       .then(({ data }) => {
+        console.log("userlistttttt", data);
         if (data) {
           setUserList(data);
         }
@@ -119,7 +120,12 @@ const Screenshots = () => {
               setDates={setScreenshotsDate}
               dates={screenshotsDate}
             /> */}
-            <DatePicker defaultValue={dayJs(screenshotsDate[0].toDateString(), "yyyy-MM-dd")} />
+            <DatePicker
+              defaultValue={dayJs(
+                screenshotsDate[0].toDateString(),
+                "yyyy-MM-dd"
+              )}
+            />
           </div>
           <div>
             <button className="text-blue-500 p-1 m-1 border border-black rounded-lg">
@@ -143,8 +149,9 @@ const Screenshots = () => {
                   <div
                     key={index}
                     onClick={() => onSelectuser(user)}
-                    className={`flex justify-start m-3 ${selecteduser?.id === user.id && "bg-slate-300"
-                      }`}
+                    className={`flex justify-start m-3 ${
+                      selecteduser?.id === user.id && "bg-slate-300"
+                    }`}
                   >
                     <Avatar name={user.usersName} size="50" round={true} />
                     <div className="mx-3">
@@ -269,8 +276,9 @@ const Screenshots = () => {
           isOpen={!isEmpty(openModel)}
           onClose={() => setOpenModel(null)}
           data={openModel}
-          title={`${selecteduser.first_Name} ${selecteduser.last_name || ""} ${selecteduser.roleName
-            } | ${openModel.created_date}`}
+          title={`${selecteduser.first_Name} ${selecteduser.last_name || ""} ${
+            selecteduser.roleName
+          } | ${openModel.created_date}`}
         >
           <>
             <div>Hello</div>

@@ -1,0 +1,44 @@
+.settings_activelistContainer {
+  align-items: center;
+  background: #e2e1e8;
+  border-radius: 5px;
+  display: flex;
+  gap: 15px;
+  height: 40px;
+  padding: 6px 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.settings_inactivelistContainer {
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  gap: 15px;
+  height: 40px;
+  padding: 6px 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+.settings_inactivelisttext:hover {
+  color: #7b61ff;
+}
+.settinglist_icons {
+  width: 24px !important;
+}
+.settings_rowcontainer {
+  margin: 10px 26px;
+  border: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  opacity: 1;
+}
+.settinglist_columnOneContainer {
+  padding: 16px 16px;
+  border-right: 1px solid #d1d1d1;
+}
+.settinglist_columnContainer {
+  padding: 16px 16px;
+}
+.settings_usersContainer {
+  /* padding: 16px 16px; */
+}

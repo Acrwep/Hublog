@@ -5,6 +5,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { SideMenuConfig } from "../config/sideBarConfig";
 import LogoImg from "../assets/images/logo-re-3.png";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
+import "./sidebarstyles.css";
 
 const Sidebar = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
@@ -33,7 +34,7 @@ const Sidebar = () => {
     <div
       className={`bg-gray-900 w-64 h-full  transition-all duration-300 ease-in-out ${sidebarClass}`}
     >
-      <div className={"overflow-y-auto h-full py-4 px-4"}>
+      <div className={"overflow-y-auto h-full py-4 px-4 sidebarContainer"}>
         <div className="flex justify-start items-center ">
           <div>
             <img

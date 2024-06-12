@@ -8,7 +8,7 @@ import { Tooltip, Button } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import DateRangePicker from "../components/dateRangePicker/DatePicker";
 import { LineCharts } from "../components/chart/RangeChart";
-import { MdOutlineDashboardCustomize } from "react-icons/md";
+import { MdDashboardCustomize } from "react-icons/md";
 import MyTable, { MyTable2 } from "../components/table/DemoTable";
 import withLogin from "../components/withLogin";
 import "./styles.css";
@@ -84,8 +84,12 @@ const Dashboard = () => {
   return (
     <div className="p-8 max-sm:p-0">
       <div className="flex justify-start items-center">
-        <MdOutlineDashboardCustomize className="text-2xl text-blue-600" />
-        <h2 className="text-xl font-bold ml-2">Dashboard</h2>
+        <div className="attendance_iconContainer">
+          <MdDashboardCustomize size={22} className="attendance_icon" />
+        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "25px" }}>
+          Dashboard
+        </h2>
       </div>
       <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
         <div>
