@@ -30,9 +30,9 @@ const Attendance = () => {
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <div className="attendance_iconContainer">
-            <TbCirclesFilled size={20} className="attendance_icon" />
+            <TbCirclesFilled size={20} />
           </div>
-          <h2 className="text-xl font-bold ml-4" style={{ fontSize: "25px" }}>
+          <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
             Attendance
           </h2>
         </div>

@@ -9,6 +9,7 @@ import { HiOutlineMail } from "react-icons/hi";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { LuGoal, LuUsers } from "react-icons/lu";
 import { VscShield } from "react-icons/vsc";
+import { IoMdSettings } from "react-icons/io";
 import { Row, Col } from "antd";
 import Team from "./team/Team";
 import Workplace from "./Workplace";
@@ -89,6 +90,39 @@ const Setting = () => {
     //   </div>
     // </div>
     <div>
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <IoMdSettings size={20} />
+        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+          Settings{" "}
+          {activePage === 1
+            ? "> Users & Designation"
+            : activePage === 2
+            ? "> Teams"
+            : activePage === 2
+            ? "> Teams"
+            : activePage === 3
+            ? "> Roles"
+            : activePage === 4
+            ? "> Workplace"
+            : activePage === 5
+            ? "> Shifts"
+            : activePage === 6
+            ? "> Breaks"
+            : activePage === 7
+            ? "> Productivity Rules"
+            : activePage === 8
+            ? "> Alert Rules"
+            : activePage === 9
+            ? "> Email Reports"
+            : activePage === 10
+            ? "> Goals"
+            : activePage === 11
+            ? "> Compliance"
+            : ""}
+        </h2>
+      </div>
       <Row className="settings_rowcontainer">
         <Col span={6} className="settinglist_columnOneContainer">
           <div className="settings_sidebarContainer">

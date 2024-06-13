@@ -1,3 +1,14 @@
+.settings_headingContainer {
+  display: flex;
+  padding: 12px 26px;
+  margin-top: 20px;
+}
+.settings_iconContainer {
+  padding: 6px;
+  border-radius: 8px;
+  color: rgb(123, 97, 255);
+  background-color: rgba(123, 97, 255, 0.15);
+}
 .settings_activelistContainer {
   align-items: center;
   background: #e2e1e8;
@@ -39,6 +50,12 @@
 .settinglist_columnContainer {
   padding: 16px 16px;
 }
-.settings_usersContainer {
-  /* padding: 16px 16px; */
+.users_submitbutton {
+  color: #fff;
+  background-color: #7b61ff;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 120px;
+  border-radius: 6px;
 }

@@ -28,9 +28,7 @@
 }
 .attendance_iconContainer {
   background-color: rgba(20, 184, 166, 0.1);
-  padding: 7px;
+  padding: 6px;
   border-radius: 8px;
-}
-.attendance_icon {
   color: rgb(20, 184, 166);
 }

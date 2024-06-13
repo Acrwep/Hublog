@@ -85,9 +85,9 @@ const Dashboard = () => {
     <div className="p-8 max-sm:p-0">
       <div className="flex justify-start items-center">
         <div className="attendance_iconContainer">
-          <MdDashboardCustomize size={22} className="attendance_icon" />
+          <MdDashboardCustomize size={20} className="attendance_icon" />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "25px" }}>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
           Dashboard
         </h2>
       </div>
