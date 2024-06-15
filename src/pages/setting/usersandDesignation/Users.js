@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Button, Table, Drawer, Row, Col, Input } from "antd";
-import CommonInputField from "../../components/Common/CommonInputField";
-import "./styles.css";
-import CommonCalendar from "../../components/Common/CommonCalendar";
-import CommonSelectField from "../../components/Common/CommonSelectField";
+import { Table, Drawer, Row, Col, Space, Dropdown } from "antd";
+import CommonInputField from "../../../components/Common/CommonInputField";
+import "../styles.css";
+import CommonCalendar from "../../../components/Common/CommonCalendar";
+import CommonSelectField from "../../../components/Common/CommonSelectField";
 import {
   nameValidator,
   lastNameValidator,
   emailValidator,
   selectValidator,
   mobileValidator,
-} from "../../components/Common/Validation";
+} from "../../../components/Common/Validation";
 import moment from "moment";
-import CommonSearchField from "../../components/Common/CommonSearchbar";
+import { IoIosAdd } from "react-icons/io";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import CommonSearchField from "../../../components/Common/CommonSearchbar";
 
-const Userdesignation = () => {
+const Users = () => {
   const [data, setData] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
@@ -61,6 +63,33 @@ const Userdesignation = () => {
       title: "Action",
       dataIndex: "accessLevel",
       key: "accessLevel",
+      fixed: "right",
+      width: 90,
+      render: (text, record) => {
+        const items = [
+          {
+            key: "1",
+            label: <a onClick={() => console.log(record)}>Modify User</a>,
+          },
+        ];
+        return (
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <button className="usertable_actionbutton">
+                  <BsThreeDotsVertical />
+                </button>
+              </Dropdown>
+            </Space>
+          </Space>
+        );
+      },
     },
   ];
   const [dummydatas, setDummyDatas] = useState([
@@ -167,38 +196,6 @@ const Userdesignation = () => {
     total: dummydatas.length,
     onChange: handlePageChange,
   };
-
-  const DesignationData = [
-    { name: "OPERATION", description: "", createdat: "2023-11-02", action: "" },
-    {
-      name: "EXTERNAL HR",
-      description: "",
-      createdat: "2023-11-02",
-      action: "",
-    },
-    {
-      name: "Sales Executive",
-      description: "sales",
-      createdat: "2023-11-02",
-      action: "",
-    },
-    {
-      name: "INTERNAL HR",
-      description: "",
-      createdat: "2023-11-02",
-      action: "",
-    },
-    { name: "QUALITY", description: "", createdat: "2023-11-02", action: "" },
-    { name: "SEO", description: "", createdat: "2023-11-02", action: "" },
-    { name: "BOE", description: "", createdat: "2023-11-02", action: "" },
-  ];
-
-  const deginationcolumns = [
-    { title: "Name", key: "name", width: "150px" },
-    { title: "Description", key: "description", width: "150px" },
-    { title: "Created At", key: "createdat", width: "150px" },
-    { title: "Action", key: "action", width: "150px" },
-  ];
 
   useEffect(() => {
     const token =
@@ -332,129 +329,40 @@ const Userdesignation = () => {
 
   return (
     <div className="settings_usersContainer">
-      {/* {showAddUser && <SidebarForm showAddUser={showAddUser} setShowAddUser={setShowAddUser} />}
       <div>
-        <h2>Users & Designations</h2>
-        <ul className=" flex p-2 text-gray-600">
-          <li
-            onClick={() => handlePageChange(1)}
-            className={`mx-3 cursor-pointer ${
-              activePage === 1 ? "border-b border-blue-600" : ""
-            }`}
-          >
-            Users
-          </li>
-          <li
-            onClick={() => handlePageChange(2)}
-            className={`mx-3 cursor-pointer ${
-              activePage === 2 ? "border-b border-blue-600" : ""
-            }`}
-          >
-            Designation
-          </li>
-        </ul>
-        <hr />
-      </div>
-
-      <div>
-        {activePage === 1 && (
-          <div>
-            <div className="flex">
-              <input
-                type="search"
-                className=" w-2/7 h-8 border border-gray-500 rounded-tl-lg rounded-bl-lg mt-5 ml-5"
-              />
-              <div className="w-12 border border-gray-500 p-1 mt-5 h-8 rounded-tr-lg rounded-br-lg text-2xl">
-                <IoSearchSharp />
-              </div>
-              <button
-                className={`m-2 p-1 cursor-pointer bg-blue-500 text-white rounded-tl-lg`}
-                onClick={()=>{setShowAddUser(!showAddUser)}}
-              >
-                Add User
-              </button>
-            </div>
-            {data?.length > 0 && <Table data={data} columns={columns} />}
-          </div>
-        )}
-        {activePage === 2 && (
-          <div>
-            <div className="flex">
-              <input
-                type="search"
-                className=" w-2/7 h-8 border border-gray-500 rounded-tl-lg rounded-bl-lg mt-5 ml-5"
-              />
-              <div className="w-12 border border-gray-500 p-1 mt-5 h-8 rounded-tr-lg rounded-br-lg text-2xl">
-                <IoSearchSharp />
-              </div>
-            </div>
-            <Table data={DesignationData} columns={deginationcolumns} />
-          </div>
-        )}
-      </div> */}
-
-      <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Users" key="1">
-          <div>
-            {/* <Button type="primary" onClick={showDrawer}>
-              Open
-            </Button> */}
-            {/* <div style={{ display: "flex" }}>
-              <CommonSearchField />
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  justifyContent: "flex-end",
-                  marginTop: "10px",
-                  marginBottom: "20px",
-                }}
-              >
-                <button className="users_submitbutton" onClick={showDrawer}>
-                  Add User
-                </button>
-              </div>
-            </div> */}
-
-            <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-              <Col span={12}>
-                <CommonSearchField
-                  placeholder="Search user..."
-                  onSearch={handleSearch}
-                />
-              </Col>
-              <Col
-                span={12}
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  padding: "0px 9px",
-                }}
-              >
-                <button className="users_submitbutton" onClick={showDrawer}>
-                  Add User
-                </button>
-              </Col>
-            </Row>
-
-            <Table
-              rowSelection={{
-                type: "checkbox",
-                ...rowSelection,
-              }}
-              columns={columns}
-              dataSource={dummydatas}
-              scroll={{ x: 1200 }} // Enable horizontal scrolling
-              pagination={paginationConfig}
-              tableLayout="fixed" // Ensures the table layout is fixed
+        <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+          <Col span={12}>
+            <CommonSearchField
+              placeholder="Search user..."
+              onSearch={handleSearch}
             />
-          </div>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Designation" key="2">
-          <p>Content of Tab Pane 2</p>
-        </Tabs.TabPane>
-      </Tabs>
+          </Col>
+          <Col
+            span={12}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: "0px 9px",
+            }}
+          >
+            <button className="users_addbutton" onClick={showDrawer}>
+              <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add User
+            </button>
+          </Col>
+        </Row>
+
+        <Table
+          rowSelection={{
+            type: "checkbox",
+            ...rowSelection,
+          }}
+          columns={columns}
+          dataSource={dummydatas}
+          scroll={{ x: 1200 }} // Enable horizontal scrolling
+          pagination={paginationConfig}
+          tableLayout="fixed" // Ensures the table layout is fixed
+        />
+      </div>
 
       {/* user creation drawer */}
       <Drawer title="Add user" onClose={onClose} open={open} width={600}>
@@ -597,4 +505,4 @@ const Userdesignation = () => {
   );
 };
 
-export default Userdesignation;
+export default Users;

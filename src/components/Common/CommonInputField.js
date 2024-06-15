@@ -10,9 +10,10 @@ const CommonInputField = ({
   error,
   maxLength,
   mandatory,
+  style,
 }) => {
   return (
-    <div>
+    <div style={style}>
       <div style={{ display: "flex" }}>
         <label className="commonfield_label">{label}</label>
         {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}

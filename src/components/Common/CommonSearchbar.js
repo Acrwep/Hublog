@@ -2,9 +2,9 @@ import React from "react";
 import { Input, Space } from "antd";
 const { Search } = Input;
 
-export default function CommonSearchField({ onSearch, placeholder }) {
+export default function CommonSearchField({ onSearch, placeholder, style }) {
   return (
-    <div>
+    <div style={style}>
       <Space direction="vertical">
         <Search
           placeholder={placeholder}

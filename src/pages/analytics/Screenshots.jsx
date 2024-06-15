@@ -14,6 +14,11 @@ import withLogin from "../../components/withLogin";
 import Model from "../../components/model/Model";
 import { dayJs, isEmpty } from "../../components/Utils";
 import "./Screenshorts-styles.css";
+import {
+  getScreenShots,
+  getUsers,
+} from "../../components/APIservice.js/action";
+import { json } from "react-router-dom";
 
 const Screenshots = () => {
   const userLoginDetail = new AuthService().getProfile();
@@ -29,57 +34,91 @@ const Screenshots = () => {
   const mw = new MWService();
 
   useEffect(() => {
-    mw.post("Admin/GetUsers", {
-      organizationId: userLoginDetail.organizationId,
-    })
-      .then(({ data }) => {
-        console.log("userlistttttt", data);
-        if (data) {
-          setUserList(data);
-        }
-        console.log("data =>", data);
-      })
-      .catch((e) => {
-        console.log("error:", e);
-      });
-    return () => true;
+    // mw.post("Admin/GetUsers", {
+    //   organizationId: userLoginDetail.organizationId,
+    // })
+    //   .then(({ data }) => {
+    //     console.log("userlistttttt", data);
+    //     if (data) {
+    //       setUserList(data);
+    //     }
+    //     console.log("data =>", data);
+    //   })
+    //   .catch((e) => {
+    //     console.log("error:", e);
+    //   });
+    // return () => true;
+
+    getUsersList();
   }, []);
 
+  const getUsersList = async () => {
+    const userDetails = localStorage.getItem("LoginUserInfo");
+
+    const convertJson = JSON.parse(userDetails);
+    console.log("eeeeeeeeeee", convertJson);
+    const request = {
+      organizationId: convertJson.organizationId,
+    };
+    try {
+      const response = await getUsers(request);
+      console.log("Users response", response);
+      setUserList(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (screenshotsDate && selecteduser) {
       getScreenshots(selecteduser, screenshotsDate);
     }
   }, [screenshotsDate]);
 
-  const getScreenshots = (user, dates) => {
+  const getScreenshots = async (user, dates) => {
     setScreenshots([]);
-    mw.post("Admin/GetScreenShots", {
+    // mw.post("Admin/GetScreenShots", {
+    //   OrganizationId: user.organizationId,
+    //   UserId: user.id,
+    //   TeamId: user.teamId,
+    //   CDate: moment(new Date()).format("YYYY-MM-DD"),
+    //   start_date: moment(dates[0]).format("YYYY-MM-DD"),
+    //   end_date: moment(dates[1]).format("YYYY-MM-DD"),
+    // })
+    //   .then(({ data }) => {
+    //     if (data) {
+    //       data = data.map((x) => {
+    //         x.display_date = moment(x.created_date).format("hh:mm A");
+    //         return x;
+    //       });
+    //       const result = Object.groupBy(data, ({ created_date }) =>
+    //         moment(created_date).format("hh:00 A")
+    //       );
+    //       setScreenshots(result);
+    //       console.log("getScreenshots data =>", result, data);
+    //     } else {
+    //       setScreenshots([]);
+    //       console.log("getScreenshots data =>", [], data);
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     console.log("error:", e);
+    //   });
+
+    const request = {
       OrganizationId: user.organizationId,
       UserId: user.id,
       TeamId: user.teamId,
       CDate: moment(new Date()).format("YYYY-MM-DD"),
       start_date: moment(dates[0]).format("YYYY-MM-DD"),
       end_date: moment(dates[1]).format("YYYY-MM-DD"),
-    })
-      .then(({ data }) => {
-        if (data) {
-          data = data.map((x) => {
-            x.display_date = moment(x.created_date).format("hh:mm A");
-            return x;
-          });
-          const result = Object.groupBy(data, ({ created_date }) =>
-            moment(created_date).format("hh:00 A")
-          );
-          setScreenshots(result);
-          console.log("getScreenshots data =>", result, data);
-        } else {
-          setScreenshots([]);
-          console.log("getScreenshots data =>", [], data);
-        }
-      })
-      .catch((e) => {
-        console.log("error:", e);
-      });
+    };
+    try {
+      const response = await getScreenShots(request);
+      console.log("Screenshot response", response);
+      setUserList(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onSelectuser = (user) => {
@@ -294,4 +333,4 @@ const Screenshots = () => {
   );
 };
 
-export default withLogin(Screenshots);
+export default Screenshots;

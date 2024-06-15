@@ -43,7 +43,7 @@ export default function withLogin(WrappedComponent, isProtected = true) {
       };
     }
 
-    componentWillMount() {
+    componentDidMount() {
       if (!Auth.loggedIn()) {
         if (isProtected) {
           // this.props.history.replace({

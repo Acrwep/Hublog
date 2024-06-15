@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MdSettings } from "react-icons/md";
-import Userdesignation from "./Userdesignation";
+import UserandDesignation from "./usersandDesignation/UsersandDesignation";
 import { FiUser, FiCoffee } from "react-icons/fi";
 import { MdAccessTime } from "react-icons/md";
 import { SiWorkplace } from "react-icons/si";
@@ -36,7 +36,7 @@ const Setting = () => {
   const [activePage, setActivePage] = useState(1);
 
   const handlePageChange = (id) => {
-    setActivePage(id === activePage ? null : id);
+    setActivePage(id === activePage ? activePage : id);
   };
 
   return (
@@ -151,7 +151,7 @@ const Setting = () => {
         <Col span={18} className="settinglist_columnContainer">
           {activePage === 1 && (
             <div>
-              <Userdesignation />
+              <UserandDesignation />
             </div>
           )}
           {activePage === 2 && (

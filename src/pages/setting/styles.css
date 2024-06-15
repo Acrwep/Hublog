@@ -30,8 +30,8 @@
   margin-bottom: 15px;
   cursor: pointer;
 }
-.settings_inactivelisttext:hover {
-  color: #7b61ff;
+.settings_inactivelistContainer:hover .settings_inactivelisttext {
+  color: #25a17d;
 }
 .settinglist_icons {
   width: 24px !important;
@@ -50,12 +50,116 @@
 .settinglist_columnContainer {
   padding: 16px 16px;
 }
+.users_addbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 110px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .users_submitbutton {
   color: #fff;
-  background-color: #7b61ff;
+  background-color: #25a17d;
   box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
   font-size: 14px;
   height: 32px;
   width: 120px;
   border-radius: 6px;
+}
+.usertable_actionbutton {
+  padding: 6px 9px;
+  border-radius: 6px;
+  color: #ae9eff;
+}
+.usertable_actionbutton:hover {
+  border: 1px solid rgb(226 223 239/ 1) !important;
+}
+/* designation styles */
+.designation_addbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 155px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.designation_submitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 90px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+/* teams */
+.team_tabmain_container {
+  border-radius: 6px;
+  border: 1px solid #e2dfef;
+}
+.teamslist_card {
+  background: #f5f6f9;
+  border-radius: 5px;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+.team_list_litag {
+  font-size: 16px;
+  margin-top: 9px;
+  cursor: pointer !important;
+  font-weight: 500;
+}
+.team_list_activelitag {
+  font-size: 16px;
+  margin-top: 9px;
+  cursor: pointer !important;
+  color: #25a17d;
+  font-weight: 500;
+}
+.team_operationheader {
+  background-color: rgb(240 243 249/ 1) !important;
+  border-radius: 6px;
+  padding: 12px;
+}
+.team_tabContainer {
+  padding: 0px 12px;
+}
+.team_memberrowContainer {
+  border-radius: 9px;
+  background-color: #c5e1d8;
+  padding: 4px 9px;
+  margin-bottom: 12px;
+  border: 1px solid #91cfbd !important;
+}
+.teaminfo_rowContainer {
+  padding: 10px;
+}
+.teaminfo_policyheading {
+  font-weight: 500;
+  font-size: 15px;
+}
+/* tab color change */
+.ant-tabs-ink-bar {
+  border-bottom: 2px solid #25a17d;
+  color: red;
+}
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #25a17d !important;
+}
+.ant-tabs .ant-tabs-tab:hover {
+  color: #25a17d !important;
+}
+.ant-tabs .ant-tabs-tab-btn:hover {
+  color: #25a17d !important;
 }

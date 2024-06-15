@@ -174,4 +174,4 @@ const Dashboard = () => {
   );
 };
 
-export default withLogin(Dashboard);
+export default Dashboard;

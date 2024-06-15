@@ -138,4 +138,4 @@ const Attendance = () => {
   );
 };
 
-export default withLogin(Attendance);
+export default Attendance;

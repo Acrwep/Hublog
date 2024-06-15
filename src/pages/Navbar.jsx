@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { TiArrowSortedDown } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 // import { IoSearchSharp } from "react-icons/io5";
 import { SearchOutlined, DownOutlined } from "@ant-design/icons";
 import { Input, Space, Dropdown, Button } from "antd";
 import "./styles.css";
 
 const Navbar = () => {
+  const navigation = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
   };
 
+  const handleLogout = () => {
+    console.log("Logout");
+    localStorage.removeItem("Accesstoken");
+    navigation("/login");
+  };
   const items = [
     {
       key: "1",
@@ -113,8 +120,8 @@ const Navbar = () => {
                 Settings
               </a>
               <a
-                href="/ "
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                onClick={handleLogout}
               >
                 Logout
               </a>

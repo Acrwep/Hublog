@@ -31,6 +31,7 @@ class MWService {
       username,
       password,
     });
+    console.log("login response", response);
     if (response.data.token) {
       auth.setToken(response.data.token, response.data.user);
     } else {
