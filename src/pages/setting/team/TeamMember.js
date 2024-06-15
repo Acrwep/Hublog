@@ -96,7 +96,14 @@ export default function TeamMember(props) {
                   </div>
                 </div>
               </Col>
-              <Col span={6}>
+              <Col
+                span={6}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Space direction="vertical">
                   <Space wrap>
                     <Dropdown
@@ -106,8 +113,8 @@ export default function TeamMember(props) {
                       placement="bottomLeft"
                       arrow
                     >
-                      <button>
-                        <BsThreeDotsVertical />
+                      <button style={{ marginTop: "4px" }}>
+                        <BsThreeDotsVertical size={19} />
                       </button>
                     </Dropdown>
                   </Space>

@@ -114,7 +114,7 @@ export const SideMenuConfig = {
     path: "userdetail",
   },
   11: {
-    title: "Setting",
+    title: "Settings",
     icon: <MdSettings />,
     path: "setting",
   },

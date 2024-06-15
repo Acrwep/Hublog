@@ -93,6 +93,10 @@
   width: 100%;
   margin-top: 5px;
 }
+.login_errormessage {
+  color: #ff4d4f;
+  margin-top: 4px;
+}
 .fotgotpassword_text {
   text-align: end;
   font-weight: 600;
@@ -105,8 +109,21 @@
   font-size: 14px;
   height: 35px;
   width: 100%;
+  font-weight: 600;
   border-radius: 6px;
   margin-top: 30px;
+}
+.login_buttondisable {
+  color: #fff;
+  background-color: #019e25;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 35px;
+  width: 100%;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-top: 30px;
+  opacity: 0.7;
 }
 .login_button:active {
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),

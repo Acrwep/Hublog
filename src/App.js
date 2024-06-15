@@ -1,16 +1,29 @@
-
-import './App.css';
-import Route from "./layout/Route"
-import { BrowserRouter } from 'react-router-dom';
-import SidebarForm from './pages/setting/AddUser';
+import "./App.css";
+import Route from "./layout/Route";
+import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SidebarForm from "./pages/setting/AddUser";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      {/* <SidebarForm showAddUser={true} setShowAddUser={()=>{}}/> */}
-    <Route />
-    </BrowserRouter>
+        {/* <SidebarForm showAddUser={true} setShowAddUser={()=>{}}/> */}
+        <Route />
+      </BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={1700}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

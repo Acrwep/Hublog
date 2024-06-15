@@ -108,7 +108,7 @@ export const RoutingConfig = [
     component: <UserDetail />,
   },
   {
-    title: "Setting",
+    title: "Settings",
     path: "setting",
     component: <Setting />,
   },
