@@ -11,6 +11,7 @@ const CommonInputField = ({
   maxLength,
   mandatory,
   style,
+  addonAfter,
 }) => {
   return (
     <div style={style}>
@@ -28,6 +29,7 @@ const CommonInputField = ({
         error={error}
         status={error ? "error" : ""}
         maxLength={maxLength}
+        addonAfter={addonAfter}
       />
       {error && (
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>

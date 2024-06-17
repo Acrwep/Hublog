@@ -1,5 +1,5 @@
 import React from "react";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 import "./commonstyles.css";
 
 export default function CommonSelectField({
@@ -9,6 +9,7 @@ export default function CommonSelectField({
   value,
   error,
   mandatory,
+  mode,
 }) {
   return (
     <div>
@@ -26,6 +27,8 @@ export default function CommonSelectField({
         value={value}
         error={error}
         status={error ? "error" : ""}
+        mode={mode}
+        className="commonSelectfield"
       />
       {error && (
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>

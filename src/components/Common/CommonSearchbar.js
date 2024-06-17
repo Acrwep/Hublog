@@ -1,5 +1,6 @@
 import React from "react";
 import { Input, Space } from "antd";
+import "./commonstyles.css";
 const { Search } = Input;
 
 export default function CommonSearchField({ onSearch, placeholder, style }) {
@@ -7,6 +8,7 @@ export default function CommonSearchField({ onSearch, placeholder, style }) {
     <div style={style}>
       <Space direction="vertical">
         <Search
+          className="commonsearchbar"
           placeholder={placeholder}
           allowClear
           onSearch={onSearch}

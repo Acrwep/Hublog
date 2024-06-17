@@ -45,3 +45,11 @@ export const mobileValidator = (mobile) => {
     error = " is not valid";
   return error;
 };
+
+export const breakTimeValidator = (min) => {
+  let error = "";
+
+  if (!min || min.length <= 0) error = " is required";
+  else if (!mobileRegex.test(min)) error = " is not valid";
+  return error;
+};

@@ -12,8 +12,12 @@ import { VscShield } from "react-icons/vsc";
 import { IoMdSettings } from "react-icons/io";
 import { Row, Col } from "antd";
 import Team from "./team/Team";
+import Role from "./Role/Role";
 import Workplace from "./Workplace";
+import Goals from "./Goals/Goals";
+import Compliance from "./Compliance/Compliance";
 import "./styles.css";
+import Break from "./Break/Break";
 
 const Setting = () => {
   const settingsList = [
@@ -161,7 +165,27 @@ const Setting = () => {
           )}
           {activePage === 3 && (
             <div>
+              <Role />
+            </div>
+          )}
+          {activePage === 4 && (
+            <div>
               <Workplace />
+            </div>
+          )}
+          {activePage === 6 && (
+            <div>
+              <Break />
+            </div>
+          )}
+          {activePage === 10 && (
+            <div>
+              <Goals />
+            </div>
+          )}
+          {activePage === 11 && (
+            <div>
+              <Compliance />
             </div>
           )}
         </Col>
