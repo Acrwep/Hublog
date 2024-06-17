@@ -137,7 +137,7 @@ const Team = () => {
       </Row>
 
       <Row gutter={12}>
-        <Col span={10} className="teamslist_card">
+        <Col xs={24} sm={24} md={24} lg={10} className="teamslist_card">
           <CommonSearchField
             placeholder="Search user..."
             onSearch={handleSearch}
@@ -157,7 +157,7 @@ const Team = () => {
             </li>
           ))}
         </Col>
-        <Col span={14}>
+        <Col xs={24} sm={24} md={24} lg={14}>
           <div className="team_tabmain_container">
             <div className="team_operationheader">
               <p style={{ fontWeight: "600", fontSize: "17px" }}>

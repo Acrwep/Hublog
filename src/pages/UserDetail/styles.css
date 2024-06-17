@@ -1,0 +1,66 @@
+.userdetail_username {
+  font-weight: 600;
+  font-size: 17px;
+}
+.userdetail_profileContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+@media (min-width: 320px) and (max-width: 800px) {
+  .userdetail_profileContainer {
+    margin-bottom: 16px;
+    display: inline;
+    padding: 0px 12px;
+  }
+}
+.userdetail_avatar {
+  width: 60px;
+  height: 60px;
+}
+@media (min-width: 320px) and (max-width: 800px) {
+  .userdetail_avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.userdetail_calendarContainer {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  height: 100%;
+  padding: 19px 12px;
+  border-radius: 7px;
+}
+@media (min-width: 320px) and (max-width: 800px) {
+  .userattendance_piechartcolumn {
+    margin-bottom: 20px;
+  }
+}
+.userattendance_heading {
+  font-weight: 600;
+  font-size: 17px;
+  margin-bottom: 20px;
+}
+.userdetail_calendarsContainer {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  height: 100%;
+  padding: 13px 12px;
+  border-radius: 7px;
+}
+.userattendancetable_Container {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 12px 12px;
+  border-radius: 7px;
+  margin-top: 30px;
+}
+.userbreak_linechartContainer {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 12px 12px;
+  border-radius: 7px;
+}
+.userbreaktable_Container {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 12px 12px;
+  border-radius: 7px;
+  margin-top: 30px;
+}

@@ -17,14 +17,20 @@ export default function Goals() {
       </p>
       <div className="golas_mainContainer">
         <Row gutter={16}>
-          <Col span={9}>
+          <Col xs={24} sm={24} md={24} lg={10}>
             <CommonSelectField
               options={goalTypes}
               label="Goal Type"
               mandatory
             />
           </Col>
-          <Col span={9}>
+          <Col
+            xs={24}
+            sm={24}
+            md={24}
+            lg={10}
+            className="goals_hoursfieldColumn"
+          >
             <CommonInputAfterImage
               label="Set minimum active time (Hours/Day)"
               addonAfter="hours"
@@ -36,14 +42,20 @@ export default function Goals() {
         <p style={{ marginTop: "20px", marginBottom: "20px" }}>And</p>
 
         <Row gutter={16}>
-          <Col span={9}>
+          <Col xs={24} sm={24} md={24} lg={10}>
             <CommonSelectField
               options={goalTypes}
               label="Goal Type"
               mandatory
             />
           </Col>
-          <Col span={9}>
+          <Col
+            xs={24}
+            sm={24}
+            md={24}
+            lg={10}
+            className="goals_hoursfieldColumn"
+          >
             <CommonInputAfterImage
               label="Set minimum active time (Hours/Day)"
               addonAfter="hours"

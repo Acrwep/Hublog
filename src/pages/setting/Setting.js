@@ -128,7 +128,13 @@ const Setting = () => {
         </h2>
       </div>
       <Row className="settings_rowcontainer">
-        <Col span={6} className="settinglist_columnOneContainer">
+        <Col
+          xs={24}
+          sm={24}
+          md={8}
+          lg={6}
+          className="settinglist_columnOneContainer"
+        >
           <div className="settings_sidebarContainer">
             {settingsList.map((item) => (
               <div
@@ -152,7 +158,13 @@ const Setting = () => {
           </div>
         </Col>
 
-        <Col span={18} className="settinglist_columnContainer">
+        <Col
+          xs={24}
+          sm={24}
+          md={16}
+          lg={18}
+          className="settinglist_columnContainer"
+        >
           {activePage === 1 && (
             <div>
               <UserandDesignation />

@@ -15,7 +15,7 @@ import Field from "../pages/Real Time/Field";
 import LiveStream from "../pages/Real Time/LiveStream";
 import Reports from "../pages/Reports";
 import Setting from "../pages/setting/Setting";
-import UserDetail from "../pages/userDetail/UserDetail";
+import UserDetail from "../pages/UserDetail/UserDetail";
 
 export const LoginRoutingConfig = [
   { name: "Login", path: "/login", component: <Login /> },

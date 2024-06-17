@@ -185,6 +185,11 @@
   padding: 0px 13px;
   margin-top: 25px;
 }
+@media (min-width: 320px) and (max-width: 800px) {
+  .goals_hoursfieldColumn {
+    margin-top: 10px;
+  }
+}
 /* compliance styles */
 .compliance_switchNames {
   font-weight: 500;
