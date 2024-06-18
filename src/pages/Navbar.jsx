@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 // import { IoSearchSharp } from "react-icons/io5";
 import { SearchOutlined, DownOutlined } from "@ant-design/icons";
-import { Input, Space, Dropdown, Button } from "antd";
+import { Input, Space, Dropdown, Avatar, Button } from "antd";
 import "./styles.css";
 
 const Navbar = () => {
   const navigation = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [avatarName, setAvatarName] = useState("");
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -16,7 +17,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     console.log("Logout");
-    localStorage.removeItem("Accesstoken");
+    localStorage.clear();
     navigation("/login");
   };
   const items = [
@@ -45,8 +46,29 @@ const Navbar = () => {
       ),
     },
   ];
+
+  const profileItems = [
+    {
+      key: "1",
+      label: (
+        <a rel="noopener noreferrer" onClick={handleLogout}>
+          Logout
+        </a>
+      ),
+    },
+  ];
+  const menu = {
+    items: profileItems,
+  };
   // const onSearch = (value, _e, info) => console.log(info?.source, value);
   const { Search } = Input;
+
+  useEffect(() => {
+    const userDetails = localStorage.getItem("LoginUserInfo");
+    const convertJson = JSON.parse(userDetails);
+    console.log("userdetailss", convertJson);
+    setAvatarName(convertJson.first_Name[0]);
+  }, []);
 
   return (
     <nav className="bg-white w-full h-20 flex justify-between items-center px-4 py-2">
@@ -95,10 +117,10 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="relative w-20">
-        <div className="flex justify-center items-center w-17">
+      <div style={{ cursor: "pointer" }}>
+        {/* <div className="flex justify-center items-center w-17">
           <div className="rounded-full h-10 w-10 bg-gray-200 flex items-center justify-center cursor-pointer">
-            {/* Insert your profile icon here */}P
+         P
           </div>
           <div className="m-3 cursor-pointer" onClick={toggleProfileMenu}>
             <TiArrowSortedDown />
@@ -127,7 +149,19 @@ const Navbar = () => {
               </a>
             </div>
           </div>
-        )}
+        )} */}
+        <Space direction="vertical">
+          <Space wrap>
+            <Dropdown menu={menu} placement="bottomRight" arrow>
+              <Avatar
+                size={40}
+                style={{ backgroundColor: "#25a17d", fontWeight: "600" }}
+              >
+                {avatarName}
+              </Avatar>
+            </Dropdown>
+          </Space>
+        </Space>
       </div>
     </nav>
   );
