@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-family: "Poppins", sans-serif;
+}
 .ant-switch {
   background: #c9c6c6 !important; /* Inactive background color */
 }

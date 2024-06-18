@@ -351,6 +351,14 @@ const Users = () => {
           </Col>
         </Row>
 
+        {/* <div>
+          <button
+            style={{ backgroundColor: "red" }}
+            onClick={() => downloadTableAsExcel(dummydatas, columns)}
+          >
+            Download as PDF
+          </button>
+          <div id="myTable" style={{ padding: "20px", background: "#fff" }}> */}
         <Table
           rowSelection={{
             type: "checkbox",
@@ -362,6 +370,8 @@ const Users = () => {
           pagination={paginationConfig}
           tableLayout="fixed" // Ensures the table layout is fixed
         />
+        {/* </div>
+        </div> */}
       </div>
 
       {/* user creation drawer */}
