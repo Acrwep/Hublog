@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import SidebarForm from "./pages/setting/AddUser";
 
 function App() {
+  // const accessToken = localStorage.getItem("Accesstoken");
+  // console.log("Access Token:::::", accessToken);
   return (
     <div className="App">
       <BrowserRouter>

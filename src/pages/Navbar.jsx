@@ -67,7 +67,7 @@ const Navbar = () => {
     const userDetails = localStorage.getItem("LoginUserInfo");
     const convertJson = JSON.parse(userDetails);
     console.log("userdetailss", convertJson);
-    setAvatarName(convertJson.first_Name[0]);
+    setAvatarName(convertJson?.first_Name[0] || "");
   }, []);
 
   return (
