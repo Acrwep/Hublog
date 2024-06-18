@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Col, Row, Calendar, Table } from "antd";
+import { Col, Row, Table } from "antd";
 import ReactApexChart from "react-apexcharts";
 import "./styles.css";
+import CommonMonthlyCalendar from "../../components/Common/CommonMonthlyCalendar";
 
 export default function UserWellness() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,10 +104,6 @@ export default function UserWellness() {
   const absentCount = 20;
   const series = [presentCount, absentCount];
 
-  const onPanelChange = (value, mode) => {
-    console.log(value.format("YYYY-MM-DD"), mode);
-  };
-
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(
@@ -139,7 +136,7 @@ export default function UserWellness() {
         <Col xs={24} sm={24} md={24} lg={15}>
           <div className="userdetail_calendarsContainer">
             <p className="userattendance_heading">Monthly Attendance</p>
-            <Calendar fullscreen={false} onPanelChange={onPanelChange} />
+            <CommonMonthlyCalendar />
           </div>
         </Col>
       </Row>

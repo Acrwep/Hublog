@@ -10,14 +10,17 @@ export default function CommonSelectField({
   error,
   mandatory,
   mode,
+  placeholder,
+  style,
 }) {
   return (
-    <div>
+    <div style={style}>
       <div style={{ display: "flex" }}>
         <label className="commonfield_label">{label}</label>
         {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}
       </div>
       <Select
+        className="commonSelectfield"
         style={{ width: "100%" }}
         onChange={onChange}
         options={options.map((item) => ({
@@ -28,7 +31,8 @@ export default function CommonSelectField({
         error={error}
         status={error ? "error" : ""}
         mode={mode}
-        className="commonSelectfield"
+        placeholder={placeholder}
+        allowClear
       />
       {error && (
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>

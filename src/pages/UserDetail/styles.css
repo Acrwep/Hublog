@@ -2,6 +2,17 @@
   font-weight: 600;
   font-size: 17px;
 }
+.userdetail_iconContainer {
+  padding: 7px;
+  border-radius: 8px;
+  color: rgb(20, 184, 166);
+  background-color: rgba(20, 184, 166, 0.1);
+}
+.userdetail_userselectContainer {
+  padding: 0px 26px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 .userdetail_profileContainer {
   display: flex;
   align-items: center;
@@ -63,4 +74,27 @@
   padding: 12px 12px;
   border-radius: 7px;
   margin-top: 30px;
+}
+.userproductivity_topContainers {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 12px 12px;
+  border-radius: 7px;
+}
+.userproductivity_contents {
+  font-weight: 700;
+  font-size: 20px;
+  margin-top: 10px;
+}
+.userproductivity_hours {
+  margin-top: 10px;
+}
+.userproductivity_chartContainer {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 12px 12px;
+  border-radius: 7px;
+  margin-top: 20px;
+}
+.userproductivity_chartheading {
+  font-weight: 600;
+  font-size: 16px;
 }

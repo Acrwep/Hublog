@@ -7,7 +7,7 @@ import { IoRocketOutline } from "react-icons/io5";
 import { HiOutlineMail } from "react-icons/hi";
 import { HiOutlineBellAlert } from "react-icons/hi2";
 import { LuGoal, LuUsers } from "react-icons/lu";
-import { VscShield } from "react-icons/vsc";
+import { FaUserLarge } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import { Row, Col, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -15,6 +15,11 @@ import UserAttendance from "./UserAttendance";
 import "./styles.css";
 import UserBreak from "./UserBreak";
 import UserWellness from "./UserWellness";
+import UserProductivity from "./UserProductivity";
+import UserActivity from "./UserActivity";
+import UserAppsUrls from "./UserApps&Urls";
+import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
 
 const UserDetail = () => {
   const usermenuList = [
@@ -35,11 +40,15 @@ const UserDetail = () => {
     setActivePage(id === activePage ? activePage : id);
   };
 
+  const usersList = [
+    { id: 1, name: "Balaji" },
+    { id: 2, name: "Rubi" },
+  ];
   return (
     <div>
       <div className="settings_headingContainer">
-        <div className="settings_iconContainer">
-          <IoMdSettings size={20} />
+        <div className="userdetail_iconContainer">
+          <FaUserLarge size={19} />
         </div>
         <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
           User Detail{" "}
@@ -58,6 +67,31 @@ const UserDetail = () => {
             : ""}
         </h2>
       </div>
+      <div className="userdetail_userselectContainer">
+        <Row>
+          <Col xs={24} sm={24} md={24} lg={12}>
+            <CommonSelectField
+              placeholder="Select Users"
+              options={usersList}
+              style={{ width: "190px" }}
+            />
+          </Col>
+          <Col
+            xs={24}
+            sm={24}
+            md={24}
+            lg={12}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "6px",
+            }}
+          >
+            <CommonDoubleDatePicker />
+          </Col>
+        </Row>
+      </div>
+
       <Row className="settings_rowcontainer">
         <Col
           xs={24}
@@ -116,6 +150,21 @@ const UserDetail = () => {
           {activePage === 3 && (
             <div>
               <UserWellness />
+            </div>
+          )}
+          {activePage === 4 && (
+            <div>
+              <UserProductivity />
+            </div>
+          )}
+          {activePage === 5 && (
+            <div>
+              <UserActivity />
+            </div>
+          )}
+          {activePage === 6 && (
+            <div>
+              <UserAppsUrls />
             </div>
           )}
         </Col>

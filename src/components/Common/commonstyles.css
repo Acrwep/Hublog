@@ -68,3 +68,19 @@
   border-left: none;
   width: 40px;
 }
+.common_calendar {
+  border: 1px solid #e1dfdf;
+  border-radius: 0px;
+}
+.commoncalendar_currentdate {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  min-width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 4px;
+  transition: "background" 0.2s;
+  color: #fff;
+  background: #1677ff;
+}
