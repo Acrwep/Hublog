@@ -82,7 +82,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-8 max-sm:p-0">
+    <div className="p-8 max-sm:p-0" data-aos="fade-up">
       <div className="flex justify-start items-center">
         <div className="attendance_iconContainer">
           <MdDashboardCustomize size={20} className="attendance_icon" />

@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { MdSettings } from "react-icons/md";
-import { FiUser, FiCoffee } from "react-icons/fi";
+import { FiCoffee } from "react-icons/fi";
 import { MdAccessTime } from "react-icons/md";
-import { SiWorkplace } from "react-icons/si";
 import { IoRocketOutline } from "react-icons/io5";
-import { HiOutlineMail } from "react-icons/hi";
-import { HiOutlineBellAlert } from "react-icons/hi2";
-import { LuGoal, LuUsers } from "react-icons/lu";
+import { FiActivity } from "react-icons/fi";
+import { MdCalendarMonth } from "react-icons/md";
 import { FaUserLarge } from "react-icons/fa6";
-import { IoMdSettings } from "react-icons/io";
 import { Row, Col, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import UserAttendance from "./UserAttendance";
@@ -26,12 +22,12 @@ const UserDetail = () => {
     {
       id: 1,
       name: "Attendance",
-      icon: <FiUser size={21} />,
+      icon: <MdCalendarMonth size={21} />,
     },
-    { id: 2, name: "Breaks", icon: <LuUsers size={21} /> },
+    { id: 2, name: "Breaks", icon: <FiCoffee size={21} /> },
     { id: 3, name: "Wellness", icon: <MdAccessTime size={21} /> },
     { id: 4, name: "Productivity", icon: <MdAccessTime size={21} /> },
-    { id: 5, name: "Activity", icon: <FiCoffee size={21} /> },
+    { id: 5, name: "Activity", icon: <FiActivity size={21} /> },
     { id: 6, name: "Apps & URLs", icon: <IoRocketOutline size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);

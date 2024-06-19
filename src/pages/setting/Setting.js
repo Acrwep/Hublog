@@ -44,55 +44,6 @@ const Setting = () => {
   };
 
   return (
-    // <div className="p-8 max-sm:p-0">
-    //   <div className="flex justify-start items-center">
-    //     <MdSettings className="text-2xl text-orange-600" />
-    //     <h2 className="text-xl font-bold ml-2">Setting</h2>
-    //   </div>
-
-    //   <div className="grid grid-cols-4 shadow-md gap-3 ">
-    //     <div className=" col-span-1 shadow-lg p-4 h-auto">
-    //       <div className="settings_sidebarContainer">
-    //         {settingsList.map((item) => (
-    //           <div
-    //             className={
-    //               item.id === activePage
-    //                 ? "settings_activelistContainer"
-    //                 : "settings_inactivelistContainer"
-    //             }
-    //             onClick={() => handlePageChange(item.id)}
-    //           >
-    //             {item.icon}
-    //             <p
-    //               className={
-    //                 item.id === activePage ? "" : "settings_inactivelisttext"
-    //               }
-    //             >
-    //               {item.name}
-    //             </p>
-    //           </div>
-    //         ))}
-    //       </div>
-    //     </div>
-    //     <div className="col-span-3 shadow-lg">
-    //       {activePage === 1 && (
-    //         <div>
-    //           <Userdesignation />
-    //         </div>
-    //       )}
-    //       {activePage === 2 && (
-    //         <div>
-    //           <Team />
-    //         </div>
-    //       )}
-    //       {activePage === 3 && (
-    //         <div>
-    //           <Workplace />
-    //         </div>
-    //       )}
-    //     </div>
-    //   </div>
-    // </div>
     <div>
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">

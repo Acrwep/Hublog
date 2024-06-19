@@ -1,4 +1,5 @@
 import "./App.css";
+import React from "react";
 import Route from "./layout/Route";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -8,10 +9,10 @@ import SidebarForm from "./pages/setting/AddUser";
 function App() {
   // const accessToken = localStorage.getItem("Accesstoken");
   // console.log("Access Token:::::", accessToken);
+
   return (
     <div className="App">
       <BrowserRouter>
-        {/* <SidebarForm showAddUser={true} setShowAddUser={()=>{}}/> */}
         <Route />
       </BrowserRouter>
       <ToastContainer

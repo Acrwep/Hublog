@@ -1,59 +1,169 @@
-import React,{useState} from 'react'
-import { TbReport, TbBellFilled } from "react-icons/tb";
-import { MdOutlineDevicesOther } from "react-icons/md";
-import Model from '../components/model/Model'
-
+import React, { useState } from "react";
+import { Row, Col } from "antd";
+import { TbReport } from "react-icons/tb";
+import { FiCoffee, FiActivity } from "react-icons/fi";
+import { FaUsersLine } from "react-icons/fa6";
+import { TbAppsFilled, TbDeviceDesktopMinus } from "react-icons/tb";
+import { BiSolidBell } from "react-icons/bi";
+import { BsFillRocketTakeoffFill } from "react-icons/bs";
+import { MdFreeBreakfast, MdCalendarMonth } from "react-icons/md";
+import { PiArrowsLeftRightBold } from "react-icons/pi";
+import { MdAccessTimeFilled, MdDynamicFeed } from "react-icons/md";
+import "./styles.css";
 
 const Reports = () => {
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-      setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-      setIsModalOpen(false);
-  };
-
-
-  const data = [
-    { icon: <TbReport />, heading: 'Daily Attendance', para: 'Download reports of the daily attendance of your organisation including punch-in and punch-out timing. ' },
-    { icon: <TbReport />, heading: 'Monthly Attendance', para: 'Download reports of the monthly attendance of your organisation including punch-in and punch-out timing. ' },
-    { icon: <TbReport />, heading: 'Monthly In-Out Attendance', para: 'Download reports of the monthly in-out attendance of your organisation including punch-in and punch-out timing. ' },
-    { icon: <TbReport />, heading: 'Apps&URLs report', para: 'Download the detailed application/URL ussage of your organisation ' },
-    { icon: <TbReport />, heading: 'Productivity Report', para: 'Download the productive report of your organisation. ' },
-    { icon: <TbReport />, heading: 'Activity Report', para: 'Download the activity report of your organisation. ' },
-    { icon: <TbReport />, heading: 'Break report', para: 'Download reports of break taken by employees. ' },
-    { icon: <TbReport />, heading: 'Team Insight', para: 'View the team wise insights for your organisation incluting key indicators and outliers. ' },
-    { icon: <TbReport />, heading: 'Project Report', para: 'View and Download reports for comprehensive insight into task, progress status and duration spend by each assignee on task. ' },
-    { icon: <TbBellFilled />, heading: 'Alert Report', para: 'View and Download reports of the all triggered alerts for your organisation. ' },
-    { icon: <MdOutlineDevicesOther />, heading: 'Device Report', para: 'Download the comprehensive devices report of your organisation. ' },
-    { icon: <TbReport />, heading: 'Dynamic report', para: 'Customise, save and download reports of the key indicators and metrics of your organisation. ' },
-
-  ]
   return (
-    <div className='p-8 max-sm:p-0'>
-      <div className='flex justify-start items-center'>
-        <TbReport className='text-2xl text-blue-600' />
-        <h2 className="text-xl font-bold ml-2">Reports</h2>
+    <div style={{ overflowX: "hidden" }}>
+      <div className="settings_headingContainer">
+        <div className="userdetail_iconContainer">
+          <TbReport size={22} />
+        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+          Reports
+        </h2>
       </div>
-      <div className='flex flex-wrap gap-5'>
-        {
-          data.map((item, index) => (
-            <>
-              <div onClick={openModal} className='w-[280px] h-[200px] flex flex-col justify-center items-center mt-8 bg-white shadow-lg rounded-xl hover:transform hover:scale-105 transition-transform cursor-pointer'>
-                <p className=' text-3xl bg-green-300 p-3 rounded-2xl'>{item.icon}</p>
-                <p className=' text-[16px]'>{item.heading}</p>
-                <p className='text-[13px] text-center text-gray-500 p-2'>{item.para}</p>
-              </div>
-            </>
-          ))
-        }
-      </div>
-      <Model isOpen={isModalOpen} onClose={closeModal} />
-    </div>
-  )
-}
+      <p className="reports_headings">Attendance</p>
+      <Row gutter={16} className="reports_rowcontainer">
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_iconContainer">
+              <FiCoffee size={26} />
+            </div>
+            <p className="reports_cardheading">Break Report</p>
+            <p className="reports_cardcontent">
+              Download reports of breaks taken by your employees
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_dailyiconContainer">
+              <MdAccessTimeFilled size={26} />
+            </div>
+            <p className="reports_cardheading">Daily Attendance</p>
+            <p className="reports_cardcontent">
+              Download reports of daily attendance of your organisation
+              including punch-in and punch-out timing
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_monthlyiconContainer">
+              <MdCalendarMonth size={26} />
+            </div>
+            <p className="reports_cardheading">Monthly Attendance</p>
+            <p className="reports_cardcontent">
+              Download reports of monthly attendance of your organisation
+              including punch-in and punch-out timing
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_inouticonContainer">
+              <PiArrowsLeftRightBold size={26} />
+            </div>
+            <p className="reports_cardheading">Monthly In-Out</p>
+            <p className="reports_cardcontent">
+              Download reports of monthly In out attendance of your organisation
+              including punch-in and punch-out timing
+            </p>
+          </div>
+        </Col>
+      </Row>
 
-export default Reports
+      <p className="reports_headings">Analytics</p>
+      <Row gutter={16} className="reports_rowcontainer">
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_activityiconContainer">
+              <FiActivity size={26} />
+            </div>
+            <p className="reports_cardheading">Activity Report</p>
+            <p className="reports_cardcontent">
+              Download the Activity report for your organisation
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_appsiconContainer">
+              <TbAppsFilled size={26} />
+            </div>
+            <p className="reports_cardheading">Apps/URLs report</p>
+            <p className="reports_cardcontent">
+              Download the detailed application/URL usage report for your
+              organisation
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_producticonContainer">
+              <BsFillRocketTakeoffFill size={26} />
+            </div>
+            <p className="reports_cardheading">Productivity Report</p>
+            <p className="reports_cardcontent">
+              Download the Productivity report for your organisation
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_teamsiconContainer">
+              <FaUsersLine size={26} />
+            </div>
+            <p className="reports_cardheading">Teams Insight</p>
+            <p className="reports_cardcontent">
+              View the team wise insights for your organisation including key
+              indicators and outliers
+            </p>
+          </div>
+        </Col>
+      </Row>
+
+      <p className="reports_headings">Others</p>
+      <Row gutter={16} className="reports_rowcontainer ">
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_alerticonContainer">
+              <BiSolidBell size={26} />
+            </div>
+            <p className="reports_cardheading">Alert Report</p>
+            <p className="reports_cardcontent">
+              View and download reports of all triggered alerts for your
+              organisation.
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_dynamiciconContainer">
+              <MdDynamicFeed size={26} />
+            </div>
+            <p className="reports_cardheading">Dynamic Report</p>
+            <p className="reports_cardcontent">
+              Customise, save and download reports of the key indicators and
+              metrics of your organisation.
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <div className="reports_card">
+            <div className="reports_producticonContainer">
+              <TbDeviceDesktopMinus size={26} />
+            </div>
+            <p className="reports_cardheading">Device Report</p>
+            <p className="reports_cardcontent">
+              Download the comprehensive devices report of your organisation
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}></Col>
+      </Row>
+    </div>
+  );
+};
+
+export default Reports;

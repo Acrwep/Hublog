@@ -31,9 +31,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div
-      className={`bg-gray-900 w-64 h-full  transition-all duration-300 ease-in-out ${sidebarClass}`}
-    >
+    <div className={`my-custom-sidebar ${sidebarClass}`}>
       <div className={"overflow-y-auto h-full py-4 px-4 sidebarContainer"}>
         <div className="flex justify-start items-center ">
           <div>

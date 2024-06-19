@@ -1,27 +1,29 @@
 import { createContext, useReducer } from "react";
 import reducer from "../reducers/sidebarReducer";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const initialState = {
-    isSidebarOpen: false
-}
+  isSidebarOpen: false,
+};
 
 export const SidebarContext = createContext({});
 export const SidebarProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const toggleSidebar = () => {
-        dispatch({ type: "TOGGLE_SIDEBAR" })
-    }
-    return (
-        <SidebarContext.Provider value = {{
-            ...state,
-            toggleSidebar
-        }}>
-            { children }
-        </SidebarContext.Provider>
-    )
-}
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const toggleSidebar = () => {
+    dispatch({ type: "TOGGLE_SIDEBAR" });
+  };
+  return (
+    <SidebarContext.Provider
+      value={{
+        ...state,
+        toggleSidebar,
+      }}
+    >
+      {children}
+    </SidebarContext.Provider>
+  );
+};
 
 SidebarProvider.propTypes = {
-    children: PropTypes.node
-}
+  children: PropTypes.node,
+};

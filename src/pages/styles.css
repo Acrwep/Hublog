@@ -85,3 +85,133 @@
 .dashboard_refresh_button:hover .refresh_icon {
   color: #a18aff !important;
 }
+/* reports styles */
+.reports_rowcontainer {
+  padding: 7px 20px;
+  margin-bottom: 15px;
+}
+.reports_headings {
+  padding: 0px 26px;
+  margin-top: 10px;
+  font-weight: 500;
+  color: gray;
+}
+.reports_card {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.4s ease-in;
+}
+.reports_card:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+.reports_iconContainer {
+  background-color: #f3e0ce;
+  border-radius: 10px;
+  color: #b85f06;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_dailyiconContainer {
+  background-color: #d5f3d5;
+  color: #59cb59;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_monthlyiconContainer {
+  background-color: rgba(33, 150, 243, 0.157);
+  color: rgb(33, 150, 243);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_inouticonContainer {
+  background-color: rgba(255, 176, 32, 0.157);
+  color: rgb(255, 176, 32);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_activityiconContainer {
+  background-color: #b4c5e9;
+  color: #3b5998;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_appsiconContainer {
+  background-color: #c3f1ee;
+  color: #00a99c;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_producticonContainer {
+  background-color: rgb(215, 208, 247);
+  color: rgb(123, 97, 255);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_teamsiconContainer {
+  background-color: #faddd1;
+  color: #795548;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_alerticonContainer {
+  background-color: #ffb9c1;
+  color: #d42338;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_dynamiciconContainer {
+  background-color: rgb(252, 209, 220);
+  color: #e91e63;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_cardheading {
+  font-weight: 600;
+  font-size: 17px;
+  margin-top: 12px;
+}
+.reports_cardcontent {
+  color: #bbc0c1;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 12px;
+  text-align: center;
+  line-height: 22px;
+}
