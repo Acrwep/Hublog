@@ -45,7 +45,7 @@ export default function CommonTable({
       dataSource={dataSource}
       scroll={scroll} // Enable horizontal scrolling
       pagination={paginationConfig}
-      tableLayout={tableLayout} // Ensures the table layout is fixed
+      tableLayout="fixed"
     />
   );
 }

@@ -4,13 +4,13 @@ import { IoIosAdd } from "react-icons/io";
 import { AiOutlineEdit } from "react-icons/ai";
 import CommonSearchField from "../../../components/Common/CommonSearchbar";
 import "../styles.css";
+import CommonTable from "../../../components/Common/CommonTable";
 import CommonInputField from "../../../components/Common/CommonInputField";
 import { nameValidator } from "../../../components/Common/Validation";
 import CommonSelectField from "../../../components/Common/CommonSelectField";
 import { RiDeleteBin7Line } from "react-icons/ri";
 
 export default function AlertRules() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
@@ -116,31 +116,6 @@ export default function AlertRules() {
     { name: "BOE", description: "", createdat: "2023-11-02", action: "Active" },
   ]);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: 4,
-    total: dummydatas.length,
-    onChange: handlePageChange,
-  };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
   const handleOk = () => {
     const nameValidate = nameValidator(name);
     const descriptionValidate = nameValidator(description);
@@ -167,23 +142,7 @@ export default function AlertRules() {
     console.log("filter", filterData);
     setDummyDatas(filterData);
   };
-  const [isOpen, setIsOpen] = useState(false);
 
-  const handleMouseEnter = () => {
-    setIsOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsOpen(false);
-  };
-  const dropdownMenuStyle = {
-    position: "absolute",
-    top: "100%",
-    left: "0",
-    backgroundColor: "white",
-    boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)",
-    zIndex: 1,
-  };
   return (
     <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
@@ -210,18 +169,12 @@ export default function AlertRules() {
         </Col>
       </Row>
 
-      <Table
-        rowSelection={{
-          type: "checkbox",
-          ...rowSelection,
-        }}
+      <CommonTable
         columns={columns}
         dataSource={dummydatas}
-        scroll={{ x: 600 }} // Enable horizontal scrolling
-        pagination={paginationConfig}
-        tableLayout="fixed" // Ensures the table layout is fixed
+        scroll={{ x: 600 }}
+        dataPerPage={4}
       />
-
       {/* addalert modal */}
       <Modal
         title="Add Designation"

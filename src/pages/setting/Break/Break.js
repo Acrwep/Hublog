@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Table, Modal, Select, Space } from "antd";
+import { Row, Col, Modal, Select, Space } from "antd";
 import { IoIosAdd } from "react-icons/io";
 import CommonSearchField from "../../../components/Common/CommonSearchbar";
 import "../styles.css";
@@ -8,10 +8,10 @@ import {
   breakTimeValidator,
   nameValidator,
 } from "../../../components/Common/Validation";
+import CommonTable from "../../../components/Common/CommonTable";
 import CommonSelectField from "../../../components/Common/CommonSelectField";
 
 export default function Break() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
@@ -79,31 +79,6 @@ export default function Break() {
     },
   ]);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: 4,
-    total: dummydatas.length,
-    onChange: handlePageChange,
-  };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
   const handleTeamChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -160,16 +135,11 @@ export default function Break() {
         </Col>
       </Row>
 
-      <Table
-        rowSelection={{
-          type: "checkbox",
-          ...rowSelection,
-        }}
+      <CommonTable
         columns={columns}
         dataSource={dummydatas}
-        scroll={{ x: 600 }} // Enable horizontal scrolling
-        pagination={paginationConfig}
-        tableLayout="fixed" // Ensures the table layout is fixed
+        scroll={{ x: 600 }}
+        dataPerPage={4}
       />
 
       {/* addrole modal */}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Drawer, Row, Col, Space, Dropdown } from "antd";
+import { Drawer, Row, Col, Space, Dropdown } from "antd";
+import CommonTable from "../../../components/Common/CommonTable";
 import CommonInputField from "../../../components/Common/CommonInputField";
 import "../styles.css";
 import CommonCalendar from "../../../components/Common/CommonCalendar";
@@ -49,7 +50,6 @@ const Users = () => {
   ]);
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const columns = [
     { title: "Name", dataIndex: "name", key: "name", width: 150 },
@@ -186,17 +186,6 @@ const Users = () => {
     },
   ]);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: 2,
-    total: dummydatas.length,
-    onChange: handlePageChange,
-  };
-
   useEffect(() => {
     const token =
       "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQEh1YmxvZy5jb20iLCJ1c2VySWQiOjEsInJvbGUiOiJBRE1JTiIsInN1YiI6MSwibmJmIjoxNzEzMTg4ODY0LjAsImlhdCI6MTcxMzE4ODg2NC4wLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjQ0MzAwLyIsImF1ZCI6InNlY3VyZWFwaXVzZXIiLCJleHAiOjE3MTMxOTYwNjQuMH0.VbXKnhK0SB1viG2bmWXuPCOBt6UwU2WfOlt2wYVLZhg";
@@ -222,22 +211,6 @@ const Users = () => {
         console.error("Error:", error);
       });
   }, []);
-
-  // rowSelection object indicates the need for row selection
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -351,27 +324,12 @@ const Users = () => {
           </Col>
         </Row>
 
-        {/* <div>
-          <button
-            style={{ backgroundColor: "red" }}
-            onClick={() => downloadTableAsExcel(dummydatas, columns)}
-          >
-            Download as PDF
-          </button>
-          <div id="myTable" style={{ padding: "20px", background: "#fff" }}> */}
-        <Table
-          rowSelection={{
-            type: "checkbox",
-            ...rowSelection,
-          }}
+        <CommonTable
           columns={columns}
           dataSource={dummydatas}
-          scroll={{ x: 1200 }} // Enable horizontal scrolling
-          pagination={paginationConfig}
-          tableLayout="fixed" // Ensures the table layout is fixed
+          scroll={{ x: 1200 }}
+          dataPerPage={4}
         />
-        {/* </div>
-        </div> */}
       </div>
 
       {/* user creation drawer */}

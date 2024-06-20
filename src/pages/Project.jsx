@@ -133,7 +133,6 @@ const Project = () => {
           dataSource={dummydatas}
           scroll={{ x: 600 }}
           dataPerPage={4}
-          tableLayout="fixed"
         />
       </div>
 
