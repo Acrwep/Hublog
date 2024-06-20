@@ -215,3 +215,19 @@
   text-align: center;
   line-height: 22px;
 }
+/* project styles */
+.projects_headingContainer {
+  display: flex;
+  padding: 19px 26px;
+  align-items: center;
+}
+.projects_addbuttonContainer {
+  display: flex;
+  padding: 12px 26px;
+  margin-top: 20px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.projecttable_Container {
+  padding: 12px 26px;
+}

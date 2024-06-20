@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/images/logo-re-3.png";
+import Vector from "../../assets/images/vector.png";
 import { useNavigate } from "react-router-dom";
 import MWService from "../../components/MWService";
 import { LoginApi } from "../../components/APIservice.js/action";
-import { Input } from "antd";
+import { Input, Row, Col } from "antd";
 import "./login.css";
 import { CommonToaster } from "../../components/Common/CommonToaster";
 import { emailValidator } from "../../components/Common/Validation";
@@ -24,6 +25,8 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (buttonDisable) return;
 
     const emailValidate = emailValidator(email);
     let passwordValidate = "";
@@ -46,20 +49,8 @@ const Login = () => {
       username: email,
       password: password,
     };
-    // console.log(request);
-    // if (!email || !password) {
-    //   setError("Please enter both email and password.");
-    //   return;
-    // }
-    // new MWService()
-    //   .login(email, password)
-    //   .then((data) => {
-    //     console.log("Response:", data);
-    //     navigate("/dashboard");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
+    console.log("login request", request);
+
     try {
       const response = await LoginApi(request);
       console.log("Loginnn response", response);
@@ -83,65 +74,89 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div style={{ overflowX: "hidden" }}>
       <div className="login_mainContainer">
         <div className="login_cardContainer">
-          <div>
-            <div className="loginlogo_container">
-              <img src={logoImg} className="login_logo" />
-            </div>
-            <p className="welcome_heading">Welcome back!</p>
-            <p className="signin_heading">Sign in to your account</p>
-
-            <label className="inputfields_label">Email</label>
-            <Input
-              className="login_inputfields"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError(emailValidator(e.target.value));
-              }}
-              status={emailError ? "error" : ""}
-            />
-            {emailError && (
-              <p className="login_errormessage">{`Email ${emailError}`}</p>
-            )}
-            <div style={{ marginTop: "14px" }}>
-              <label className="inputfields_label">Password</label>
-              <Input.Password
-                className="login_inputfields"
-                visibilityToggle={{
-                  visible: passwordVisible,
-                  onVisibleChange: setPasswordVisible,
-                }}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (e.target.value === "") {
-                    setPasswordError(" Password is required");
-                  } else if (e.target.value.length < 3) {
-                    setPasswordError(" Password is not valid");
-                  } else {
-                    setPasswordError("");
-                  }
-                }}
-                status={passwordError ? "error" : ""}
-              />
-              {passwordError && (
-                <p className="login_errormessage">{passwordError}</p>
-              )}
-            </div>
-
-            <p className="fotgotpassword_text">Forgot Password?</p>
-
-            <button
-              className={buttonDisable ? "login_buttondisable" : "login_button"}
-              disabled={buttonDisable}
-              onClick={buttonDisable ? "" : handleLogin}
+          <Row gutter={16}>
+            <Col span={12} className="login_cardleftContainer">
+              {/* <img src={Vector} /> */}
+              <div>
+                <p className="welcome_heading">Welcome Back!</p>
+                <p
+                  style={{
+                    marginTop: "10px",
+                    color: "white",
+                    textAlign: "center",
+                  }}
+                >
+                  To keep connected with us please login
+                </p>
+              </div>
+            </Col>
+            <Col
+              span={12}
+              className="login_cardrightContainer"
+              style={{ padding: "65px 30px", backgroundColor: "#fff" }}
             >
-              {buttonDisable ? <CommonSpinner /> : "Sign In"}
-            </button>
-          </div>
+              <div>
+                <div className="loginlogo_container">
+                  <img src={logoImg} className="login_logo" />
+                </div>
+                <p className="signin_heading">Sign in to your account</p>
+
+                <label className="inputfields_label">Email</label>
+                <Input
+                  className="login_inputfields"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError(emailValidator(e.target.value));
+                  }}
+                  status={emailError ? "error" : ""}
+                />
+                {emailError && (
+                  <p className="login_errormessage">{`Email ${emailError}`}</p>
+                )}
+                <div style={{ marginTop: "14px" }}>
+                  <label className="inputfields_label">Password</label>
+                  <Input.Password
+                    className="login_inputfields"
+                    visibilityToggle={{
+                      visible: passwordVisible,
+                      onVisibleChange: setPasswordVisible,
+                    }}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (e.target.value === "") {
+                        setPasswordError(" Password is required");
+                      } else if (e.target.value.length < 3) {
+                        setPasswordError(" Password is not valid");
+                      } else {
+                        setPasswordError("");
+                      }
+                    }}
+                    status={passwordError ? "error" : ""}
+                  />
+                  {passwordError && (
+                    <p className="login_errormessage">{passwordError}</p>
+                  )}
+                </div>
+
+                <p className="fotgotpassword_text">Forgot Password?</p>
+
+                <button
+                  className={
+                    buttonDisable ? "login_buttondisable" : "login_button"
+                  }
+                  disabled={buttonDisable}
+                  onClick={handleLogin}
+                >
+                  {buttonDisable ? <CommonSpinner /> : "Sign In"}
+                </button>
+              </div>
+            </Col>
+          </Row>
         </div>
       </div>
     </div>

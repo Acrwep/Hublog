@@ -149,7 +149,7 @@ export default function Designation() {
     setDummyDatas(filterData);
   };
   return (
-    <div className="settings_usersContainer">
+    <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
         <Col span={12}>
           <CommonSearchField

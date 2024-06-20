@@ -18,7 +18,7 @@ const UserandDesignation = () => {
     },
   ];
   return (
-    <div className="settings_usersContainer">
+    <div>
       <Tabs defaultActiveKey="1" items={items} />
     </div>
   );

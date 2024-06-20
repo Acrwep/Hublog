@@ -1,43 +1,194 @@
-import React from 'react'
-import { RiSuitcaseFill } from "react-icons/ri";
-import Dropdown from '../components/dropdown/Dropdown';
-import { MdRefresh } from 'react-icons/md';
-import Table from '../components/table/Table';
-
+import React, { useState } from "react";
+import { Row, Col, Modal } from "antd";
+import { TbReport } from "react-icons/tb";
+import { IoIosAdd } from "react-icons/io";
+import "./styles.css";
+import CommonInputField from "../components/Common/CommonInputField";
+import CommonSelectField from "../components/Common/CommonSelectField";
+import CommonTable from "../components/Common/CommonTable";
+import {
+  nameValidator,
+  selectValidator,
+} from "../components/Common/Validation";
 
 const Project = () => {
-  const data =[];
-  const columns = [
-    { title: 'Data', key: 'data', width: '150px' },
-    { title: 'Alert Description', key: 'alertdescription',width: '150px' },
-    { title: 'Alert Type', key: 'alerttype',width: '150px' },
-    { title: 'Triggered for', key: 'triggeredfor',width: '150px' },
-    { title: 'Triggered time', key: 'triggeredtime',width: '150px' },
+  const [status, setStatus] = useState("");
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [description, setDescription] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [owner, setOwner] = useState("");
+  const [ownerError, setOwnerError] = useState("");
+  const ownerList = [
+    { id: 1, name: "balaji@gmail.com" },
+    { id: 2, name: "Rubi@gmail.com" },
   ];
+  const statusList = [
+    { id: 1, name: "Active" },
+    { id: 2, name: "Inactive" },
+    { id: 3, name: "Closed" },
+  ];
+  const columns = [
+    { title: "Name", dataIndex: "name", key: "name" },
+    { title: "Description", dataIndex: "description", key: "description" },
+    { title: "Created At", dataIndex: "createdat", key: "createdat" },
+    { title: "Action", dataIndex: "action", key: "action" },
+  ];
+  const [dummydatas, setDummyDatas] = useState([
+    {
+      key: "1",
+      name: "OPERATION",
+      description: "",
+      createdat: "2023-11-02",
+      action: "Active",
+    },
+    {
+      key: "2",
+      name: "EXTERNAL HR",
+      description: "",
+      createdat: "2023-11-02",
+      action: "Active",
+    },
+    {
+      key: "3",
+
+      name: "Sales Executive",
+      description: "sales",
+      createdat: "2023-11-02",
+      action: "Active",
+    },
+    {
+      name: "INTERNAL HR",
+      description: "",
+      createdat: "2023-11-02",
+      action: "Active",
+    },
+    {
+      name: "QUALITY",
+      description: "",
+      createdat: "2023-11-02",
+      action: "Active",
+    },
+    { name: "SEO", description: "", createdat: "2023-11-02", action: "Active" },
+    { name: "BOE", description: "", createdat: "2023-11-02", action: "Active" },
+  ]);
+
+  const handleOk = () => {
+    const nameValidate = nameValidator(name);
+    const descriptionValidate = nameValidator(description);
+    const ownerValidate = selectValidator(owner);
+
+    setNameError(nameValidate);
+    setDescriptionError(descriptionValidate);
+    setOwnerError(ownerValidate);
+
+    if (nameValidate || descriptionValidate || ownerValidate) return;
+
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className='p-8 max-sm:p-0'>
-       <div className='flex justify-start items-center'>
-        <RiSuitcaseFill className='text-2xl text-blue-600' />
-        <h2 className="text-xl font-bold ml-2">Project</h2>
-      </div>
-      <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
-        <div>
-          <Dropdown />
-        </div>
-        <div className="flex justify-end items-center h-20 w-full max-sm:flex-col">
-          <div>
-            <button className="text-blue-500 p-1 border border-black rounded-md">
-              <MdRefresh />
+    <div style={{ overflowX: "hidden" }}>
+      <Row>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="projects_headingContainer">
+            <div className="userdetail_iconContainer">
+              <TbReport size={22} />
+            </div>
+            <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+              Projects
+            </h2>
+            <CommonSelectField
+              options={statusList}
+              value={status}
+              onChange={(value) => setStatus(value)}
+              style={{ marginLeft: "16px", width: "120px" }}
+            />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="projects_addbuttonContainer">
+            <button
+              className="designation_addbutton"
+              // onClick={() => setIsModalOpen(true)}
+            >
+              <IoIosAdd
+                size={24}
+                style={{ marginRight: "6px" }}
+                onClick={() => setIsModalOpen(true)}
+              />
+              Add Project
             </button>
           </div>
-        </div>
-      </div>
-      <div>
-        <Table data={data} columns={columns}/>
-        <p className='text-center'>No Data</p>
-      </div>
-    </div>
-  )
-}
+        </Col>
+      </Row>
 
-export default Project
+      <div className="projecttable_Container">
+        <CommonTable
+          columns={columns}
+          dataSource={dummydatas}
+          scroll={{ x: 600 }}
+          dataPerPage={4}
+          tableLayout="fixed"
+        />
+      </div>
+
+      {/* addproject modal */}
+      <Modal
+        title="Add Designation"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <button className="designation_submitbutton" onClick={handleOk}>
+            Submit
+          </button>,
+        ]}
+      >
+        <CommonInputField
+          label="Name"
+          onChange={(e) => {
+            setName(e.target.value);
+            setNameError(nameValidator(e.target.value));
+          }}
+          value={name}
+          error={nameError}
+          style={{ marginTop: "20px", marginBottom: "20px" }}
+          mandatory
+        />
+        <CommonInputField
+          label="Description"
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setDescriptionError(nameValidator(e.target.value));
+          }}
+          value={description}
+          error={descriptionError}
+          mandatory
+          style={{ marginBottom: "20px" }}
+        />
+        <CommonSelectField
+          label="Owner"
+          options={ownerList}
+          onChange={(value) => setOwner(value)}
+          value={owner}
+          error={ownerError}
+          mandatory
+          style={{ marginBottom: "20px" }}
+        />
+        <CommonSelectField
+          label="Project Status"
+          options={statusList}
+          value={status}
+          onChange={(value) => setStatus(value)}
+        />
+      </Modal>
+    </div>
+  );
+};
+
+export default Project;

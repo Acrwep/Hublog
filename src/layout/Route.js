@@ -9,19 +9,19 @@ const RouteComponent = () => {
   const location = useLocation();
   const initialLoadRef = React.useRef(true);
 
-  useEffect(() => {
-    if (initialLoadRef.current) {
-      console.log("RouteComponent mounted");
-      const accessToken = localStorage.getItem("Accesstoken");
-      console.log("Access Token:::::", accessToken);
-      if (accessToken && location.pathname === "/login") {
-        navigate("/dashboard");
-      } else if (!accessToken && location.pathname !== "/login") {
-        navigate("/login");
-      }
-      initialLoadRef.current = false;
-    }
-  }, [navigate, location.pathname]);
+  // useEffect(() => {
+  //   if (initialLoadRef.current) {
+  //     console.log("RouteComponent mounted");
+  //     const accessToken = localStorage.getItem("Accesstoken");
+  //     console.log("Access Token:::::", accessToken);
+  //     if (accessToken && location.pathname === "/login") {
+  //       navigate("/dashboard");
+  //     } else if (!accessToken && location.pathname !== "/login") {
+  //       navigate("/login");
+  //     }
+  //     initialLoadRef.current = false;
+  //   }
+  // }, [navigate, location.pathname]);
 
   return (
     <Routes>

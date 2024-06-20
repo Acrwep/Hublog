@@ -145,7 +145,9 @@ export default function UserBreak() {
       </div>
 
       <div className="userbreaktable_Container">
-        <p style={{ fontWeight: 600, fontSize: "17px" }}>Detail</p>
+        <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
+          Detail
+        </p>
         <Table
           rowSelection={{
             type: "checkbox",

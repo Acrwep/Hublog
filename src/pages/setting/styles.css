@@ -1,7 +1,7 @@
 .settings_headingContainer {
   display: flex;
-  padding: 12px 26px;
-  margin-top: 20px;
+  padding: 19px 26px;
+  align-items: center;
 }
 .settings_iconContainer {
   padding: 6px;
@@ -41,7 +41,7 @@
   width: 24px !important;
 }
 .settings_rowcontainer {
-  margin: 10px 26px;
+  margin: 0px 26px;
   border: 0 !important;
   border-radius: 12px !important;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -200,4 +200,22 @@
   display: flex;
   justify-content: flex-end;
   padding: 0px 12px;
+}
+/* alertrules styles */
+.alertrules_tableeditbutton {
+  cursor: pointer;
+  color: #25a17d;
+  transition: all 0.3s ease-in;
+}
+.alertrules_tableeditbutton:hover {
+  transform: scale(1.2);
+}
+.alertrules_tabledeletebutton {
+  cursor: pointer;
+  color: #ff4d4f;
+  margin-left: 20px;
+  transition: all 0.3s ease-in;
+}
+.alertrules_tabledeletebutton:hover {
+  transform: scale(1.2);
 }

@@ -201,7 +201,9 @@ export default function UserProductivity() {
       </div>
 
       <div className="userattendancetable_Container">
-        <p style={{ fontWeight: 600, fontSize: "17px" }}>Detail</p>
+        <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
+          Detail
+        </p>
         <Table
           rowSelection={{
             type: "checkbox",

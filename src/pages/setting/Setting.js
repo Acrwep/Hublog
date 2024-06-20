@@ -18,6 +18,7 @@ import Goals from "./Goals/Goals";
 import Compliance from "./Compliance/Compliance";
 import "./styles.css";
 import Break from "./Break/Break";
+import AlertRules from "./AlertRules/AlertRules";
 
 const Setting = () => {
   const settingsList = [
@@ -139,6 +140,11 @@ const Setting = () => {
           {activePage === 6 && (
             <div>
               <Break />
+            </div>
+          )}
+          {activePage === 8 && (
+            <div>
+              <AlertRules />
             </div>
           )}
           {activePage === 10 && (
