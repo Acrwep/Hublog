@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Col, Row, Calendar, Table } from "antd";
+import { Col, Row } from "antd";
 import ReactApexChart from "react-apexcharts";
 import moment from "moment/moment";
+import CommonTable from "../../components/Common/CommonTable";
 import "./styles.css";
 import CommonMonthlyCalendar from "../../components/Common/CommonMonthlyCalendar";
 
 export default function UserAttendance() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [currentDate, setCurrentDate] = useState(new Date());
   const columns = [
     { title: "Date", dataIndex: "date", key: "date", width: 140 },
@@ -38,17 +38,6 @@ export default function UserAttendance() {
       duration: "8h:02min",
     },
   ]);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: 2,
-    total: dummydatas.length,
-    onChange: handlePageChange,
-  };
 
   const options = {
     chart: {
@@ -101,21 +90,6 @@ export default function UserAttendance() {
   const absentCount = 20;
   const series = [presentCount, absentCount];
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
   return (
     <div>
       <Row gutter={16}>
@@ -142,16 +116,11 @@ export default function UserAttendance() {
         <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
           Detail
         </p>
-        <Table
-          rowSelection={{
-            type: "checkbox",
-            ...rowSelection,
-          }}
+        <CommonTable
           columns={columns}
           dataSource={dummydatas}
-          scroll={{ x: 700 }} // Enable horizontal scrolling
-          pagination={paginationConfig}
-          tableLayout="fixed" // Ensures the table layout is fixed
+          scroll={{ x: 600 }}
+          dataPerPage={4}
         />
       </div>
     </div>

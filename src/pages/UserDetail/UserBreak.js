@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Table } from "antd";
 import ReactApexChart from "react-apexcharts";
+import CommonTable from "../../components/Common/CommonTable";
 import "./styles.css";
 
 export default function UserBreak() {
-  const [currentPage, setCurrentPage] = useState(1);
   const columns = [
     { title: "Date", dataIndex: "date", key: "date", width: 160 },
     {
@@ -61,31 +60,6 @@ export default function UserBreak() {
       breakstart: "04:00 PM",
     },
   ]);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: 4,
-    total: dummydatas.length,
-    onChange: handlePageChange,
-  };
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
 
   const datas = {
     series: [
@@ -148,16 +122,12 @@ export default function UserBreak() {
         <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
           Detail
         </p>
-        <Table
-          rowSelection={{
-            type: "checkbox",
-            ...rowSelection,
-          }}
+
+        <CommonTable
           columns={columns}
           dataSource={dummydatas}
-          scroll={{ x: 700 }} // Enable horizontal scrolling
-          pagination={paginationConfig}
-          tableLayout="fixed" // Ensures the table layout is fixed
+          scroll={{ x: 600 }}
+          dataPerPage={4}
         />
       </div>
     </div>

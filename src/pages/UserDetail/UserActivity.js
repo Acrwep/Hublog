@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Row, Col, Table } from "antd";
+import { Row, Col } from "antd";
+import CommonTable from "../../components/Common/CommonTable";
 import ReactApexChart from "react-apexcharts";
 import "./styles.css";
 
 export default function UserActivity() {
-  const [currentPage, setCurrentPage] = useState(1);
   const columns = [
     {
       title: "Attendance",
@@ -54,17 +54,6 @@ export default function UserActivity() {
       unproductivetime: "00h:00m:00s",
     },
   ]);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: 10,
-    total: dummydatas.length,
-    onChange: handlePageChange,
-  };
 
   const convertTimeToMinutes = (timeStr) => {
     const [hours, minutes] = timeStr.split(":").map((time) => parseInt(time));
@@ -134,21 +123,6 @@ export default function UserActivity() {
 
   const series = [productiveTimeInMinutes, unproductiveTimeInMinutes];
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User",
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
   return (
     <div>
       <Row gutter={16}>
@@ -204,16 +178,12 @@ export default function UserActivity() {
         <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
           Detail
         </p>
-        <Table
-          rowSelection={{
-            type: "checkbox",
-            ...rowSelection,
-          }}
+
+        <CommonTable
           columns={columns}
           dataSource={dummydatas}
-          scroll={{ x: 700 }} // Enable horizontal scrolling
-          pagination={paginationConfig}
-          tableLayout="fixed" // Ensures the table layout is fixed
+          scroll={{ x: 600 }}
+          dataPerPage={4}
         />
       </div>
     </div>
