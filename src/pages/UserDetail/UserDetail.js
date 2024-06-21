@@ -41,7 +41,7 @@ const UserDetail = () => {
     { id: 2, name: "Rubi" },
   ];
   return (
-    <div>
+    <div className="settings_mainContainer">
       <div className="settings_headingContainer">
         <div className="userdetail_iconContainer">
           <FaUserLarge size={19} />

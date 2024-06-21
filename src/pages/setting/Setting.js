@@ -45,7 +45,7 @@ const Setting = () => {
   };
 
   return (
-    <div>
+    <div className="settings_mainContainer">
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
           <IoMdSettings size={20} />

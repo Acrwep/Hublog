@@ -63,7 +63,8 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       CommonToaster(
-        error.response?.data?.message || "Something went wrong",
+        error.response?.data?.message ||
+          "Something went wrong. Please try again later.",
         "error"
       );
     } finally {
@@ -75,6 +76,7 @@ const Login = () => {
 
   return (
     <div style={{ overflowX: "hidden" }}>
+      <div className="circle" />
       <div className="login_mainContainer">
         <div className="login_cardContainer">
           <Row gutter={16}>
@@ -159,6 +161,7 @@ const Login = () => {
           </Row>
         </div>
       </div>
+      <div className="bottom_circle" />
     </div>
   );
 };

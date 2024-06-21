@@ -1,6 +1,8 @@
+.settings_mainContainer {
+  padding: 19px 26px;
+}
 .settings_headingContainer {
   display: flex;
-  padding: 19px 26px;
   align-items: center;
 }
 .settings_iconContainer {
@@ -41,7 +43,7 @@
   width: 24px !important;
 }
 .settings_rowcontainer {
-  margin: 0px 26px;
+  margin: 20px 0px;
   border: 0 !important;
   border-radius: 12px !important;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

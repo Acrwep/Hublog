@@ -92,10 +92,10 @@ const Project = () => {
   };
 
   return (
-    <div style={{ overflowX: "hidden" }}>
+    <div className="alerts_mainContainer">
       <Row>
         <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="projects_headingContainer">
+          <div style={{ display: "flex", alignItems: "center" }}>
             <div className="userdetail_iconContainer">
               <TbReport size={22} />
             </div>
@@ -114,13 +114,9 @@ const Project = () => {
           <div className="projects_addbuttonContainer">
             <button
               className="designation_addbutton"
-              // onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalOpen(true)}
             >
-              <IoIosAdd
-                size={24}
-                style={{ marginRight: "6px" }}
-                onClick={() => setIsModalOpen(true)}
-              />
+              <IoIosAdd size={24} style={{ marginRight: "6px" }} />
               Add Project
             </button>
           </div>

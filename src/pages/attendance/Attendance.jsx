@@ -26,7 +26,7 @@ const Attendance = () => {
   }, []);
 
   return (
-    <div className="p-8 max-sm:p-0">
+    <div className="max-sm:p-0" style={{ padding: "19px 26px" }}>
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <div className="attendance_iconContainer">

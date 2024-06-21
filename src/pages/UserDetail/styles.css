@@ -9,8 +9,7 @@
   background-color: rgba(20, 184, 166, 0.1);
 }
 .userdetail_userselectContainer {
-  padding: 0px 26px;
-  margin-bottom: 20px;
+  margin: 14px 0px;
 }
 .userdetail_profileContainer {
   display: flex;

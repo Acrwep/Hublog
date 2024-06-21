@@ -48,19 +48,31 @@
   width: 160px;
 }
 .circle {
-  width: 200px;
-  height: 200px;
-  background-color: #3498db;
-  border-radius: 50%;
   position: absolute;
-  top: -59px;
-  /* right: -70px; */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 185px;
+  height: 182px;
+  border-top: 82px solid #009e24;
+  border-bottom: 100px solid #009e24;
+  border-bottom-left-radius: 176px;
+  border-bottom-right-radius: 00px;
+  right: 0px;
+}
+.bottom_circle {
+  position: absolute;
+  width: 185px;
+  height: 182px;
+  border-top: 72px solid #009ff2;
+  border-bottom: 110px solid #009ff2;
+  border-top-right-radius: 175px;
+  border-bottom-left-radius: 00px;
+  left: 0px;
+  bottom: 0px;
 }
 .login_cardContainer {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   width: 800px;
   border-radius: 9px;
+  z-index: 1;
 }
 .login_cardleftContainer {
   background-color: #25a17d;
