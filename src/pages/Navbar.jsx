@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 // import { IoSearchSharp } from "react-icons/io5";
 import { SearchOutlined, DownOutlined } from "@ant-design/icons";
 import { Input, Space, Dropdown, Avatar, Button } from "antd";
+import CommonSelectField from "../components/Common/CommonSelectField";
 import "./styles.css";
 
 const Navbar = () => {
@@ -71,7 +72,10 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-white w-full h-20 flex justify-between items-center px-4 py-2">
+    <nav
+      className="bg-white w-full h-20 flex justify-between items-center px-4 py-2"
+      id="navbarmain_container"
+    >
       <div className="searchbarandexplore_container">
         <div className="searchbar_container">
           <Space direction="vertical">

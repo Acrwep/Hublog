@@ -68,6 +68,13 @@
   justify-content: center;
   align-items: center;
 }
+.users_addbutton:hover {
+  background-color: #009737;
+}
+.users_addbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
 .users_submitbutton {
   color: #fff;
   background-color: #25a17d;
@@ -76,6 +83,13 @@
   height: 32px;
   width: 120px;
   border-radius: 6px;
+}
+.users_submitbutton:hover {
+  background-color: #009737;
+}
+.users_submitbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
 .usertable_actionbutton {
   padding: 6px 9px;
@@ -99,6 +113,13 @@
   align-items: center;
   padding: 0px 13px;
 }
+.designation_addbutton:hover {
+  background-color: #009737;
+}
+.designation_addbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
 .designation_submitbutton {
   color: #fff;
   background-color: #25a17d;
@@ -108,6 +129,13 @@
   width: 90px;
   border-radius: 6px;
   margin-top: 10px;
+}
+.designation_submitbutton:hover {
+  background-color: #009737;
+}
+.designation_submitbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
 /* teams */
 .team_tabmain_container {
@@ -186,6 +214,13 @@
   border-radius: 6px;
   padding: 0px 13px;
   margin-top: 25px;
+}
+.goals_savebutton:hover {
+  background-color: #009737;
+}
+.goals_savebutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
 @media (min-width: 320px) and (max-width: 800px) {
   .goals_hoursfieldColumn {

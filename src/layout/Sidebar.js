@@ -48,7 +48,10 @@ const Sidebar = () => {
             <RxHamburgerMenu />
           </span>
         </div>
-        <div className="h-600 overflow-auto scrollbar-thin scrollbar-thumb-pumpkin scrollbar-track-pumpkin">
+        <div
+          className="h-600 overflow-auto scrollbar-thin scrollbar-thumb-pumpkin scrollbar-track-pumpkin"
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
           <nav className="mt-10 h-600 scrollbar-thin scrollbar-thumb-pumpkin scrollbar-track-pumpkin">
             <ul className="nav-list">
               {Object.values(SideMenuConfig).map((item, index) => (

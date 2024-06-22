@@ -12,7 +12,15 @@
   border-bottom-left-radius: 7px !important;
 }
 .navbar_discoversearchnbar:hover {
-  border-color: #a18aff !important;
+  border-color: #25a17d !important;
+  border-width: 1px !important;
+}
+.navbar_discoversearchnbar:focus {
+  border-color: #25a17d !important;
+  border-width: 1px !important;
+}
+.navbar_discoversearchnbar:focus-within {
+  border-color: #25a17d !important;
   border-width: 1px !important;
 }
 /* #a18aff */
@@ -230,4 +238,114 @@
 /* alerts styles */
 .alerts_mainContainer {
   padding: 19px 26px;
+}
+/* notebook styles */
+.notebook_heading {
+  font-weight: 600;
+  font-size: 19px;
+  margin-top: 20px;
+  margin-bottom: 7px;
+}
+.notes_titleinput {
+  border-bottom: none;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-top: 0.2px solid #d9d9d9 !important;
+  border-left: 0.2px solid #d9d9d9 !important;
+  border-right: 0.2px solid #d9d9d9 !important;
+}
+.notebook_savebutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 26px;
+}
+.notebook_savebutton:hover {
+  background-color: #009737;
+}
+.notebook_savebutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
+@media (min-width: 600px) and (max-width: 800px) {
+  .notebook_savebutton {
+    margin-top: 24px;
+  }
+}
+.notebook_discardbutton {
+  border: 1px solid gray;
+  border-radius: 6px;
+  color: black;
+  padding: 0px 20px;
+  margin-right: 12px;
+}
+.notebook_discardbutton:hover {
+  border-color: #25a17d !important;
+  color: #25a17d !important;
+}
+.yournotes_Container {
+  height: 160px;
+  margin-top: 7px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.yournotes_ContentContainer {
+  height: 100%;
+  width: 100%;
+  padding: 12px;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.yournotes_ContentContainer::-webkit-scrollbar {
+  width: 7px; /* Width of the scrollbar */
+}
+
+.yournotes_ContentContainer::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the track */
+}
+
+.yournotes_ContentContainer::-webkit-scrollbar-thumb {
+  background: rgb(110, 110, 110); /* Color of the scroll thumb */
+  border-radius: 12px; /* Rounded corners for the scroll thumb */
+}
+
+.yournotes_ContentContainer::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scroll thumb on hover */
+}
+.youtnotes_heading {
+  font-weight: 600;
+  font-size: 17px;
+}
+.notes_deleteContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  background-color: black;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.notes_editContainer {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  background-color: black;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.notebook_cancelbutton {
+  margin-right: 12px;
+}
+.notebook_cancelbutton:hover {
+  border-color: #25a17d !important;
+  color: #25a17d !important;
 }

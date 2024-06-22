@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+ol,
+ul,
+menu {
+  list-style: revert;
+  padding: revert !important;
+}
 * {
   font-family: "Poppins", sans-serif;
+}
+.button:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
 .ant-switch {
   background: #c9c6c6 !important; /* Inactive background color */
