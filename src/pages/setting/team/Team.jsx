@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Tabs, Modal } from "antd";
 import CommonSearchField from "../../../components/Common/CommonSearchbar";
 import CommonInputField from "../../../components/Common/CommonInputField";
@@ -6,10 +6,12 @@ import { nameValidator } from "../../../components/Common/Validation";
 import { IoIosAdd } from "react-icons/io";
 import TeamInfo from "./TeamInfo";
 import TeamMember from "./TeamMember";
-import { IoSearchSharp } from "react-icons/io5";
+import { addteamMembers } from "../../../components/Redux/slice";
+import { useDispatch } from "react-redux";
 import "../styles.css";
 
 const Team = () => {
+  const dispatch = useDispatch();
   const [memberList, setMemberList] = useState([
     { id: 1, name: "Karthi" },
     { id: 2, name: "Vicky" },
@@ -23,7 +25,7 @@ const Team = () => {
     {
       key: "2",
       label: "Members",
-      children: <TeamMember memberList={memberList} />,
+      children: <TeamMember />,
     },
   ];
 
@@ -43,6 +45,14 @@ const Team = () => {
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
 
+  useEffect(() => {
+    const teamMembers = [
+      { id: 1, name: "Karthi", email: "karthi@gmail.com" },
+      { id: 2, name: "Vicky", email: "vicky@gmail.com" },
+    ];
+    dispatch(addteamMembers(teamMembers));
+  }, []);
+
   const handleSearch = (value) => {
     console.log("Search value:", value);
   };
@@ -52,15 +62,35 @@ const Team = () => {
     setActiveTeam(item.id === activeTeam ? activeTeam : item.id);
 
     if (item.name === "Operation") {
-      setMemberList([
-        { id: 1, name: "Karthi" },
-        { id: 2, name: "Vicky" },
-      ]);
+      const teamMembers = [
+        { id: 1, name: "Karthi", email: "karthi@gmail.com" },
+        { id: 2, name: "Vicky", email: "vicky@gmail.com" },
+      ];
+      dispatch(addteamMembers(teamMembers));
+    } else if (item.name === "Branch Operation") {
+      const teamMembers = [
+        { id: 3, name: "Naresh", email: "naresh@gmail.com" },
+        { id: 4, name: "Deepika", email: "deepika@gmail.com" },
+      ];
+      dispatch(addteamMembers(teamMembers));
+    } else if (item.name === "Quality") {
+      const teamMembers = [
+        { id: 5, name: "Vaishali", email: "vaishali@gmail.com" },
+        { id: 6, name: "Nivetha", email: "nivetha@gmail.com" },
+      ];
+      dispatch(addteamMembers(teamMembers));
+    } else if (item.name === "SEO") {
+      const teamMembers = [{ id: 7, name: "Divya", email: "divya@gmail.com" }];
+      dispatch(addteamMembers(teamMembers));
+    } else if (item.name === "Sales") {
+      const teamMembers = [];
+      dispatch(addteamMembers(teamMembers));
     } else {
-      setMemberList([
-        { id: 3, name: "Balaji" },
-        { id: 4, name: "Vijay" },
-      ]);
+      const teamMembers = [
+        { id: 8, name: "Balaji", email: "balaji@gmail.com" },
+        { id: 9, name: "Rubi", email: "rubi@gmail.com" },
+      ];
+      dispatch(addteamMembers(teamMembers));
     }
   };
 
@@ -138,24 +168,26 @@ const Team = () => {
 
       <Row gutter={12}>
         <Col xs={24} sm={24} md={24} lg={10} className="teamslist_card">
-          <CommonSearchField
-            placeholder="Search user..."
-            onSearch={handleSearch}
-            style={{ marginBottom: "20px" }}
-          />
+          <div style={{ padding: "0px 16px" }}>
+            <CommonSearchField
+              placeholder="Search user..."
+              onSearch={handleSearch}
+              style={{ marginBottom: "20px" }}
+            />
 
-          {teamList.map((item) => (
-            <li
-              className={
-                item.id === activeTeam
-                  ? "team_list_activelitag"
-                  : "team_list_litag"
-              }
-              onClick={() => handleTeam(item)}
-            >
-              {item.name}
-            </li>
-          ))}
+            {teamList.map((item) => (
+              <li
+                className={
+                  item.id === activeTeam
+                    ? "team_list_activelitag"
+                    : "team_list_litag"
+                }
+                onClick={() => handleTeam(item)}
+              >
+                {item.name}
+              </li>
+            ))}
+          </div>
         </Col>
         <Col xs={24} sm={24} md={24} lg={14}>
           <div className="team_tabmain_container">

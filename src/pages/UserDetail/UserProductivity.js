@@ -85,6 +85,7 @@ export default function UserProductivity() {
     plotOptions: {
       pie: {
         donut: {
+          size: "75%",
           labels: {
             show: true,
             total: {

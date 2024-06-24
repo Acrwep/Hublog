@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 
-const DownloadTableAsXlSX = (data, columns, fileName = "table.xlsx") => {
+const DownloadTableAsXlSX = (data, columns, fileName) => {
   // Create a new workbook
   const workbook = XLSX.utils.book_new();
 

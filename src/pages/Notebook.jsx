@@ -16,7 +16,7 @@ const Notebook = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   var modules = {
     toolbar: [
-      [{ size: ["small", false, "large", "huge"] }],
+      [{ header: [1, 2, 4, false] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
       [{ list: "ordered" }, { list: "bullet" }],
       ["link", "image"],
@@ -73,7 +73,6 @@ const Notebook = () => {
   };
   var formats = [
     "header",
-    "height",
     "bold",
     "italic",
     "underline",

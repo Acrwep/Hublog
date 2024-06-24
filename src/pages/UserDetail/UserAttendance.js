@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Col, Row } from "antd";
-import ReactApexChart from "react-apexcharts";
-import moment from "moment/moment";
 import CommonTable from "../../components/Common/CommonTable";
-import "./styles.css";
 import CommonMonthlyCalendar from "../../components/Common/CommonMonthlyCalendar";
+import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import "./styles.css";
 
 export default function UserAttendance() {
-  const [currentDate, setCurrentDate] = useState(new Date());
   const columns = [
     { title: "Date", dataIndex: "date", key: "date", width: 140 },
     { title: "In", dataIndex: "in", key: "in", width: 120 },
@@ -39,56 +37,6 @@ export default function UserAttendance() {
     },
   ]);
 
-  const options = {
-    chart: {
-      type: "donut",
-    },
-    labels: ["Present", "Absent"],
-    colors: ["#25a17d", "#7A7D7C"], // Blue and Gray colors
-    plotOptions: {
-      pie: {
-        donut: {
-          size: "75%",
-          labels: {
-            show: true,
-            total: {
-              showAlways: false,
-              show: true,
-              fontWeight: 600, // Increase font weight
-              fontSize: "19px",
-              fontFamily: "Poppins",
-            },
-            name: {
-              show: true,
-            },
-            value: {
-              show: true,
-              fontFamily: "Poppins",
-              fontWeight: 700, // Increase font weight
-              formatter: function (val) {
-                return val; // Display value in the tooltip
-              },
-            },
-          },
-        },
-      },
-    },
-    tooltip: {
-      enabled: true,
-      y: {
-        formatter: function (val) {
-          return val; // Display value in the tooltip
-        },
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      show: true,
-      position: "bottom",
-    },
-  };
   const presentCount = 30;
   const absentCount = 20;
   const series = [presentCount, absentCount];
@@ -99,11 +47,11 @@ export default function UserAttendance() {
         <Col xs={24} sm={24} md={24} lg={9}>
           <div className="userdetail_calendarContainer">
             <p className="userattendance_heading">Attendance</p>
-            <ReactApexChart
-              options={options}
+            <CommonDonutChart
+              labels={["Present", "Absent"]}
+              colors={["#25a17d", "#7A7D7C"]}
               series={series}
-              type="donut"
-              height={270}
+              labelsfontSize="19px"
             />
           </div>
         </Col>

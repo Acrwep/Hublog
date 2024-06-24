@@ -1,3 +1,9 @@
+.sidebar_menuitems {
+  transition: all 0.3s ease-in;
+}
+.sidebar_menuitems:hover {
+  transform: scale(1.1);
+}
 .sidebarContainer {
   scrollbar-width: thin; /* "auto", "thin", or "none" */
   scrollbar-color: #c1c1c1 #f1f1f1; /* thumb color, track color */

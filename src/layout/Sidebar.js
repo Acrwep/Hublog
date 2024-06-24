@@ -59,9 +59,9 @@ const Sidebar = () => {
                   {item.submenu ? (
                     <>
                       <div
-                        className={`p-3 flex cursor-pointer hover:rounded-l-lg ${
+                        className={`p-3 flex cursor-pointer hover:rounded-l-lg${
                           sidebarClass ? "justify-end" : "justify-start"
-                        } text-gray-300 hover:text-white`}
+                        } text-gray-300 hover:text-white sidebar_menuitems`}
                         onClick={() => handleAccordionClick(index)}
                       >
                         <div>
@@ -101,7 +101,7 @@ const Sidebar = () => {
                             <Link
                               key={subIndex}
                               to={submenuItem.path}
-                              className={`p-3 px-5 cursor-pointer text-gray-300 hover:text-white transition-all duration-300 ${determineBackgroundColor(
+                              className={`sidebar_menuitems p-3 px-5 cursor-pointer text-gray-300 hover:text-white transition-all duration-300 ${determineBackgroundColor(
                                 submenuItem.path
                               )}`}
                             >
@@ -147,7 +147,7 @@ const Sidebar = () => {
                           <div />
                         </div>
                         <div
-                          className={`w-32 flex ${
+                          className={`w-32 flex sidebar_menuitems ${
                             sidebarClass ? "justify-end" : "justify-start"
                           } items-center`}
                         >

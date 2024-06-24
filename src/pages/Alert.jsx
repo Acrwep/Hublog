@@ -4,6 +4,7 @@ import { Button, Tooltip } from "antd";
 import CommonDatePicker from "../components/Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../components/Common/CommonTable";
+import DownloadTableAsXLSX from "../components/Common/DownloadTableAsXLSX";
 import "./styles.css";
 
 const Alert = () => {
@@ -92,8 +93,13 @@ const Alert = () => {
           <div>
             <CommonDatePicker onChange={onDateChange} value={date} />
           </div>
-          <Tooltip placement="top" title="Download PDF">
-            <Button className="dashboard_download_button">
+          <Tooltip placement="top" title="Download">
+            <Button
+              className="dashboard_download_button"
+              onClick={() => {
+                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+              }}
+            >
               <DownloadOutlined className="download_icon" />
             </Button>
           </Tooltip>

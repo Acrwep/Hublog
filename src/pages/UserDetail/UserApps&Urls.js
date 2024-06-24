@@ -34,6 +34,7 @@ export default function UserAppsUrls() {
     plotOptions: {
       pie: {
         donut: {
+          size: "75%",
           labels: {
             show: true,
             total: {

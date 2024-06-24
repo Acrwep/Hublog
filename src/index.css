@@ -8,6 +8,15 @@ menu {
   list-style: revert;
   padding: 2px 12px !important;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: revert !important;
+  font-weight: revert !important;
+}
 * {
   font-family: "Poppins", sans-serif;
 }
