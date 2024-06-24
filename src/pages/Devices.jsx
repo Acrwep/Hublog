@@ -1,15 +1,16 @@
 import React from "react";
-import { MdOutlineDevicesOther } from "react-icons/md";
-import Dropdown from "../components/dropdown/Dropdown";
-import { MdRefresh } from "react-icons/md";
-import DoughnutChart from "../components/chart/DoughnutChart";
-import { AntTable } from "../components/table/Table";
+import { PiDevicesBold } from "react-icons/pi";
+import { Col, Row } from "antd";
+import CommonDonutChart from "../components/Common/CommonDonutChart";
+import "./styles.css";
+import CommonTable from "../components/Common/CommonTable";
 
 const Devices = () => {
-  const doughnutData = {
-    labels: ["Present", "Absent"],
-    datasets: [{ data: [75, 25] }],
-  };
+  const onlineDeviceCount = 70;
+  const offlineDeviceCount = 30;
+  const series = [onlineDeviceCount, offlineDeviceCount];
+
+  const platformchartDatas = [80, 20];
 
   const data = [
     {
@@ -58,8 +59,8 @@ const Devices = () => {
       title: "Device ID",
       dataIndex: "deviceid",
       defaultSortOrder: "descend",
+      width: 200,
       sorter: (a, b) => a.deviceid - b.deviceid,
-      width: 180,
     },
     {
       title: "Platform",
@@ -106,64 +107,54 @@ const Devices = () => {
     },
   ];
   return (
-    <div className="p-8 max-sm:p-0">
-      <div className="flex justify-start items-center">
-        <MdOutlineDevicesOther className="text-2xl text-blue-600" />
-        <h2 className="text-xl font-bold ml-2">Devices</h2>
+    <div className="alerts_mainContainer">
+      <div className="flex">
+        <div className="userdetail_iconContainer">
+          <PiDevicesBold size={22} />
+        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+          Devices
+        </h2>
       </div>
-      <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
-        <div>
-          <Dropdown />
-        </div>
-        <div className="flex justify-end items-center h-20 w-full max-sm:flex-col">
-          <div>
-            <button className="text-blue-500 p-1 border border-black rounded-md">
-              <MdRefresh />
-            </button>
+
+      <Row gutter={16} style={{ marginTop: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Status of devices: PC</p>
+            <p className="devices_chartsubheading">
+              Distribution between offline and online devices.
+            </p>
+            <CommonDonutChart
+              labels={["Online Devices", "Offline Devices"]}
+              colors={["#25a17d", "#e93b3a"]}
+              series={series}
+              labelsfontSize="17px"
+            />
           </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-5">
-        <div className=" col-span-1 shadow-lg p-5">
-          <h5 className="mb-3">Overall Wellness</h5>
-          <hr />
-          <div className="flex justify-between">
-            <div>
-              <DoughnutChart data={doughnutData} />
-            </div>
-            <div className="flex flex-col justify-center items-center w-full mt-2">
-              <div className="flex items-center">
-                <div className=" w-2 h-6 bg-blue-600 rounded-lg m-2"></div>30
-              </div>
-              <div className="flex items-center ">
-                <div className=" w-2 h-6 bg-gray-600 rounded-lg m-2"></div>20
-              </div>
-            </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Platform</p>
+            <p className="devices_chartsubheading">
+              Summarized view of the distribution of all the operating systems.
+            </p>
+            <CommonDonutChart
+              labels={["Windows", "Mac"]}
+              colors={["#0174cd", "#f6c614"]}
+              series={platformchartDatas}
+              labelsfontSize="17px"
+            />
           </div>
-        </div>
-        <div className=" col-span-1 shadow-lg p-5">
-          <h5 className="mb-3">Overall Wellness</h5>
-          <hr />
-          <div className="flex justify-between items-center">
-            <div>
-              <DoughnutChart data={doughnutData} />
-            </div>
-            <div className="flex flex-col justify-center items-center w-full mt-2">
-              <div className="flex items-center">
-                <div className=" w-2 h-6 bg-blue-600 rounded-lg m-2"></div>30
-              </div>
-              <div className="flex items-center ">
-                <div className=" w-2 h-6 bg-gray-600 rounded-lg m-2"></div>20
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className=" shadow-lg mt-3 p-5">
-        <h2 className="text-2xl font-semibold mb-4">Employee List</h2>
-        <div className=" overflow-x-auto">
-          <AntTable data={data} columns={columns} />
-        </div>
+        </Col>
+      </Row>
+
+      <div style={{ marginTop: "20px" }}>
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 1600 }}
+          dataPerPage={4}
+        />
       </div>
     </div>
   );

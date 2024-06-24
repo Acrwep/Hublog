@@ -48,6 +48,7 @@ export default function UserAttendance() {
     plotOptions: {
       pie: {
         donut: {
+          size: "75%",
           labels: {
             show: true,
             total: {
@@ -55,12 +56,14 @@ export default function UserAttendance() {
               show: true,
               fontWeight: 600, // Increase font weight
               fontSize: "19px",
+              fontFamily: "Poppins",
             },
             name: {
               show: true,
             },
             value: {
               show: true,
+              fontFamily: "Poppins",
               fontWeight: 700, // Increase font weight
               formatter: function (val) {
                 return val; // Display value in the tooltip

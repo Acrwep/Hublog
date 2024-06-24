@@ -6,7 +6,7 @@ ol,
 ul,
 menu {
   list-style: revert;
-  padding: revert !important;
+  padding: 2px 12px !important;
 }
 * {
   font-family: "Poppins", sans-serif;

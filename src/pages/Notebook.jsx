@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import { CgNotes } from "react-icons/cg";
 import { MdEdit, MdDelete } from "react-icons/md";
 import "./styles.css";
+import { CommonToaster } from "../components/Common/CommonToaster";
 
 const Notebook = () => {
   const [text, setText] = useState("");
@@ -87,12 +88,7 @@ const Notebook = () => {
     "align",
     "size",
   ];
-  const handleDeleteNote = () => {
-    notes.splice(deleteIndex, 1);
-    setText("");
-    setNotesTitle("");
-    setIsModalOpen(false);
-  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -109,6 +105,14 @@ const Notebook = () => {
     setEditIndex(index);
   };
 
+  const handleDeleteNote = () => {
+    notes.splice(deleteIndex, 1);
+    setText("");
+    setNotesTitle("");
+    CommonToaster("Deleted successfully", "success");
+    setIsModalOpen(false);
+  };
+
   const handleDiscard = () => {
     if (editIndex !== null) {
       setText("");
@@ -118,7 +122,7 @@ const Notebook = () => {
   };
   const handleSave = () => {
     if (notesTitle === "") {
-      alert("Please enter title");
+      CommonToaster("Please add title for the note", "error");
       return;
     }
     if (editIndex !== null) {
