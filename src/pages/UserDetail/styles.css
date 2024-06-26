@@ -77,11 +77,15 @@
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   padding: 12px 12px;
   border-radius: 7px;
+  height: 100%;
 }
 .userproductivity_contents {
   font-weight: 700;
   font-size: 20px;
   margin-top: 10px;
+  /* word-wrap: break-word; */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .userproductivity_hours {
   margin-top: 10px;

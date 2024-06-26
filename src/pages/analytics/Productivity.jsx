@@ -1,91 +1,206 @@
-import React from 'react'
-import DoughnutChart from '../../components/chart/DoughnutChart';
-import { ProductiveBarChart } from '../../components/chart/BarChart';
-// import LineChart from '../../components/chart/LineChart';
-import MyTable, { MyTable2 } from '../../components/table/DemoTable';
+import React, { useState, useEffect } from "react";
+import { Row, Col, Button, Tooltip } from "antd";
+import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonBarChart from "../../components/Common/CommonBarChart";
+import { MdRocketLaunch } from "react-icons/md";
+import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import "./styles.css";
+import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
 
 const Productivity = () => {
+  const [date, setDate] = useState(new Date());
 
-  const doughnutData = {
-    labels: ['Present', 'Absent'],
-    datasets: [{ data: [75, 25] }],
+  const teamList = [{ id: 1, name: "Operation" }];
+
+  const OverallWellness = [15, 6];
+  const TopHealthy = [10, 20, 40];
+  const TopOverburdened = [20, 40, 30];
+  const TopUnderutilized = [80, 20, 40];
+
+  const xasis = [
+    "SEO",
+    "External HR",
+    "Internal HR",
+    "Branch Operation",
+    "Quality",
+    "Operation",
+    "Sales",
+  ];
+
+  const series = [
+    {
+      name: "Productive time",
+      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+    },
+    {
+      name: "Unproductive time",
+      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+    },
+    {
+      name: "Neutral",
+      data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
+    },
+  ];
+
+  const barchartColors = ["#25a17d", "#e93b3a", "#94acb7"];
+
+  const onDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setDate(date); // Update the state when the date changes
   };
 
   return (
-    <div className='p-8 max-sm:p-0'>
-      <div className='grid grid-cols-4 gap-8 mt-5 w-full h-24 max-sm:grid-cols-1'>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-          <div>
-            <p className=' text-[12px]'>Activity</p>
-            <h2 className='my-2'>52.46</h2>
-            <p className='text-[12px]'> 772h:45m</p>
-          </div>
-          <div></div>
+    <div className="alerts_mainContainer">
+      <div className="flex">
+        <div className="userdetail_iconContainer">
+          <MdRocketLaunch size={22} />
         </div>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-          <div>
-            <p className=' text-[12px]'>Top Application</p>
-            <h2 className='my-2'>Chrome</h2>
-            <p className='text-[12px]'>990h:44m</p>
-          </div>
-          <div></div>
-        </div>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-          <div>
-            <p className=' text-[12px]'>Top URL</p>
-            <h2 className='my-2'>www.google.doc...</h2>
-            <p className='text-[12px]'> 145h:41:m</p>
-          </div>
-          <div></div>
-        </div>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'><div>
-          <p className=' text-[12px]'>Top Category</p>
-          <h2 className='my-2'>Internate</h2>
-          <p className='text-[12px]'> 310h:23m</p>
-        </div>
-        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+          Productivity
+        </h2>
       </div>
 
-      <div className=' grid grid-cols-3 grid-rows-2 gap-8'>
-        <div className='col-span-1 row-span-2 block mt-5'>
-          <div className=' shadow-lg p-12 bg-white mt-1'>
-            <h5 className='mb-3'>Productivity Breakdown</h5>
-            <hr />
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "170px" }}>
+            <CommonSelectField options={teamList} placeholder="All Teams" />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
             <div>
-              <DoughnutChart data={doughnutData} />
+              {/* <CommonDatePicker onChange={onDateChange} value={date} /> */}
+              <CommonDoubleDatePicker />
             </div>
+            <Tooltip placement="top" title="Download">
+              <Button
+                className="dashboard_download_button"
+                // onClick={() => {
+                //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                // }}
+              >
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button className="dashboard_refresh_button">
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
           </div>
-          
-        </div>
-        {/* <div className=' w-full'> */}
-        <div className=" col-span-2 row-span-1 mt-5 shadow-lg p-2 bg-white max-sm:p-0">
-          <h5 className='mb'>Most Productive Team</h5>
-          <div className=''>
-            <hr />
-            <MyTable2 />
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Productivity</p>
+            <p className="userproductivity_contents">41.69%</p>
+            <p className="userproductivity_hours">388h:49m</p>
           </div>
-        </div>
-        <div className="  col-span-2 mt-1 row-span-1 shadow-lg p-2 bg-white max-sm:p-0">
-          <h5 className='mb'>Least Productive Team</h5>
-          <div>
-            <hr />
-            <MyTable />
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top Application</p>
+            <p className="userproductivity_contents">Chrome</p>
+            <p className="userproductivity_hours">346h:32m</p>
           </div>
-        </div>
-        {/* </div> */}
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top URL</p>
+            <p className="userproductivity_contents">
+              https://web.whatsapppppp
+            </p>
+            <p className="userproductivity_hours">174h:42m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top Category</p>
+            <p className="userproductivity_contents">Internet</p>
+            <p className="userproductivity_hours">661h:44m</p>
+          </div>
+        </Col>
+      </Row>
+
+      <div style={{ marginTop: "25px" }}>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={6} lg={6}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Productivity Breakdown</p>
+              <p className="devices_chartsubheading">
+                Distribution between offline and online devices.
+              </p>
+              <CommonDonutChart
+                labels={["Healthy", "Overburdened"]}
+                colors={["#25a17d", "#e93b3a"]}
+                series={OverallWellness}
+                labelsfontSize="17px"
+              />
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={6} lg={6}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Top Healthy</p>
+              <p className="devices_chartsubheading">
+                Distribution between offline and online devices.
+              </p>
+              <CommonDonutChart
+                labels={["External HR", "SEO", "Quality"]}
+                colors={["#8c499c", "#f6c614", "#009ddb"]}
+                series={TopHealthy}
+                labelsfontSize="17px"
+              />
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={6} lg={6}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Top Overburdened</p>
+              <p className="devices_chartsubheading">
+                Distribution between offline and online devices.
+              </p>
+              <CommonDonutChart
+                labels={["External HR", "Sales", "Quality"]}
+                colors={["#8c499c", "#d1b052", "#009ddb"]}
+                series={TopOverburdened}
+                labelsfontSize="17px"
+              />
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={6} lg={6}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Top Underutilized</p>
+              <p className="devices_chartsubheading">
+                Distribution between offline and online devices.
+              </p>
+              <CommonDonutChart
+                labels={["SEO", "Quality", "Branch Operation"]}
+                colors={["#f6c614", "#009ddb", "#d470f7"]}
+                series={TopUnderutilized}
+                labelsfontSize="17px"
+              />
+            </div>
+          </Col>
+        </Row>
       </div>
 
-      <div>
-        <div className=' grid grid-cols-1 shadow-lg p-12 max-sm:p-0'>
-          <h5 className='mb-3 '> Team Wise Productivity Breakdown</h5>
-          <div className=' h-80'>
-            <hr />
-              <ProductiveBarChart />
-          </div>
+      <div style={{ marginTop: "25px" }}>
+        <div className="devices_chartsContainer">
+          <p className="devices_chartheading">Team Wise Utilization</p>
+          <CommonBarChart
+            xasis={xasis}
+            series={series}
+            colors={barchartColors}
+            timebased={true}
+          />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Productivity
+export default Productivity;

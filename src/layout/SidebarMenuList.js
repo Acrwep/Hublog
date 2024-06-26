@@ -15,6 +15,7 @@ import {
   TbReport,
   TbAppWindowFilled,
 } from "react-icons/tb";
+import { FaAppStore } from "react-icons/fa";
 import { RiSuitcaseFill, RiUser3Fill } from "react-icons/ri";
 import { GiNotebook, GiLotus } from "react-icons/gi";
 import { CiStreamOn } from "react-icons/ci";
@@ -80,7 +81,7 @@ const SidebarMenuList = () => {
         },
         {
           title: "App $ URLs",
-          icon: <TbAppWindowFilled />,
+          icon: <FaAppStore />,
           path: "app$url",
         },
         {
@@ -165,7 +166,7 @@ const SidebarMenuList = () => {
     <Menu
       theme="dark"
       mode="inline"
-      defaultSelectedKeys={["1"]}
+      defaultSelectedKeys={["dashboard"]}
       onClick={handleMenuClick}
     >
       {renderMenuItems(SideMenuConfig)}

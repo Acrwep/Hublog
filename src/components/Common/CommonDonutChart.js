@@ -24,14 +24,14 @@ export default function CommonDonutChart({
               show: true,
               fontWeight: 600, // Increase font weight
               fontSize: labelsfontSize,
-              fontFamily: "Poppins",
+              fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
             },
             name: {
               show: true,
             },
             value: {
               show: true,
-              fontFamily: "Poppins",
+              fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               fontWeight: 700, // Increase font weight
               formatter: function (val) {
                 return val; // Display value in the tooltip
@@ -55,6 +55,7 @@ export default function CommonDonutChart({
     legend: {
       show: true,
       position: "bottom",
+      fontFamily: "Poppins, sans-serif",
       formatter: function (seriesName, opts) {
         const value = opts.w.globals.series[opts.seriesIndex];
         return `${seriesName}: ${value}`;

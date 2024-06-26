@@ -1,66 +1,203 @@
-import React,{useState} from 'react'
-import { MdRefresh, MdDownload } from 'react-icons/md';
-import Dropdown from '../../components/dropdown/Dropdown';
-import DateRangePicker from '../../components/dateRangePicker/DatePicker';
-import { TbAppWindowFilled } from "react-icons/tb";
-import Summary from './App$Urlsubcomp/Summary';
+import React, { useState, useEffect } from "react";
+import { Row, Col, Button, Tooltip } from "antd";
+import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import { FaAppStore } from "react-icons/fa";
+import ReactApexChart from "react-apexcharts";
+import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import "./styles.css";
+import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonDonutChart from "../../components/Common/CommonDonutChart";
 
 const Apps$Url = () => {
-  const [activePage, setActivePage] = useState(1);
+  const [date, setDate] = useState(new Date());
 
-  const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
+  const teamList = [{ id: 1, name: "Operation" }];
+
+  const OverallWellness = [15, 6];
+
+  const barchartoptions = {
+    chart: {
+      type: "bar",
+      height: 350,
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        borderRadiusApplication: "end",
+        horizontal: true,
+      },
+    },
+    colors: ["#00952e"],
+    // tooltip: {
+    //   custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+    //     return `<div class="arrow_box">
+    //       <span>${w.globals.labels[dataPointIndex]}</span>
+    //       </div>`;
+    //   },
+    // },
   };
-  return (
-    <div className="p-8 max-sm:p-0">
-      <div className='flex justify-between items-center'>
-      <div className='flex justify-start items-center'>
-        <TbAppWindowFilled className='text-2xl text-blue-600' />
-        <h2 className="text-xl font-bold ml-2">App & URLs</h2>
-      </div>
-      <ul className='flex w-64 shadow-lg rounded'>
-          <li onClick={() => handlePageChange(1)} className={`m-2 p-1 cursor-pointer ${activePage === 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Summary</li>
-          <li onClick={() => handlePageChange(2)} className={`m-2 p-1 cursor-pointer ${activePage === 2 ? 'bg-blue-500 text-white' : 'bg-gray-200'} rounded`}>Detailed</li>
-        </ul>
-      </div>
-      <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
-        <div>
-          <Dropdown />
-        </div>
-        <div className="flex justify-end items-center h-20 w-full max-sm:flex-col">
-          <div>
-            <DateRangePicker />
-          </div>
-          <div>
-            <button className="text-blue-500 p-1 m-1 border border-black rounded-lg">
-              <MdDownload />
-            </button>
-            <button className="text-blue-500 p-1 border border-black rounded-md">
-              <MdRefresh />
-            </button>
-          </div>
-        </div>
-      </div>
-      <div>
-      {activePage === 1 && (
-        <div> 
-          <Summary />     
-          {/* Add your content for page 1 here */}
-        </div>
-      )}
-      {activePage === 2 && (
-        <div>
-         {/* <AttendanceDetail /> */}
-        </div>
-      )}
-      {activePage === 3 && (
-        <div>
-        {/* <DateWiseAttendance /> */}
-        </div>
-      )}
-     </div>
-    </div>
-  )
-}
 
-export default Apps$Url
+  const barchartseries = [
+    {
+      data: [
+        {
+          x: "Chrome",
+          y: 20,
+        },
+        {
+          x: "Vs code",
+          y: 30,
+        },
+        {
+          x: "Notepad",
+          y: 30,
+        },
+        {
+          x: "Files",
+          y: 20,
+        },
+        {
+          x: "Gmail",
+          y: 70,
+        },
+        {
+          x: "Email",
+          y: 20,
+        },
+      ],
+    },
+  ];
+
+  const onDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setDate(date); // Update the state when the date changes
+  };
+
+  return (
+    <div className="alerts_mainContainer">
+      <div className="flex">
+        <div className="userdetail_iconContainer">
+          <FaAppStore size={22} />
+        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+          Apps & URLs
+        </h2>
+      </div>
+
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "170px" }}>
+            <CommonSelectField options={teamList} placeholder="All Teams" />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
+            <div>
+              <CommonDatePicker onChange={onDateChange} value={date} />
+            </div>
+            <Tooltip placement="top" title="Download">
+              <Button
+                className="dashboard_download_button"
+                // onClick={() => {
+                //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                // }}
+              >
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button className="dashboard_refresh_button">
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={7} lg={7}>
+          <div className="userproductivity_topContainers">
+            <p>Top Application</p>
+            <p className="userproductivity_contents">Chrome</p>
+            <p className="userproductivity_hours">14h:47m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={10} lg={10}>
+          <div className="userproductivity_topContainers">
+            <p>Top Urls</p>
+            <p className="userproductivity_contents">https://ads.google.com/</p>
+            <p className="userproductivity_hours">14h:47m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={7} lg={7}>
+          <div className="userproductivity_topContainers">
+            <p>Top Category</p>
+            <p className="userproductivity_contents">Internet</p>
+            <p className="userproductivity_hours">14h:47m</p>
+          </div>
+        </Col>
+      </Row>
+
+      <div style={{ marginTop: "25px" }}>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <div className="devices_chartsContainer">
+              <p
+                className="devices_chartheading"
+                style={{ marginBottom: "20px" }}
+              >
+                Category Utilization
+              </p>
+              <CommonDonutChart
+                labels={["Healthy", "Overburdened"]}
+                colors={["#25a17d", "#e93b3a"]}
+                series={OverallWellness}
+                labelsfontSize="17px"
+              />
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <div className="userproductivity_topContainers">
+              <p
+                className="devices_chartheading"
+                style={{ marginBottom: "20px" }}
+              >
+                Application Usage
+              </p>
+              <ReactApexChart
+                options={barchartoptions}
+                series={barchartseries}
+                type="bar"
+                height={320}
+              />
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div style={{ marginTop: "25px" }}>
+        <Row>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <div className="userproductivity_topContainers">
+              <p
+                className="devices_chartheading"
+                style={{ marginBottom: "20px" }}
+              >
+                URL Usage
+              </p>
+              <ReactApexChart
+                options={barchartoptions}
+                series={barchartseries}
+                type="bar"
+                height={320}
+              />
+            </div>
+          </Col>
+        </Row>
+      </div>
+    </div>
+  );
+};
+
+export default Apps$Url;
