@@ -52,6 +52,14 @@
   border-color: #25a17d !important;
   color: red !important;
 }
+/* dashboardstyles */
+.dashboard_iconContainer {
+  background-color: rgba(20, 184, 166, 0.1);
+  padding: 6px;
+  border-radius: 8px;
+  color: rgb(20, 184, 166);
+}
+
 .dashboard_download_button {
   background-color: #ffffff;
   border-color: #d9d9d9;

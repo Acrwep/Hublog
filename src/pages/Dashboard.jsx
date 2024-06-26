@@ -84,7 +84,7 @@ const Dashboard = () => {
   return (
     <div className="max-sm:p-0" style={{ padding: "19px 26px" }}>
       <div className="flex justify-start items-center">
-        <div className="attendance_iconContainer">
+        <div className="dashboard_iconContainer">
           <MdDashboardCustomize size={20} className="attendance_icon" />
         </div>
         <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
@@ -114,14 +114,14 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-3 gap-8 max-sm:grid-cols-1">
         <div className=" col-span-1 p-8 shadow-lg bg-white">
-          <h5 className="mb-3">Today's Attendance</h5>
+          <h3 className="mb-3">Today's Attendance</h3>
           <hr />
           <div className="mt-10">
             <DoughnutChart />
           </div>
         </div>
         <div className=" col-span-2 shadow-lg p-12 bg-white max-sm:p-0">
-          <h5 className="mb-3 "> Attendance Trend</h5>
+          <h3 className="mb-3 "> Attendance Trend</h3>
           <div className=" h-80">
             <hr />
             <LineChart
@@ -140,14 +140,14 @@ const Dashboard = () => {
       </div>
       <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
         <div className="mt-8 col-span-1 shadow-lg p-1 bg-white max-sm:p-0">
-          <h5 className="mb-3">Most Productive Team</h5>
+          <h3 className="mb-3">Most Productive Team</h3>
           <div>
             <hr />
             <MyTable2 />
           </div>
         </div>
         <div className="mt-8 col-span-1 shadow-lg p-1 bg-white max-sm:p-0">
-          <h5 className="mb-3">Most Active Team</h5>
+          <h3 className="mb-3">Most Active Team</h3>
           <div>
             <hr />
             <MyTable />
@@ -156,14 +156,14 @@ const Dashboard = () => {
       </div>
       <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
         <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:w-full max-sm:p-0">
-          <h5 className="mb-3">Activity Trend</h5>
+          <h3 className="mb-3">Activity Trend</h3>
           <div className=" h-72">
             <hr />
             <LineCharts data={lineData1} />
           </div>
         </div>
         <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:grid-cols-1 max-sm:p-0">
-          <h5 className="mb-3">Productivity Trend</h5>
+          <h3 className="mb-3">Productivity Trend</h3>
           <div className="">
             <hr />
             <LineCharts data={lineData2} />

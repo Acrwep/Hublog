@@ -6,7 +6,7 @@ ol,
 ul,
 menu {
   list-style: revert;
-  padding: 2px 12px !important;
+  /* padding: 9px 0px !important; */
 }
 h1,
 h2,
@@ -16,6 +16,31 @@ h5,
 h6 {
   font-size: revert !important;
   font-weight: revert !important;
+}
+.ant-layout-sider .ant-layout-sider-children {
+  position: fixed;
+  top: 0;
+  overflow-y: auto;
+  width: inherit;
+  padding: 16px 4px;
+}
+.ant-menu-dark .ant-menu-item-selected {
+  background: linear-gradient(
+    to left,
+    #007bff,
+    #007bff,
+    #28a745
+  ); /* From blue-700 via-blue-700 to green-500 */
+}
+.ant-layout-sider-children {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.05);
+}
+.aside_slid .ant-layout-sider-children .ant-menu-light {
+  background-color: transparent !important;
+}
+.site-layout {
+  transition: margin-left 0.2s ease;
 }
 * {
   font-family: "Poppins", sans-serif;

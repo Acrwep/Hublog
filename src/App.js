@@ -1,6 +1,7 @@
 import "./App.css";
 import React from "react";
 import Route from "./layout/Route";
+import SidebarMenu from "./layout/SidebarMenu";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,7 +17,8 @@ function App() {
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
-          <Route />
+          {/* <Route /> */}
+          <SidebarMenu />
         </BrowserRouter>
         <ToastContainer
           position="top-right"
