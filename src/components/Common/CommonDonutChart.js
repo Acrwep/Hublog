@@ -6,6 +6,7 @@ export default function CommonDonutChart({
   colors,
   series,
   labelsfontSize,
+  style,
 }) {
   const options = {
     chart: {
@@ -63,7 +64,7 @@ export default function CommonDonutChart({
     },
   };
   return (
-    <div>
+    <div style={style}>
       <ReactApexChart
         options={options}
         series={series}

@@ -7,3 +7,31 @@
   font-weight: 600;
   margin-top: 10px;
 }
+/* productivity styles */
+.mostproductive_heading {
+  font-weight: 600;
+  font-size: 16px;
+}
+.totalproductive_timeheading {
+  font-size: 12px;
+  padding: 1px;
+}
+.totalproductive_time {
+  font-weight: 600;
+  font-size: 19px;
+  padding: 1px;
+}
+/* activites styles */
+.totalactive_timeheading {
+  padding: 1px;
+  font-size: 10px;
+}
+.totalactive_time {
+  font-weight: 600;
+  font-size: 19px;
+  padding: 1px;
+}
+.activelevel_chartContainer {
+  display: flex;
+  align-items: center;
+}

@@ -50,7 +50,7 @@ const Setting = () => {
         <div className="settings_iconContainer">
           <IoMdSettings size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+        <h2 className="allpage_mainheadings">
           Settings{" "}
           {activePage === 1
             ? "> Users & Designation"

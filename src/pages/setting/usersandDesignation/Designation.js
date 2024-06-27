@@ -126,26 +126,24 @@ export default function Designation() {
   return (
     <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={24} lg={12}>
           <CommonSearchField
             placeholder="Search designation..."
             onSearch={handleSearch}
           />
         </Col>
         <Col
-          span={12}
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            padding: "0px 9px",
-          }}
+          xs={24}
+          sm={24}
+          md={24}
+          lg={12}
+          className="designion_adduserbuttonContainer"
         >
           <button
             className="designation_addbutton"
             onClick={() => setIsModalOpen(true)}
           >
-            <IoIosAdd size={24} style={{ marginRight: "6px" }} /> Add
-            Designation
+            <IoIosAdd className="designationbutton_addicon" /> Add Designation
           </button>
         </Col>
       </Row>

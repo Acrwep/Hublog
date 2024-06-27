@@ -21,7 +21,7 @@ import { GiNotebook, GiLotus } from "react-icons/gi";
 import { CiStreamOn } from "react-icons/ci";
 import { GrMapLocation } from "react-icons/gr";
 import { VscGraphLine } from "react-icons/vsc";
-import { LiaAsteriskSolid } from "react-icons/lia";
+import { FiActivity } from "react-icons/fi";
 import { Menu } from "antd";
 
 const { SubMenu } = Menu;
@@ -66,7 +66,7 @@ const SidebarMenuList = () => {
         },
         {
           title: "Activity",
-          icon: <LiaAsteriskSolid />,
+          icon: <FiActivity />,
           path: "activity",
         },
         {

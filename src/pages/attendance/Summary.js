@@ -1,158 +1,224 @@
-import React from 'react'
-import DoughnutChart from '../../components/chart/DoughnutChart'; // Import the DoughnutChart component
-// import BarChart from '../../components/chart/BarChart'; // Import the BarChart component
-import LineChart from '../../components/chart/LineChart'; // Import the LineChart component
-import { LineCharts } from '../../components/chart/RangeChart';
+import React, { useState } from "react";
+import { Row, Col, Button, Tooltip, Progress, Flex } from "antd";
+import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonBarChart from "../../components/Common/CommonBarChart";
+import { MdRocketLaunch } from "react-icons/md";
+import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import { FiActivity } from "react-icons/fi";
+import "./styles.css";
+import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
 
 const Summary = () => {
+  const [date, setDate] = useState(new Date());
 
-    const doughnutData = {
-        labels: ['Present', 'Absent'],
-        datasets: [{ data: [75, 25] }],
-    };
+  const teamList = [{ id: 1, name: "Operation" }];
 
-    const lineData = {
-        dates: ['2024-02-01', '2024-02-02', '2024-02-03', '2024-02-04', '2024-02-05', '2024-02-06','2024-02-07',], // Sample dates
-        // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        present: [65, 59, 80, 81, 56, 55, 40],
-        absent: [35, 41, 20, 19, 44, 45, 60],
-        attendancePercentage: [],
-        averageWorkingHours: [],
-    };
+  const OverallWellness = [15, 6];
+  const TopHealthy = [10, 20, 40];
+  const TopOverburdened = [20, 40, 30];
+  const TopUnderutilized = [80, 20, 40];
 
-    const lineData1 = {
-        labels: ['2024-02-01', '2024-02-02', '2024-02-03', '2024-02-04', '2024-02-05', '2024-02-06',], // Sample dates
-        // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        // activeTime: [45, 51, 30, 30, 64, 55],
-        // idealTime: [35, 41, 20, 19, 44, 45],
+  const xasis = [
+    "SEO",
+    "External HR",
+    "Internal HR",
+    "Branch Operation",
+    "Quality",
+    "Operation",
+    "Sales",
+  ];
 
-        datasets: [
-            {
-                label: 'Active Time',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                borderColor: 'rgba(75, 192, 192, 1)',
-            },
-            {
-                label: 'Ideal Time',
-                data: [35, 41, 20, 19, 44, 45],
-                borderColor: 'rgba(0, 0, 0, 1)',
-            },
-        ],
-    };
+  const series = [
+    {
+      name: "Productive time",
+      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+    },
+    {
+      name: "Unproductive time",
+      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+    },
+    {
+      name: "Neutral",
+      data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
+    },
+  ];
 
-    const lineData2 = {
-        labels: ['2024-02-01', '2024-02-02', '2024-02-03', '2024-02-04', '2024-02-05', '2024-02-06',], // Sample dates
-        // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        // productiveTime: [45, 51, 35, 37, 64, 55],
-        // unProductiveTime: [0, 0, 0, 0, 0, 0],
-        // naturalTime: [40, 35, 30, 28, 54, 50],
-        datasets: [
-            {
-                label: 'Productive Time',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                borderColor: 'rgba(75, 192, 192, 1)',
-            },
-            {
-                label: 'UnProductive Time',
-                data: [0, 0, 0, 0, 0, 0, 0],
-                borderColor: 'rgba(0, 0, 0, 1)',
-            },
-            {
-                label: 'Natural Time',
-                data: [10, 20, 30, 40, 50, 60, 70],
-                borderColor: 'rgba(0, 0, 255, 1)',
-            },
-        ],
-    };
-    return (
-        <div className=''>
-            <div className='grid grid-cols-4 gap-8 mt-5 w-full h-24 max-sm:grid-cols-1'>
-                <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-                    <div>
-                        <p className=' text-[12px]'>Attendence %</p>
-                        <h2 className='my-2'>52.46</h2>
-                        <p className='text-[12px]'><span className='text-red-400'>3.75%</span> less then last period</p>
-                    </div>
-                    <div></div>
-                </div>
-                <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-                    <div>
-                        <p className=' text-[12px]'>Late Arrivals</p>
-                        <h2 className='my-2'>0 %</h2>
-                        <p className='text-[12px]'>same as previous day</p>
-                    </div>
-                    <div></div>
-                </div>
-                <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-                    <div>
-                        <p className=' text-[12px]'>Break Time</p>
-                        <h2 className='my-2'>145h:41:m</h2>
-                        <p className='text-[12px]'><span className='text-red-400'>57h:20m</span> less then last period</p>
-                    </div>
-                    <div></div>
-                </div>
-                <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'><div>
-                    <p className=' text-[12px]'>Working Time</p>
-                    <h2 className='my-2'>2k h:37:m</h2>
-                    <p className='text-[12px]'><span className='text-red-400'>310h:23m</span> less then last period</p>
-                </div>
-                    <div></div></div>
-            </div>
+  const barchartColors = ["#25a17d", "#e93b3a", "#94acb7"];
 
-            <div className="grid grid-cols-3 gap-8 mt-5 max-sm:grid-cols-1">
-                <div className=' col-span-1 shadow-lg p-12 bg-white'>
-                    <h5 className='mb-3'>Today's Attendance</h5>
-                    <div>
-                        <hr />
-                        <DoughnutChart data={doughnutData} />
-                    </div>
-                    {/* <div className='flex justify-center w-full mt-2'>
-                        <div className='flex' ><div className=' w-2 h-6 bg-blue-600 rounded-lg mx-2'></div>75</div>
-                        <div className='flex' ><div className=' w-2 h-6 bg-gray-600 rounded-lg mx-2'></div>25</div>
-                    </div> */}
-                </div>
-                <div className=' col-span-2 shadow-lg p-12 bg-white max-sm:p-0'>
-                    <h5 className='mb-3 '> Attendance Trend</h5>
-                    <div className=' h-80'>
-                        <hr />
-                        <LineChart data={lineData} />
-                    </div>
-                </div>
-            </div>
-            {/* <div className='grid grid-cols-2 gap-8 max-sm:grid-cols-1'>
-        <div className="mt-8 col-span-1 shadow-lg p-8 max-sm:p-0">
-          <h5 className='mb-3'>Most Productive Team</h5>
-          <div>
-            <hr />
-            <BarChart data={barData} orientation="horizontal" />
+  const onDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setDate(date); // Update the state when the date changes
+  };
+
+  const productiveTeamsItems = [
+    { id: 1, name: "INTERNAL HR", percentage: 90 },
+    { id: 2, name: "EXTERNAL HR", percentage: 85 },
+    { id: 3, name: "SEO", percentage: 75 },
+  ];
+  const nonProductiveteamsItems = [
+    { id: 1, name: "OPERATION", percentage: 30 },
+    { id: 2, name: "QUALITY", percentage: 20 },
+    { id: 3, name: "Sales", percentage: 10 },
+  ];
+  return (
+    <div>
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Productivity</p>
+            <p className="userproductivity_contents">41.69%</p>
+            <p className="userproductivity_hours">388h:49m</p>
           </div>
-        </div>
-        <div className="mt-8 col-span-1 shadow-lg p-8 max-sm:p-0">
-          <h5 className='mb-3'>Most Active Team</h5>
-          <div>
-            <hr />
-            <BarChart data={barData1} orientation="horizontal" />
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top Application</p>
+            <p className="userproductivity_contents">Chrome</p>
+            <p className="userproductivity_hours">346h:32m</p>
           </div>
-        </div>
-      </div> */}
-            <div className='grid grid-cols-2 gap-8 max-sm:grid-cols-1'>
-                <div className='mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:w-full max-sm:p-0'>
-                    <h5 className='mb-3'>Break Trend</h5>
-                    <div className=''>
-                        <hr />
-                        <LineCharts data={lineData1} />
-                    </div>
-                </div>
-                <div className='mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:grid-cols-1 max-sm:p-0'>
-                    <h5 className='mb-3'>Late Arrivals Trend</h5>
-                    <div className=''>
-                        <hr />
-                        <LineCharts data={lineData2} />
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top URL</p>
+            <p className="userproductivity_contents">
+              https://web.whatsapppppp
+            </p>
+            <p className="userproductivity_hours">174h:42m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top Category</p>
+            <p className="userproductivity_contents">Internet</p>
+            <p className="userproductivity_hours">661h:44m</p>
+          </div>
+        </Col>
+      </Row>
 
-export default Summary
+      <div style={{ marginTop: "25px" }}>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Online Time Breakdown</p>
+
+              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalactive_timeheading">Total online time</p>
+                  <p className="totalactive_time">826h 39m</p>
+                  <p className="totalactive_timeheading">For the last 7 days</p>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalactive_timeheading">Average online time</p>
+                  <p className="totalactive_time">4h 55m</p>
+                  <p className="totalactive_timeheading">Average per day</p>
+                </Col>
+              </Row>
+              <CommonDonutChart
+                labels={["Healthy", "Overburdened"]}
+                colors={["#25a17d", "#e93b3a"]}
+                series={OverallWellness}
+                labelsfontSize="15px"
+              />
+            </div>
+          </Col>
+
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Activity Level Breakdown</p>
+
+              <CommonDonutChart
+                labels={["Healthy", "Overburdened"]}
+                colors={["#25a17d", "#e93b3a"]}
+                series={OverallWellness}
+                labelsfontSize="15px"
+                style={{
+                  marginTop: "97px",
+                }}
+              />
+            </div>
+          </Col>
+
+          <Col xs={24} sm={24} md={10} lg={10}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Activity outliers</p>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "20px",
+                }}
+              >
+                <PiCellSignalHighFill
+                  color="#25a17d"
+                  size={22}
+                  style={{ marginRight: "12px" }}
+                />
+                <p className="mostproductive_heading">Most active Team(s)</p>
+              </div>
+
+              <div style={{ marginTop: "15px" }}>
+                {productiveTeamsItems.map((item) => (
+                  <Row>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Flex gap="small" vertical>
+                        <Progress percent={item.percentage} />
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "20px",
+                }}
+              >
+                <PiCellSignalLowFill
+                  color="#e93b3a"
+                  size={22}
+                  style={{ marginRight: "12px" }}
+                />
+                <p className="mostproductive_heading">Least active Team(s)</p>
+              </div>
+              <div style={{ marginTop: "15px" }}>
+                {productiveTeamsItems.map((item) => (
+                  <Row>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Flex gap="small" vertical>
+                        <Progress percent={item.percentage} />
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div style={{ marginTop: "25px" }}>
+        <div className="devices_chartsContainer">
+          <p className="devices_chartheading">Team Wise Utilization</p>
+          <CommonBarChart
+            xasis={xasis}
+            series={series}
+            colors={barchartColors}
+            timebased={true}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Summary;

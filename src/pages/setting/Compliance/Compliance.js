@@ -15,7 +15,7 @@ export default function Compliance() {
           <p className="compliance_switchNames">Screenshots Capture</p>
         </Col>
         <Col span={12} className="compliance_switchContainer">
-          <Switch />
+          <Switch size={1} />
         </Col>
       </Row>
       <Row style={{ marginBottom: "35px" }}>

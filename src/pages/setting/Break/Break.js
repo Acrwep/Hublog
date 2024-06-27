@@ -112,22 +112,21 @@ export default function Break() {
   return (
     <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={24} lg={12}>
           <CommonSearchField
             placeholder="Search break..."
             onSearch={handleSearch}
           />
         </Col>
         <Col
-          span={12}
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            padding: "0px 9px",
-          }}
+          xs={24}
+          sm={24}
+          md={24}
+          lg={12}
+          className="users_adduserbuttonContainer"
         >
           <button
-            className="designation_addbutton"
+            className="users_addbutton"
             onClick={() => setIsModalOpen(true)}
           >
             <IoIosAdd size={24} style={{ marginRight: "6px" }} /> Add Break

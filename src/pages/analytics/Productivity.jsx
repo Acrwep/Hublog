@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip } from "antd";
+import React, { useState } from "react";
+import { Row, Col, Button, Tooltip, Progress, Flex } from "antd";
 import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonDonutChart from "../../components/Common/CommonDonutChart";
 import CommonBarChart from "../../components/Common/CommonBarChart";
@@ -52,6 +53,16 @@ const Productivity = () => {
     setDate(date); // Update the state when the date changes
   };
 
+  const productiveTeamsItems = [
+    { id: 1, name: "INTERNAL HR", percentage: 90 },
+    { id: 2, name: "EXTERNAL HR", percentage: 85 },
+    { id: 3, name: "SEO", percentage: 75 },
+  ];
+  const nonProductiveteamsItems = [
+    { id: 1, name: "OPERATION", percentage: 30 },
+    { id: 2, name: "QUALITY", percentage: 20 },
+    { id: 3, name: "Sales", percentage: 10 },
+  ];
   return (
     <div className="alerts_mainContainer">
       <div className="flex">
@@ -129,12 +140,28 @@ const Productivity = () => {
 
       <div style={{ marginTop: "25px" }}>
         <Row gutter={16}>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col xs={24} sm={24} md={10} lg={10}>
             <div className="devices_chartsContainer">
               <p className="devices_chartheading">Productivity Breakdown</p>
-              <p className="devices_chartsubheading">
-                Distribution between offline and online devices.
-              </p>
+
+              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalproductive_timeheading">
+                    Total productive time
+                  </p>
+                  <p className="totalproductive_time">328h 36m</p>
+                  <p className="totalproductive_timeheading">
+                    For the last 7 days
+                  </p>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalproductive_timeheading">
+                    Average productive time
+                  </p>
+                  <p className="totalproductive_time">2h 8m</p>
+                  <p className="totalproductive_timeheading">Average per day</p>
+                </Col>
+              </Row>
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
                 colors={["#25a17d", "#e93b3a"]}
@@ -143,46 +170,69 @@ const Productivity = () => {
               />
             </div>
           </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col xs={24} sm={24} md={14} lg={14}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Top Healthy</p>
-              <p className="devices_chartsubheading">
-                Distribution between offline and online devices.
-              </p>
-              <CommonDonutChart
-                labels={["External HR", "SEO", "Quality"]}
-                colors={["#8c499c", "#f6c614", "#009ddb"]}
-                series={TopHealthy}
-                labelsfontSize="17px"
-              />
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Top Overburdened</p>
-              <p className="devices_chartsubheading">
-                Distribution between offline and online devices.
-              </p>
-              <CommonDonutChart
-                labels={["External HR", "Sales", "Quality"]}
-                colors={["#8c499c", "#d1b052", "#009ddb"]}
-                series={TopOverburdened}
-                labelsfontSize="17px"
-              />
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Top Underutilized</p>
-              <p className="devices_chartsubheading">
-                Distribution between offline and online devices.
-              </p>
-              <CommonDonutChart
-                labels={["SEO", "Quality", "Branch Operation"]}
-                colors={["#f6c614", "#009ddb", "#d470f7"]}
-                series={TopUnderutilized}
-                labelsfontSize="17px"
-              />
+              <p className="devices_chartheading">Productivity outliers</p>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "20px",
+                }}
+              >
+                <PiCellSignalHighFill
+                  color="#25a17d"
+                  size={22}
+                  style={{ marginRight: "12px" }}
+                />
+                <p className="mostproductive_heading">
+                  Most productive Team(s)
+                </p>
+              </div>
+
+              <div style={{ marginTop: "15px" }}>
+                {productiveTeamsItems.map((item) => (
+                  <Row>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Flex gap="small" vertical>
+                        <Progress percent={item.percentage} />
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "20px",
+                }}
+              >
+                <PiCellSignalLowFill
+                  color="#e93b3a"
+                  size={22}
+                  style={{ marginRight: "12px" }}
+                />
+                <p className="mostproductive_heading">
+                  Least productive Team(s)
+                </p>
+              </div>
+              <div style={{ marginTop: "15px" }}>
+                {productiveTeamsItems.map((item) => (
+                  <Row>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Flex gap="small" vertical>
+                        <Progress percent={item.percentage} />
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
             </div>
           </Col>
         </Row>

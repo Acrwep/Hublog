@@ -11,6 +11,16 @@
   color: rgb(20, 184, 166);
   background-color: rgba(20, 184, 166, 0.1);
 }
+.allpage_mainheadings {
+  font-size: 22px;
+  margin-left: 1rem;
+  font-weight: 700;
+}
+@media (min-width: 300px) and (max-width: 700px) {
+  .allpage_mainheadings {
+    font-size: 16px !important;
+  }
+}
 .settings_activelistContainer {
   align-items: center;
   background: #25a17d;
@@ -26,6 +36,16 @@
   display: flex;
   align-items: center;
 }
+@media (min-width: 375px) and (max-width: 799px) {
+  .settings_activelistContainer {
+    font-size: 12px !important;
+  }
+}
+@media (min-width: 300px) and (max-width: 374px) {
+  .settings_activelistContainer {
+    font-size: 10px !important;
+  }
+}
 .settings_inactivelistContainer {
   align-items: center;
   border-radius: 5px;
@@ -35,6 +55,16 @@
   padding: 6px 10px;
   margin-bottom: 15px;
   cursor: pointer;
+}
+@media (min-width: 375px) and (max-width: 799px) {
+  .settings_inactivelistContainer {
+    font-size: 14px !important;
+  }
+}
+@media (min-width: 300px) and (max-width: 374px) {
+  .settings_inactivelistContainer {
+    font-size: 12px !important;
+  }
 }
 .settings_inactivelistContainer:hover .settings_inactivelisttext {
   color: #25a17d;
@@ -55,6 +85,16 @@
 }
 .settinglist_columnContainer {
   padding: 16px 16px;
+}
+.users_adduserbuttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px 9px;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .users_adduserbuttonContainer {
+    justify-content: flex-start;
+  }
 }
 .users_addbutton {
   color: #fff;
@@ -100,18 +140,49 @@
   border: 1px solid rgb(226 223 239/ 1) !important;
 }
 /* designation styles */
+.designion_adduserbuttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px 9px;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .designion_adduserbuttonContainer {
+    justify-content: flex-start;
+  }
+}
+.designationbutton_addicon {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+}
+@media (min-width: 300px) and (max-width: 800px) {
+  .designationbutton_addicon {
+    width: 16px;
+    height: 16px;
+  }
+}
 .designation_addbutton {
   color: #fff;
   background-color: #25a17d;
   box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
   font-size: 14px;
   height: 32px;
-  /* width: 155px; */
   border-radius: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0px 13px;
+}
+@media (min-width: 375px) and (max-width: 800px) {
+  .designation_addbutton {
+    padding: 0px 9px;
+  }
+}
+@media (min-width: 300px) and (max-width: 374px) {
+  .designation_addbutton {
+    width: 100%;
+    font-size: 10px;
+  }
 }
 .designation_addbutton:hover {
   background-color: #009737;
@@ -228,7 +299,7 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
-@media (min-width: 320px) and (max-width: 800px) {
+@media (min-width: 320px) and (max-width: 768px) {
   .goals_hoursfieldColumn {
     margin-top: 10px;
   }
@@ -238,6 +309,16 @@
   font-weight: 500;
   font-size: 16px;
   margin-left: 12px;
+}
+@media (min-width: 376px) and (max-width: 768px) {
+  .compliance_switchNames {
+    font-size: 12px;
+  }
+}
+@media (min-width: 300px) and (max-width: 375px) {
+  .compliance_switchNames {
+    font-size: 10px;
+  }
 }
 .compliance_switchContainer {
   display: flex;

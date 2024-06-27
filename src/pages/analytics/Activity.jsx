@@ -1,102 +1,264 @@
-import React from 'react'
-import DoughnutChart from '../../components/chart/DoughnutChart';
-import { VerticalBarChart } from '../../components/chart/BarChart';
-// import LineChart from '../../components/chart/LineChart';
-import MyTable, { MyTable2 } from '../../components/table/DemoTable';
+import React, { useState } from "react";
+import { Row, Col, Button, Tooltip, Progress, Flex } from "antd";
+import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonBarChart from "../../components/Common/CommonBarChart";
+import { MdRocketLaunch } from "react-icons/md";
+import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import { FiActivity } from "react-icons/fi";
+import "./styles.css";
+import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
 
 const Activity = () => {
+  const [date, setDate] = useState(new Date());
 
-  const doughnutData = {
-    labels: ['Present', 'Absent'],
-    datasets: [{ data: [75, 25] }],
+  const teamList = [{ id: 1, name: "Operation" }];
+
+  const OverallWellness = [15, 6];
+  const TopHealthy = [10, 20, 40];
+  const TopOverburdened = [20, 40, 30];
+  const TopUnderutilized = [80, 20, 40];
+
+  const xasis = [
+    "SEO",
+    "External HR",
+    "Internal HR",
+    "Branch Operation",
+    "Quality",
+    "Operation",
+    "Sales",
+  ];
+
+  const series = [
+    {
+      name: "Productive time",
+      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+    },
+    {
+      name: "Unproductive time",
+      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+    },
+    {
+      name: "Neutral",
+      data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
+    },
+  ];
+
+  const barchartColors = ["#25a17d", "#e93b3a", "#94acb7"];
+
+  const onDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setDate(date); // Update the state when the date changes
   };
 
-
+  const productiveTeamsItems = [
+    { id: 1, name: "INTERNAL HR", percentage: 90 },
+    { id: 2, name: "EXTERNAL HR", percentage: 85 },
+    { id: 3, name: "SEO", percentage: 75 },
+  ];
+  const nonProductiveteamsItems = [
+    { id: 1, name: "OPERATION", percentage: 30 },
+    { id: 2, name: "QUALITY", percentage: 20 },
+    { id: 3, name: "Sales", percentage: 10 },
+  ];
   return (
-    <div className='p-8 max-sm:p-0'>
-      <div className='grid grid-cols-4 gap-8 mt-5 w-full h-24 max-sm:grid-cols-1'>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-          <div>
-            <p className=' text-[12px]'>Activity</p>
-            <h2 className='my-2'>52.46</h2>
-            <p className='text-[12px]'> 772h:45m</p>
-          </div>
-          <div></div>
+    <div className="alerts_mainContainer">
+      <div className="flex">
+        <div className="userdetail_iconContainer">
+          <FiActivity size={22} />
         </div>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-          <div>
-            <p className=' text-[12px]'>Top Application</p>
-            <h2 className='my-2'>Chrome</h2>
-            <p className='text-[12px]'>990h:44m</p>
-          </div>
-          <div></div>
-        </div>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'>
-          <div>
-            <p className=' text-[12px]'>Top URL</p>
-            <h2 className='my-2'>www.google.doc...</h2>
-            <p className='text-[12px]'> 145h:41:m</p>
-          </div>
-          <div></div>
-        </div>
-        <div className=' col-span-1 w-full p-3 flex justify-between shadow-lg rounded-sm'><div>
-          <p className=' text-[12px]'>Top Category</p>
-          <h2 className='my-2'>Internate</h2>
-          <p className='text-[12px]'> 310h:23m</p>
-        </div>
-        </div>
+        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+          Activity
+        </h2>
       </div>
 
-      <div className=' grid grid-cols-3 gap-8'>
-        <div className='col-span-1 block'>
-          <div className=' shadow-lg p-3 bg-white mt-8'>
-            <h5 className='mb-3'>Online Time Breakdown</h5>
-            <hr />
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "170px" }}>
+            <CommonSelectField options={teamList} placeholder="All Teams" />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
             <div>
-              <DoughnutChart data={doughnutData} />
+              {/* <CommonDatePicker onChange={onDateChange} value={date} /> */}
+              <CommonDoubleDatePicker />
             </div>
+            <Tooltip placement="top" title="Download">
+              <Button
+                className="dashboard_download_button"
+                // onClick={() => {
+                //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                // }}
+              >
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button className="dashboard_refresh_button">
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
           </div>
-          <div className=' shadow-lg p-3 bg-white mt-5'>
-            <h5 className='mb-3'>Activity Time Breakdown</h5>
-            <hr />
-            <div>
-              <DoughnutChart data={doughnutData} />
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Productivity</p>
+            <p className="userproductivity_contents">41.69%</p>
+            <p className="userproductivity_hours">388h:49m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top Application</p>
+            <p className="userproductivity_contents">Chrome</p>
+            <p className="userproductivity_hours">346h:32m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top URL</p>
+            <p className="userproductivity_contents">
+              https://web.whatsapppppp
+            </p>
+            <p className="userproductivity_hours">174h:42m</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Top Category</p>
+            <p className="userproductivity_contents">Internet</p>
+            <p className="userproductivity_hours">661h:44m</p>
+          </div>
+        </Col>
+      </Row>
+
+      <div style={{ marginTop: "25px" }}>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Online Time Breakdown</p>
+
+              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalactive_timeheading">Total online time</p>
+                  <p className="totalactive_time">826h 39m</p>
+                  <p className="totalactive_timeheading">For the last 7 days</p>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalactive_timeheading">Average online time</p>
+                  <p className="totalactive_time">4h 55m</p>
+                  <p className="totalactive_timeheading">Average per day</p>
+                </Col>
+              </Row>
+              <CommonDonutChart
+                labels={["Healthy", "Overburdened"]}
+                colors={["#25a17d", "#e93b3a"]}
+                series={OverallWellness}
+                labelsfontSize="15px"
+              />
             </div>
-          </div>
-        </div>
-        <div className='col-span-2 block-inline  w-full'>
-          <div className="m-10 shadow-lg p-8 bg-white max-sm:p-0">
-            <h5 className='mb-3'>Most Active Team</h5>
-            <div className=''>
-              <hr />
-              {/* <BarChart data={barData} orientation="horizontal" /> */}
-              <MyTable />
-            </div> 
-          </div>
-          <div className="m-10 shadow-lg p-8 bg-white max-sm:p-0">
-            <h5 className='mb-3'>Least Active Team</h5>
-            <div>
-              <hr />
-              {/* <BarChart data={barData} orientation="horizontal" /> */}
-              <MyTable2 />
+          </Col>
+
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Activity Level Breakdown</p>
+
+              <CommonDonutChart
+                labels={["Healthy", "Overburdened"]}
+                colors={["#25a17d", "#e93b3a"]}
+                series={OverallWellness}
+                labelsfontSize="15px"
+                style={{
+                  marginTop: "97px",
+                }}
+              />
             </div>
-          </div>
-        </div>
+          </Col>
+
+          <Col xs={24} sm={24} md={10} lg={10}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Activity outliers</p>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "20px",
+                }}
+              >
+                <PiCellSignalHighFill
+                  color="#25a17d"
+                  size={22}
+                  style={{ marginRight: "12px" }}
+                />
+                <p className="mostproductive_heading">Most active Team(s)</p>
+              </div>
+
+              <div style={{ marginTop: "15px" }}>
+                {productiveTeamsItems.map((item) => (
+                  <Row>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Flex gap="small" vertical>
+                        <Progress percent={item.percentage} />
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "20px",
+                }}
+              >
+                <PiCellSignalLowFill
+                  color="#e93b3a"
+                  size={22}
+                  style={{ marginRight: "12px" }}
+                />
+                <p className="mostproductive_heading">Least active Team(s)</p>
+              </div>
+              <div style={{ marginTop: "15px" }}>
+                {productiveTeamsItems.map((item) => (
+                  <Row>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <Flex gap="small" vertical>
+                        <Progress percent={item.percentage} />
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+            </div>
+          </Col>
+        </Row>
       </div>
 
-      <div>
-      <div className=' grid grid-cols-1 shadow-lg p-12 bg-white max-sm:p-0'>
-                    <h5 className='mb-3 '> Team Wise Activity Breakdown </h5>
-                    <div className=''>
-                        <hr />
-                        <VerticalBarChart />
-                        {/* <LineChart data={lineData} displayFields={['present', 'absent']} yOptions={{ type: 'logarithmic', display: false }}
-                            y1Options={{ type: 'linear', display: false, min: 0, max: 24 }} /> */}
-                    </div>
-                </div>
+      <div style={{ marginTop: "25px" }}>
+        <div className="devices_chartsContainer">
+          <p className="devices_chartheading">Team Wise Utilization</p>
+          <CommonBarChart
+            xasis={xasis}
+            series={series}
+            colors={barchartColors}
+            timebased={true}
+          />
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Activity
+export default Activity;
