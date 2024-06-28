@@ -92,34 +92,35 @@ const Project = () => {
   };
 
   return (
-    <div className="alerts_mainContainer">
+    <div className="settings_mainContainer">
       <Row>
         <Col xs={24} sm={24} md={12} lg={12}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div className="userdetail_iconContainer">
-              <TbReport size={22} />
+          <div className="settings_headingContainer">
+            <div className="settings_iconContainer">
+              <TbReport size={20} />
             </div>
-            <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-              Projects
-            </h2>
-            <CommonSelectField
-              options={statusList}
-              value={status}
-              onChange={(value) => setStatus(value)}
-              style={{ marginLeft: "16px", width: "120px" }}
-            />
+            <h2 className="allpage_mainheadings">Projects</h2>
           </div>
         </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="projects_addbuttonContainer">
-            <button
-              className="designation_addbutton"
-              onClick={() => setIsModalOpen(true)}
-            >
-              <IoIosAdd size={24} style={{ marginRight: "6px" }} />
-              Add Project
-            </button>
-          </div>
+        <Col
+          xs={24}
+          sm={24}
+          md={12}
+          lg={12}
+          className="project_adduserbuttonContainer"
+        >
+          <button
+            className="project_addbutton"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add Project
+          </button>
+        </Col>
+      </Row>
+
+      <Row style={{ marginTop: "15px" }}>
+        <Col xs={24} sm={7} md={7} lg={4}>
+          <CommonSelectField options={statusList} placeholder="Select status" />
         </Col>
       </Row>
 

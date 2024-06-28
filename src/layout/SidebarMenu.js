@@ -155,6 +155,7 @@ function SidebarMenu() {
                   md={2}
                   lg={2}
                   className="header_collapesbuttonContainer"
+                  id="header_collapesbuttonContainer"
                 >
                   <Button
                     type="text"

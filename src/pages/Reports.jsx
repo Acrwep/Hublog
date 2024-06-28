@@ -15,12 +15,10 @@ const Reports = () => {
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
-        <div className="userdetail_iconContainer">
-          <TbReport size={22} />
+        <div className="settings_iconContainer">
+          <TbReport size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Reports
-        </h2>
+        <h2 className="allpage_mainheadings">Reports</h2>
       </div>
 
       <div style={{ marginTop: "20px" }}>

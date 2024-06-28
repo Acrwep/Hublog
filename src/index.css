@@ -6,6 +6,7 @@ ol,
 ul,
 menu {
   list-style: revert;
+  padding: revert;
   /* padding: 9px 0px !important; */
 }
 h1,

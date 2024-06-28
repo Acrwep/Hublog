@@ -21,14 +21,14 @@
   align-items: center;
 }
 .dashboard_download_button:hover {
-  border-color: #a18aff !important;
+  border-color: #009737 !important;
 }
 .dashboard_download_button:hover .download_icon {
-  color: #a18aff !important;
+  color: #009737 !important;
 }
 .dashboard_refresh_button {
   background-color: #ffffff;
-  border-color: #7b61ff;
+  border-color: #25a17d;
   height: 32px;
   padding: 4px 15px;
   border-radius: 6px;
@@ -39,13 +39,13 @@
   align-items: center;
 }
 .dashboard_refresh_button:hover {
-  border-color: #a18aff !important;
+  border-color: #009737 !important;
 }
 .refresh_icon {
-  color: #7b61ff !important;
+  color: #25a17d !important;
 }
 .dashboard_refresh_button:hover .refresh_icon {
-  color: #a18aff !important;
+  color: #009737 !important;
 }
 /* reports styles */
 .reports_headings {
@@ -167,6 +167,11 @@
   font-size: 17px;
   margin-top: 12px;
 }
+@media (min-width: 300px) and (max-width: 767px) {
+  .reports_cardheading {
+    font-size: 14px;
+  }
+}
 .reports_cardcontent {
   color: #bbc0c1;
   font-size: 13px;
@@ -189,9 +194,50 @@
 .projecttable_Container {
   margin-top: 30px;
 }
+.project_adduserbuttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0px 9px;
+}
+@media (min-width: 300px) and (max-width: 767px) {
+  .project_adduserbuttonContainer {
+    justify-content: flex-start;
+  }
+}
+.project_addbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 120px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
+@media (min-width: 300px) and (max-width: 767px) {
+  .project_addbutton {
+    margin-top: 15px;
+  }
+}
+.project_addbutton:hover {
+  background-color: #009737;
+}
+.project_addbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
 /* alerts styles */
 .alerts_mainContainer {
   padding: 19px 26px;
+}
+.alerts_calendarContainer {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: flex-end;
 }
 /* notebook styles */
 .notebook_heading {
@@ -207,6 +253,25 @@
   border-top: 0.2px solid #d9d9d9 !important;
   border-left: 0.2px solid #d9d9d9 !important;
   border-right: 0.2px solid #d9d9d9 !important;
+}
+.reactquillnotebook {
+  height: 240px;
+  margin-bottom: 60px;
+}
+@media (min-width: 260px) and (max-width: 322px) {
+  .reactquillnotebook {
+    margin-bottom: 225px;
+  }
+}
+@media (min-width: 322px) and (max-width: 375px) {
+  .reactquillnotebook {
+    margin-bottom: 152px;
+  }
+}
+@media (min-width: 376px) and (max-width: 767px) {
+  .reactquillnotebook {
+    margin-bottom: 130px;
+  }
 }
 .notebook_savebutton {
   color: #fff;

@@ -96,7 +96,7 @@ const Notebook = () => {
   };
 
   const handleEdit = (note, index) => {
-    const container = document.getElementById("navbarmain_container");
+    const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
 
     setText(note.notes);
@@ -144,14 +144,12 @@ const Notebook = () => {
     setText("");
   };
   return (
-    <div className="alerts_mainContainer" id="alerts_mainContainer">
-      <div className="flex">
-        <div className="userdetail_iconContainer">
-          <CgNotes size={22} />
+    <div className="settings_mainContainer">
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <CgNotes size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Notebook
-        </h2>
+        <h2 className="allpage_mainheadings">Notebook</h2>
       </div>
 
       <div>
@@ -170,7 +168,7 @@ const Notebook = () => {
             value={text}
             placeholder="write your content ...."
             onChange={handleProcedureContentChange}
-            style={{ height: "220px", marginBottom: "60px" }}
+            className="reactquillnotebook"
           />
         </div>
 

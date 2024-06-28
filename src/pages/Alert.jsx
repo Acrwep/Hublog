@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BiSolidBell } from "react-icons/bi";
-import { Button, Tooltip } from "antd";
+import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../components/Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../components/Common/CommonTable";
@@ -78,21 +78,23 @@ const Alert = () => {
   };
 
   return (
-    <div className="alerts_mainContainer">
-      <div className="flex">
-        <div className="userdetail_iconContainer">
-          <BiSolidBell size={22} />
+    <div className="settings_mainContainer">
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <BiSolidBell size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Alerts
-        </h2>
+        <h2 className="allpage_mainheadings">Alerts</h2>
       </div>
 
-      <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
-        <div className="flex justify-end items-center h-20 w-full max-sm:flex-col">
-          <div>
-            <CommonDatePicker onChange={onDateChange} value={date} />
-          </div>
+      <Row style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Col
+          xs={24}
+          sm={24}
+          md={10}
+          lg={10}
+          className="alerts_calendarContainer"
+        >
+          <CommonDatePicker onChange={onDateChange} value={date} />
           <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"
@@ -108,9 +110,8 @@ const Alert = () => {
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>
-        </div>
-      </div>
-
+        </Col>
+      </Row>
       <CommonTable
         columns={columns}
         dataSource={data}
