@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
 import CommonTable from "../../components/Common/CommonTable";
+import CommonDonutChart from "../../components/Common/CommonDonutChart";
 import ReactApexChart from "react-apexcharts";
 import "./styles.css";
 
@@ -55,74 +56,7 @@ export default function UserProductivity() {
     },
   ]);
 
-  const convertTimeToMinutes = (timeStr) => {
-    const [hours, minutes] = timeStr.split(":").map((time) => parseInt(time));
-    return hours * 60 + minutes;
-  };
-
-  // Convert total minutes back to hours and minutes
-  const convertMinutesToTime = (totalMinutes) => {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    return `${hours}h:${minutes}m`;
-  };
-
-  const ProductiveTime = "17h:51m";
-  const UnproductiveTime = "01h:01m";
-
-  const productiveTimeInMinutes = convertTimeToMinutes(ProductiveTime);
-  const unproductiveTimeInMinutes = convertTimeToMinutes(UnproductiveTime);
-  const totalTimeInMinutes =
-    productiveTimeInMinutes + unproductiveTimeInMinutes;
-  const totalTimeFormatted = convertMinutesToTime(totalTimeInMinutes);
-
-  const options = {
-    chart: {
-      type: "donut",
-    },
-    labels: ["Productive time", "Unproductive time"],
-    colors: ["#25a17d", "#7A7D7C"], // Green and Gray colors
-    plotOptions: {
-      pie: {
-        donut: {
-          size: "75%",
-          labels: {
-            show: true,
-            total: {
-              showAlways: false,
-              show: true,
-              formatter: function () {
-                return totalTimeFormatted;
-              },
-              style: {
-                fontWeight: 600, // Increase font weight
-                fontSize: "19px",
-              },
-            },
-          },
-        },
-      },
-    },
-    tooltip: {
-      enabled: true,
-      y: {
-        formatter: function (val) {
-          const hours = Math.floor(val / 60);
-          const minutes = val % 60;
-          return `${hours}h:${minutes}m`;
-        },
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      show: true,
-      position: "bottom",
-    },
-  };
-
-  const series = [productiveTimeInMinutes, unproductiveTimeInMinutes];
+  const series = [2.72, 3.0];
 
   return (
     <div>
@@ -152,26 +86,26 @@ export default function UserProductivity() {
 
       <div className="userproductivity_chartContainer">
         <p className="userproductivity_chartheading">Productivity Breakdown</p>
-        <div
-          style={{ display: "flex", marginTop: "20px", marginBottom: "20px" }}
-        >
-          <div style={{ flexDirection: "column" }}>
-            <p>Total productive time</p>
-            <p style={{ fontWeight: "600", fontSize: "19px" }}>17h 51m</p>
-            <p>For the last 7 days</p>
-          </div>
-
-          <div style={{ flexDirection: "column", marginLeft: "20px" }}>
-            <p>Average productive time</p>
-            <p style={{ fontWeight: "600", fontSize: "19px" }}>2h 51m</p>
-            <p>Average per day</p>
-          </div>
-        </div>
-        <ReactApexChart
-          options={options}
+        <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+          <Col xs={24} sm={24} md={24} lg={6}>
+            <p className="totalproductive_timeheading">Total productive time</p>
+            <p className="totalproductive_time">328h 36m</p>
+            <p className="totalproductive_timeheading">For the last 7 days</p>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={18}>
+            <p className="totalproductive_timeheading">
+              Average productive time
+            </p>
+            <p className="totalproductive_time">2h 8m</p>
+            <p className="totalproductive_timeheading">Average per day</p>
+          </Col>
+        </Row>
+        <CommonDonutChart
+          labels={["Productive time", "Unproductive time"]}
+          colors={["#25a17d", "#7A7D7C"]}
           series={series}
-          type="donut"
-          height={320}
+          timebased={true}
+          labelsfontSize="14px"
         />
       </div>
 

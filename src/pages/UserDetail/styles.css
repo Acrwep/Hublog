@@ -8,8 +8,32 @@
   color: rgb(20, 184, 166);
   background-color: rgba(20, 184, 166, 0.1);
 }
+@media (min-width: 300px) and (max-width: 424px) {
+  .userdetail_usermail {
+    font-size: 12px;
+  }
+}
 .userdetail_userselectContainer {
   margin: 14px 0px;
+}
+.userdetail_userselectfield {
+  width: 190px;
+}
+@media (min-width: 300px) and (max-width: 375px) {
+  .userdetail_userselectfield {
+    width: 100%;
+  }
+}
+.usersdetail_calendarContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .usersdetail_calendarContainer {
+    justify-content: flex-start;
+    margin-top: 0px;
+  }
 }
 .userdetail_profileContainer {
   display: flex;

@@ -11,10 +11,11 @@ export default function CommonSelectField({
   mandatory,
   mode,
   placeholder,
+  className,
   style,
 }) {
   return (
-    <div style={style}>
+    <div style={style} className={className}>
       <div style={{ display: "flex" }}>
         <label className="commonfield_label">{label}</label>
         {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}

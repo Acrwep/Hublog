@@ -220,6 +220,15 @@
   gap: 16px;
   padding: 24px;
 }
+.totalcreatedteam_text {
+  font-weight: 600;
+  font-size: 17px;
+}
+@media (min-width: 300px) and (max-width: 767px) {
+  .totalcreatedteam_text {
+    margin-bottom: 15px;
+  }
+}
 .team_list_litag {
   font-size: 16px;
   margin-top: 9px;
@@ -260,6 +269,29 @@
   font-weight: 700;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+.teammember_email {
+  margin-bottom: 0px;
+}
+@media (min-width: 300px) and (max-width: 767px) {
+  .teammember_email {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis !important;
+  }
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .team_tabmain_container {
+    margin-top: 20px;
+  }
+}
+.team_searchbarcontainer {
+  padding: 0px 16px;
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .settings_teamsearchbar {
+    width: 100% !important;
+  }
 }
 /* break styles */
 .breakstatus_container {

@@ -81,10 +81,58 @@ export default function TeamMember() {
           return (
             <div style={{ marginTop: "20px" }}>
               <Row className="team_memberrowContainer">
-                <Col span={18}>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={3}
+                  lg={3}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Avatar
+                    size={32}
+                    className="temmember_nameavatar"
+                    style={{
+                      backgroundColor: nameColors,
+                      marginRight: "16px",
+                      color: veryDarkTextColor,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {getInitials(item.name)}
+                  </Avatar>
+                </Col>
+                <Col xs={24} sm={24} md={17} lg={17}>
+                  <p style={{ fontWeight: "500" }}>{item.name}</p>
+                  <p className="teammember_email">{item.email}</p>
+                </Col>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={4}
+                  lg={4}
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Space direction="vertical">
+                    <Space wrap>
+                      <Dropdown
+                        menu={{
+                          items,
+                        }}
+                        placement="bottomLeft"
+                        arrow
+                      >
+                        <button style={{ marginTop: "4px" }}>
+                          <BsThreeDotsVertical size={19} />
+                        </button>
+                      </Dropdown>
+                    </Space>
+                  </Space>
+                </Col>
+                {/* <Col xs={24} sm={24} md={18} lg={18}>
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
                       size={32}
+                      className="temmember_nameavatar"
                       style={{
                         backgroundColor: nameColors,
                         marginRight: "16px",
@@ -96,12 +144,15 @@ export default function TeamMember() {
                     </Avatar>
                     <div>
                       <p style={{ fontWeight: "500" }}>{item.name}</p>
-                      <p style={{ marginBottom: "0px" }}>{item.email}</p>
+                      <p className="teammember_email">{item.email}</p>
                     </div>
                   </div>
                 </Col>
                 <Col
-                  span={6}
+                  xs={24}
+                  sm={24}
+                  md={6}
+                  lg={6}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -123,7 +174,7 @@ export default function TeamMember() {
                       </Dropdown>
                     </Space>
                   </Space>
-                </Col>
+                </Col> */}
               </Row>
             </div>
           );

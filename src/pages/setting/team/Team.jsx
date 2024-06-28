@@ -144,18 +144,15 @@ const Team = () => {
 
     <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col span={12}>
-          <p style={{ fontWeight: "600", fontSize: "17px" }}>
-            Total Created Teams
-          </p>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <p className="totalcreatedteam_text">Total Created Teams</p>
         </Col>
         <Col
-          span={12}
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            padding: "0px 9px",
-          }}
+          xs={24}
+          sm={24}
+          md={12}
+          lg={12}
+          className="users_adduserbuttonContainer"
         >
           <button
             className="users_addbutton"
@@ -168,10 +165,11 @@ const Team = () => {
 
       <Row gutter={12}>
         <Col xs={24} sm={24} md={24} lg={10} className="teamslist_card">
-          <div style={{ padding: "0px 16px" }}>
+          <div className="team_searchbarcontainer">
             <CommonSearchField
               placeholder="Search user..."
               onSearch={handleSearch}
+              className="settings_teamsearchbar"
               style={{ marginBottom: "20px" }}
             />
 

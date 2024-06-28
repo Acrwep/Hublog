@@ -46,7 +46,7 @@ const UserDetail = () => {
         <div className="userdetail_iconContainer">
           <FaUserLarge size={19} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
+        <h2 className="allpage_mainheadings">
           User Detail{" "}
           {activePage === 1
             ? "> Attendance"
@@ -69,7 +69,7 @@ const UserDetail = () => {
             <CommonSelectField
               placeholder="Select Users"
               options={usersList}
-              style={{ width: "190px" }}
+              className="userdetail_userselectfield"
             />
           </Col>
           <Col
@@ -77,11 +77,7 @@ const UserDetail = () => {
             sm={24}
             md={24}
             lg={12}
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "6px",
-            }}
+            className="usersdetail_calendarContainer"
           >
             <CommonDoubleDatePicker />
           </Col>
@@ -100,7 +96,7 @@ const UserDetail = () => {
             <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
             <div style={{ flexDirection: "column", padding: "12px" }}>
               <p className="userdetail_username">Balaji</p>
-              <p>balaji@gmail.com</p>
+              <p className="userdetail_usermail">balaji@gmail.com</p>
             </div>
           </div>
           <div className="settings_sidebarContainer">
