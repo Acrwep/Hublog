@@ -1,8 +1,7 @@
 import "./App.css";
 import React from "react";
-// import Route from "./layout/Route";
 import SidebarMenu from "./Layout/SidebarMenu";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
@@ -16,7 +15,6 @@ function App() {
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
-          {/* <Route /> */}
           <SidebarMenu />
         </BrowserRouter>
         <ToastContainer
