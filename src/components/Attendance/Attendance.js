@@ -5,8 +5,8 @@ import { TbCirclesFilled } from "react-icons/tb";
 import Summary from "./Summary";
 import AttendanceDetail from "./AddendanceDetail";
 import DateWiseAttendance from "./DateWiseAttendance";
-import CommonSelectField from "../../components/Common/CommonSelectField";
-import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
+import CommonSelectField from "../Common/CommonSelectField";
+import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import "./styles.css";
 
 const Attendance = () => {

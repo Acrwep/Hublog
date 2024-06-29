@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Tooltip } from "antd";
-import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import { FaAppStore } from "react-icons/fa";
 import ReactApexChart from "react-apexcharts";
-import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
-import CommonSelectField from "../../components/Common/CommonSelectField";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonSelectField from "../Common/CommonSelectField";
+import CommonDonutChart from "../Common/CommonDonutChart";
 
 const Apps$Url = () => {
   const [date, setDate] = useState(new Date());

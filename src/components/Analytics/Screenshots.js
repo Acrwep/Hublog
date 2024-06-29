@@ -1,23 +1,20 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import Dropdown from "../../components/dropdown/Dropdown";
+import Dropdown from "../dropdown/Dropdown";
 import { MdRefresh, MdDownload } from "react-icons/md";
-import DateRangePicker from "../../components/dateRangePicker/DatePicker";
+import DateRangePicker from "../dateRangePicker/DatePicker";
 import { DatePicker } from "antd";
 import { MdScreenshotMonitor } from "react-icons/md";
 import Avatar from "react-avatar";
-import MWService from "../../components/MWService";
-import AuthService from "../../components/AuthService";
+import MWService from "../MWService";
+import AuthService from "../AuthService";
 import moment from "moment";
-import withLogin from "../../components/withLogin";
-import Model from "../../components/model/Model";
-import { dayJs, isEmpty } from "../../components/Utils";
+import withLogin from "../withLogin";
+import Model from "../model/Model";
+import { dayJs, isEmpty } from "../Utils";
 import "./Screenshorts-styles.css";
-import {
-  getScreenShots,
-  getUsers,
-} from "../../components/APIservice.js/action";
+import { getScreenShots, getUsers } from "../APIservice.js/action";
 import { json } from "react-router-dom";
 
 const Screenshots = () => {

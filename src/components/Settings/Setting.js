@@ -20,7 +20,7 @@ import "./styles.css";
 import Break from "./Break/Break";
 import AlertRules from "./AlertRules/AlertRules";
 
-const Setting = () => {
+const Settings = () => {
   const settingsList = [
     {
       id: 1,
@@ -163,4 +163,4 @@ const Setting = () => {
   );
 };
 
-export default Setting;
+export default Settings;

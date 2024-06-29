@@ -1,0 +1,10 @@
+/* alerts styles */
+.alerts_mainContainer {
+  padding: 19px 26px;
+}
+.alerts_calendarContainer {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: flex-end;
+}

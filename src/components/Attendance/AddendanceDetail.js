@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import LineChart from "../../components/chart/LineChart";
-import Table from "../../components/table/Table";
+import LineChart from "../chart/LineChart";
+import Table from "../table/Table";
 
 const AddendanceDetail = () => {
   const [data1, setData] = useState([]);

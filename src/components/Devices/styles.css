@@ -1,0 +1,16 @@
+/* devices styles */
+.devices_chartsContainer {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  height: 100%;
+  padding: 13px 12px;
+  border-radius: 7px;
+}
+.devices_chartheading {
+  font-weight: 600;
+  font-size: 16px;
+}
+.devices_chartsubheading {
+  color: gray;
+  font-size: 12px;
+  margin-bottom: 15px;
+}

@@ -1,9 +1,9 @@
 import React from "react";
 import { PiDevicesBold } from "react-icons/pi";
 import { Col, Row } from "antd";
-import CommonDonutChart from "../components/Common/CommonDonutChart";
+import CommonDonutChart from "../Common/CommonDonutChart";
 import "./styles.css";
-import CommonTable from "../components/Common/CommonTable";
+import CommonTable from "../Common/CommonTable";
 
 const Devices = () => {
   const onlineDeviceCount = 70;

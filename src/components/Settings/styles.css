@@ -140,6 +140,18 @@
 .usertable_actionbutton:hover {
   border: 1px solid rgb(226 223 239/ 1) !important;
 }
+.users_tableeditbutton {
+  cursor: pointer;
+  color: #25a17d;
+  transition: all 0.3s ease-in;
+  margin-right: 6px;
+}
+.users_tabledeletebutton {
+  cursor: pointer;
+  color: #ff4d4f;
+  margin-right: 6px;
+  transition: all 0.3s ease-in;
+}
 /* designation styles */
 .designion_adduserbuttonContainer {
   display: flex;

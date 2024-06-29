@@ -16,6 +16,9 @@ import moment from "moment";
 import { IoIosAdd } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import CommonSearchField from "../../../components/Common/CommonSearchbar";
+import { AiOutlineEdit } from "react-icons/ai";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import Loader from "../../../components/Common/Loader";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -50,6 +53,7 @@ const Users = () => {
   ]);
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const columns = [
     { title: "Name", dataIndex: "name", key: "name", width: 150 },
@@ -69,7 +73,24 @@ const Users = () => {
         const items = [
           {
             key: "1",
-            label: <a onClick={() => console.log(record)}>Modify User</a>,
+            label: (
+              <div style={{ display: "flex" }}>
+                <AiOutlineEdit size={19} className="users_tableeditbutton" />
+                <button onClick={() => console.log(record)}>Edit</button>
+              </div>
+            ),
+          },
+          {
+            key: "2",
+            label: (
+              <div style={{ display: "flex" }}>
+                <RiDeleteBin7Line
+                  size={19}
+                  className="users_tabledeletebutton"
+                />
+                <button onClick={() => console.log(record)}>Delete</button>
+              </div>
+            ),
           },
         ];
         return (
@@ -210,6 +231,10 @@ const Users = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   }, []);
 
   const showDrawer = () => {
@@ -302,35 +327,38 @@ const Users = () => {
 
   return (
     <div>
-      <div>
-        <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-          <Col xs={24} sm={24} md={24} lg={12}>
-            <CommonSearchField
-              placeholder="Search user..."
-              onSearch={handleSearch}
-            />
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={24}
-            lg={12}
-            className="users_adduserbuttonContainer"
-          >
-            <button className="users_addbutton" onClick={showDrawer}>
-              <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add User
-            </button>
-          </Col>
-        </Row>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+            <Col xs={24} sm={24} md={24} lg={12}>
+              <CommonSearchField
+                placeholder="Search user..."
+                onSearch={handleSearch}
+              />
+            </Col>
+            <Col
+              xs={24}
+              sm={24}
+              md={24}
+              lg={12}
+              className="users_adduserbuttonContainer"
+            >
+              <button className="users_addbutton" onClick={showDrawer}>
+                <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add User
+              </button>
+            </Col>
+          </Row>
 
-        <CommonTable
-          columns={columns}
-          dataSource={dummydatas}
-          scroll={{ x: 1200 }}
-          dataPerPage={4}
-        />
-      </div>
-
+          <CommonTable
+            columns={columns}
+            dataSource={dummydatas}
+            scroll={{ x: 1200 }}
+            dataPerPage={4}
+          />
+        </div>
+      )}
       {/* user creation drawer */}
       <Drawer title="Add user" onClose={onClose} open={open} width={600}>
         <Row gutter={16}>

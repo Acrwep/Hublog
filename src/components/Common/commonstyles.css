@@ -96,3 +96,15 @@
   color: #fff;
   background: #1677ff;
 }
+/* loader styles */
+.lottieloader_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  opacity: 2 !important;
+  background-color: white;
+}
+.lottie_loader {
+  width: 200px;
+}

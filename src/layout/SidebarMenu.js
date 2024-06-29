@@ -11,22 +11,23 @@ import {
   DownOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import Login from "../components/Login/Login";
 import Dashboard from "../pages/Dashboard";
-import Attendance from "../pages/attendance/Attendance";
+import Attendance from "../components/Attendance/Attendance";
 import LiveStream from "../pages/Real Time/LiveStream";
 import Field from "../pages/Real Time/Field";
-import Timeline from "../pages/analytics/Timeline";
-import Activity from "../pages/analytics/Activity";
-import Productivity from "../pages/analytics/Productivity";
-import Screenshots from "../pages/analytics/Screenshots";
-import Wellness from "../pages/analytics/Wellness";
-import Apps$Url from "../pages/analytics/Apps$Url";
-import Devices from "../pages/Devices";
-import Alert from "../pages/Alert";
-import Reports from "../pages/Reports";
-import Project from "../pages/Project";
-import Notebook from "../pages/Notebook";
-import Setting from "../pages/setting/Setting";
+import Timeline from "../components/Analytics/Timeline";
+import Activity from "../components/Analytics/Activity";
+import Productivity from "../components/Analytics/Productivity";
+import Screenshots from "../components/Analytics/Screenshots";
+import Apps$Url from "../components/Analytics/Apps$Url";
+import Wellness from "../components/Analytics/Wellness";
+import Devices from "../components/Devices/Devices";
+import Alert from "../components/Alert/Alert";
+import Reports from "../components/Reports/Reports";
+import Projects from "../components/Projects/Project";
+import Notebook from "../components/Notebook/Notebook";
+import Settings from "../components/Settings/Setting";
 import {
   Button,
   Layout,
@@ -38,9 +39,8 @@ import {
   Row,
   Col,
 } from "antd";
-import UserDetail from "../pages/UserDetail/UserDetail";
+import UserDetail from "../components/UserDetail/UserDetail";
 import "./sidebarstyles.css";
-import Login from "../pages/Login/Login";
 const { Header, Sider, Content } = Layout;
 
 //pages
@@ -238,11 +238,11 @@ function SidebarMenu() {
                 <Route path="/devices" element={<Devices />} />
                 <Route path="/alert" element={<Alert />} />
                 <Route path="/reports" element={<Reports />} />
-                <Route path="/projects" element={<Project />} />
+                <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />
 
-                <Route path="/settings" element={<Setting />} />
+                <Route path="/settings" element={<Settings />} />
               </Routes>
             </Content>
           </Layout>

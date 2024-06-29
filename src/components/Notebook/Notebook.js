@@ -5,7 +5,7 @@ import ReactQuill from "react-quill";
 import { CgNotes } from "react-icons/cg";
 import { MdEdit, MdDelete } from "react-icons/md";
 import "./styles.css";
-import { CommonToaster } from "../components/Common/CommonToaster";
+import { CommonToaster } from "../Common/CommonToaster";
 
 const Notebook = () => {
   const [text, setText] = useState("");

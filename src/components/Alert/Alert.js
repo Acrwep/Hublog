@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { BiSolidBell } from "react-icons/bi";
 import { Row, Col, Button, Tooltip } from "antd";
-import CommonDatePicker from "../components/Common/CommonDatePicker";
+import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import CommonTable from "../components/Common/CommonTable";
-import DownloadTableAsXLSX from "../components/Common/DownloadTableAsXLSX";
+import CommonTable from "../Common/CommonTable";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 
 const Alert = () => {

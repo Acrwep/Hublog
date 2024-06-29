@@ -5,7 +5,6 @@ import SidebarMenu from "./layout/SidebarMenu";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SidebarForm from "./pages/setting/AddUser";
 import { Provider } from "react-redux";
 import { store } from "./components/Redux/store";
 

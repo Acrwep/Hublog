@@ -3,15 +3,12 @@ import { Row, Col, Modal } from "antd";
 import { TbReport } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
 import "./styles.css";
-import CommonInputField from "../components/Common/CommonInputField";
-import CommonSelectField from "../components/Common/CommonSelectField";
-import CommonTable from "../components/Common/CommonTable";
-import {
-  nameValidator,
-  selectValidator,
-} from "../components/Common/Validation";
+import CommonInputField from "../Common/CommonInputField";
+import CommonSelectField from "../Common/CommonSelectField";
+import CommonTable from "../Common/CommonTable";
+import { nameValidator, selectValidator } from "../Common/Validation";
 
-const Project = () => {
+const Projects = () => {
   const [status, setStatus] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
@@ -187,4 +184,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default Projects;
