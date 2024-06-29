@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
-import CommonTable from "../../components/Common/CommonTable";
+import CommonTable from "../../Components/Common/CommonTable";
 import ReactApexChart from "react-apexcharts";
 import "./styles.css";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 
 export default function UserActivity() {
   const columns = [

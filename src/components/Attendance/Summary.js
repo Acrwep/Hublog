@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Row, Col, Button, Tooltip, Progress, Flex } from "antd";
-import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import CommonDatePicker from "../../Components/Common/CommonDatePicker";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
-import CommonBarChart from "../../components/Common/CommonBarChart";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
+import CommonBarChart from "../../Components/Common/CommonBarChart";
 import { MdRocketLaunch } from "react-icons/md";
-import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../../Components/Common/DownloadTableAsXLSX";
 import { FiActivity } from "react-icons/fi";
 import "./styles.css";
-import CommonSelectField from "../../components/Common/CommonSelectField";
-import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
+import CommonSelectField from "../../Components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
 
 const Summary = () => {
   const [date, setDate] = useState(new Date());

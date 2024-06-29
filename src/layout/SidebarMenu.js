@@ -11,23 +11,23 @@ import {
   DownOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import Login from "../components/Login/Login";
+import Login from "../Components/Login/Login";
 import Dashboard from "../pages/Dashboard";
-import Attendance from "../components/Attendance/Attendance";
+import Attendance from "../Components/Attendance/Attendance";
 import LiveStream from "../pages/Real Time/LiveStream";
 import Field from "../pages/Real Time/Field";
-import Timeline from "../components/Analytics/Timeline";
-import Activity from "../components/Analytics/Activity";
-import Productivity from "../components/Analytics/Productivity";
-import Screenshots from "../components/Analytics/Screenshots";
-import Apps$Url from "../components/Analytics/Apps$Url";
-import Wellness from "../components/Analytics/Wellness";
-import Devices from "../components/Devices/Devices";
-import Alert from "../components/Alert/Alert";
-import Reports from "../components/Reports/Reports";
-import Projects from "../components/Projects/Project";
-import Notebook from "../components/Notebook/Notebook";
-import Settings from "../components/Settings/Setting";
+import Timeline from "../Components/Analytics/Timeline";
+import Activity from "../Components/Analytics/Activity";
+import Productivity from "../Components/Analytics/Productivity";
+import Screenshots from "../Components/Analytics/Screenshots";
+import Apps$Url from "../Components/Analytics/Apps$Url";
+import Wellness from "../Components/Analytics/Wellness";
+import Devices from "../Components/Devices/Devices";
+import Alert from "../Components/Alert/Alert";
+import Reports from "../Components/Reports/Reports";
+import Projects from "../Components/Projects/Project";
+import Notebook from "../Components/Notebook/Notebook";
+import Settings from "../Components/Settings/Setting";
 import {
   Button,
   Layout,
@@ -39,7 +39,7 @@ import {
   Row,
   Col,
 } from "antd";
-import UserDetail from "../components/UserDetail/UserDetail";
+import UserDetail from "../Components/UserDetail/UserDetail";
 import "./sidebarstyles.css";
 const { Header, Sider, Content } = Layout;
 

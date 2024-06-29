@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
 import ReactApexChart from "react-apexcharts";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import "./styles.css";
 
 export default function UserAppsUrls() {

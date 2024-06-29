@@ -1,12 +1,12 @@
 import "./App.css";
 import React from "react";
 // import Route from "./layout/Route";
-import SidebarMenu from "./layout/SidebarMenu";
+import SidebarMenu from "./Layout/SidebarMenu";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
-import { store } from "./components/Redux/store";
+import { store } from "./Components/Redux/store";
 
 function App() {
   // const accessToken = localStorage.getItem("Accesstoken");

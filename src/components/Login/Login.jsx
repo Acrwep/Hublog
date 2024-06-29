@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/images/logo-re-3.png";
 import Vector from "../../assets/images/vector.png";
 import { useNavigate } from "react-router-dom";
-import MWService from "../../components/MWService";
-import { LoginApi } from "../../components/APIservice.js/action";
+import MWService from "../../Components/MWService";
+import { LoginApi } from "../../Components/APIservice.js/action";
 import { Input, Row, Col } from "antd";
 import "./login.css";
-import { CommonToaster } from "../../components/Common/CommonToaster";
-import { emailValidator } from "../../components/Common/Validation";
-import CommonSpinner from "../../components/Common/CommonSpinner";
+import { CommonToaster } from "../../Components/Common/CommonToaster";
+import { emailValidator } from "../../Components/Common/Validation";
+import CommonSpinner from "../../Components/Common/CommonSpinner";
 
 const Login = () => {
   const [email, setEmail] = useState("");

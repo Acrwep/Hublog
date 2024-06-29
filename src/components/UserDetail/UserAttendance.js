@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Col, Row } from "antd";
-import CommonTable from "../../components/Common/CommonTable";
-import CommonMonthlyCalendar from "../../components/Common/CommonMonthlyCalendar";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonTable from "../../Components/Common/CommonTable";
+import CommonMonthlyCalendar from "../../Components/Common/CommonMonthlyCalendar";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import "./styles.css";
 
 export default function UserAttendance() {

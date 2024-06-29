@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Row, Col, Modal } from "antd";
 import { IoIosAdd } from "react-icons/io";
-import CommonSearchField from "../../../components/Common/CommonSearchbar";
+import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
-import CommonTable from "../../../components/Common/CommonTable";
-import CommonInputField from "../../../components/Common/CommonInputField";
-import { nameValidator } from "../../../components/Common/Validation";
+import CommonTable from "../../../Components/Common/CommonTable";
+import CommonInputField from "../../../Components/Common/CommonInputField";
+import { nameValidator } from "../../../Components/Common/Validation";
 
 export default function Designation() {
   const [isModalOpen, setIsModalOpen] = useState(false);

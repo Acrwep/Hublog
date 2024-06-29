@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, Row, Col, Space, Dropdown } from "antd";
-import CommonTable from "../../../components/Common/CommonTable";
-import CommonInputField from "../../../components/Common/CommonInputField";
+import CommonTable from "../../../Components/Common/CommonTable";
+import CommonInputField from "../../../Components/Common/CommonInputField";
 import "../styles.css";
-import CommonCalendar from "../../../components/Common/CommonCalendar";
-import CommonSelectField from "../../../components/Common/CommonSelectField";
+import CommonCalendar from "../../../Components/Common/CommonCalendar";
+import CommonSelectField from "../../../Components/Common/CommonSelectField";
 import {
   nameValidator,
   lastNameValidator,
   emailValidator,
   selectValidator,
   mobileValidator,
-} from "../../../components/Common/Validation";
+} from "../../../Components/Common/Validation";
 import moment from "moment";
 import { IoIosAdd } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import CommonSearchField from "../../../components/Common/CommonSearchbar";
+import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
-import Loader from "../../../components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 
 const Users = () => {
   const [data, setData] = useState([]);

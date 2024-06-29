@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Row, Col, Modal, Select, Space } from "antd";
 import { IoIosAdd } from "react-icons/io";
-import CommonSearchField from "../../../components/Common/CommonSearchbar";
+import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
-import CommonInputField from "../../../components/Common/CommonInputField";
+import CommonInputField from "../../../Components/Common/CommonInputField";
 import {
   breakTimeValidator,
   nameValidator,
-} from "../../../components/Common/Validation";
-import CommonTable from "../../../components/Common/CommonTable";
-import CommonSelectField from "../../../components/Common/CommonSelectField";
+} from "../../../Components/Common/Validation";
+import CommonTable from "../../../Components/Common/CommonTable";
+import CommonSelectField from "../../../Components/Common/CommonSelectField";
 
 export default function Break() {
   const [isModalOpen, setIsModalOpen] = useState(false);

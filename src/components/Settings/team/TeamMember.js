@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CommonSearchField from "../../../components/Common/CommonSearchbar";
+import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import { Col, Row, Avatar, Space, Dropdown } from "antd";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { searchteamMembers } from "../../../components/Redux/slice";
+import { searchteamMembers } from "../../../Components/Redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles.css";
 

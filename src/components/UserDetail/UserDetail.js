@@ -14,8 +14,8 @@ import UserWellness from "./UserWellness";
 import UserProductivity from "./UserProductivity";
 import UserActivity from "./UserActivity";
 import UserAppsUrls from "./UserApps&Urls";
-import CommonSelectField from "../../components/Common/CommonSelectField";
-import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
+import CommonSelectField from "../../Components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
 
 const UserDetail = () => {
   const usermenuList = [

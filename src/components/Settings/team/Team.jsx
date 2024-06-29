@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Tabs, Modal } from "antd";
-import CommonSearchField from "../../../components/Common/CommonSearchbar";
-import CommonInputField from "../../../components/Common/CommonInputField";
-import { nameValidator } from "../../../components/Common/Validation";
+import CommonSearchField from "../../../Components/Common/CommonSearchbar";
+import CommonInputField from "../../../Components/Common/CommonInputField";
+import { nameValidator } from "../../../Components/Common/Validation";
 import { IoIosAdd } from "react-icons/io";
 import TeamInfo from "./TeamInfo";
 import TeamMember from "./TeamMember";
-import { addteamMembers } from "../../../components/Redux/slice";
+import { addteamMembers } from "../../../Components/Redux/slice";
 import { useDispatch } from "react-redux";
 import "../styles.css";
 

@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import React from "react";
-import CommonSelectField from "../../../components/Common/CommonSelectField";
+import CommonSelectField from "../../../Components/Common/CommonSelectField";
 
 export default function TeamInfo() {
   const teamList = [

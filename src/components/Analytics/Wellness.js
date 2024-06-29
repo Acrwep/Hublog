@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Tooltip } from "antd";
-import CommonDatePicker from "../../components/Common/CommonDatePicker";
+import CommonDatePicker from "../../Components/Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
-import CommonBarChart from "../../components/Common/CommonBarChart";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
+import CommonBarChart from "../../Components/Common/CommonBarChart";
 import { GiLotus } from "react-icons/gi";
-import DownloadTableAsXLSX from "../../components/Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../../Components/Common/DownloadTableAsXLSX";
 import "./styles.css";
-import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonSelectField from "../../Components/Common/CommonSelectField";
 
 const Wellness = () => {
   const [date, setDate] = useState(new Date());

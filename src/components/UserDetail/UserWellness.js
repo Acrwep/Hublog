@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Col, Row } from "antd";
-import CommonTable from "../../components/Common/CommonTable";
+import CommonTable from "../../Components/Common/CommonTable";
 import "./styles.css";
-import CommonMonthlyCalendar from "../../components/Common/CommonMonthlyCalendar";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonMonthlyCalendar from "../../Components/Common/CommonMonthlyCalendar";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 
 export default function UserWellness() {
   const columns = [

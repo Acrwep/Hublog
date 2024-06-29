@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
-import CommonTable from "../../components/Common/CommonTable";
-import CommonDonutChart from "../../components/Common/CommonDonutChart";
+import CommonTable from "../../Components/Common/CommonTable";
+import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import ReactApexChart from "react-apexcharts";
 import "./styles.css";
 

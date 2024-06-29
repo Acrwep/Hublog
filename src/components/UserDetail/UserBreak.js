@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import CommonTable from "../../components/Common/CommonTable";
+import CommonTable from "../../Components/Common/CommonTable";
 import "./styles.css";
 
 export default function UserBreak() {

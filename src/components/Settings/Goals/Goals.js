@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col } from "antd";
-import CommonSelectField from "../../../components/Common/CommonSelectField";
-import CommonInputAfterImage from "../../../components/Common/CommonInputAfterImage";
+import CommonSelectField from "../../../Components/Common/CommonSelectField";
+import CommonInputAfterImage from "../../../Components/Common/CommonInputAfterImage";
 import "../styles.css";
 
 export default function Goals() {
