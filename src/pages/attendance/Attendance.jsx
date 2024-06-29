@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { MdRefresh, MdDownload } from "react-icons/md";
-
-import Dropdown from "../../components/dropdown/Dropdown";
-import { Button, Tooltip } from "antd";
+import { Button, Col, Row, Tooltip } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import DateRangePicker from "../../components/dateRangePicker/DatePicker";
-
 import { TbCirclesFilled } from "react-icons/tb";
 import Summary from "./Summary";
 import AttendanceDetail from "./AddendanceDetail";
 import DateWiseAttendance from "./DateWiseAttendance";
-import withLogin from "../../components/withLogin";
+import CommonSelectField from "../../components/Common/CommonSelectField";
+import CommonDoubleDatePicker from "../../components/Common/CommonDoubleDatePicker";
 import "./styles.css";
 
 const Attendance = () => {
   // Sample data for charts
   const [activePage, setActivePage] = useState(1);
+  const teamList = [{ id: 1, name: "Operation" }];
 
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
@@ -26,8 +23,53 @@ const Attendance = () => {
   }, []);
 
   return (
-    <div className="alerts_mainContainer">
-      <div className="flex justify-between items-center">
+    <div className="settings_mainContainer">
+      <Row>
+        <Col xs={24} sm={24} md={24} lg={15}>
+          <div className="settings_headingContainer">
+            <div className="settings_iconContainer">
+              <TbCirclesFilled size={20} />
+            </div>
+            <h2 className="allpage_mainheadings">Attendance</h2>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={9}>
+          <div className="summary_container">
+            <Button
+              className={
+                activePage === 1
+                  ? "attendance_activesummarybutton "
+                  : "attendance_summarybutton"
+              }
+              onClick={() => handlePageChange(1)}
+            >
+              Summary
+            </Button>
+            <Button
+              className={
+                activePage === 2
+                  ? "attendance_activesummarybutton "
+                  : "attendance_summarybutton"
+              }
+              onClick={() => handlePageChange(2)}
+            >
+              Detailed
+            </Button>
+            <Button
+              className={
+                activePage === 3
+                  ? "attendance_activesummarybutton "
+                  : "attendance_summarybutton"
+              }
+              onClick={() => handlePageChange(3)}
+            >
+              Datewise Attendance
+            </Button>
+          </div>
+        </Col>
+      </Row>
+
+      {/* <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <div className="attendance_iconContainer">
             <TbCirclesFilled size={20} />
@@ -36,86 +78,39 @@ const Attendance = () => {
             Attendance
           </h2>
         </div>
-        {/* <ul className="flex w-96 shadow-lg rounded">
-          <li
-            onClick={() => handlePageChange(1)}
-            className={`m-2 p-1 cursor-pointer ${
-              activePage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-            } rounded`}
-          >
-            Summary
-          </li>
-          <li
-            onClick={() => handlePageChange(2)}
-            className={`m-2 p-1 cursor-pointer ${
-              activePage === 2 ? "bg-blue-500 text-white" : "bg-gray-200"
-            } rounded`}
-          >
-            Detailed
-          </li>
-          <li
-            onClick={() => handlePageChange(3)}
-            className={`m-2 p-1 cursor-pointer ${
-              activePage === 3 ? "bg-blue-500 text-white" : "bg-gray-200"
-            } rounded`}
-          >
-            Datewise Attendance
-          </li>
-        </ul> */}
-
-        <div className="summary_container">
-          <Button
-            className={
-              activePage === 1
-                ? "attendance_activesummarybutton "
-                : "attendance_summarybutton"
-            }
-            onClick={() => handlePageChange(1)}
-          >
-            Summary
-          </Button>
-          <Button
-            className={
-              activePage === 2
-                ? "attendance_activesummarybutton "
-                : "attendance_summarybutton"
-            }
-            onClick={() => handlePageChange(2)}
-          >
-            Detailed
-          </Button>
-          <Button
-            className={
-              activePage === 3
-                ? "attendance_activesummarybutton "
-                : "attendance_summarybutton"
-            }
-            onClick={() => handlePageChange(3)}
-          >
-            Datewise Attendance
-          </Button>
-        </div>
-      </div>
-      <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
-        <div>
-          <Dropdown />
-        </div>
-        <div className="flex justify-end items-center h-20 w-full max-sm:flex-col">
-          <div>
-            <DateRangePicker />
+       
+      </div> */}
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "170px" }}>
+            <CommonSelectField options={teamList} placeholder="All Teams" />
           </div>
-          <Tooltip placement="top" title="Download PDF">
-            <Button className="dashboard_download_button">
-              <DownloadOutlined className="download_icon" />
-            </Button>
-          </Tooltip>
-          <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
-              <RedoOutlined className="refresh_icon" />
-            </Button>
-          </Tooltip>
-        </div>
-      </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
+            <div>
+              {/* <CommonDatePicker onChange={onDateChange} value={date} /> */}
+              <CommonDoubleDatePicker />
+            </div>
+            <Tooltip placement="top" title="Download">
+              <Button
+                className="dashboard_download_button"
+                // onClick={() => {
+                //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                // }}
+              >
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button className="dashboard_refresh_button">
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
+
       <div>
         {activePage === 1 && (
           <div>

@@ -107,14 +107,12 @@ const Devices = () => {
     },
   ];
   return (
-    <div className="alerts_mainContainer">
-      <div className="flex">
-        <div className="userdetail_iconContainer">
-          <PiDevicesBold size={22} />
+    <div className="settings_mainContainer">
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <PiDevicesBold size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Devices
-        </h2>
+        <h2 className="allpage_mainheadings">Devices</h2>
       </div>
 
       <Row gutter={16} style={{ marginTop: "20px" }}>

@@ -105,9 +105,7 @@ function SidebarMenu() {
 
   useEffect(() => {
     const handleResize = () => {
-      // setScreenWidth(window.innerWidth);
-      console.log("window widthhhhh", window.innerWidth);
-      if (window.innerWidth >= 300 && window.innerWidth <= 699) {
+      if (window.outerWidth >= 300 && window.outerWidth <= 699) {
         setCollapsed(true);
       } else {
         setCollapsed(false);

@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import teamMemberSlice from "./slice";
+import { teamMemberReducer } from "./slice";
 
 export const store = configureStore({
   devTools: true,
   reducer: {
-    teamMembers: teamMemberSlice,
+    teamMembers: teamMemberReducer,
+    // windowWidth: windowWidthReducer,
   },
 });

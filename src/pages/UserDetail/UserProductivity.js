@@ -104,7 +104,7 @@ export default function UserProductivity() {
           labels={["Productive time", "Unproductive time"]}
           colors={["#25a17d", "#7A7D7C"]}
           series={series}
-          timebased={true}
+          timebased="true"
           labelsfontSize="14px"
         />
       </div>

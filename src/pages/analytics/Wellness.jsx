@@ -52,14 +52,12 @@ const Wellness = () => {
   };
 
   return (
-    <div className="alerts_mainContainer">
-      <div className="flex">
-        <div className="userdetail_iconContainer">
-          <GiLotus size={22} />
+    <div className="settings_mainContainer">
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <GiLotus size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Wellness
-        </h2>
+        <h2 className="allpage_mainheadings">Wellness</h2>
       </div>
 
       <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
@@ -133,7 +131,7 @@ const Wellness = () => {
 
       <div style={{ marginTop: "25px" }}>
         <Row gutter={16}>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col xs={24} sm={24} md={12} lg={6}>
             <div className="devices_chartsContainer">
               <p className="devices_chartheading">Overall Wellness</p>
               <p className="devices_chartsubheading">
@@ -147,7 +145,7 @@ const Wellness = () => {
               />
             </div>
           </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col xs={24} sm={24} md={12} lg={6}>
             <div className="devices_chartsContainer">
               <p className="devices_chartheading">Top Healthy</p>
               <p className="devices_chartsubheading">
@@ -161,7 +159,7 @@ const Wellness = () => {
               />
             </div>
           </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col xs={24} sm={24} md={12} lg={6}>
             <div className="devices_chartsContainer">
               <p className="devices_chartheading">Top Overburdened</p>
               <p className="devices_chartsubheading">
@@ -175,7 +173,7 @@ const Wellness = () => {
               />
             </div>
           </Col>
-          <Col xs={24} sm={24} md={6} lg={6}>
+          <Col xs={24} sm={24} md={12} lg={6}>
             <div className="devices_chartsContainer">
               <p className="devices_chartheading">Top Underutilized</p>
               <p className="devices_chartsubheading">

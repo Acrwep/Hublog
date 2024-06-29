@@ -31,6 +31,22 @@ const teamMemberSlice = createSlice({
   },
 });
 
+// const windowWidth = "";
+// const windowWidthSlice = createSlice({
+//   name: "windowWidth",
+//   windowWidth,
+//   reducers: {
+//     storewindowWidth(state, action) {
+//       state = action.payload;
+//       return state;
+//     },
+//   },
+// });
+
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
-export default teamMemberSlice.reducer;
+// export const { storewindowWidth } = windowWidthSlice.actions;
+// export default teamMemberSlice.reducer;
+
+export const teamMemberReducer = teamMemberSlice.reducer;
+// export const windowWidthReducer = windowWidthSlice.reducer;

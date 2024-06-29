@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 import SidebarForm from "./pages/setting/AddUser";
 import { Provider } from "react-redux";
 import { store } from "./components/Redux/store";
-import Login from "./pages/Login/Login";
 
 function App() {
   // const accessToken = localStorage.getItem("Accesstoken");

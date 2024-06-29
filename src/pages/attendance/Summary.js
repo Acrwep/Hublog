@@ -213,7 +213,7 @@ const Summary = () => {
             xasis={xasis}
             series={series}
             colors={barchartColors}
-            timebased={true}
+            timebased="true"
           />
         </div>
       </div>

@@ -13,8 +13,7 @@ export default function CommonDonutChart({
 
   useEffect(() => {
     const handleResize = () => {
-      console.log("window widthhhhh", window.innerWidth);
-      if (window.innerWidth <= 375) {
+      if (window.outerWidth <= 375) {
         setMobileView(true);
       } else {
         setMobileView(false);
@@ -48,7 +47,7 @@ export default function CommonDonutChart({
               fontSize: mobileView ? "10px" : labelsfontSize,
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               formatter: function (val) {
-                if (timebased === true) {
+                if (timebased === "true") {
                   const totalHours = series.reduce((acc, val) => acc + val, 0);
                   const totalMinutes = Math.round((totalHours % 1) * 60);
                   return `${Math.floor(totalHours)} hrs ${totalMinutes} min`;
@@ -70,7 +69,7 @@ export default function CommonDonutChart({
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               fontWeight: 700, // Increase font weight
               formatter: function (val) {
-                if (timebased === true) {
+                if (timebased === "true") {
                   const hours = Math.floor(val);
                   const minutes = Math.round((val % 1) * 60);
                   return `${hours} hrs ${minutes} min`;
@@ -86,7 +85,7 @@ export default function CommonDonutChart({
       enabled: true,
       y: {
         formatter: function (val) {
-          if (timebased === true) {
+          if (timebased === "true") {
             const hours = Math.floor(val);
             const minutes = Math.round((val % 1) * 60);
             return `${hours} hrs ${minutes} min`;
@@ -104,7 +103,7 @@ export default function CommonDonutChart({
       fontFamily: "Poppins, sans-serif",
       formatter: function (seriesName, opts) {
         const value = opts.w.globals.series[opts.seriesIndex];
-        if (timebased === true) {
+        if (timebased === "true") {
           const hours = Math.floor(value);
           const minutes = Math.round((value % 1) * 60);
           return `${seriesName}: ${hours} hrs ${minutes} min`;

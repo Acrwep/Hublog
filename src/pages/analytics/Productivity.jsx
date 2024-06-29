@@ -64,14 +64,12 @@ const Productivity = () => {
     { id: 3, name: "Sales", percentage: 10 },
   ];
   return (
-    <div className="alerts_mainContainer">
-      <div className="flex">
-        <div className="userdetail_iconContainer">
-          <MdRocketLaunch size={22} />
+    <div className="settings_mainContainer">
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <MdRocketLaunch size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Productivity
-        </h2>
+        <h2 className="allpage_mainheadings">Productivity</h2>
       </div>
 
       <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
@@ -245,7 +243,7 @@ const Productivity = () => {
             xasis={xasis}
             series={series}
             colors={barchartColors}
-            timebased={true}
+            timebased="true"
           />
         </div>
       </div>

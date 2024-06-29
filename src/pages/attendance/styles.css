@@ -5,13 +5,22 @@
   border-radius: 6px;
   padding: 4px;
 }
+@media (min-width: 300px) and (max-width: 768px) {
+  .summary_container {
+    margin-top: 20px;
+  }
+}
 .attendance_summarybutton {
   margin: 0px 4px;
   border: none !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .attendance_activesummarybutton {
   background-color: white !important;
   border: none !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .attendance_summarybutton:hover {
   border: none !important;

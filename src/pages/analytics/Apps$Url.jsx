@@ -75,14 +75,12 @@ const Apps$Url = () => {
   };
 
   return (
-    <div className="alerts_mainContainer">
-      <div className="flex">
-        <div className="userdetail_iconContainer">
-          <FaAppStore size={22} />
+    <div className="settings_mainContainer">
+      <div className="settings_headingContainer">
+        <div className="settings_iconContainer">
+          <FaAppStore size={20} />
         </div>
-        <h2 className="text-xl font-bold ml-4" style={{ fontSize: "22px" }}>
-          Apps & URLs
-        </h2>
+        <h2 className="allpage_mainheadings">Apps & URLs</h2>
       </div>
 
       <Row style={{ marginTop: "20px", marginBottom: "20px" }}>

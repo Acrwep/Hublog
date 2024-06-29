@@ -38,7 +38,7 @@ const CommonBarChart = ({ colors, xasis, series, timebased }) => {
     yaxis: {
       labels: {
         formatter: function (value) {
-          if (timebased === true) {
+          if (timebased === "true") {
             const hours = Math.floor(value);
             return `${hours} hrs`;
           } else {
@@ -59,7 +59,7 @@ const CommonBarChart = ({ colors, xasis, series, timebased }) => {
     tooltip: {
       y: {
         formatter: function (val) {
-          if (timebased === true) {
+          if (timebased === "true") {
             const hours = Math.floor(val);
             const minutes = Math.round((val % 1) * 60);
             return `${hours} hrs ${minutes} min`;
