@@ -1,5 +1,14 @@
+.project_logo {
+  width: 100%;
+  padding: 12px 19px;
+}
+.sidebar_hrtag {
+  border-bottom: 0px !important;
+  border: 1.5px solid #2b2f37;
+  margin-bottom: 6px;
+}
 .sidebar_menuitems {
-  transition: all 0.3s ease-in;
+  transition: all 0.2s ease-in !important;
 }
 .sidebar_menuitems:hover {
   transform: scale(1.1);

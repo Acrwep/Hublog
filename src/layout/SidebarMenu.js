@@ -1,16 +1,27 @@
 import "../App.css";
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+  Button,
+  Layout,
+  theme,
+  Space,
+  Input,
+  Dropdown,
+  Avatar,
+  Row,
+  Col,
+} from "antd";
 import "react-toastify/dist/ReactToastify.css";
 import SidebarMenuList from "./SidebarMenuList";
 import LogoImg from "../../src/assets/images/logo-re-3.png";
-//sidebar
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DownOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+//pages
 import Login from "../Components/Login/Login";
 import Dashboard from "../pages/Dashboard";
 import Attendance from "../Components/Attendance/Attendance";
@@ -28,22 +39,10 @@ import Reports from "../Components/Reports/Reports";
 import Projects from "../Components/Projects/Project";
 import Notebook from "../Components/Notebook/Notebook";
 import Settings from "../Components/Settings/Setting";
-import {
-  Button,
-  Layout,
-  theme,
-  Space,
-  Input,
-  Dropdown,
-  Avatar,
-  Row,
-  Col,
-} from "antd";
 import UserDetail from "../Components/UserDetail/UserDetail";
 import "./sidebarstyles.css";
-const { Header, Sider, Content } = Layout;
 
-//pages
+const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
   // const accessToken = localStorage.getItem("Accesstoken");
   // console.log("Access Token:::::", accessToken);
@@ -128,14 +127,8 @@ function SidebarMenu() {
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapsed}>
             <div className="demo-logo-vertical">
-              <img
-                src={LogoImg}
-                alt="profile_image"
-                style={{
-                  width: "182px",
-                  padding: "12px 21px",
-                }}
-              />
+              <img src={LogoImg} className="project_logo" />
+              <hr className="sidebar_hrtag" />
             </div>
             <SidebarMenuList />
           </Sider>
@@ -203,9 +196,10 @@ function SidebarMenu() {
                             style={{
                               backgroundColor: "#25a17d",
                               fontWeight: "600",
+                              cursor: "pointer",
                             }}
                           >
-                            {avatarName}
+                            {/* {avatarName} */}B
                           </Avatar>
                         </Dropdown>
                       </Space>

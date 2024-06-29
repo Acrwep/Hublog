@@ -53,9 +53,22 @@
   height: 182px;
   border-top: 82px solid #009e24;
   border-bottom: 100px solid #009e24;
-  border-bottom-left-radius: 176px;
+  border-bottom-left-radius: 196px;
   border-bottom-right-radius: 00px;
   right: 0px;
+}
+
+@media (min-width: 300px) and (max-width: 1024px) {
+  .circle {
+    position: absolute;
+    width: 95px;
+    height: 92px;
+    border-top: 42px solid #009e24;
+    border-bottom: 60px solid #009e24;
+    border-bottom-left-radius: 116px;
+    border-bottom-right-radius: 00px;
+    right: 0px;
+  }
 }
 .bottom_circle {
   position: absolute;
@@ -67,6 +80,19 @@
   border-bottom-left-radius: 00px;
   left: 0px;
   bottom: 0px;
+}
+@media (min-width: 300px) and (max-width: 1024px) {
+  .bottom_circle {
+    position: absolute;
+    width: 95px;
+    height: 92px;
+    border-top: 42px solid #009ff2;
+    border-bottom: 60px solid #009ff2;
+    border-top-right-radius: 116px;
+    border-bottom-left-radius: 00px;
+    left: 0px;
+    bottom: 0px;
+  }
 }
 .login_cardContainer {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -88,10 +114,21 @@
   border-top-right-radius: 9px;
   border-bottom-right-radius: 9px;
 }
+@media (min-width: 300px) and (max-width: 767px) {
+  .login_cardrightContainer {
+    padding: 20px 30px;
+  }
+}
 .welcome_heading {
   font-weight: 600;
   font-size: 40px;
   color: white;
+}
+@media (min-width: 300px) and (max-width: 767px) {
+  .welcome_heading {
+    font-size: 20px;
+    text-align: center;
+  }
 }
 .signin_heading {
   color: #706f6fee;

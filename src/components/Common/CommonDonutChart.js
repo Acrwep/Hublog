@@ -43,6 +43,7 @@ export default function CommonDonutChart({
             total: {
               showAlways: false,
               show: true,
+              color: "#2d2d2d",
               fontWeight: 600, // Increase font weight
               fontSize: mobileView ? "10px" : labelsfontSize,
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
@@ -66,6 +67,7 @@ export default function CommonDonutChart({
             value: {
               show: true,
               fontSize: mobileView ? "10px" : labelsfontSize,
+              color: "#2d2d2d",
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               fontWeight: 700, // Increase font weight
               formatter: function (val) {
