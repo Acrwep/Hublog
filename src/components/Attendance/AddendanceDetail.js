@@ -1,76 +1,104 @@
 import React, { useState } from "react";
-import LineChart from "../chart/LineChart";
-import Table from "../table/Table";
+import CommonBarChart from "../Common/CommonBarChart";
+import "./styles.css";
+import CommonTable from "../Common/CommonTable";
 
 const AddendanceDetail = () => {
-  const [data1, setData] = useState([]);
-
-  const lineData = {
-    labels: [
-      "2024-02-01",
-      "2024-02-02",
-      "2024-02-03",
-      "2024-02-04",
-      "2024-02-05",
-      "2024-02-06",
-      "2024-02-07",
-    ], // Sample dates
-    // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    present: [65, 59, 80, 81, 56, 55, 40],
-    absent: [35, 41, 20, 19, 44, 45, 60],
-    attendance: [30, 40, 10, 20, 50],
-    averageWorkingHours: [5, 7, 1, 3, 9, 13],
-    attendancePercentage: [5, 7, 1, 3, 9, 13],
-  };
-
-  const data = [
-    {
-      employee: "John",
-      attendance: "Present",
-      workingTime: "8 hours",
-      onlineTime: "7 hours",
-      breakTime: "1 hour",
-    },
-    {
-      employee: "Alice",
-      attendance: "Absent",
-      workingTime: "0 hours",
-      onlineTime: "0 hours",
-      breakTime: "0 hours",
-    },
-    // More data...
+  const attendanceTrendsXasis = [
+    "23/06/24",
+    "24/06/24",
+    "25/06/24",
+    "26/06/24",
   ];
+
+  const attendanceTrendsSeries = [
+    { name: "Present", data: [12, 10, 20, 30] },
+    { name: "Absent", data: [5, 6, 10, 12] },
+  ];
+  const attendanceTrendsColors = ["#25a17d", "#e93b3a"];
 
   const columns = [
-    { title: "Employee", key: "employee", width: "150px" },
-    { title: "Attendance", key: "attendance", width: "150px" },
-    { title: "Working Time", key: "workingTime", width: "150px" },
-    { title: "Online Time", key: "onlineTime", width: "150px" },
-    { title: "Break Time", key: "breakTime", width: "150px" },
+    { title: "Employee", dataIndex: "employee", key: "employee", width: 140 },
+    {
+      title: "Attendance",
+      dataIndex: "attendance",
+      key: "attendance",
+      width: 120,
+    },
+    {
+      title: "Working time",
+      dataIndex: "workingtime",
+      key: "workingtime",
+      width: 140,
+    },
+    {
+      title: "Online time",
+      dataIndex: "onlinetime",
+      key: "onlinetime",
+      width: 140,
+    },
+    {
+      title: "Break time",
+      dataIndex: "breaktime",
+      key: "breaktime",
+      width: 140,
+    },
   ];
-
+  const employeeList = [
+    {
+      key: "1",
+      employee: "John Brown",
+      attendance: "4",
+      workingtime: "07h:16m",
+      onlinetime: "06h:12m",
+      breaktime: "01h:02min",
+    },
+    {
+      key: "w",
+      employee: "Balaji",
+      attendance: "6",
+      workingtime: "07h:20m",
+      onlinetime: "06h:20m",
+      breaktime: "01h:01min",
+    },
+    {
+      key: "3",
+      employee: "Rubi",
+      attendance: "6",
+      workingtime: "07h:50m",
+      onlinetime: "06h:40m",
+      breaktime: "40min",
+    },
+    {
+      key: "4",
+      employee: "Vijay",
+      attendance: "12",
+      workingtime: "07h:16m",
+      onlinetime: "06h:12m",
+      breaktime: "01h:02min",
+    },
+  ];
   return (
     <div>
-      <div className=" col-span-1 shadow-lg p-12 max-sm:p-0">
-        <h5 className="mb-3 "> Attendance Trend</h5>
-        <div className=" h-80">
-          <hr />
-          <LineChart
-            data={lineData}
-            displayFields={[
-              "present",
-              "absent",
-              "attendance",
-              "averageWorkingHours",
-            ]}
-            yOptions={{ type: "logarithmic", display: true }}
-            y1Options={{ type: "linear", display: true, min: 0, max: 24 }}
-          />
-        </div>
+      <div className="devices_chartsContainer">
+        <p className="devices_chartheading">Attendance Trends</p>
+        <CommonBarChart
+          xasis={attendanceTrendsXasis}
+          series={attendanceTrendsSeries}
+          colors={attendanceTrendsColors}
+        />
       </div>
 
-      <div>
-        <Table data={data} columns={columns} />
+      <div style={{ marginTop: "20px" }}>
+        <div className="devices_chartsContainer">
+          <p className="devices_chartheading">Employee List</p>
+          <CommonTable
+            columns={columns}
+            dataSource={employeeList}
+            scroll={{ x: 1000 }}
+            dataPerPage={4}
+          />
+        </div>
       </div>
     </div>
   );

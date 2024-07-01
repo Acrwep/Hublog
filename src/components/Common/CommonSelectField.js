@@ -16,10 +16,18 @@ export default function CommonSelectField({
 }) {
   return (
     <div style={style} className={className}>
-      <div style={{ display: "flex" }}>
-        <label className="commonfield_label">{label}</label>
-        {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}
-      </div>
+      {label ? (
+        <div style={{ display: "flex" }}>
+          <label className="commonfield_label">{label}</label>
+          {mandatory ? (
+            <p style={{ color: "red", marginLeft: "4px" }}>*</p>
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        ""
+      )}
       <Select
         className="commonSelectfield"
         style={{ width: "100%" }}

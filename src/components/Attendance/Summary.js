@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Tooltip, Progress, Flex } from "antd";
-import CommonDatePicker from "../../Components/Common/CommonDatePicker";
-import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import { Row, Col } from "antd";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import CommonBarChart from "../../Components/Common/CommonBarChart";
-import { MdRocketLaunch } from "react-icons/md";
-import DownloadTableAsXLSX from "../../Components/Common/DownloadTableAsXLSX";
-import { FiActivity } from "react-icons/fi";
 import "./styles.css";
-import CommonSelectField from "../../Components/Common/CommonSelectField";
-import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
+import ReactApexChart from "react-apexcharts";
 
 const Summary = () => {
   const [date, setDate] = useState(new Date());
@@ -22,79 +15,118 @@ const Summary = () => {
   const TopOverburdened = [20, 40, 30];
   const TopUnderutilized = [80, 20, 40];
 
-  const xasis = [
-    "SEO",
-    "External HR",
-    "Internal HR",
-    "Branch Operation",
-    "Quality",
-    "Operation",
-    "Sales",
+  const attendanceTrendsXasis = [
+    "23/06/24",
+    "24/06/24",
+    "25/06/24",
+    "26/06/24",
   ];
 
-  const series = [
-    {
-      name: "Productive time",
-      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
-    },
-    {
-      name: "Unproductive time",
-      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
-    },
-    {
-      name: "Neutral",
-      data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
-    },
+  const attendanceTrendsSeries = [
+    { name: "Present", data: [12, 10, 20, 30] },
+    { name: "Absent", data: [5, 6, 10, 12] },
   ];
+  const attendanceTrendsColors = ["#25a17d", "#e93b3a"];
 
-  const barchartColors = ["#25a17d", "#e93b3a", "#94acb7"];
+  const lateArrivalSeries = [
+    { name: "Late arrivals", data: [12, 10, 20, 30] },
+    { name: "On time arrivals", data: [5, 6, 10, 12] },
+  ];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
     setDate(date); // Update the state when the date changes
   };
 
-  const productiveTeamsItems = [
-    { id: 1, name: "INTERNAL HR", percentage: 90 },
-    { id: 2, name: "EXTERNAL HR", percentage: 85 },
-    { id: 3, name: "SEO", percentage: 75 },
-  ];
-  const nonProductiveteamsItems = [
-    { id: 1, name: "OPERATION", percentage: 30 },
-    { id: 2, name: "QUALITY", percentage: 20 },
-    { id: 3, name: "Sales", percentage: 10 },
-  ];
+  const datas = {
+    series: [
+      {
+        name: "Active Time",
+        data: [65, 59, 80, 81, 56, 55],
+      },
+    ],
+    options: {
+      chart: {
+        type: "line",
+        height: 350,
+        zoom: {
+          enabled: false,
+        },
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      xaxis: {
+        categories: [
+          "2024-02-01",
+          "2024-02-02",
+          "2024-02-03",
+          "2024-02-04",
+          "2024-02-05",
+          "2024-02-06",
+        ],
+        title: {
+          text: "",
+        },
+        labels: {
+          rotate: -45,
+        },
+      },
+      yaxis: {
+        title: {
+          text: "Time (hours)",
+        },
+        forceNiceScale: true,
+      },
+      colors: ["#25a17d", "#F44336"], // Blue for Active Time, Red for Idle Time
+      legend: {
+        position: "top",
+      },
+    },
+  };
+
   return (
     <div>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Productivity</p>
+            <p>Attendance %</p>
             <p className="userproductivity_contents">41.69%</p>
-            <p className="userproductivity_hours">388h:49m</p>
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={6} lg={6}>
-          <div className="userproductivity_topContainers">
-            <p>Top Application</p>
-            <p className="userproductivity_contents">Chrome</p>
-            <p className="userproductivity_hours">346h:32m</p>
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={6} lg={6}>
-          <div className="userproductivity_topContainers">
-            <p>Top URL</p>
-            <p className="userproductivity_contents">
-              https://web.whatsapppppp
+            <p className="userproductivity_hours">
+              <span style={{ color: "#25a17d", fontWeight: "600" }}>0.14%</span>{" "}
+              More than last period
             </p>
-            <p className="userproductivity_hours">174h:42m</p>
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top Category</p>
-            <p className="userproductivity_contents">Internet</p>
-            <p className="userproductivity_hours">661h:44m</p>
+            <p>Late Arrivals</p>
+            <p className="userproductivity_contents">0%</p>
+            <p className="userproductivity_hours">same as previous day</p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Break time</p>
+            <p className="userproductivity_contents">70h:12m</p>
+            <p className="userproductivity_hours">
+              <span style={{ color: "#25a17d", fontWeight: "600" }}>
+                82h:22m
+              </span>{" "}
+              Less than last period
+            </p>
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            <p>Working time</p>
+            <p className="userproductivity_contents">575h:04m</p>
+            <p className="userproductivity_hours">
+              <span style={{ color: "#e93b3a", fontWeight: "600" }}>
+                82h:22m
+              </span>{" "}
+              Less than last period
+            </p>{" "}
           </div>
         </Col>
       </Row>
@@ -103,22 +135,22 @@ const Summary = () => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Online Time Breakdown</p>
+              <p className="devices_chartheading">Today's Attendance</p>
 
               <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">Total online time</p>
-                  <p className="totalactive_time">826h 39m</p>
-                  <p className="totalactive_timeheading">For the last 7 days</p>
+                  <p className="totalactive_timeheading">On time arrivals</p>
+                  <p className="totalactive_time">14</p>
+                  <p className="totalactive_timeheading">100%</p>
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">Average online time</p>
-                  <p className="totalactive_time">4h 55m</p>
-                  <p className="totalactive_timeheading">Average per day</p>
+                  <p className="totalactive_timeheading">Late arrivals</p>
+                  <p className="totalactive_time">0</p>
+                  <p className="totalactive_timeheading">0%</p>
                 </Col>
               </Row>
               <CommonDonutChart
-                labels={["Healthy", "Overburdened"]}
+                labels={["Prsent", "Absent"]}
                 colors={["#25a17d", "#e93b3a"]}
                 series={OverallWellness}
                 labelsfontSize="15px"
@@ -126,87 +158,43 @@ const Summary = () => {
             </div>
           </Col>
 
-          <Col xs={24} sm={24} md={7} lg={7}>
+          <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
               <p className="devices_chartheading">Activity Level Breakdown</p>
-
-              <CommonDonutChart
-                labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#e93b3a"]}
-                series={OverallWellness}
-                labelsfontSize="15px"
-                style={{
-                  marginTop: "97px",
-                }}
+              <CommonBarChart
+                xasis={attendanceTrendsXasis}
+                series={attendanceTrendsSeries}
+                colors={attendanceTrendsColors}
               />
-            </div>
-          </Col>
-
-          <Col xs={24} sm={24} md={10} lg={10}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Activity outliers</p>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalHighFill
-                  color="#25a17d"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">Most active Team(s)</p>
-              </div>
-
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalLowFill
-                  color="#e93b3a"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">Least active Team(s)</p>
-              </div>
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
             </div>
           </Col>
         </Row>
       </div>
 
-      <div style={{ marginTop: "25px" }}>
+      <Row gutter={16} style={{ marginTop: "25px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Break Trends</p>
+            <ReactApexChart
+              options={datas.options}
+              series={datas.series}
+              type="line"
+              height={300}
+            />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Late Arrival Tendency</p>
+            <CommonBarChart
+              xasis={attendanceTrendsXasis}
+              series={lateArrivalSeries}
+              colors={["#8c489b", "#01aaee"]}
+            />
+          </div>
+        </Col>
+      </Row>
+      {/* <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
           <p className="devices_chartheading">Team Wise Utilization</p>
           <CommonBarChart
@@ -216,7 +204,7 @@ const Summary = () => {
             timebased="true"
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

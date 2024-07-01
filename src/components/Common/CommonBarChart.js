@@ -64,7 +64,7 @@ const CommonBarChart = ({ colors, xasis, series, timebased }) => {
             const minutes = Math.round((val % 1) * 60);
             return `${hours} hrs ${minutes} min`;
           }
-          return val + " %";
+          return val;
         },
       },
     },

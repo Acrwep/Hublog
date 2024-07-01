@@ -40,6 +40,7 @@ import Projects from "../Components/Projects/Project";
 import Notebook from "../Components/Notebook/Notebook";
 import Settings from "../Components/Settings/Setting";
 import UserDetail from "../Components/UserDetail/UserDetail";
+import BreakReports from "../Components/Reports/BreakReports";
 import "./sidebarstyles.css";
 
 const { Header, Sider, Content } = Layout;
@@ -232,6 +233,7 @@ function SidebarMenu() {
                 <Route path="/devices" element={<Devices />} />
                 <Route path="/alert" element={<Alert />} />
                 <Route path="/reports" element={<Reports />} />
+                <Route path="/breakreports" element={<BreakReports />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />

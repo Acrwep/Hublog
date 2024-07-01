@@ -40,9 +40,15 @@ const Users = () => {
     { id: 1, name: "Male" },
     { id: 2, name: "Female" },
   ]);
+  const [role, setRole] = useState("");
+  const [roleOptions, setRoleOptions] = useState([
+    { id: 1, name: "Frontend Developer" },
+    { id: 2, name: "Backend Developer" },
+  ]);
+  const [roleError, setRoleError] = useState("");
   const [designation, setDesignation] = useState("");
   const [designationOptions, setDesignationOptions] = useState([
-    { id: 1, name: "Developer" },
+    { id: 1, name: "Software Developer" },
     { id: 2, name: "Support" },
   ]);
   const [team, setTeam] = useState("");
@@ -242,6 +248,26 @@ const Users = () => {
   };
   const onClose = () => {
     setOpen(false);
+    setFirstName("");
+    setFirstNameError("");
+    setLastName("");
+    setLastNameError("");
+    setEmail("");
+    setEmailError("");
+    setDateOfBirth("");
+    setDateOfBirthError("");
+    setDateOfJoining("");
+    setDateOfJoiningError("");
+    setPhone("");
+    setPhoneError("");
+    setGender("");
+    setGenderError("");
+    setRole("");
+    setRoleError("");
+    setDesignation("");
+    setTeam("");
+    setTeamError("");
+    setEmployeeId("");
   };
 
   const handleDateOfBirth = (date) => {
@@ -286,6 +312,7 @@ const Users = () => {
     const dateofjoiningValidate = selectValidator(dateofJoining);
     const phoneValidate = mobileValidator(phone);
     const genderValidate = selectValidator(gender);
+    const roleValidate = selectValidator(role);
     const teamValidate = selectValidator(team);
 
     setFirstNameError(firstnameValidate);
@@ -295,6 +322,7 @@ const Users = () => {
     setDateOfJoiningError(dateofjoiningValidate);
     setPhoneError(phoneValidate);
     setGenderError(genderValidate);
+    setRoleError(roleValidate);
     setTeamError(teamValidate);
 
     if (
@@ -305,6 +333,7 @@ const Users = () => {
       dateofjoiningValidate ||
       phoneValidate ||
       genderValidate ||
+      roleValidate ||
       teamValidate
     )
       return;
@@ -453,15 +482,28 @@ const Users = () => {
           </Col>
           <Col span={12}>
             <CommonSelectField
+              label="Role"
+              onChange={(value) => {
+                setRole(value);
+                setRoleError(selectValidator(value));
+              }}
+              options={roleOptions}
+              value={role}
+              error={roleError}
+              mandatory
+            />
+          </Col>
+        </Row>
+
+        <Row gutter={16} style={{ marginTop: "20px" }}>
+          <Col span={12}>
+            <CommonSelectField
               label="Designation"
               onChange={(value) => setDesignation(value)}
               options={designationOptions}
               value={designation}
             />
           </Col>
-        </Row>
-
-        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Team"
@@ -475,6 +517,9 @@ const Users = () => {
               mandatory
             />
           </Col>
+        </Row>
+
+        <Row style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonInputField
               label="Employee Id"

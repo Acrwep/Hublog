@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
+import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FiCoffee, FiActivity } from "react-icons/fi";
 import { FaUsersLine } from "react-icons/fa6";
@@ -12,6 +13,8 @@ import { MdAccessTimeFilled, MdDynamicFeed } from "react-icons/md";
 import "./styles.css";
 
 const Reports = () => {
+  const navigation = useNavigate();
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -25,7 +28,10 @@ const Reports = () => {
         <p style={{ fontWeight: "500", color: "gray" }}>Attendance</p>
         <Row gutter={16} className="reports_rowcontainer">
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/breakreports")}
+            >
               <div className="reports_iconContainer">
                 <FiCoffee size={26} />
               </div>

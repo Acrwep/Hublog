@@ -13,7 +13,7 @@ export default function CommonDonutChart({
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.outerWidth <= 375) {
+      if (window.outerWidth <= 768) {
         setMobileView(true);
       } else {
         setMobileView(false);
@@ -45,7 +45,7 @@ export default function CommonDonutChart({
               show: true,
               color: "#2d2d2d",
               fontWeight: 600, // Increase font weight
-              fontSize: mobileView ? "10px" : labelsfontSize,
+              fontSize: mobileView ? "12px" : labelsfontSize,
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               formatter: function (val) {
                 if (timebased === "true") {
@@ -66,7 +66,7 @@ export default function CommonDonutChart({
             },
             value: {
               show: true,
-              fontSize: mobileView ? "10px" : labelsfontSize,
+              fontSize: mobileView ? "12px" : labelsfontSize,
               color: "#2d2d2d",
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               fontWeight: 700, // Increase font weight

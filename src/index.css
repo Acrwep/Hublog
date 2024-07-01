@@ -18,6 +18,8 @@ h6 {
   font-size: revert !important;
   font-weight: revert !important;
 }
+
+/* sidebar color change */
 .ant-layout-sider .ant-layout-sider-children {
   position: fixed;
   top: 0;
@@ -30,7 +32,7 @@ h6 {
     to left,
     #007bff,
     #007bff,
-    #28a745
+    #009737
   ); /* From blue-700 via-blue-700 to green-500 */
 }
 .ant-layout-sider-children {
@@ -56,6 +58,7 @@ h6 {
 .ant-switch.ant-switch-checked {
   background: #25a17d !important;
 }
+
 /* tab color change */
 .ant-tabs-ink-bar {
   border-bottom: 2px solid #25a17d;
@@ -70,6 +73,7 @@ h6 {
 .ant-tabs .ant-tabs-tab-btn:hover {
   color: #25a17d !important;
 }
+
 /* table header color */
 .ant-table-thead > tr > th {
   background-color: white !important;
@@ -94,4 +98,12 @@ h6 {
 }
 .ant-checkbox-indeterminate .ant-checkbox-inner:after {
   background-color: #25a17d !important;
+}
+
+/* pagination color change */
+.ant-pagination .ant-pagination-item-active {
+  border-color: #25a17d !important;
+}
+.ant-pagination .ant-pagination-item-active a {
+  color: #009737 !important;
 }

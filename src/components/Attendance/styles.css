@@ -1,7 +1,7 @@
 .summary_container {
   display: flex;
   justify-content: space-between;
-  background-color: #cfd8dc;
+  /* background-color: #cfd8dc; */
   border-radius: 6px;
   padding: 4px;
 }
@@ -12,32 +12,80 @@
 }
 .attendance_summarybutton {
   margin: 0px 4px;
-  border: none !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.attendance_activesummarybutton {
-  background-color: white !important;
-  border: none !important;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .attendance_summarybutton:hover {
-  border: none !important;
-  color: black !important;
-  background-color: #c3cbcf !important;
+  border-color: #25a17d !important;
+  color: #25a17d !important;
 }
-.attendance_summarybutton:active {
-  border: none !important;
-  color: black !important;
+.attendance_activesummarybutton {
+  background-color: #25a17d !important;
+  border-color: #25a17d;
+  color: white;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px 12px;
 }
 .attendance_activesummarybutton:hover {
-  border: none !important;
-  color: black !important;
+  background-color: #25a17d !important;
+  border-color: #25a17d !important;
+  color: white !important;
 }
 .attendance_iconContainer {
   background-color: rgba(20, 184, 166, 0.1);
   padding: 6px;
   border-radius: 8px;
   color: rgb(20, 184, 166);
+}
+.datewise_Container {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  height: 100%;
+  border-radius: 7px;
+}
+.datewise_presenttext {
+  padding: 13px 12px;
+  background-color: rgba(8, 199, 177, 0.212) !important;
+  color: #25a17d;
+  font-weight: 600;
+}
+.datewise_presentlistContainer {
+  padding: 13px 12px;
+}
+.presentlist_avatarContainer {
+  display: flex;
+  align-items: center;
+}
+.datewise_presentlistnames {
+  margin-left: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.datewise_presentlist_rightContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .datewise_presentlist_rightContainer {
+    margin-top: 12px;
+    justify-content: flex-start;
+  }
+}
+.datewise_inouttimeContainer {
+  display: flex;
+}
+.datewise_checkintime {
+  margin-left: 6px;
+}
+.presentname_hrtag {
+  border-bottom: 0px !important;
+  border: 1.5px solid #dbdcdd;
+}
+.datewise_absenttext {
+  padding: 13px 12px;
+  background-color: #ed323242;
+  color: #e93b3a;
+  font-weight: 600;
 }
