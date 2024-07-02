@@ -131,3 +131,39 @@
   text-align: center;
   line-height: 22px;
 }
+.reports_backContainer {
+  display: flex;
+  margin-top: 20px;
+  cursor: pointer;
+  width: 160px;
+  align-items: center;
+}
+.reports_backContainer:hover {
+  color: #25a17d;
+}
+.breakreports_calendarrowContainer {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.breakreports_calendarContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+.breakreport_employeenameContainer {
+  display: flex;
+  align-items: center;
+}
+/* dailyattendance report styles */
+.dailyreports_backContainer {
+  display: flex;
+  margin-top: 20px;
+  cursor: pointer;
+  width: 220px;
+  align-items: center;
+}
+@media (min-width: 300px) and (max-width: 425px) {
+  .dailyreports_backContainer {
+    width: 100%;
+  }
+}

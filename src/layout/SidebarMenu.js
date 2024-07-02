@@ -42,6 +42,9 @@ import Settings from "../Components/Settings/Setting";
 import UserDetail from "../Components/UserDetail/UserDetail";
 import BreakReports from "../Components/Reports/BreakReports";
 import "./sidebarstyles.css";
+import DailyAttendanceReport from "../Components/Reports/DailyAttendanceReport";
+import MonthlyAttendanceReport from "../Components/Reports/MonthlyAttendanceReport";
+import ActivityReport from "../Components/Reports/ActivityReport";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -234,6 +237,15 @@ function SidebarMenu() {
                 <Route path="/alert" element={<Alert />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/breakreports" element={<BreakReports />} />
+                <Route
+                  path="/dailyattendancereport"
+                  element={<DailyAttendanceReport />}
+                />
+                <Route
+                  path="/monthlyattendancereport"
+                  element={<MonthlyAttendanceReport />}
+                />
+                <Route path="/activityreport" element={<ActivityReport />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />

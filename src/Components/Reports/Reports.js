@@ -42,7 +42,10 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/dailyattendancereport")}
+            >
               <div className="reports_dailyiconContainer">
                 <MdAccessTimeFilled size={26} />
               </div>
@@ -54,7 +57,10 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/monthlyattendancereport")}
+            >
               <div className="reports_monthlyiconContainer">
                 <MdCalendarMonth size={26} />
               </div>
@@ -82,7 +88,10 @@ const Reports = () => {
         <p className="reports_headings">Analytics</p>
         <Row gutter={16} className="reports_rowcontainer">
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/activityreport")}
+            >
               <div className="reports_activityiconContainer">
                 <FiActivity size={26} />
               </div>
