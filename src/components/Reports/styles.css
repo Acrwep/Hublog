@@ -162,6 +162,9 @@
   width: 220px;
   align-items: center;
 }
+.dailyreports_backContainer:hover {
+  color: #25a17d;
+}
 @media (min-width: 300px) and (max-width: 425px) {
   .dailyreports_backContainer {
     width: 100%;

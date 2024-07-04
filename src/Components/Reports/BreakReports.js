@@ -66,6 +66,7 @@ const BreakReports = () => {
             "#D6DBA6",
             "#8ED1FC",
             "#EEB39C",
+            "#CDB2FD",
           ];
           const nameHash = name
             .split("")
