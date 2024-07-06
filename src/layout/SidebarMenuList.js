@@ -133,6 +133,11 @@ const SidebarMenuList = () => {
 
   useEffect(() => {
     const pathName = location.pathname.split("/")[1];
+    console.log("pathnameee", pathName);
+    if (pathName === "") {
+      setSelectedKey("dashboard");
+      return;
+    }
     setSelectedKey(pathName);
   }, [location.pathname]);
 

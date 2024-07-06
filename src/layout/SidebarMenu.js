@@ -21,30 +21,41 @@ import {
   DownOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-//pages
+//login
 import Login from "../Components/Login/Login";
+//dashboard
 import Dashboard from "../pages/Dashboard";
+//attendance
 import Attendance from "../Components/Attendance/Attendance";
-import LiveStream from "../pages/Real Time/LiveStream";
-import Field from "../pages/Real Time/Field";
+//real time
+import Field from "../Components/Real Time/Field";
+import LiveStream from "../Components/Real Time/LiveStream";
+//analytics
 import Timeline from "../Components/Analytics/Timeline";
 import Activity from "../Components/Analytics/Activity";
 import Productivity from "../Components/Analytics/Productivity";
 import Screenshots from "../Components/Analytics/Screenshots";
 import Apps$Url from "../Components/Analytics/Apps$Url";
 import Wellness from "../Components/Analytics/Wellness";
+//devices
 import Devices from "../Components/Devices/Devices";
+//aler
 import Alert from "../Components/Alert/Alert";
+//reports
 import Reports from "../Components/Reports/Reports";
-import Projects from "../Components/Projects/Project";
-import Notebook from "../Components/Notebook/Notebook";
-import Settings from "../Components/Settings/Setting";
-import UserDetail from "../Components/UserDetail/UserDetail";
 import BreakReports from "../Components/Reports/BreakReports";
-import "./sidebarstyles.css";
 import DailyAttendanceReport from "../Components/Reports/DailyAttendanceReport";
 import MonthlyAttendanceReport from "../Components/Reports/MonthlyAttendanceReport";
 import ActivityReport from "../Components/Reports/ActivityReport";
+//projects
+import Projects from "../Components/Projects/Project";
+//notebook
+import Notebook from "../Components/Notebook/Notebook";
+//userdetail
+import UserDetail from "../Components/UserDetail/UserDetail";
+//settings
+import Settings from "../Components/Settings/Setting";
+import "./sidebarstyles.css";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {

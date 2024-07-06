@@ -35,3 +35,66 @@
   display: flex;
   align-items: center;
 }
+/* screenshots styles */
+.screenshots_usersmainContainer {
+  border-radius: 6px;
+  border: 0.5px solid #e0e0e0;
+}
+.screenshots_userlistheaderContainer {
+  display: flex;
+  background-color: rgba(20, 184, 166, 0.1);
+  padding: 6px 12px;
+}
+.screenshots_userheading {
+  font-weight: 600;
+  width: 50%;
+  font-size: 12px;
+  color: gray;
+}
+.screenshot_userhrtag {
+  border-top: none;
+  border: 0.5px solid rgb(184, 184, 184);
+}
+.screenshots_usersnamemainContainer {
+  overflow-y: auto;
+  height: 65vh;
+}
+.screenshots_usersnameContainer {
+  display: flex;
+  padding: 12px 9px;
+  align-items: center;
+  cursor: pointer;
+}
+.screenshot_users_hrtag {
+  border-top: none;
+  border-bottom: 0px !important;
+  border: 0.5px solid #e0e0e0;
+}
+.screenshots_imagesContainer {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 13px 12px;
+  border-radius: 7px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.screenshots_nodatafound {
+  font-weight: 600;
+}
+.screenshot_images {
+  width: 220px;
+  border-radius: 6px;
+}
+.screenshotimage_buttonmainContainer {
+  position: absolute;
+  bottom: 8px;
+  right: 22px;
+}
+.screenshotimage_buttonContainer {
+  background-color: rgba(20, 184, 166, 0.1);
+  border-radius: 6px;
+  padding: 2px;
+  color: rgb(20, 184, 166);
+  cursor: pointer;
+}
