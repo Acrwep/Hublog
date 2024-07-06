@@ -170,3 +170,6 @@
     width: 100%;
   }
 }
+.reports_avatarname {
+  word-break: break-all;
+}

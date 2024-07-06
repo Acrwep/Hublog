@@ -2,39 +2,72 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
-import { Row, Col, Button, Tooltip } from "antd";
+import { Row, Col, Button, Tooltip, Flex, Progress } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
+import CommonAvatar from "../Common/CommonAvatar";
+import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 
 const ActivityReport = () => {
   const navigation = useNavigate();
   const [date, setDate] = useState(new Date());
   const teamList = [{ id: 1, name: "Operation" }];
+  const userList = [
+    { id: 1, name: "Balaji" },
+    { id: 2, name: "Karthick" },
+  ];
   const data = [
     {
       employee: "Balaji",
       key: "1",
-      breaktype: "Lunch",
-      breakstart: "01:00 PM",
-      breakend: "01:45 PM",
+      attendance: "0",
+      onlinetime: "00h:00m:00s",
+      activetime: "00h:00m:00s",
+      idletime: "00h:00m:00s",
+      breaktime: "00h:00m:00s",
+      keypresses: 0,
+      mouseclick: 0,
+      activity: 0,
     },
     {
       employee: "Vignesh",
       key: "2",
-      breaktype: "Morning Break",
-      breakstart: "11:00 AM",
-      breakend: "11:20 AM",
+      attendance: "0",
+      onlinetime: "00h:00m:00s",
+      activetime: "00h:00m:00s",
+      idletime: "00h:00m:00s",
+      breaktime: "00h:00m:00s",
+      keypresses: 0,
+      mouseclick: 0,
+      activity: 0,
     },
     {
       employee: "Balaji",
       key: "3",
-      breaktype: "Evening Break",
-      breakstart: "04:00 PM",
-      breakend: "04:20 PM",
+      attendance: "0",
+      onlinetime: "00h:00m:00s",
+      activetime: "00h:00m:00s",
+      idletime: "00h:00m:00s",
+      breaktime: "00h:00m:00s",
+      keypresses: 0,
+      mouseclick: 0,
+      activity: 0,
+    },
+    {
+      employee: "Divya",
+      key: "4",
+      attendance: "1",
+      onlinetime: "00h:00m:00s",
+      activetime: "00h:00m:00s",
+      idletime: "00h:00m:00s",
+      breaktime: "00h:00m:00s",
+      keypresses: 0,
+      mouseclick: 0,
+      activity: 20,
     },
   ];
 
@@ -44,24 +77,71 @@ const ActivityReport = () => {
       dataIndex: "employee",
       key: "employee",
       width: "150px",
+      fixed: "left",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarfontSize="17px" itemName={record.employee} />
+            <p className="reports_avatarname">{record.employee}</p>
+          </div>
+        );
+      },
     },
     {
-      title: "Break type",
-      dataIndex: "breaktype",
-      key: "breaktype",
+      title: "Attendance",
+      dataIndex: "attendance",
+      key: "attendance",
+      width: "120px",
+    },
+    {
+      title: "Online time",
+      dataIndex: "onlinetime",
+      key: "onlinetime",
       width: "150px",
     },
     {
-      title: "Break start",
-      dataIndex: "breakstart",
-      key: "breakstart",
+      title: "Active time",
+      dataIndex: "activetime",
+      key: "activetime",
       width: "150px",
     },
     {
-      title: "Break end",
-      dataIndex: "breakend",
-      key: "breakend",
+      title: "Idle time",
+      dataIndex: "idletime",
+      key: "idletime",
       width: "150px",
+    },
+    {
+      title: "Break time",
+      dataIndex: "breaktime",
+      key: "breaktime",
+      width: "150px",
+    },
+    {
+      title: "Key presses",
+      dataIndex: "keypresses",
+      key: "keypresses",
+      width: "150px",
+    },
+    {
+      title: "Mouse click",
+      dataIndex: "mouseclick",
+      key: "mouseclick",
+      width: "150px",
+    },
+    {
+      title: "Activity %",
+      dataIndex: "activity",
+      key: "activity",
+      width: "150px",
+      fixed: "right",
+      render: (text, record) => {
+        return (
+          <Flex gap="small" vertical>
+            <Progress percent={record.activity} />
+          </Flex>
+        );
+      },
     },
   ];
 
@@ -88,11 +168,17 @@ const ActivityReport = () => {
       </div>
       <Row className="breakreports_calendarrowContainer">
         <Col xs={24} sm={24} md={12} lg={12}>
-          <CommonSelectField
-            options={teamList}
-            placeholder="All Teams"
-            style={{ width: "170px" }}
-          />
+          <div
+            className="field_selectfielsContainer"
+            style={{ display: "flex" }}
+          >
+            <div className="field_teamselectfieldContainer">
+              <CommonSelectField options={teamList} placeholder="All Teams" />
+            </div>
+            <div style={{ width: "170px" }}>
+              <CommonSelectField options={userList} placeholder="Select User" />
+            </div>
+          </div>
         </Col>
         <Col
           xs={24}
@@ -101,7 +187,7 @@ const ActivityReport = () => {
           lg={12}
           className="breakreports_calendarContainer"
         >
-          <CommonDatePicker onChange={onDateChange} value={date} />
+          <CommonDoubleDatePicker onChange={onDateChange} value={date} />
           <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"
@@ -122,7 +208,7 @@ const ActivityReport = () => {
       <CommonTable
         columns={columns}
         dataSource={data}
-        scroll={{ x: 600 }}
+        scroll={{ x: 1200 }}
         dataPerPage={4}
       />
     </div>

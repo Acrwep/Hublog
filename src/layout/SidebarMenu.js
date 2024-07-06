@@ -40,7 +40,7 @@ import Wellness from "../Components/Analytics/Wellness";
 //devices
 import Devices from "../Components/Devices/Devices";
 //aler
-import Alert from "../Components/Alert/Alert";
+import Alerts from "../Components/Alerts/Alerts";
 //reports
 import Reports from "../Components/Reports/Reports";
 import BreakReports from "../Components/Reports/BreakReports";
@@ -245,7 +245,7 @@ function SidebarMenu() {
                 <Route path="/app$url" element={<Apps$Url />} />
 
                 <Route path="/devices" element={<Devices />} />
-                <Route path="/alert" element={<Alert />} />
+                <Route path="/alerts" element={<Alerts />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/breakreports" element={<BreakReports />} />
                 <Route

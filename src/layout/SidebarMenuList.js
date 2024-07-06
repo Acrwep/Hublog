@@ -100,9 +100,9 @@ const SidebarMenuList = () => {
       path: "devices",
     },
     6: {
-      title: "Alert",
+      title: "Alerts",
       icon: <TbBellFilled />,
-      path: "alert",
+      path: "alerts",
     },
     7: {
       title: "Reports",

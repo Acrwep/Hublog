@@ -7,7 +7,7 @@ import CommonTable from "../Common/CommonTable";
 import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 
-const Alert = () => {
+const Alerts = () => {
   const [date, setDate] = useState(new Date());
   const data = [
     {
@@ -122,4 +122,4 @@ const Alert = () => {
   );
 };
 
-export default Alert;
+export default Alerts;

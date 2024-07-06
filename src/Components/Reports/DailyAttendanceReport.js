@@ -7,6 +7,7 @@ import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import CommonAvatar from "../Common/CommonAvatar";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 
@@ -14,6 +15,10 @@ const DailyAttendanceReport = () => {
   const navigation = useNavigate();
   const [date, setDate] = useState(new Date());
   const teamList = [{ id: 1, name: "Operation" }];
+  const userList = [
+    { id: 1, name: "Balaji" },
+    { id: 2, name: "Karthick" },
+  ];
   const data = [
     {
       key: "1",
@@ -67,6 +72,14 @@ const DailyAttendanceReport = () => {
       dataIndex: "employee",
       key: "employee",
       width: "150px",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarfontSize="17px" itemName={record.employee} />
+            <p className="reports_avatarname">{record.employee}</p>
+          </div>
+        );
+      },
     },
     {
       title: "Shift",
@@ -135,11 +148,17 @@ const DailyAttendanceReport = () => {
       </div>
       <Row className="breakreports_calendarrowContainer">
         <Col xs={24} sm={24} md={12} lg={12}>
-          <CommonSelectField
-            options={teamList}
-            placeholder="All Teams"
-            style={{ width: "170px" }}
-          />
+          <div
+            className="field_selectfielsContainer"
+            style={{ display: "flex" }}
+          >
+            <div className="field_teamselectfieldContainer">
+              <CommonSelectField options={teamList} placeholder="All Teams" />
+            </div>
+            <div style={{ width: "170px" }}>
+              <CommonSelectField options={userList} placeholder="Select User" />
+            </div>
+          </div>
         </Col>
         <Col
           xs={24}
