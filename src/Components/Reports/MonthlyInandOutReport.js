@@ -13,9 +13,9 @@ import moment from "moment";
 import CommonAvatar from "../Common/CommonAvatar";
 import { dayJs } from "../Utils";
 
-const MonthlyAttendanceReport = () => {
+const MonthlyInandOutReport = () => {
   const navigation = useNavigate();
-  const [date, setDate] = useState(dayJs().subtract(1, "month"));
+  const [date, setDate] = useState(dayJs());
   const teamList = [{ id: 1, name: "Operation" }];
   const userList = [
     { id: 1, name: "Balaji" },
@@ -43,7 +43,109 @@ const MonthlyAttendanceReport = () => {
       title: date,
       dataIndex: date,
       key: date,
-      width: 100,
+      border: "1px solid gray",
+      className: "target-column-class",
+      children: [
+        {
+          title: (
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: "400",
+              }}
+            >
+              In
+            </div>
+          ),
+          dataIndex: `${date}_in`,
+          key: `${date}_in`,
+          width: 100,
+          render: (record) => {
+            if (record === "weeklyoff") {
+              return {
+                props: {
+                  style: {
+                    background: "rgb(211 47 47 / 27%)",
+                    borderRight: "none",
+                    borderBottom: "1.7px solid white",
+                    position: "relative",
+                  },
+                },
+                children: (
+                  <div>
+                    <p className="monthlyweeklyoff_text">Weekly Off</p>
+                  </div>
+                ),
+              };
+            } else if (record === undefined) {
+              return;
+            } else {
+              return {
+                props: {
+                  style: {
+                    background:
+                      record === "weeklyoff"
+                        ? "rgb(211 47 47 / 27%)"
+                        : record === ""
+                        ? "white"
+                        : "rgb(20 184 166 / 20%)",
+                    borderRight: "1px solid #d5d1d1",
+                    borderBottom: "1.7px solid white",
+                  },
+                },
+                children: (
+                  <div>
+                    <p className="monthlyInOuttime_text">{record}</p>
+                  </div>
+                ),
+              };
+            }
+          },
+        },
+        {
+          title: (
+            <div style={{ textAlign: "center", fontWeight: "400" }}>Out</div>
+          ),
+          dataIndex: `${date}_out`,
+          key: `${date}_out`,
+          width: 100,
+          render: (record) => {
+            if (record === "weeklyoff") {
+              return {
+                props: {
+                  style: {
+                    background: "rgb(211 47 47 / 27%)",
+                    borderRight: "none",
+                    borderBottom: "1.7px solid white",
+                  },
+                },
+                children: (
+                  <div>
+                    {/* <p className="monthlyInOuttime_text">{record}</p> */}
+                  </div>
+                ),
+              };
+            } else if (record === undefined) {
+              return;
+            } else {
+              return {
+                props: {
+                  style: {
+                    background: "rgb(20 184 166 / 20%)",
+                    borderRight: "1px solid #d5d1d1",
+                    borderBottom: "1.7px solid white",
+                  },
+                },
+                children: (
+                  <div>
+                    <p className="monthlyInOuttime_text">{record}</p>
+                  </div>
+                ),
+              };
+            }
+          },
+        },
+      ],
     }));
 
     return [
@@ -72,14 +174,18 @@ const MonthlyAttendanceReport = () => {
     {
       key: "1",
       employee: "John Doe",
-      "01": "3h 0m",
-      "02": "5h 0m",
+      "01_in": "09:20 AM",
+      "01_out": "06:30 PM",
+      "02_in": "weeklyoff",
+      "02_out": "weeklyoff",
     },
     {
       key: "2",
       employee: "Maxy",
-      "01": "5h 0m",
-      "02": "3h 0m",
+      "01_in": "09:14 AM",
+      "01_out": "06:40 PM",
+      "02_in": "weeklyoff",
+      "02_out": "weeklyoff",
     },
     // Add more data as necessary
   ];
@@ -104,12 +210,15 @@ const MonthlyAttendanceReport = () => {
 
   const disabledDate = (current) => {
     // Disable all future dates
-    return (
-      current &&
-      (current > dayJs().endOf("month") ||
-        (current.month() === dayJs().month() &&
-          current.year() === dayJs().year()))
-    );
+    return current && current > dayJs().endOf("month");
+  };
+
+  const handleSelectedDatas = (value) => {
+    console.log("Selected Rows", value);
+    const Ids = value.map((item) => {
+      return item.key;
+    });
+    console.log("Selected Ids", Ids);
   };
   return (
     <div className="settings_mainContainer">
@@ -125,7 +234,7 @@ const MonthlyAttendanceReport = () => {
         onClick={() => navigation("/reports")}
       >
         <FaArrowLeft size={16} />
-        <p style={{ marginLeft: "12px" }}>Monthly Attendance Report</p>
+        <p style={{ marginLeft: "12px" }}>Monthly In-Out Report</p>
       </div>
       <Row className="breakreports_calendarrowContainer">
         <Col xs={24} sm={24} md={12} lg={12}>
@@ -173,14 +282,18 @@ const MonthlyAttendanceReport = () => {
           </Tooltip>
         </Col>
       </Row>
-      <CommonTable
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 1200 }}
-        dataPerPage={4}
-      />
+      <div className="monthly-inout-report-table">
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 1200 }}
+          dataPerPage={4}
+          bordered="true"
+          checkBox="false"
+        />
+      </div>
     </div>
   );
 };
 
-export default MonthlyAttendanceReport;
+export default MonthlyInandOutReport;

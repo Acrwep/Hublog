@@ -173,3 +173,21 @@
 .reports_avatarname {
   word-break: break-all;
 }
+.monthly-inout-report-table .ant-table-thead > tr > th.date-header {
+  border-bottom: 2px solid #d9d9d9; /* Change the color and width as needed */
+}
+/* monthlyinandout styles */
+.monthlyInOuttime_text {
+  color: rgb(20, 184, 166);
+  font-weight: 600;
+}
+.monthlyweeklyoff_text {
+  position: absolute;
+  text-align: center;
+  width: 100px;
+  left: 50%;
+  z-index: 1;
+  top: 34%;
+  font-weight: 600;
+  color: #d32f2f;
+}

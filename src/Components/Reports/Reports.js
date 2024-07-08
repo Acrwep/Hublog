@@ -72,7 +72,10 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/monthlyinandoutreport")}
+            >
               <div className="reports_inouticonContainer">
                 <PiArrowsLeftRightBold size={26} />
               </div>
