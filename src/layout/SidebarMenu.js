@@ -57,6 +57,7 @@ import UserDetail from "../Components/UserDetail/UserDetail";
 import Settings from "../Components/Settings/Setting";
 import "./sidebarstyles.css";
 import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
+import AlertReport from "../Components/Reports/AlertReport";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -261,6 +262,7 @@ function SidebarMenu() {
                   path="/monthlyinandoutreport"
                   element={<MonthlyInandOutReport />}
                 />
+                <Route path="/alertreport" element={<AlertReport />} />
                 <Route path="/activityreport" element={<ActivityReport />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />

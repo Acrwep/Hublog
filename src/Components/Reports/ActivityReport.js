@@ -205,12 +205,16 @@ const ActivityReport = () => {
           </Tooltip>
         </Col>
       </Row>
-      <CommonTable
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 1200 }}
-        dataPerPage={4}
-      />
+      <div className="breakreport_tableContainer">
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 1200 }}
+          dataPerPage={4}
+          bordered="true"
+          checkBox="false"
+        />
+      </div>
     </div>
   );
 };

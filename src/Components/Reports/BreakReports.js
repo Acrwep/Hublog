@@ -138,12 +138,16 @@ const BreakReports = () => {
           </Tooltip>
         </Col>
       </Row>
-      <CommonTable
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 600 }}
-        dataPerPage={4}
-      />
+      <div className="breakreport_tableContainer">
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 600 }}
+          dataPerPage={4}
+          checkBox="false"
+          bordered="true"
+        />
+      </div>
     </div>
   );
 };

@@ -154,6 +154,7 @@ const MonthlyInandOutReport = () => {
         dataIndex: "employee",
         key: "employee",
         width: "170px",
+        fixed: "left",
         render: (text, record) => {
           return (
             <div className="breakreport_employeenameContainer">
@@ -282,7 +283,7 @@ const MonthlyInandOutReport = () => {
           </Tooltip>
         </Col>
       </Row>
-      <div className="monthly-inout-report-table">
+      <div className="breakreport_tableContainer">
         <CommonTable
           columns={columns}
           dataSource={data}

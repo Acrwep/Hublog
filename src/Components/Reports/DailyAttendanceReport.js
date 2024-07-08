@@ -71,7 +71,8 @@ const DailyAttendanceReport = () => {
       title: "Employee",
       dataIndex: "employee",
       key: "employee",
-      width: "150px",
+      width: "170px",
+      fixed: "left",
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
@@ -185,12 +186,16 @@ const DailyAttendanceReport = () => {
           </Tooltip>
         </Col>
       </Row>
-      <CommonTable
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 1200 }}
-        dataPerPage={4}
-      />
+      <div className="breakreport_tableContainer">
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 1200 }}
+          dataPerPage={4}
+          checkBox="false"
+          bordered="true"
+        />
+      </div>
     </div>
   );
 };

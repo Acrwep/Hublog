@@ -144,7 +144,10 @@ const Reports = () => {
         <p className="reports_headings">Others</p>
         <Row gutter={16} className="reports_rowcontainer ">
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/alertreport")}
+            >
               <div className="reports_alerticonContainer">
                 <BiSolidBell size={26} />
               </div>

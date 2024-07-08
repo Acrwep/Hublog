@@ -154,6 +154,10 @@
   display: flex;
   align-items: center;
 }
+.breakreport_tableContainer {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  border-radius: 4px;
+}
 /* dailyattendance report styles */
 .dailyreports_backContainer {
   display: flex;
@@ -172,9 +176,6 @@
 }
 .reports_avatarname {
   word-break: break-all;
-}
-.monthly-inout-report-table .ant-table-thead > tr > th.date-header {
-  border-bottom: 2px solid #d9d9d9; /* Change the color and width as needed */
 }
 /* monthlyinandout styles */
 .monthlyInOuttime_text {
