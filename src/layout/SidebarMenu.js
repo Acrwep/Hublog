@@ -58,6 +58,7 @@ import Settings from "../Components/Settings/Setting";
 import "./sidebarstyles.css";
 import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
+import ManualTime from "../Components/Manual Time/ManualTime";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -247,6 +248,7 @@ function SidebarMenu() {
                 <Route path="/app$url" element={<Apps$Url />} />
 
                 <Route path="/devices" element={<Devices />} />
+                <Route path="/manualtime" element={<ManualTime />} />
                 <Route path="/alerts" element={<Alerts />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/breakreports" element={<BreakReports />} />

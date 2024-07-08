@@ -15,7 +15,7 @@
 .project_adduserbuttonContainer {
   display: flex;
   justify-content: flex-end;
-  padding: 0px 9px;
+  align-items: center;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .project_adduserbuttonContainer {

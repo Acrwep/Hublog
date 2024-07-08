@@ -99,11 +99,17 @@ const Projects = () => {
             <h2 className="allpage_mainheadings">Projects</h2>
           </div>
         </Col>
+      </Row>
+
+      <Row style={{ marginTop: "15px" }}>
+        <Col xs={24} sm={7} md={7} lg={4}>
+          <CommonSelectField options={statusList} placeholder="Select status" />
+        </Col>
         <Col
           xs={24}
           sm={24}
-          md={12}
-          lg={12}
+          md={17}
+          lg={20}
           className="project_adduserbuttonContainer"
         >
           <button
@@ -112,12 +118,6 @@ const Projects = () => {
           >
             <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add Project
           </button>
-        </Col>
-      </Row>
-
-      <Row style={{ marginTop: "15px" }}>
-        <Col xs={24} sm={7} md={7} lg={4}>
-          <CommonSelectField options={statusList} placeholder="Select status" />
         </Col>
       </Row>
 

@@ -107,3 +107,18 @@ h6 {
 .ant-pagination .ant-pagination-item-active a {
   color: #009737 !important;
 }
+/* primary button styles */
+.ant-btn-primary {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+}
+.ant-btn-primary:hover {
+  background-color: #009737 !important;
+}
+.ant-picker-now-btn {
+  color: #25a17d;
+}
+.ant-picker-now-btn:hover {
+  color: #009737 !important;
+}

@@ -129,7 +129,9 @@ const AlertReport = () => {
           lg={12}
           className="breakreports_calendarContainer"
         >
-          <CommonDatePicker onChange={onDateChange} value={date} />
+          <div style={{ width: "30%" }}>
+            <CommonDatePicker onChange={onDateChange} value={date} />
+          </div>
           <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"

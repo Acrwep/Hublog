@@ -16,6 +16,7 @@ import {
   TbAppWindowFilled,
 } from "react-icons/tb";
 import { FaAppStore } from "react-icons/fa";
+import { MdTimer } from "react-icons/md";
 import { RiSuitcaseFill, RiUser3Fill } from "react-icons/ri";
 import { GiNotebook, GiLotus } from "react-icons/gi";
 import { CiStreamOn } from "react-icons/ci";
@@ -100,31 +101,36 @@ const SidebarMenuList = () => {
       path: "devices",
     },
     6: {
+      title: "Manual Time",
+      icon: <MdTimer />,
+      path: "manualtime",
+    },
+    7: {
       title: "Alerts",
       icon: <TbBellFilled />,
       path: "alerts",
     },
-    7: {
+    8: {
       title: "Reports",
       icon: <TbReport />,
       path: "reports",
     },
-    8: {
+    9: {
       title: "Projects",
       icon: <RiSuitcaseFill />,
       path: "projects",
     },
-    9: {
+    10: {
       title: "Notebook",
       icon: <GiNotebook />,
       path: "notebook",
     },
-    10: {
+    11: {
       title: "User Detail",
       icon: <RiUser3Fill />,
       path: "userdetail",
     },
-    11: {
+    12: {
       title: "Settings",
       icon: <MdSettings />,
       path: "settings",

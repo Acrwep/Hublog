@@ -94,7 +94,9 @@ const Alerts = () => {
           lg={10}
           className="alerts_calendarContainer"
         >
-          <CommonDatePicker onChange={onDateChange} value={date} />
+          <div style={{ width: "35%" }}>
+            <CommonDatePicker onChange={onDateChange} value={date} />
+          </div>
           <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"

@@ -1,34 +1,33 @@
 import React from "react";
-import { DatePicker, Space } from "antd";
-import { dayJs } from "../Utils";
+import { Space, TimePicker } from "antd";
 import "./commonstyles.css";
-export default function CommonDatePicker({
+
+const CommonTimePicker = ({
   onChange,
   value,
-  defaultValue,
-  month,
-  placeholder,
   label,
   error,
   mandatory,
   style,
-}) {
+}) => {
+  //   const onChange = (time, timeString) => {
+  //     console.log(time, timeString);
+  //   };
   return (
     <div style={style}>
       <div style={{ display: "flex" }}>
-        {label && <label className="commonfield_label">{label}</label>}
+        <label className="commonfield_label">{label}</label>
         {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}
       </div>
       <Space direction="vertical" style={{ width: "100%" }}>
-        <DatePicker
-          picker={month === "true" ? "month" : "date"}
+        <TimePicker
+          use12Hours
+          format="h:mm A"
+          value={value}
           onChange={onChange}
-          value={value ? dayJs(value) : null}
-          defaultValue={defaultValue}
-          format="DD-MM-YYYY"
-          placeholder={placeholder}
-          status={error ? "error" : ""}
+          placeholder="Select time"
           style={{ width: "100%" }}
+          status={error ? "error" : ""}
         />
       </Space>
       {error && (
@@ -36,4 +35,5 @@ export default function CommonDatePicker({
       )}
     </div>
   );
-}
+};
+export default CommonTimePicker;
