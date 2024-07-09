@@ -111,6 +111,7 @@ h6 {
 .ant-btn-primary {
   color: #fff;
   background-color: #25a17d;
+  font-weight: 600;
   box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
 }
 .ant-btn-primary:hover {
@@ -122,6 +123,11 @@ h6 {
 .ant-picker-now-btn:hover {
   color: #009737 !important;
 }
+.ant-btn-primary:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
+
 /* drag and drop image upload styles */
 .ant-upload-wrapper .ant-upload-drag:not(.ant-upload-disabled):hover {
   border-color: #009737 !important;

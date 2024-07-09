@@ -14,7 +14,7 @@
   }
 }
 .userdetail_userselectContainer {
-  margin: 14px 0px;
+  margin-top: 20px;
 }
 .userdetail_userselectfield {
   width: 190px;
@@ -27,7 +27,6 @@
 .usersdetail_calendarContainer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 6px;
 }
 @media (min-width: 300px) and (max-width: 768px) {
   .usersdetail_calendarContainer {

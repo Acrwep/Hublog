@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Modal, Select, Space } from "antd";
-import { IoIosAdd } from "react-icons/io";
+import { Row, Col, Modal } from "antd";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
 import CommonInputField from "../../../Components/Common/CommonInputField";
@@ -10,6 +9,7 @@ import {
 } from "../../../Components/Common/Validation";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonSelectField from "../../../Components/Common/CommonSelectField";
+import CommonAddButton from "../../Common/CommonAddButton";
 
 export default function Break() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,7 +112,7 @@ export default function Break() {
   return (
     <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={24} lg={12}>
+        <Col xs={24} sm={24} md={12} lg={12}>
           <CommonSearchField
             placeholder="Search break..."
             onSearch={handleSearch}
@@ -121,16 +121,14 @@ export default function Break() {
         <Col
           xs={24}
           sm={24}
-          md={24}
+          md={12}
           lg={12}
           className="users_adduserbuttonContainer"
         >
-          <button
-            className="users_addbutton"
+          <CommonAddButton
+            name="Add Break"
             onClick={() => setIsModalOpen(true)}
-          >
-            <IoIosAdd size={24} style={{ marginRight: "6px" }} /> Add Break
-          </button>
+          />
         </Col>
       </Row>
 

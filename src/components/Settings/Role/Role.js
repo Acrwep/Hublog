@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Row, Col, Modal } from "antd";
-import { IoIosAdd } from "react-icons/io";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
 import CommonInputField from "../../../Components/Common/CommonInputField";
 import { nameValidator } from "../../../Components/Common/Validation";
+import CommonAddButton from "../../Common/CommonAddButton";
 
 export default function Role() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -116,7 +116,7 @@ export default function Role() {
   return (
     <div>
       <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={24} lg={12}>
+        <Col xs={24} sm={24} md={12} lg={12}>
           <CommonSearchField
             placeholder="Search role..."
             onSearch={handleSearch}
@@ -125,16 +125,14 @@ export default function Role() {
         <Col
           xs={24}
           sm={24}
-          md={24}
+          md={12}
           lg={12}
           className="users_adduserbuttonContainer"
         >
-          <button
-            className="users_addbutton"
+          <CommonAddButton
+            name="Add Role"
             onClick={() => setIsModalOpen(true)}
-          >
-            <IoIosAdd size={24} style={{ marginRight: "6px" }} /> Add Role
-          </button>
+          />
         </Col>
       </Row>
 

@@ -89,9 +89,8 @@
 .users_adduserbuttonContainer {
   display: flex;
   justify-content: flex-end;
-  padding: 0px 9px;
 }
-@media (min-width: 300px) and (max-width: 768px) {
+@media (min-width: 300px) and (max-width: 767px) {
   .users_adduserbuttonContainer {
     justify-content: flex-start;
   }
@@ -156,7 +155,6 @@
 .designion_adduserbuttonContainer {
   display: flex;
   justify-content: flex-end;
-  padding: 0px 9px;
 }
 @media (min-width: 300px) and (max-width: 768px) {
   .designion_adduserbuttonContainer {
@@ -329,21 +327,7 @@
   margin-top: 30px;
 }
 .goals_savebutton {
-  color: #fff;
-  background-color: #25a17d;
-  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
-  font-size: 14px;
-  height: 32px;
-  border-radius: 6px;
-  padding: 0px 13px;
-  margin-top: 25px;
-}
-.goals_savebutton:hover {
-  background-color: #009737;
-}
-.goals_savebutton:active {
-  transform: scale(0.9);
-  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+  margin-top: 20px;
 }
 @media (min-width: 320px) and (max-width: 768px) {
   .goals_hoursfieldColumn {

@@ -183,9 +183,13 @@ const Notebook = () => {
               Discard
             </Button>
           )}
-          <button className="notebook_savebutton" onClick={handleSave}>
+          <Button
+            type="primary"
+            className="notebook_savebutton"
+            onClick={handleSave}
+          >
             Save
-          </button>
+          </Button>
         </div>
       </div>
 

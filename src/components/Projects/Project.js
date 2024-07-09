@@ -7,6 +7,7 @@ import CommonInputField from "../Common/CommonInputField";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonTable from "../Common/CommonTable";
 import { nameValidator, selectValidator } from "../Common/Validation";
+import CommonAddButton from "../Common/CommonAddButton";
 
 const Projects = () => {
   const [status, setStatus] = useState("");
@@ -112,12 +113,10 @@ const Projects = () => {
           lg={20}
           className="project_adduserbuttonContainer"
         >
-          <button
-            className="project_addbutton"
+          <CommonAddButton
+            name="Add Project"
             onClick={() => setIsModalOpen(true)}
-          >
-            <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add Project
-          </button>
+          />
         </Col>
       </Row>
 

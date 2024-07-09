@@ -13,12 +13,12 @@ import {
   mobileValidator,
 } from "../../../Components/Common/Validation";
 import moment from "moment";
-import { IoIosAdd } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Loader from "../../../Components/Common/Loader";
+import CommonAddButton from "../../Common/CommonAddButton";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -361,7 +361,7 @@ const Users = () => {
       ) : (
         <div>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-            <Col xs={24} sm={24} md={24} lg={12}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField
                 placeholder="Search user..."
                 onSearch={handleSearch}
@@ -370,13 +370,11 @@ const Users = () => {
             <Col
               xs={24}
               sm={24}
-              md={24}
+              md={12}
               lg={12}
               className="users_adduserbuttonContainer"
             >
-              <button className="users_addbutton" onClick={showDrawer}>
-                <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add User
-              </button>
+              <CommonAddButton name="Add User" onClick={showDrawer} />
             </Col>
           </Row>
 

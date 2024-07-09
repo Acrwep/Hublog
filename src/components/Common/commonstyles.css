@@ -19,7 +19,7 @@
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
-@media (min-width: 300px) and (max-width: 768px) {
+@media (min-width: 300px) and (max-width: 767px) {
   .commonSelectfield {
     width: 100% !important;
     margin-bottom: 14px;
@@ -145,8 +145,8 @@
 }
 @media (min-width: 300px) and (max-width: 425px) {
   .commonadd_button {
-    width: 160px;
     font-size: 12px;
+    overflow: hidden;
   }
 }
 .common_buttonaddIcon {

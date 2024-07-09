@@ -65,7 +65,7 @@ const UserDetail = () => {
       </div>
       <div className="userdetail_userselectContainer">
         <Row>
-          <Col xs={24} sm={24} md={24} lg={12}>
+          <Col xs={24} sm={24} md={12} lg={12}>
             <CommonSelectField
               placeholder="Select Users"
               options={usersList}
@@ -75,7 +75,7 @@ const UserDetail = () => {
           <Col
             xs={24}
             sm={24}
-            md={24}
+            md={12}
             lg={12}
             className="usersdetail_calendarContainer"
           >

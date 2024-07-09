@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Row, Col, Table, Modal } from "antd";
-import { IoIosAdd } from "react-icons/io";
 import { AiOutlineEdit } from "react-icons/ai";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
@@ -9,6 +8,7 @@ import CommonInputField from "../../../Components/Common/CommonInputField";
 import { nameValidator } from "../../../Components/Common/Validation";
 import CommonSelectField from "../../../Components/Common/CommonSelectField";
 import { RiDeleteBin7Line } from "react-icons/ri";
+import CommonAddButton from "../../Common/CommonAddButton";
 
 export default function AlertRules() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -159,12 +159,10 @@ export default function AlertRules() {
           lg={12}
           className="designion_adduserbuttonContainer"
         >
-          <button
-            className="designation_addbutton"
+          <CommonAddButton
+            name="Add Alert Rule"
             onClick={() => setIsModalOpen(true)}
-          >
-            <IoIosAdd size={24} style={{ marginRight: "6px" }} /> Add Alert Rule
-          </button>
+          />
         </Col>
       </Row>
 

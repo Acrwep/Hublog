@@ -1,5 +1,6 @@
 import React from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Button } from "antd";
+import CommonAddButton from "../../Common/CommonAddButton";
 import CommonSelectField from "../../../Components/Common/CommonSelectField";
 import CommonInputAfterImage from "../../../Components/Common/CommonInputAfterImage";
 import "../styles.css";
@@ -64,7 +65,10 @@ export default function Goals() {
           </Col>
         </Row>
 
-        <button className="goals_savebutton">Save changes</button>
+        {/* <button className="goals_savebutton">Save changes</button> */}
+        <Button className="goals_savebutton" type="primary">
+          Save changes
+        </Button>
       </div>
     </div>
   );

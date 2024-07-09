@@ -3,12 +3,12 @@ import { Row, Col, Tabs, Modal } from "antd";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import CommonInputField from "../../../Components/Common/CommonInputField";
 import { nameValidator } from "../../../Components/Common/Validation";
-import { IoIosAdd } from "react-icons/io";
 import TeamInfo from "./TeamInfo";
 import TeamMember from "./TeamMember";
 import { addteamMembers } from "../../../Components/Redux/slice";
 import { useDispatch } from "react-redux";
 import "../styles.css";
+import CommonAddButton from "../../Common/CommonAddButton";
 
 const Team = () => {
   const dispatch = useDispatch();
@@ -154,12 +154,10 @@ const Team = () => {
           lg={12}
           className="users_adduserbuttonContainer"
         >
-          <button
-            className="users_addbutton"
+          <CommonAddButton
+            name="Add Team"
             onClick={() => setIsModalOpen(true)}
-          >
-            <IoIosAdd size={24} style={{ marginRight: "4px" }} /> Add Team
-          </button>
+          />
         </Col>
       </Row>
 
