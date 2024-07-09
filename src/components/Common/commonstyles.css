@@ -109,3 +109,52 @@
   width: 160px;
   opacity: 0.7;
 }
+/* imageupload styles */
+.imageupload_imagenameContainer {
+  margin-top: 6px;
+  font-weight: 500;
+  color: #25a17d;
+  display: flex;
+  align-items: center;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .imageupload_imagenameContainer {
+    font-size: 12px;
+    word-break: break-all;
+  }
+}
+.draganddrop_container:hover {
+  border-color: #25a17d !important;
+}
+.imageupload_deleteicon {
+  color: #25a17d;
+  margin-left: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+.imageupload_deleteicon:hover {
+  opacity: 0.7;
+  color: #d32f2f;
+}
+/* common addbutton */
+.commonadd_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
+@media (min-width: 300px) and (max-width: 425px) {
+  .commonadd_button {
+    width: 160px;
+    font-size: 12px;
+  }
+}
+.common_buttonaddIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.commonadd_button:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}

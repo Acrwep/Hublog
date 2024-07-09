@@ -3,3 +3,46 @@
   justify-content: flex-end;
   align-items: center;
 }
+@media (min-width: 300px) and (max-width: 767px) {
+  .addmanualtimebutton_column {
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+}
+.manualtime_attahmnt_heading {
+  font-weight: 500;
+}
+.manualpending_container {
+  display: flex;
+  /* background-color: #cfd8dc; */
+  border-radius: 6px;
+  padding: 4px;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .manualpending_container {
+    margin-top: 0px;
+  }
+}
+.manualpending_button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 12px;
+}
+.manualpending_button:hover {
+  border-color: #25a17d !important;
+  color: #25a17d !important;
+}
+.manualpending_activebutton {
+  background-color: #25a17d !important;
+  border-color: #25a17d;
+  color: white;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 12px;
+}
+.manualpending_activebutton:hover {
+  background-color: #25a17d !important;
+  border-color: #25a17d !important;
+  color: white !important;
+}
