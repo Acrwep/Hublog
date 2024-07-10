@@ -50,6 +50,40 @@
     margin-left: 12px;
   }
 }
+.navbar_discoversearchbar_container {
+  position: relative;
+  transition: all 0.3s ease;
+}
+.navbar_searchlistContainer {
+  position: absolute;
+  top: 84%;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  width: 68%;
+  background-color: #f7f7f7;
+  z-index: 1;
+  border-radius: 6px;
+  max-height: 40vh;
+  overflow-y: auto;
+  display: block;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(20, 184, 165, 0.13) transparent;
+}
+.searchlist_innerContainer {
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+.searchlist_innerContainer:hover {
+  background-color: rgba(20, 184, 166, 0.1);
+  color: rgb(20, 184, 166);
+  font-weight: 600;
+}
+.searchlist_texts {
+  height: 35px;
+  display: flex;
+  align-items: center;
+}
 .navbar_discoversearchnbar {
   width: 240px !important;
   height: 40px !important;
@@ -78,6 +112,7 @@
 }
 .explore_container {
   height: 62px;
+  position: relative;
 }
 @media (min-width: 300px) and (max-width: 700px) {
   .explore_container {

@@ -14,6 +14,7 @@ import PendingManulaTime from "./PendingManualTime";
 import ApprovedManualTime from "./ApprovedManualTime";
 import RejectedManualTime from "./RejectedManulaTime";
 import CommonAddButton from "../Common/CommonAddButton";
+import { CommonToaster } from "../Common/CommonToaster";
 
 export default function ManualTime() {
   const [activePage, setActivePage] = useState(1);
@@ -65,7 +66,7 @@ export default function ManualTime() {
       setAttachmentName("");
     }
   };
-  const handleCancel = () => {
+  const formRestart = () => {
     setIsModalOpen(false);
     setDate("");
     setDateError("");
@@ -79,6 +80,9 @@ export default function ManualTime() {
     setSummaryError("");
     setAttachment("");
     setAttachmentName("");
+  };
+  const handleCancel = () => {
+    formRestart();
   };
 
   const handleOk = () => {
@@ -102,6 +106,18 @@ export default function ManualTime() {
       summaryValidate
     )
       return;
+
+    const payload = {
+      date: date.format("DD-MM-YYYY"),
+      startTime: startTime.format("HH:mm"),
+      endTime: endTime.format("HH:mm"),
+      timeAttribution: timeAttribution,
+      summary: summary,
+      ...(attachment.length >= 1 ? { attachment: attachment[0] } : {}),
+    };
+    console.log("Manula Time Payload", payload);
+    formRestart();
+    CommonToaster("Manual Time Created Successfully", "success");
   };
   return (
     <div className="settings_mainContainer">

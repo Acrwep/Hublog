@@ -11,6 +11,7 @@ import {
   Avatar,
   Row,
   Col,
+  Divider,
 } from "antd";
 import "react-toastify/dist/ReactToastify.css";
 import SidebarMenuList from "./SidebarMenuList";
@@ -59,6 +60,18 @@ import "./sidebarstyles.css";
 import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
+import { SideMenuConfig } from "./SideMenuItems";
+import {
+  MdOutlineDashboardCustomize,
+  MdRocketLaunch,
+  MdScreenshotMonitor,
+} from "react-icons/md";
+import { FaAppStore } from "react-icons/fa";
+import { CiStreamOn } from "react-icons/ci";
+import { GrMapLocation } from "react-icons/gr";
+import { VscGraphLine } from "react-icons/vsc";
+import { FiActivity } from "react-icons/fi";
+import { GiLotus } from "react-icons/gi";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -67,6 +80,10 @@ function SidebarMenu() {
   const navigation = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [sidemenuList, setSidemenuList] = useState([]);
+  const [dummySidemenuList, setDummySidemenuList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [searchbarHover, setSearchbarHover] = useState(false);
   const [avatarName, setAvatarName] = useState("");
   const [screenWidth, setScreenWidth] = useState("");
   const {
@@ -133,6 +150,68 @@ function SidebarMenu() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const menuList = Object.values(SideMenuConfig).map((item) => {
+      return { ...item };
+    });
+
+    const filterItems = menuList.filter((f) => !f.submenu);
+
+    filterItems.push(
+      { title: "Livestream", icon: <CiStreamOn /> },
+      { title: "Field", icon: <GrMapLocation /> },
+      {
+        title: "Timeline",
+        icon: <VscGraphLine />,
+      },
+      {
+        title: "Activity",
+        icon: <FiActivity />,
+      },
+      {
+        title: "Productivity",
+        icon: <MdRocketLaunch />,
+      },
+      {
+        title: "Screenshots",
+        icon: <MdScreenshotMonitor />,
+      },
+      {
+        title: "App $ URLs",
+        icon: <FaAppStore />,
+      },
+      {
+        title: "Wellness",
+        icon: <GiLotus size={17} />,
+        path: "wellness",
+      }
+    );
+    console.log("filterItems", filterItems);
+
+    setSidemenuList(filterItems);
+    setDummySidemenuList(filterItems);
+  }, []);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    if (value === "") {
+      setSidemenuList(dummySidemenuList);
+      return;
+    }
+
+    const filterData = dummySidemenuList.filter((item) => {
+      return item.title.toLowerCase().includes(value.toLowerCase());
+    });
+    setSidemenuList(filterData);
+  };
+
+  const handleSearchLists = (title) => {
+    const removespace = title.split(" ").join("");
+    console.log("spaceeeee", removespace);
+    navigation(`/${removespace.toLowerCase()}`);
+    setSearch("");
+  };
   return (
     <div>
       {location.pathname === "/login" ? (
@@ -176,31 +255,68 @@ function SidebarMenu() {
                   />
                 </Col>
                 <Col xs={24} sm={24} md={11} lg={11}>
-                  <div className="searchbarandexplore_container">
-                    <div className="searchbar_container">
-                      <Space direction="vertical">
-                        <Input
-                          placeholder="Discover it all: feature, settings, report"
-                          className="navbar_discoversearchnbar"
-                          prefix={
-                            <SearchOutlined className="site-form-item-icon" />
-                          }
-                        />
-                      </Space>
-                    </div>
-                    <div className="explore_container">
-                      <Space direction="vertical">
-                        <Space wrap>
-                          <Dropdown menu={{ items }} placement="bottomLeft">
-                            <Button className="explore_button">
-                              <div style={{ display: "flex" }}>
-                                <p>Explorer</p>
-                                <DownOutlined className="navbar_explorericon" />
-                              </div>
-                            </Button>
-                          </Dropdown>
+                  <div style={{ position: "relative" }}>
+                    <div className="searchbarandexplore_container">
+                      <div
+                        className="navbar_discoversearchbar_container"
+                        onMouseEnter={() => setSearchbarHover(true)}
+                        onMouseLeave={() => setSearchbarHover(false)}
+                      >
+                        <Space direction="vertical">
+                          <Input
+                            placeholder="Discover it all: feature, settings, report"
+                            className="navbar_discoversearchnbar"
+                            prefix={
+                              <SearchOutlined className="site-form-item-icon" />
+                            }
+                            onChange={handleSearch}
+                            value={search}
+                          />
                         </Space>
-                      </Space>
+                      </div>
+                      <div className="explore_container">
+                        <Space direction="vertical">
+                          <Space wrap>
+                            <Dropdown menu={{ items }} placement="bottomLeft">
+                              <Button className="explore_button">
+                                <div style={{ display: "flex" }}>
+                                  <p>Explorer</p>
+                                  <DownOutlined className="navbar_explorericon" />
+                                </div>
+                              </Button>
+                            </Dropdown>
+                          </Space>
+                        </Space>
+                      </div>
+                    </div>
+                    <div
+                      className="navbar_searchlistContainer"
+                      style={{
+                        display:
+                          searchbarHover &&
+                          search != "" &&
+                          sidemenuList.length >= 1
+                            ? "block"
+                            : "none",
+                      }}
+                      onMouseEnter={() => setSearchbarHover(true)}
+                      onMouseLeave={() => setSearchbarHover(false)}
+                    >
+                      {sidemenuList.map((item) => (
+                        <>
+                          <div
+                            className="searchlist_innerContainer"
+                            key={item.title}
+                            onClick={() => handleSearchLists(item.title)}
+                          >
+                            <div style={{ marginRight: "12px" }}>
+                              {item.icon}
+                            </div>
+                            <p className="searchlist_texts">{item.title}</p>
+                          </div>
+                          <Divider style={{ margin: "0px" }} />
+                        </>
+                      ))}
                     </div>
                   </div>
                 </Col>
@@ -245,7 +361,7 @@ function SidebarMenu() {
                 <Route path="/productivity" element={<Productivity />} />
                 <Route path="/screenshots" element={<Screenshots />} />
                 <Route path="/wellness" element={<Wellness />} />
-                <Route path="/app$url" element={<Apps$Url />} />
+                <Route path="/app$urls" element={<Apps$Url />} />
 
                 <Route path="/devices" element={<Devices />} />
                 <Route path="/manualtime" element={<ManualTime />} />
