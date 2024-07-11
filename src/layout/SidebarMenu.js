@@ -48,6 +48,7 @@ import BreakReports from "../Components/Reports/BreakReports";
 import DailyAttendanceReport from "../Components/Reports/DailyAttendanceReport";
 import MonthlyAttendanceReport from "../Components/Reports/MonthlyAttendanceReport";
 import ActivityReport from "../Components/Reports/ActivityReport";
+import ProductivityReport from "../Components/Reports/ProductivityReport";
 //projects
 import Projects from "../Components/Projects/Project";
 //notebook
@@ -60,7 +61,7 @@ import "./sidebarstyles.css";
 import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
-import { SideMenuConfig } from "./SideMenuItems";
+import { SideMenuConfig } from "./SideMenuConfig";
 import {
   MdOutlineDashboardCustomize,
   MdRocketLaunch,
@@ -274,7 +275,7 @@ function SidebarMenu() {
                           />
                         </Space>
                       </div>
-                      <div className="explore_container">
+                      {/* <div className="explore_container">
                         <Space direction="vertical">
                           <Space wrap>
                             <Dropdown menu={{ items }} placement="bottomLeft">
@@ -287,7 +288,7 @@ function SidebarMenu() {
                             </Dropdown>
                           </Space>
                         </Space>
-                      </div>
+                      </div> */}
                     </div>
                     <div
                       className="navbar_searchlistContainer"
@@ -382,6 +383,10 @@ function SidebarMenu() {
                 />
                 <Route path="/alertreport" element={<AlertReport />} />
                 <Route path="/activityreport" element={<ActivityReport />} />
+                <Route
+                  path="/productivityreport"
+                  element={<ProductivityReport />}
+                />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />
