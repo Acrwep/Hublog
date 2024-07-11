@@ -149,12 +149,16 @@ const AlertReport = () => {
           </Tooltip>
         </Col>
       </Row>
-      <CommonTable
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 600 }}
-        dataPerPage={4}
-      />
+      <div className="breakreport_tableContainer">
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 600 }}
+          dataPerPage={4}
+          bordered="true"
+          checkBox="false"
+        />
+      </div>
     </div>
   );
 };

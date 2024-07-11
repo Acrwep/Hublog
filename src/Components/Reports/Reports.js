@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
-import { TbReport } from "react-icons/tb";
 import { FiCoffee, FiActivity } from "react-icons/fi";
 import { FaUsersLine } from "react-icons/fa6";
-import { TbAppsFilled, TbDeviceDesktopMinus } from "react-icons/tb";
+import {
+  TbAppsFilled,
+  TbDeviceDesktopMinus,
+  TbReportSearch,
+  TbReport,
+} from "react-icons/tb";
 import { BiSolidBell } from "react-icons/bi";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
 import { MdFreeBreakfast, MdCalendarMonth } from "react-icons/md";
 import { PiArrowsLeftRightBold } from "react-icons/pi";
 import { MdAccessTimeFilled, MdDynamicFeed } from "react-icons/md";
+import { FaBusinessTime } from "react-icons/fa6";
 import "./styles.css";
 
 const Reports = () => {
@@ -117,7 +122,10 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/productivityreport")}
+            >
               <div className="reports_producticonContainer">
                 <BsFillRocketTakeoffFill size={26} />
               </div>
@@ -141,6 +149,41 @@ const Reports = () => {
           </Col>
         </Row>
 
+        <Row gutter={16} style={{ marginTop: "20px" }}>
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
+              // onClick={() => navigation("/activityreport")}
+            >
+              <div className="reports_projecticonContainer">
+                <FaBusinessTime size={26} />
+              </div>
+              <p className="reports_cardheading">Project Report</p>
+              <p className="reports_cardcontent">
+                View and download the projects report for comprehensive insights
+                into tasks, progress status, and duration spent by each assignee
+                on tasks.
+              </p>
+            </div>
+          </Col>
+
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
+              // onClick={() => navigation("/activityreport")}
+            >
+              <div className="reports_logsiconContainer">
+                <TbReportSearch size={26} />
+              </div>
+              <p className="reports_cardheading">Logs Report</p>
+              <p className="reports_cardcontent">
+                View and download the detailed logs of application usage and
+                website visits for comprehensive insights into employee
+                activity.
+              </p>
+            </div>
+          </Col>
+        </Row>
         <p className="reports_headings">Others</p>
         <Row gutter={16} className="reports_rowcontainer ">
           <Col xs={24} sm={24} md={12} lg={6}>

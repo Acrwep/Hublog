@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu } from "antd";
-import { SideMenuConfig } from "./SideMenuItems";
+import { SideMenuConfig } from "./SideMenuConfig";
 
 const { SubMenu } = Menu;
 
@@ -12,15 +12,27 @@ const SidebarMenuList = () => {
 
   useEffect(() => {
     const pathName = location.pathname.split("/")[1];
-    console.log("pathnameee", pathName);
+    console.log("Current PathName", pathName);
     if (pathName === "") {
       setSelectedKey("dashboard");
+      return;
+    }
+    if (
+      pathName === "breakreports" ||
+      pathName === "dailyattendancereport" ||
+      pathName === "monthlyattendancereport" ||
+      pathName === "monthlyinandoutreport" ||
+      pathName === "activityreport" ||
+      pathName === "productivityreport"
+    ) {
+      setSelectedKey("reports");
       return;
     }
     setSelectedKey(pathName);
   }, [location.pathname]);
 
   const handleMenuClick = (e) => {
+    console.log("menuuuuuuu", e);
     navigate(`/${e.key}`);
   };
 
