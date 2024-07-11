@@ -160,27 +160,27 @@ function SidebarMenu() {
     const filterItems = menuList.filter((f) => !f.submenu);
 
     filterItems.push(
-      { title: "Livestream", icon: <CiStreamOn /> },
-      { title: "Field", icon: <GrMapLocation /> },
+      { title: "Livestream", icon: <CiStreamOn size={17} /> },
+      { title: "Field", icon: <GrMapLocation size={17} /> },
       {
         title: "Timeline",
-        icon: <VscGraphLine />,
+        icon: <VscGraphLine size={17} />,
       },
       {
         title: "Activity",
-        icon: <FiActivity />,
+        icon: <FiActivity size={17} />,
       },
       {
         title: "Productivity",
-        icon: <MdRocketLaunch />,
+        icon: <MdRocketLaunch size={17} />,
       },
       {
         title: "Screenshots",
-        icon: <MdScreenshotMonitor />,
+        icon: <MdScreenshotMonitor size={17} />,
       },
       {
         title: "App $ URLs",
-        icon: <FaAppStore />,
+        icon: <FaAppStore size={17} />,
       },
       {
         title: "Wellness",

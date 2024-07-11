@@ -33,12 +33,12 @@ const Productivity = () => {
 
   const series = [
     {
-      name: "Productive time",
-      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
-    },
-    {
       name: "Unproductive time",
       data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+    },
+    {
+      name: "Productive time",
+      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
     },
     {
       name: "Neutral",
@@ -46,7 +46,7 @@ const Productivity = () => {
     },
   ];
 
-  const barchartColors = ["#25a17d", "#ABB3B3", "#00a4d0"];
+  const barchartColors = ["#7A7D7C", "#25a17d", "#9B65F7"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -162,7 +162,7 @@ const Productivity = () => {
               </Row>
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#ABB3B3"]}
+                colors={["#25a17d", "#7A7D7C"]}
                 series={OverallWellness}
                 labelsfontSize="17px"
               />

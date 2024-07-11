@@ -44,7 +44,7 @@ const Wellness = () => {
     },
   ];
 
-  const barchartColors = ["#ABB3B3", "#25a17d", "#01aaee"];
+  const barchartColors = ["#7A7D7C", "#25a17d", "#9B65F7"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -139,7 +139,7 @@ const Wellness = () => {
               </p>
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#ABB3B3"]}
+                colors={["#25a17d", "#7A7D7C"]}
                 series={OverallWellness}
                 labelsfontSize="17px"
               />

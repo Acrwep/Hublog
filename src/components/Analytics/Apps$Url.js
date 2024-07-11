@@ -149,7 +149,7 @@ const Apps$Url = () => {
               </p>
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#ABB3B3"]}
+                colors={["#25a17d", "#7A7D7C"]}
                 series={OverallWellness}
                 labelsfontSize="17px"
               />
