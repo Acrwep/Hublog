@@ -2,20 +2,28 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
-import { Row, Col, Button, Tooltip, Space, Select } from "antd";
+import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import {
+  DownloadOutlined,
+  RedoOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
+import CommonInputField from "../Common/CommonInputField";
 
 const ProjectReport = () => {
   const navigation = useNavigate();
   const [date, setDate] = useState(new Date());
-  const teamList = [{ id: 1, name: "Operation" }];
+  const assigneeList = [
+    { id: 1, name: "Balaji" },
+    { id: 2, name: "Rubi" },
+  ];
   const userList = [
     { id: 1, name: "Balaji" },
     { id: 2, name: "Karthick" },
@@ -176,16 +184,13 @@ const ProjectReport = () => {
             style={{ display: "flex" }}
           >
             <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
+              <CommonInputField prefix={<SearchOutlined />} />
             </div>
-            <div>
-              <Select
-                showSearch
-                placeholder="Select a person"
-                optionFilterProp="label"
-                options={teamList}
-                // onChange={onChange}
-                // onSearch={onSearch}
+            <div style={{ width: "170px" }}>
+              <CommonSelectField
+                showSearch={true}
+                options={assigneeList}
+                placeholder="Search Assignee..."
               />
             </div>
           </div>

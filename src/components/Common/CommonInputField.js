@@ -12,15 +12,24 @@ const CommonInputField = ({
   mandatory,
   style,
   addonAfter,
+  prefix,
+  className,
 }) => {
   return (
     <div style={style}>
-      <div style={{ display: "flex" }}>
-        <label className="commonfield_label">{label}</label>
-        {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}
-      </div>
+      {label && (
+        <div style={{ display: "flex" }}>
+          <label className="commonfield_label">{label}</label>
+          {mandatory ? (
+            <p style={{ color: "red", marginLeft: "4px" }}>*</p>
+          ) : (
+            ""
+          )}
+        </div>
+      )}
       <Input
-        className="commonInputfield"
+        // className="commonInputfield"
+        className={`commonInputfield ${className}`}
         label={label}
         placeholder={placeholder}
         onChange={onChange}
@@ -30,6 +39,7 @@ const CommonInputField = ({
         status={error ? "error" : ""}
         maxLength={maxLength}
         addonAfter={addonAfter}
+        prefix={prefix}
       />
       {error && (
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>

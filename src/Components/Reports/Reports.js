@@ -170,7 +170,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              // onClick={() => navigation("/activityreport")}
+              onClick={() => navigation("/logsreport")}
             >
               <div className="reports_logsiconContainer">
                 <TbReportSearch size={26} />

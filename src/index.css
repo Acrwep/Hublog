@@ -7,7 +7,6 @@ ul,
 menu {
   list-style: revert;
   padding: revert;
-  /* padding: 9px 0px !important; */
 }
 h1,
 h2,
@@ -106,6 +105,10 @@ h6 {
 }
 .ant-pagination .ant-pagination-item-active a {
   color: #009737 !important;
+}
+/* antd selectfield styles */
+.ant-select-selection-search-input:focus {
+  box-shadow: none;
 }
 /* primary button styles */
 .ant-btn-primary {

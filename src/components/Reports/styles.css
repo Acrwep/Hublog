@@ -210,3 +210,26 @@
   font-weight: 600;
   color: #d32f2f;
 }
+/* logs styles */
+.logsreport_mappingActivetextContainer {
+  border-radius: 7px;
+  background-color: rgba(20, 184, 166, 0.1);
+  color: rgb(20, 184, 166);
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 0px;
+  font-size: 13px;
+}
+.logsreport_statusInActivetextContainer {
+  border-radius: 7px;
+  background-color: #fef3c9;
+  color: #92410f;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px 0px;
+  font-size: 13px;
+}
