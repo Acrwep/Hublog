@@ -15,7 +15,7 @@ const AddendanceDetail = () => {
     { name: "Present", data: [12, 10, 20, 30] },
     { name: "Absent", data: [5, 6, 10, 12] },
   ];
-  const attendanceTrendsColors = ["#25a17d", "#e93b3a"];
+  const attendanceTrendsColors = ["#25a17d", "#ABB3B3"];
 
   const columns = [
     { title: "Employee", dataIndex: "employee", key: "employee", width: 140 },

@@ -49,6 +49,7 @@ import DailyAttendanceReport from "../Components/Reports/DailyAttendanceReport";
 import MonthlyAttendanceReport from "../Components/Reports/MonthlyAttendanceReport";
 import ActivityReport from "../Components/Reports/ActivityReport";
 import ProductivityReport from "../Components/Reports/ProductivityReport";
+import ProjectReport from "../Components/Reports/ProjectReport";
 //projects
 import Projects from "../Components/Projects/Project";
 //notebook
@@ -387,6 +388,7 @@ function SidebarMenu() {
                   path="/productivityreport"
                   element={<ProductivityReport />}
                 />
+                <Route path="/projectreport" element={<ProjectReport />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />

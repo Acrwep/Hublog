@@ -153,7 +153,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              // onClick={() => navigation("/activityreport")}
+              onClick={() => navigation("/projectreport")}
             >
               <div className="reports_projecticonContainer">
                 <FaBusinessTime size={26} />

@@ -47,7 +47,7 @@ const Activity = () => {
     },
   ];
 
-  const barchartColors = ["#25a17d", "#e93b3a", "#94acb7"];
+  const barchartColors = ["#25a17d", "#ABB3B3", "#00a4d0"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -157,7 +157,7 @@ const Activity = () => {
               </Row>
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#e93b3a"]}
+                colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
                 labelsfontSize="15px"
               />
@@ -170,7 +170,7 @@ const Activity = () => {
 
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#e93b3a"]}
+                colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
                 labelsfontSize="15px"
                 style={{

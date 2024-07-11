@@ -124,7 +124,7 @@ const Devices = () => {
             </p>
             <CommonDonutChart
               labels={["Online Devices", "Offline Devices"]}
-              colors={["#25a17d", "#e93b3a"]}
+              colors={["#25a17d", "#ABB3B3"]}
               series={series}
               labelsfontSize="17px"
             />

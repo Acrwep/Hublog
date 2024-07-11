@@ -13,6 +13,7 @@ export default function CommonSelectField({
   placeholder,
   className,
   style,
+  showSearch,
 }) {
   return (
     <div style={style} className={className}>
@@ -41,6 +42,7 @@ export default function CommonSelectField({
         status={error ? "error" : ""}
         mode={mode}
         placeholder={placeholder}
+        showSearch={showSearch}
         allowClear
       />
       {error && (

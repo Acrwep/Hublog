@@ -26,7 +26,7 @@ const Summary = () => {
     { name: "Present", data: [12, 10, 20, 30] },
     { name: "Absent", data: [5, 6, 10, 12] },
   ];
-  const attendanceTrendsColors = ["#25a17d", "#e93b3a"];
+  const attendanceTrendsColors = ["#25a17d", "#ABB3B3"];
 
   const lateArrivalSeries = [
     { name: "Late arrivals", data: [12, 10, 20, 30] },
@@ -151,7 +151,7 @@ const Summary = () => {
               </Row>
               <CommonDonutChart
                 labels={["Prsent", "Absent"]}
-                colors={["#25a17d", "#e93b3a"]}
+                colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
                 labelsfontSize="15px"
               />
