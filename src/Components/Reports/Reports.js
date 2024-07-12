@@ -110,7 +110,10 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/appsurlsreport")}
+            >
               <div className="reports_appsiconContainer">
                 <TbAppsFilled size={26} />
               </div>
@@ -136,7 +139,10 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/teamsinsightreport")}
+            >
               <div className="reports_teamsiconContainer">
                 <FaUsersLine size={26} />
               </div>
@@ -201,7 +207,7 @@ const Reports = () => {
               </p>
             </div>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={6}>
+          {/* <Col xs={24} sm={24} md={12} lg={6}>
             <div className="reports_card">
               <div className="reports_dynamiciconContainer">
                 <MdDynamicFeed size={26} />
@@ -212,9 +218,12 @@ const Reports = () => {
                 metrics of your organisation.
               </p>
             </div>
-          </Col>
+          </Col> */}
           <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
+            <div
+              className="reports_card"
+              onClick={() => navigation("/devicereport")}
+            >
               <div className="reports_producticonContainer">
                 <TbDeviceDesktopMinus size={26} />
               </div>

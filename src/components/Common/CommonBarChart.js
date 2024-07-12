@@ -1,7 +1,14 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const CommonBarChart = ({ colors, xasis, series, timebased }) => {
+const CommonBarChart = ({
+  colors,
+  xasis,
+  series,
+  timebased,
+  distributed,
+  legend,
+}) => {
   const options = {
     chart: {
       type: "bar",
@@ -12,7 +19,7 @@ const CommonBarChart = ({ colors, xasis, series, timebased }) => {
     plotOptions: {
       bar: {
         labels: true,
-        // distributed: true,
+        distributed: distributed === "true" ? true : false,
         columnWidth: 40,
         horizontal: false,
       },
@@ -28,6 +35,7 @@ const CommonBarChart = ({ colors, xasis, series, timebased }) => {
     xaxis: {
       categories: xasis,
       labels: {
+        show: true,
         rotate: -40, // Rotate labels by -40 degrees
         color: ["#ffffff"],
         style: {
@@ -67,6 +75,14 @@ const CommonBarChart = ({ colors, xasis, series, timebased }) => {
           return val;
         },
       },
+      // custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+      //   const category = w.globals.labels[dataPointIndex];
+      //   const value = series[seriesIndex][dataPointIndex];
+      //   return `<div class="apexcharts-tooltip-custom">${category}: ${value}</div>`;
+      // },
+    },
+    legend: {
+      show: legend === "false" ? false : true, // Hide legends
     },
   };
 

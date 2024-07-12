@@ -1,24 +1,24 @@
-import React from "react";
-import { PiDevicesBold } from "react-icons/pi";
-import { Col, Row, Tooltip, Button } from "antd";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { TbReport } from "react-icons/tb";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Row, Col, Button, Tooltip } from "antd";
+import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import CommonDonutChart from "../Common/CommonDonutChart";
+import CommonTable from "../Common/CommonTable";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
-import CommonTable from "../Common/CommonTable";
+import CommonAvatar from "../Common/CommonAvatar";
 
-const Devices = () => {
+const DeviceReport = () => {
+  const navigation = useNavigate();
+  const [date, setDate] = useState(new Date());
   const teamList = [{ id: 1, name: "Operation" }];
   const userList = [
     { id: 1, name: "Balaji" },
     { id: 2, name: "Karthick" },
   ];
-  const onlineDeviceCount = 70;
-  const offlineDeviceCount = 30;
-  const series = [onlineDeviceCount, offlineDeviceCount];
-
-  const platformchartDatas = [80, 20];
-
   const data = [
     {
       key: 1,
@@ -113,15 +113,27 @@ const Devices = () => {
       sorter: (a, b) => a.myzenversion - b.myzenversion,
     },
   ];
+  const onDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setDate(date); // Update the state when the date changes
+  };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
-          <PiDevicesBold size={20} />
+          <TbReport size={20} />
         </div>
-        <h2 className="allpage_mainheadings">Devices</h2>
+        <h2 className="allpage_mainheadings">Reports</h2>
       </div>
 
+      <div
+        className="reports_backContainer"
+        onClick={() => navigation("/reports")}
+      >
+        <FaArrowLeft size={16} />
+        <p style={{ marginLeft: "12px" }}>Device Report</p>
+      </div>
       <Row className="breakreports_calendarrowContainer">
         <Col xs={24} sm={24} md={22} lg={22}>
           <div
@@ -158,6 +170,16 @@ const Devices = () => {
           lg={2}
           className="breakreports_calendarContainer"
         >
+          <Tooltip placement="top" title="Download">
+            <Button
+              className="dashboard_download_button"
+              onClick={() => {
+                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+              }}
+            >
+              <DownloadOutlined className="download_icon" />
+            </Button>
+          </Tooltip>
           <Tooltip placement="top" title="Refresh">
             <Button className="dashboard_refresh_button">
               <RedoOutlined className="refresh_icon" />
@@ -165,48 +187,18 @@ const Devices = () => {
           </Tooltip>
         </Col>
       </Row>
-
-      <Row gutter={16} style={{ marginTop: "20px" }}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Status of devices: PC</p>
-            <p className="devices_chartsubheading">
-              Distribution between offline and online devices.
-            </p>
-            <CommonDonutChart
-              labels={["Online Devices", "Offline Devices"]}
-              colors={["#25a17d", "#7A7D7C"]}
-              series={series}
-              labelsfontSize="17px"
-            />
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Platform</p>
-            <p className="devices_chartsubheading">
-              Summarized view of the distribution of all the operating systems.
-            </p>
-            <CommonDonutChart
-              labels={["Windows", "Mac"]}
-              colors={["#0174cd", "#f6c614"]}
-              series={platformchartDatas}
-              labelsfontSize="17px"
-            />
-          </div>
-        </Col>
-      </Row>
-
-      <div style={{ marginTop: "20px" }}>
+      <div className="breakreport_tableContainer">
         <CommonTable
           columns={columns}
           dataSource={data}
           scroll={{ x: 1600 }}
           dataPerPage={4}
+          checkBox="false"
+          bordered="true"
         />
       </div>
     </div>
   );
 };
 
-export default Devices;
+export default DeviceReport;

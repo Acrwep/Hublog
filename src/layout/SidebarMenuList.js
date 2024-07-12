@@ -23,7 +23,13 @@ const SidebarMenuList = () => {
       pathName === "monthlyattendancereport" ||
       pathName === "monthlyinandoutreport" ||
       pathName === "activityreport" ||
-      pathName === "productivityreport"
+      pathName === "productivityreport" ||
+      pathName === "teamsinsightreport" ||
+      pathName === "appsurlsreport" ||
+      pathName === "projectreport" ||
+      pathName === "logsreport" ||
+      pathName === "alertreport" ||
+      pathName === "devicereport"
     ) {
       setSelectedKey("reports");
       return;

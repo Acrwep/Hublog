@@ -49,8 +49,11 @@ import DailyAttendanceReport from "../Components/Reports/DailyAttendanceReport";
 import MonthlyAttendanceReport from "../Components/Reports/MonthlyAttendanceReport";
 import ActivityReport from "../Components/Reports/ActivityReport";
 import ProductivityReport from "../Components/Reports/ProductivityReport";
+import TeamsInsightReport from "../Components/Reports/TeamsInsightReport";
 import ProjectReport from "../Components/Reports/ProjectReport";
 import LogsReport from "../Components/Reports/LogsReport";
+import AppsUrlsReport from "../Components/Reports/AppsUrlsReport";
+import DeviceReport from "../Components/Reports/DeviceReport";
 //projects
 import Projects from "../Components/Projects/Project";
 //notebook
@@ -389,8 +392,14 @@ function SidebarMenu() {
                   path="/productivityreport"
                   element={<ProductivityReport />}
                 />
+                <Route
+                  path="/teamsinsightreport"
+                  element={<TeamsInsightReport />}
+                />
+                <Route path="/appsurlsreport" element={<AppsUrlsReport />} />
                 <Route path="/projectreport" element={<ProjectReport />} />
                 <Route path="/logsreport" element={<LogsReport />} />
+                <Route path="/devicereport" element={<DeviceReport />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />

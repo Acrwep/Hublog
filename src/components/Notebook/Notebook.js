@@ -268,9 +268,9 @@ const Notebook = () => {
             <Button className="notebook_cancelbutton" onClick={handleCancel}>
               Cancel
             </Button>
-            <button className="notebook_savebutton" onClick={handleDeleteNote}>
+            <Button type="primary" onClick={handleDeleteNote}>
               Yes
-            </button>
+            </Button>
           </div>,
         ]}
       >

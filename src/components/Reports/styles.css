@@ -153,7 +153,7 @@
   display: flex;
   margin-top: 20px;
   cursor: pointer;
-  width: 160px;
+  width: 190px;
   align-items: center;
 }
 .reports_backContainer:hover {
@@ -232,4 +232,61 @@
   align-items: center;
   padding: 3px 0px;
   font-size: 13px;
+}
+/* teamreport styles */
+.teamreport_accordionheading {
+  font-weight: 600;
+  font-size: 16px;
+}
+.teamreport_accordionContainer {
+  font-weight: 400;
+  font-size: 14px;
+}
+.teamreport_prsnText {
+  font-weight: 600;
+  color: #25a17d;
+}
+.teamreport_absnText {
+  font-weight: 600;
+  color: #e93b3a;
+  margin-top: 12px;
+}
+.teamreport_workingHrs {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  margin-top: 12px;
+}
+.teamreport_pogessbarContainer {
+  display: flex;
+  margin-top: 12px;
+}
+.teamreport_topuserheaderContainer {
+  display: flex;
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  align-items: center;
+}
+.teamreport_topusers {
+  font-weight: 600;
+}
+.teamreport_topuserName {
+  font-weight: 500;
+  margin-top: 6px;
+}
+/* appurl styles */
+.appurlreport_tableheading {
+  padding: 14px;
+  font-weight: 600;
+  font-size: 16px;
+}
+/* devicereport styles */
+.devicereport_selectfieldContainers {
+  width: 170px;
+  margin-right: 12px;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .devicereport_selectfieldContainers {
+    margin-bottom: 12px;
+  }
 }
