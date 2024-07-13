@@ -31,12 +31,12 @@ const Wellness = () => {
 
   const series = [
     {
-      name: "Overburdened",
-      data: [12, 25, 30, 35, 45, 30, 20],
+      name: "Health",
+      data: [18, 20, 35, 45, 20, 18, 30],
     },
     {
-      name: "Health",
-      data: [18, 20, 17, 21, 20, 18, 30],
+      name: "Overburdened",
+      data: [3, 2, 12, 17, 12, 30, 20],
     },
     {
       name: "Underutilized",
@@ -44,7 +44,7 @@ const Wellness = () => {
     },
   ];
 
-  const barchartColors = ["#7A7D7C", "#25a17d", "#9B65F7"];
+  const barchartColors = ["#25a17d", "#ABB3B3", "#87D1E4"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -139,7 +139,7 @@ const Wellness = () => {
               </p>
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#7A7D7C"]}
+                colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
                 labelsfontSize="17px"
               />
@@ -153,7 +153,7 @@ const Wellness = () => {
               </p>
               <CommonDonutChart
                 labels={["External HR", "SEO", "Quality"]}
-                colors={["#8c499c", "#f6c614", "#009ddb"]}
+                colors={["#8c499c", "#646dd5", "#009ddb"]}
                 series={TopHealthy}
                 labelsfontSize="17px"
               />
@@ -181,7 +181,7 @@ const Wellness = () => {
               </p>
               <CommonDonutChart
                 labels={["SEO", "Quality", "Branch Operation"]}
-                colors={["#f6c614", "#009ddb", "#d470f7"]}
+                colors={["#646dd5", "#009ddb", "#d470f7"]}
                 series={TopUnderutilized}
                 labelsfontSize="17px"
               />

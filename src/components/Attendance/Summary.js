@@ -29,8 +29,8 @@ const Summary = () => {
   const attendanceTrendsColors = ["#25a17d", "#ABB3B3"];
 
   const lateArrivalSeries = [
-    { name: "Late arrivals", data: [12, 10, 20, 30] },
-    { name: "On time arrivals", data: [5, 6, 10, 12] },
+    { name: "On time arrivals", data: [12, 10, 20, 30] },
+    { name: "Late arrivals", data: [5, 6, 10, 12] },
   ];
 
   const onDateChange = (date, dateString) => {
@@ -189,7 +189,7 @@ const Summary = () => {
             <CommonBarChart
               xasis={attendanceTrendsXasis}
               series={lateArrivalSeries}
-              colors={["#8c489b", "#01aaee"]}
+              colors={["#25a17d", "#ABB3B3"]}
             />
           </div>
         </Col>

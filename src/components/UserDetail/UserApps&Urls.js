@@ -103,7 +103,7 @@ export default function UserAppsUrls() {
         </Row>
         <CommonDonutChart
           labels={["Productive time", "Unproductive time"]}
-          colors={["#25a17d", "#7A7D7C"]}
+          colors={["#25a17d", "#ABB3B3"]}
           series={series}
           timebased="true"
           labelsfontSize="14px"

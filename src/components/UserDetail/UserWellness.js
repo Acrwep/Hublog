@@ -54,7 +54,7 @@ export default function UserWellness() {
             <p className="userattendance_heading">Attendance</p>
             <CommonDonutChart
               labels={["Present", "Absent"]}
-              colors={["#25a17d", "#7A7D7C"]}
+              colors={["#25a17d", "#ABB3B3"]}
               series={series}
               labelsfontSize="19px"
             />

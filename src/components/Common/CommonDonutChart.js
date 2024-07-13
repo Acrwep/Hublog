@@ -8,6 +8,7 @@ export default function CommonDonutChart({
   labelsfontSize,
   style,
   timebased,
+  height,
 }) {
   const [mobileView, setMobileView] = useState(false);
 
@@ -121,7 +122,7 @@ export default function CommonDonutChart({
         options={options}
         series={series}
         type="donut"
-        height={270}
+        height={height ? height : 270}
         timebased={timebased}
       />
     </div>

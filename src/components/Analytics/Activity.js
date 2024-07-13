@@ -34,20 +34,16 @@ const Activity = () => {
 
   const series = [
     {
-      name: "Unproductive time",
-      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+      name: "Active time",
+      data: [3.0, 3.5, 5.5, 6.75, 9.0, 2.5, 4.25],
     },
     {
-      name: "Productive time",
-      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
-    },
-    {
-      name: "Neutral",
-      data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
+      name: "Idle time",
+      data: [2.72, 4.42, 2.0, 2.58, 1.5, 5.0, 3.5], // Representing hours and minutes in decimal format
     },
   ];
 
-  const barchartColors = ["#7A7D7C", "#25a17d", "#9B65F7"];
+  const barchartColors = ["#25a17d", "#ABB3B3"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -156,10 +152,10 @@ const Activity = () => {
                 </Col>
               </Row>
               <CommonDonutChart
-                labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#7A7D7C"]}
+                labels={["Active time", "Idle time"]}
+                colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
-                labelsfontSize="15px"
+                labelsfontSize="17px"
               />
             </div>
           </Col>
@@ -170,7 +166,7 @@ const Activity = () => {
 
               <CommonDonutChart
                 labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#7A7D7C"]}
+                colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
                 labelsfontSize="15px"
                 style={{

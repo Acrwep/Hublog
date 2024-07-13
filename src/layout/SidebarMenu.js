@@ -25,7 +25,7 @@ import {
 //login
 import Login from "../Components/Login/Login";
 //dashboard
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../Components/Dashboard/Dashboard";
 //attendance
 import Attendance from "../Components/Attendance/Attendance";
 //real time

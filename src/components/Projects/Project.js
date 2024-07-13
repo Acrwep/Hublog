@@ -166,7 +166,10 @@ const Projects = () => {
         <CommonSelectField
           label="Owner"
           options={ownerList}
-          onChange={(value) => setOwner(value)}
+          onChange={(value) => {
+            setOwner(value);
+            setOwnerError(selectValidator(value));
+          }}
           value={owner}
           error={ownerError}
           mandatory

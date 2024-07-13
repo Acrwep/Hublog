@@ -16,7 +16,7 @@ const Productivity = () => {
 
   const teamList = [{ id: 1, name: "Operation" }];
 
-  const OverallWellness = [15, 6];
+  const OverallWellness = [12.0, 6.2, 2.0];
   const TopHealthy = [10, 20, 40];
   const TopOverburdened = [20, 40, 30];
   const TopUnderutilized = [80, 20, 40];
@@ -33,12 +33,12 @@ const Productivity = () => {
 
   const series = [
     {
-      name: "Unproductive time",
-      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
-    },
-    {
       name: "Productive time",
       data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+    },
+    {
+      name: "Unproductive time",
+      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
     },
     {
       name: "Neutral",
@@ -46,7 +46,7 @@ const Productivity = () => {
     },
   ];
 
-  const barchartColors = ["#7A7D7C", "#25a17d", "#9B65F7"];
+  const barchartColors = ["#25a17d", "#ABB3B3", "#5E9EBB"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -161,10 +161,16 @@ const Productivity = () => {
                 </Col>
               </Row>
               <CommonDonutChart
-                labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#7A7D7C"]}
+                labels={[
+                  "Productive time",
+                  "Unproductive time",
+                  "Neutral time",
+                ]}
+                colors={["#25a17d", "#ABB3B3", "#5E9EBB"]}
                 series={OverallWellness}
-                labelsfontSize="17px"
+                timebased="true"
+                labelsfontSize="16px"
+                height={325}
               />
             </div>
           </Col>

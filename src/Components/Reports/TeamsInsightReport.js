@@ -94,7 +94,12 @@ const TeamsInsightReport = () => {
 
                 <div className="teamreport_pogessbarContainer">
                   <p style={{ marginRight: "12px" }}>Acvitity</p>
-                  <Progress strokeLinecap="butt" percent={50} status="active" />
+                  <Progress
+                    strokeLinecap="butt"
+                    percent={50}
+                    status="active"
+                    strokeColor="#009737"
+                  />
                 </div>
                 <div className="teamreport_topuserheaderContainer">
                   <FiAward
@@ -153,7 +158,12 @@ const TeamsInsightReport = () => {
 
                 <div className="teamreport_pogessbarContainer">
                   <p style={{ marginRight: "12px" }}>Acvitity</p>
-                  <Progress strokeLinecap="butt" percent={50} status="active" />
+                  <Progress
+                    strokeLinecap="butt"
+                    percent={50}
+                    status="active"
+                    strokeColor="#009737"
+                  />
                 </div>
 
                 <div className="teamreport_topuserheaderContainer">
