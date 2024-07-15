@@ -200,6 +200,9 @@ export default function ManualTime() {
             Submit
           </button>,
         ]}
+        style={{
+          top: 20,
+        }}
       >
         <CommonDatePicker
           label="Date"

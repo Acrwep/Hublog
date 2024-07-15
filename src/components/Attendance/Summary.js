@@ -150,10 +150,10 @@ const Summary = () => {
                 </Col>
               </Row>
               <CommonDonutChart
-                labels={["Prsent", "Absent"]}
+                labels={["Present", "Absent"]}
                 colors={["#25a17d", "#ABB3B3"]}
                 series={OverallWellness}
-                labelsfontSize="15px"
+                labelsfontSize="17px"
               />
             </div>
           </Col>

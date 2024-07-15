@@ -158,7 +158,11 @@ const MonthlyInandOutReport = () => {
         render: (text, record) => {
           return (
             <div className="breakreport_employeenameContainer">
-              <CommonAvatar avatarfontSize="17px" itemName={record.employee} />
+              <CommonAvatar
+                avatarfontSize="14px"
+                avatarSize={28}
+                itemName={record.employee}
+              />
               <p className="reports_avatarname">{record.employee}</p>
             </div>
           );
