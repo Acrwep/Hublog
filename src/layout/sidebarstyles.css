@@ -2,6 +2,10 @@
   width: 100%;
   padding: 12px 19px;
 }
+.collapsed_projectlogo {
+  width: 100%;
+  padding: 12px 0px;
+}
 .sidebar_hrtag {
   border-bottom: 0px !important;
   border: 1.5px solid #2b2f37;

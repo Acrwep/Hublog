@@ -230,7 +230,10 @@ function SidebarMenu() {
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapsed}>
             <div className="demo-logo-vertical">
-              <img src={LogoImg} className="project_logo" />
+              <img
+                src={LogoImg}
+                className={collapsed ? "collapsed_projectlogo" : "project_logo"}
+              />
               <hr className="sidebar_hrtag" />
             </div>
             <SidebarMenuList />

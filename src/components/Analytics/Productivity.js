@@ -46,7 +46,7 @@ const Productivity = () => {
     },
   ];
 
-  const barchartColors = ["#25a17d", "#ABB3B3", "#5E9EBB"];
+  const barchartColors = ["#25a17d", "#ABB3B3", "#3B9AC5"];
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -166,7 +166,7 @@ const Productivity = () => {
                   "Unproductive time",
                   "Neutral time",
                 ]}
-                colors={["#25a17d", "#ABB3B3", "#5E9EBB"]}
+                colors={["#25a17d", "#ABB3B3", "#4FA2C7"]}
                 series={OverallWellness}
                 timebased="true"
                 labelsfontSize="16px"
