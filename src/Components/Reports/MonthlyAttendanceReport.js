@@ -56,7 +56,7 @@ const MonthlyAttendanceReport = () => {
         render: (text, record) => {
           return (
             <div className="breakreport_employeenameContainer">
-              <CommonAvatar avatarfontSize="17px" itemName={record.employee} />
+              <CommonAvatar itemName={record.employee} />
               <p className="reports_avatarname">{record.employee}</p>
             </div>
           );

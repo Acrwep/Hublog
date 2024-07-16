@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Row, Col, Space, Dropdown } from "antd";
+import { Row, Col, Space, Dropdown, Modal } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
 import "../styles.css";
@@ -19,6 +19,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import Loader from "../../../Components/Common/Loader";
 import CommonAddButton from "../../Common/CommonAddButton";
+import { CommonToaster } from "../../Common/CommonToaster";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -243,10 +244,7 @@ const Users = () => {
     }, 2000);
   }, []);
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
-  const onClose = () => {
+  const formReset = () => {
     setOpen(false);
     setFirstName("");
     setFirstNameError("");
@@ -268,6 +266,9 @@ const Users = () => {
     setTeam("");
     setTeamError("");
     setEmployeeId("");
+  };
+  const onClose = () => {
+    formReset();
   };
 
   const handleDateOfBirth = (date) => {
@@ -351,6 +352,8 @@ const Users = () => {
       employeeId: employeeId,
     };
     console.log("response", object);
+    formReset();
+    CommonToaster("User created successfully", "success");
     // alert("Success");
   };
 
@@ -374,7 +377,7 @@ const Users = () => {
               lg={12}
               className="users_adduserbuttonContainer"
             >
-              <CommonAddButton name="Add User" onClick={showDrawer} />
+              <CommonAddButton name="Add User" onClick={() => setOpen(true)} />
             </Col>
           </Row>
 
@@ -387,7 +390,18 @@ const Users = () => {
         </div>
       )}
       {/* user creation drawer */}
-      <Drawer title="Add user" onClose={onClose} open={open} width={600}>
+      <Modal
+        title="Add user"
+        open={open}
+        onOk={handleSubmit}
+        onCancel={onClose}
+        footer={[
+          <button className="designation_submitbutton" onClick={handleSubmit}>
+            Submit
+          </button>,
+        ]}
+        centered
+      >
         <Row gutter={16}>
           <Col span={12}>
             <CommonInputField
@@ -414,7 +428,6 @@ const Users = () => {
             />
           </Col>
         </Row>
-
         <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonInputField
@@ -438,7 +451,6 @@ const Users = () => {
             />
           </Col>
         </Row>
-
         <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonCalendar
@@ -463,7 +475,6 @@ const Users = () => {
             />
           </Col>
         </Row>
-
         <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
@@ -492,7 +503,6 @@ const Users = () => {
             />
           </Col>
         </Row>
-
         <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
@@ -516,7 +526,6 @@ const Users = () => {
             />
           </Col>
         </Row>
-
         <Row style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonInputField
@@ -526,8 +535,7 @@ const Users = () => {
             />
           </Col>
         </Row>
-
-        <div
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "center",
@@ -537,8 +545,8 @@ const Users = () => {
           <button className="users_submitbutton" onClick={handleSubmit}>
             Submit
           </button>
-        </div>
-      </Drawer>
+        </div> */}
+      </Modal>
     </div>
   );
 };

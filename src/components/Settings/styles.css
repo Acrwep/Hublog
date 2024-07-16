@@ -221,17 +221,6 @@
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
 /* teams */
-.team_tabmain_container {
-  border-radius: 6px;
-  border: 1px solid #e2dfef;
-}
-.teamslist_card {
-  background: #f0f5f3;
-  border-radius: 6px;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-}
 .totalcreatedteam_text {
   font-weight: 600;
   font-size: 17px;
@@ -241,69 +230,43 @@
     margin-bottom: 15px;
   }
 }
-.team_list_litag {
-  font-size: 16px;
-  margin-top: 9px;
-  cursor: pointer !important;
-  font-weight: 500;
-}
-.team_list_activelitag {
-  font-size: 16px;
-  margin-top: 9px;
-  cursor: pointer !important;
-  color: #25a17d;
-  font-weight: 500;
-}
-.team_operationheader {
-  background-color: #e8f7f2 !important;
-  border-radius: 6px;
+.teammember_card {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 2px 14px;
   padding: 12px;
+  border-radius: 7px;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
 }
-.team_tabContainer {
-  padding: 0px 12px;
-}
-.team_memberrowContainer {
-  border-radius: 9px;
-  background-color: #c5e1d8;
-  padding: 4px 9px;
-  margin-bottom: 12px;
-  border: 1px solid #91cfbd !important;
-}
-.teaminfo_rowContainer {
-  padding: 10px;
-}
-.teaminfo_policyheading {
-  font-weight: 500;
-  font-size: 15px;
-}
-.teams_nodatafound {
-  text-align: center;
-  font-weight: 700;
-  margin-top: 20px;
-  margin-bottom: 20px;
+.teammember_name {
+  font-weight: 600;
+  overflow: hidden;
+  word-break: break-all;
 }
 .teammember_email {
-  margin-bottom: 0px;
+  color: gray;
+  font-size: 12px;
+  overflow: hidden;
+  word-break: break-all;
 }
-@media (min-width: 300px) and (max-width: 767px) {
-  .teammember_email {
-    font-size: 12px;
-    overflow: hidden;
-    text-overflow: ellipsis !important;
-  }
+.teammembercard_buttons {
+  width: 106px !important;
+  font-size: 12px !important;
+  padding: 0px !important;
+  overflow: hidden !important;
+  word-break: break-all !important;
 }
-@media (min-width: 300px) and (max-width: 768px) {
-  .team_tabmain_container {
-    margin-top: 20px;
-  }
+.teammembercard_buttons:hover {
+  color: #009737 !important;
+  border-color: #009737 !important;
 }
-.team_searchbarcontainer {
-  padding: 0px 16px;
+.teammembercard_buttons:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 12px 1px rgba(85, 226, 108, 0.507);
 }
-@media (min-width: 769px) and (max-width: 1024px) {
-  .settings_teamsearchbar {
-    width: 100% !important;
-  }
+.teammember_nodata {
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
 }
 /* break styles */
 .breakstatus_container {

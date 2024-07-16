@@ -24,6 +24,15 @@ export default function CommonAvatar({ itemName, avatarSize, avatarfontSize }) {
       "#8ED1FC",
       "#EEB39C",
       "#CDB2FD",
+      "#DBA6AA",
+      "#B0DBA6",
+      "#DBCCA6",
+      "#D7DBA6",
+      "#AADBA6",
+      "#AFECE7",
+      "#E6B4A4",
+      "#E0A1B1",
+      "#B8D5E2",
     ];
     const nameHash = name
       .split("")
