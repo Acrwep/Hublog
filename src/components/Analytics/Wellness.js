@@ -5,7 +5,6 @@ import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import CommonBarChart from "../../Components/Common/CommonBarChart";
 import { GiLotus } from "react-icons/gi";
-import DownloadTableAsXLSX from "../../Components/Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 
@@ -74,9 +73,6 @@ const Wellness = () => {
             <Tooltip placement="top" title="Download">
               <Button
                 className="dashboard_download_button"
-                // onClick={() => {
-                //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
-                // }}
               >
                 <DownloadOutlined className="download_icon" />
               </Button>
