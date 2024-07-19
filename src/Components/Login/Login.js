@@ -46,22 +46,22 @@ const Login = () => {
 
     setButtonDisable(true);
     const request = {
-      username: email,
-      password: password,
+      UserName: email,
+      Password: password,
     };
     console.log("login request", request);
 
     try {
       const response = await LoginApi(request);
       console.log("Loginnn response", response);
-      CommonToaster("Login Successfully", "success");
-      localStorage.setItem("Accesstoken", response.data.token);
-      localStorage.setItem("LoginUserInfo", JSON.stringify(response.data.user));
+      // CommonToaster("Login Successfully", "success");
+      // localStorage.setItem("Accesstoken", response.data.token);
+      // localStorage.setItem("LoginUserInfo", JSON.stringify(response.data.user));
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
     } catch (error) {
-      console.log(error);
+      console.log("login error", error);
       CommonToaster(
         error.response?.data?.message ||
           "Something went wrong. Please try again later.",

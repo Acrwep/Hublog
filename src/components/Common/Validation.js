@@ -20,6 +20,15 @@ export const lastNameValidator = (name) => {
   return error;
 };
 
+export const descriptionValidator = (name) => {
+  let error = "";
+
+  if (!name || name.length <= 0) error = " is required";
+  else if (name.length < 3) error = " is not valid";
+
+  return error;
+};
+
 export const emailValidator = (email) => {
   let error = "";
 

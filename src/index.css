@@ -116,6 +116,9 @@ h6 {
   background-color: #25a17d;
   font-weight: 600;
   box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .ant-btn-primary:hover {
   background-color: #009737 !important;
@@ -134,4 +137,8 @@ h6 {
 /* drag and drop image upload styles */
 .ant-upload-wrapper .ant-upload-drag:not(.ant-upload-disabled):hover {
   border-color: #009737 !important;
+}
+/* antd table spin */
+.ant-spin .ant-spin-dot-item {
+  background: #009737 !important;
 }

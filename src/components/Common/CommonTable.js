@@ -9,6 +9,7 @@ const CommonTable = ({
   bordered,
   selectedDatas,
   checkBox,
+  loading,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -51,6 +52,7 @@ const CommonTable = ({
       pagination={paginationConfig}
       tableLayout="fixed"
       bordered={bordered === "true" ? true : false}
+      loading={loading}
     />
   );
 };

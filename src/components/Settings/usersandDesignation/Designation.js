@@ -1,190 +1,244 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Modal } from "antd";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
+import moment from "moment";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
-import { nameValidator } from "../../../Components/Common/Validation";
+import {
+  descriptionValidator,
+  nameValidator,
+} from "../../../Components/Common/Validation";
 import CommonAddButton from "../../Common/CommonAddButton";
+import {
+  getDesignation,
+  createDesignation,
+  updateDesignation,
+} from "../../APIservice.js/action";
+import { AiOutlineEdit } from "react-icons/ai";
+import { CommonToaster } from "../../Common/CommonToaster";
+import Loader from "../../Common/Loader";
 
 export default function Designation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [createdDate, setCreatedDate] = useState(new Date());
+  const [edit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [tableLoading, setTableLoading] = useState(false);
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Description", dataIndex: "description", key: "description" },
-    { title: "Created At", dataIndex: "createdat", key: "createdat" },
-    { title: "Action", dataIndex: "action", key: "action" },
+    { title: "Name", dataIndex: "name", key: "name", width: "200px" },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "310px",
+    },
+    {
+      title: "Created At",
+      dataIndex: "created_date",
+      key: "created_date",
+      render: (text, record) => {
+        return <p>{moment(record).format("DD/MM/YYYY")}</p>;
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "active",
+      key: "active",
+      align: "center",
+      render: (text, record) => {
+        return (
+          <button onClick={() => handleEdit(record)}>
+            <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
+          </button>
+        );
+      },
+    },
   ];
-  const [dummydatas, setDummyDatas] = useState([
-    {
-      key: "1",
-      name: "OPERATION",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      key: "2",
-      name: "EXTERNAL HR",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      key: "3",
+  const [data, setData] = useState([]);
+  const [dummyData, setDummyData] = useState([]);
 
-      name: "Sales Executive",
-      description: "sales",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      name: "INTERNAL HR",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      name: "QUALITY",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    { name: "SEO", description: "", createdat: "2023-11-02", action: "Active" },
-    { name: "BOE", description: "", createdat: "2023-11-02", action: "Active" },
-  ]);
+  useEffect(() => {
+    getDesignationData();
+  }, []);
 
-  const [duplicateDummydatas, setDuplicateDummyDatas] = useState([
-    {
-      key: "1",
-      name: "OPERATION",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      key: "2",
-      name: "EXTERNAL HR",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      key: "3",
+  const getDesignationData = async () => {
+    setLoading(true);
+    try {
+      const response = await getDesignation();
+      console.log("Designation response", response.data);
+      setData(response.data);
+      setDummyData(response.data);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
 
-      name: "Sales Executive",
-      description: "sales",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      name: "INTERNAL HR",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      name: "QUALITY",
-      description: "",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    { name: "SEO", description: "", createdat: "2023-11-02", action: "Active" },
-    { name: "BOE", description: "", createdat: "2023-11-02", action: "Active" },
-  ]);
+  const formReset = () => {
+    setName("");
+    setNameError("");
+    setDescription("");
+    setDescriptionError("");
+    setIsModalOpen(false);
+    setEdit(false);
+  };
 
-  const handleOk = () => {
+  const handleCancel = () => {
+    formReset();
+  };
+
+  const handleOk = async () => {
     const nameValidate = nameValidator(name);
-    const descriptionValidate = nameValidator(description);
+    const descriptionValidate = descriptionValidator(description);
 
     setNameError(nameValidate);
     setDescriptionError(descriptionValidate);
 
     if (nameValidate || descriptionValidate) return;
 
-    setIsModalOpen(false);
+    const request = {
+      Name: name,
+      Description: description,
+      Active: true,
+      Created_date: moment(createdDate).format("YYYY-MM-DDTHH:mm:ss.SSSSSSSZ"),
+      OrganizationId: 1,
+      ...(edit && { id: id }),
+    };
+    if (edit) {
+      setTableLoading(true);
+      try {
+        const response = await updateDesignation(request);
+        console.log("designation update response", response);
+        CommonToaster("Designation updated successfully", "success");
+        getDesignationData();
+        formReset();
+      } catch (error) {
+        console.log("update designation error", error);
+        CommonToaster(error.response.data.message, "error");
+      } finally {
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 1000);
+      }
+    } else {
+      try {
+        setTableLoading(true);
+        const response = await createDesignation(request);
+        console.log("Designation create response", response);
+        CommonToaster("Designation created successfully", "success");
+        getDesignationData();
+        formReset();
+      } catch (error) {
+        console.log("designation error", error);
+        CommonToaster(error.response.data.message, "error");
+      } finally {
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 1000);
+      }
+    }
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+
+  const handleEdit = async (record) => {
+    console.log("Clicked Item", record);
+    setEdit(true);
+    setIsModalOpen(true);
+    setId(record.id);
+    setName(record.name);
+    setDescription(record.description);
   };
+
   const handleSearch = (value) => {
     console.log("Search value:", value);
     if (value === "") {
-      setDummyDatas(duplicateDummydatas);
+      setData(dummyData);
       return;
     }
-    const filterData = dummydatas.filter((item) =>
+    const filterData = data.filter((item) =>
       item.name.toLowerCase().includes(value)
     );
     console.log("filter", filterData);
-    setDummyDatas(filterData);
+    setData(filterData);
   };
   return (
-    <div>
-      <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={24} lg={12}>
-          <CommonSearchField
-            placeholder="Search designation..."
-            onSearch={handleSearch}
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+            <Col xs={24} sm={24} md={24} lg={12}>
+              <CommonSearchField
+                placeholder="Search designation..."
+                onSearch={handleSearch}
+              />
+            </Col>
+            <Col
+              xs={24}
+              sm={24}
+              md={24}
+              lg={12}
+              className="designion_adduserbuttonContainer"
+            >
+              <CommonAddButton
+                name="Add Designation"
+                onClick={() => setIsModalOpen(true)}
+              />
+            </Col>
+          </Row>
+          <CommonTable
+            columns={columns}
+            dataSource={data}
+            scroll={{ x: 760 }}
+            dataPerPage={10}
+            loading={tableLoading}
+            checkBox="false"
           />
-        </Col>
-        <Col
-          xs={24}
-          sm={24}
-          md={24}
-          lg={12}
-          className="designion_adduserbuttonContainer"
-        >
-          <CommonAddButton
-            name="Add Designation"
-            onClick={() => setIsModalOpen(true)}
-          />
-        </Col>
-      </Row>
-      <CommonTable
-        columns={columns}
-        dataSource={dummydatas}
-        scroll={{ x: 600 }}
-        dataPerPage={4}
-      />
-      {/* adddesignation modal */}
-      <Modal
-        title="Add Designation"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <button className="designation_submitbutton" onClick={handleOk}>
-            Submit
-          </button>,
-        ]}
-      >
-        <CommonInputField
-          label="Name"
-          onChange={(e) => {
-            setName(e.target.value);
-            setNameError(nameValidator(e.target.value));
-          }}
-          value={name}
-          error={nameError}
-          style={{ marginTop: "20px", marginBottom: "20px" }}
-          mandatory
-        />
-        <CommonInputField
-          label="Description"
-          onChange={(e) => {
-            setDescription(e.target.value);
-            setDescriptionError(nameValidator(e.target.value));
-          }}
-          value={description}
-          error={descriptionError}
-          mandatory
-        />
-      </Modal>
-    </div>
+          {/* adddesignation modal */}
+          <Modal
+            title="Add Designation"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <button className="designation_submitbutton" onClick={handleOk}>
+                Submit
+              </button>,
+            ]}
+          >
+            <CommonInputField
+              label="Name"
+              onChange={(e) => {
+                setName(e.target.value);
+                setNameError(nameValidator(e.target.value));
+              }}
+              value={name}
+              error={nameError}
+              style={{ marginTop: "20px", marginBottom: "20px" }}
+              mandatory
+            />
+            <CommonInputField
+              label="Description"
+              onChange={(e) => {
+                setDescription(e.target.value);
+                setDescriptionError(descriptionValidator(e.target.value));
+              }}
+              value={description}
+              error={descriptionError}
+              mandatory
+            />
+          </Modal>
+        </div>
+      )}
+    </>
   );
 }

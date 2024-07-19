@@ -11,21 +11,18 @@ import "../styles.css";
 import CommonAddButton from "../../Common/CommonAddButton";
 import CommonSelectField from "../../Common/CommonSelectField";
 import CommonAvatar from "../../Common/CommonAvatar";
+import { getTeams, createTeams, updateTeams } from "../../APIservice.js/action";
+import { CommonToaster } from "../../Common/CommonToaster";
+import Loader from "../../Common/Loader";
+import { AiOutlineEdit } from "react-icons/ai";
 
 const Team = () => {
   const dispatch = useDispatch();
   const memberList = useSelector((state) => state.teamMembers);
+  const [id, setId] = useState("");
+  const [teamId, setTeamId] = useState("");
+  const [teamList, setTeamList] = useState([]);
 
-  const [team, setTeam] = useState(1);
-  const teamList = [
-    { id: 1, name: "Operation" },
-    { id: 2, name: "Branch Operation" },
-    { id: 3, name: "Quality" },
-    { id: 4, name: "SEO" },
-    { id: 5, name: "Sales" },
-    { id: 6, name: "Developers" },
-    { id: 7, name: "HR" },
-  ];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeTeamModal, setChangeTeamModal] = useState(false);
   const [name, setName] = useState("");
@@ -34,23 +31,40 @@ const Team = () => {
   const [descriptionError, setDescriptionError] = useState("");
   const [changeTeam, setChangeTeam] = useState("");
   const [changeTeamError, setChangeTeamError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
-    const teamMembers = [
-      { id: 1, name: "Karthi", email: "karthi@gmail.com" },
-      { id: 2, name: "Vicky", email: "vicky@gmail.com" },
-    ];
-    console.log("meberrrr", memberList);
-    setTeam(1);
-    dispatch(addteamMembers(teamMembers));
+    getTeamsData();
   }, []);
 
+  const getTeamsData = async () => {
+    setLoading(true);
+    try {
+      const response = await getTeams(1);
+      console.log("teams response", response.data);
+      const teamList = response.data;
+      teamList.map((item, index) => {
+        if (index === 0) {
+          setTeamId(item.id);
+        }
+      });
+      setTeamList(teamList);
+      // setDummyData(response.data);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
   const handleSearch = (value) => {
     console.log("Search value:", value);
   };
 
   const handleTeam = (item) => {
-    setTeam(item);
+    setTeamId(item);
     const filterItem = teamList.find((f) => f.id === item);
     console.log("filterItem", filterItem);
 
@@ -102,13 +116,14 @@ const Team = () => {
     setChangeTeamError("");
     setIsModalOpen(false);
     setChangeTeamModal(false);
+    setEdit(false);
   };
 
   const handleCancel = () => {
     formReset();
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     const nameValidate = nameValidator(name);
     const descriptionValidate = nameValidator(description);
 
@@ -117,7 +132,37 @@ const Team = () => {
 
     if (nameValidate || descriptionValidate) return;
 
-    setIsModalOpen(false);
+    const request = {
+      Name: name,
+      Description: description,
+      Active: true,
+      OrganizationId: 1,
+      ...(edit && { id: id }),
+      Parentid: 1,
+    };
+    if (edit) {
+      try {
+        const response = await updateTeams(request);
+        console.log("team update response", response);
+        CommonToaster("Team updated successfully", "success");
+        getTeamsData();
+        formReset();
+      } catch (error) {
+        console.log("update team error", error);
+        CommonToaster(error.response.data.message, "error");
+      }
+    } else {
+      try {
+        const response = await createTeams(request);
+        console.log("team create response", response);
+        CommonToaster("Team created successfully", "success");
+        getTeamsData();
+        formReset();
+      } catch (error) {
+        console.log("team error", error);
+        CommonToaster(error.response.data.message, "error");
+      }
+    }
   };
 
   const handleChangeTeamSubmit = () => {
@@ -156,15 +201,32 @@ const Team = () => {
         </Col>
       </Row>
 
-      <CommonSelectField
-        label="Select team"
-        options={teamList}
-        value={team}
-        showSearch={true}
-        style={{ width: "170px" }}
-        onChange={handleTeam}
-        allowClear="false"
-      />
+      <Row gutter={16}>
+        <Col span={12}>
+          <CommonSelectField
+            label="Select team"
+            options={teamList}
+            value={teamId}
+            showSearch={true}
+            style={{ width: "170px" }}
+            onChange={handleTeam}
+            allowClear="false"
+          />
+        </Col>
+        <Col
+          span={12}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Button type="primary">
+            <AiOutlineEdit size={17} style={{ marginRight: "6px" }} />
+            {"  "} Edit
+          </Button>
+        </Col>
+      </Row>
 
       <Row gutter={16} style={{ marginTop: "20px" }}>
         {memberList.length >= 1 &&

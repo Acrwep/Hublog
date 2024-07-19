@@ -27,7 +27,7 @@ api.interceptors.request.use(
 
 export const LoginApi = async (loginCredential) => {
   try {
-    const response = await api.post("/api/Login/AdminLogin", loginCredential);
+    const response = await api.post("api/Login/UserLogin", loginCredential);
     return response;
   } catch (error) {
     throw error;
@@ -46,6 +46,64 @@ export const getUsers = async (userDetails) => {
 export const getScreenShots = async (request) => {
   try {
     const response = await api.post("/api/Admin/GetScreenShots", request);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+// designation
+export const getDesignation = async () => {
+  try {
+    const response = await api.get("/api/Designation/GetDesignationAll");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createDesignation = async (designrequest) => {
+  try {
+    const response = await api.post(
+      "/api/Designation/InsertDesignation",
+      designrequest
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateDesignation = async (designrequest) => {
+  try {
+    const response = await api.put(
+      "/api/Designation/UpdateDesignation",
+      designrequest
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//teams
+export const getTeams = async (organizationId) => {
+  try {
+    const response = await api.get(
+      `/api/Team/GetTeam?organizationId=${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createTeams = async (teamrequest) => {
+  try {
+    const response = await api.post("/api/Team/CreateTeam", teamrequest);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateTeams = async (teamrequest) => {
+  try {
+    const response = await api.post("/api/Team/UpdateTeam", teamrequest);
     return response;
   } catch (error) {
     throw error;
