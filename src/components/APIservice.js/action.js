@@ -27,7 +27,7 @@ api.interceptors.request.use(
 
 export const LoginApi = async (loginCredential) => {
   try {
-    const response = await api.post("api/Login/UserLogin", loginCredential);
+    const response = await api.post("api/Login/AdminLogin", loginCredential);
     return response;
   } catch (error) {
     throw error;

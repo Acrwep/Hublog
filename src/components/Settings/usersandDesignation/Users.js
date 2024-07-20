@@ -51,21 +51,15 @@ const Users = () => {
   ]);
   const [role, setRole] = useState("");
   const [roleOptions, setRoleOptions] = useState([
-    { id: 1, name: "Frontend Developer" },
-    { id: 2, name: "Backend Developer" },
+    { id: 2, name: "Admin" },
+    { id: 3, name: "User" },
   ]);
   const [roleError, setRoleError] = useState("");
   const [designation, setDesignation] = useState("");
-  const [designationOptions, setDesignationOptions] = useState([
-    { id: 1, name: "Software Developer" },
-    { id: 2, name: "Support" },
-  ]);
+  const [designationOptions, setDesignationOptions] = useState([]);
   const [team, setTeam] = useState("");
   const [teamError, setTeamError] = useState("");
-  const [teamOptions, setTeamOptions] = useState([
-    { id: 1, name: "Frontend" },
-    { id: 2, name: "Backend" },
-  ]);
+  const [teamOptions, setTeamOptions] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -226,24 +220,11 @@ const Users = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getRoleData();
-      }, 1000);
-    }
-  };
-
-  const getRoleData = async () => {
-    try {
-      const response = await getRole();
-      console.log("role response", response.data);
-      setRoleOptions(response.data);
-    } catch (error) {
-      CommonToaster(error.response.data.message, "error");
-    } finally {
-      setTimeout(() => {
         setLoading(false);
       }, 1000);
     }
   };
+
   const formReset = () => {
     setOpen(false);
     setFirstName("");
@@ -379,7 +360,7 @@ const Users = () => {
       Gender: gender === 1 ? "Male" : "Female",
       OrganizationId: 1,
       RoleName: "Employee",
-      RoleId: 3,
+      RoleId: role,
       DesignationName: designationName,
       DesignationId: designation,
       TeamId: team,

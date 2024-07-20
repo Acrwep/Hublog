@@ -159,11 +159,69 @@
   display: flex;
   justify-content: flex-end;
   padding: 0px 20px;
+  align-items: center;
+  position: relative;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .logoutavatar_container {
     display: none;
   }
+}
+.header_avatar {
+  background-color: #25a17d;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.header_logoutmenuContainer {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 12px;
+  /* position: absolute; */
+  /* top: 90%; */
+  background-color: white;
+  padding: 6px 0px;
+  z-index: 1;
+}
+.headerlogoutmenu_avatercontainer {
+  display: flex;
+  padding: 0px 12px;
+  margin-top: 12px;
+  margin-bottom: 10px;
+}
+.header_logoutmenuname {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.header_logoutmenuemail {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: gray;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.headerlogoutmenu_logiconContainer {
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  cursor: pointer;
+  color: gray;
+}
+.headerlogoutmenu_logiconContainer:hover {
+  background-color: rgba(20, 184, 166, 0.1);
+  color: rgb(20, 184, 166) !important;
+  font-weight: 600;
+}
+.header_logoutmenulogout {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .header_collapesbuttonContainer {

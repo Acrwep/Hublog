@@ -16,12 +16,26 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 import SidebarMenuList from "./SidebarMenuList";
 import LogoImg from "../../src/assets/images/logo-re-3.png";
+import { AiOutlineLogout } from "react-icons/ai";
+import {
+  MdOutlineDashboardCustomize,
+  MdRocketLaunch,
+  MdScreenshotMonitor,
+} from "react-icons/md";
+import { FaAppStore } from "react-icons/fa";
+import { CiStreamOn } from "react-icons/ci";
+import { GrMapLocation } from "react-icons/gr";
+import { VscGraphLine } from "react-icons/vsc";
+import { FiActivity } from "react-icons/fi";
+import { GiLotus } from "react-icons/gi";
+
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DownOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import { IoMdArrowDropdown } from "react-icons/io";
 //login
 import Login from "../Components/Login/Login";
 //dashboard
@@ -67,17 +81,6 @@ import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
-import {
-  MdOutlineDashboardCustomize,
-  MdRocketLaunch,
-  MdScreenshotMonitor,
-} from "react-icons/md";
-import { FaAppStore } from "react-icons/fa";
-import { CiStreamOn } from "react-icons/ci";
-import { GrMapLocation } from "react-icons/gr";
-import { VscGraphLine } from "react-icons/vsc";
-import { FiActivity } from "react-icons/fi";
-import { GiLotus } from "react-icons/gi";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -90,7 +93,9 @@ function SidebarMenu() {
   const [dummySidemenuList, setDummySidemenuList] = useState([]);
   const [search, setSearch] = useState("");
   const [searchbarHover, setSearchbarHover] = useState(false);
-  const [avatarName, setAvatarName] = useState("");
+  const [logMenu, setLogMenu] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [screenWidth, setScreenWidth] = useState("");
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -100,47 +105,6 @@ function SidebarMenu() {
     console.log("Logout");
     localStorage.clear();
     navigation("/login");
-  };
-
-  const items = [
-    {
-      key: "1",
-      label: (
-        <a rel="noopener noreferrer" href="#">
-          Explorer
-        </a>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <a rel="noopener noreferrer" href="#">
-          User
-        </a>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <a rel="noopener noreferrer" href="#">
-          Apps&URLs
-        </a>
-      ),
-    },
-  ];
-
-  const profileItems = [
-    {
-      key: "1",
-      label: (
-        <a rel="noopener noreferrer" onClick={handleLogout}>
-          Logout
-        </a>
-      ),
-    },
-  ];
-  const menu = {
-    items: profileItems,
   };
 
   useEffect(() => {
@@ -157,6 +121,11 @@ function SidebarMenu() {
   }, []);
 
   useEffect(() => {
+    const getItem = localStorage.getItem("LoginUserInfo");
+    const userDetails = JSON.parse(getItem);
+    console.log("login user details", userDetails);
+    setUserName(userDetails.first_Name);
+    setUserEmail(userDetails.email);
     const menuList = Object.values(SideMenuConfig).map((item) => {
       return { ...item };
     });
@@ -218,6 +187,33 @@ function SidebarMenu() {
     navigation(`/${removespace.toLowerCase()}`);
     setSearch("");
   };
+  const CustomDropdownContent = () => (
+    <div className="header_logoutmenuContainer">
+      <div className="headerlogoutmenu_avatercontainer">
+        <Avatar
+          size={40}
+          style={{
+            backgroundColor: "#25a17d",
+            fontWeight: "600",
+            marginRight: "12px",
+            textTransform: "uppercase",
+          }}
+        >
+          {userName[0]}
+        </Avatar>
+
+        <div>
+          <p className="header_logoutmenuname">{userName}</p>
+          <p className="header_logoutmenuemail">{userEmail}</p>
+        </div>
+      </div>
+      <Divider style={{ margin: "0" }} />
+      <div className="headerlogoutmenu_logiconContainer" onClick={handleLogout}>
+        <AiOutlineLogout size={25} style={{ marginRight: "27px" }} />
+        <p className="header_logoutmenulogout">Logout</p>
+      </div>
+    </div>
+  );
   return (
     <div>
       {location.pathname === "/login" ? (
@@ -283,20 +279,6 @@ function SidebarMenu() {
                           />
                         </Space>
                       </div>
-                      {/* <div className="explore_container">
-                        <Space direction="vertical">
-                          <Space wrap>
-                            <Dropdown menu={{ items }} placement="bottomLeft">
-                              <Button className="explore_button">
-                                <div style={{ display: "flex" }}>
-                                  <p>Explorer</p>
-                                  <DownOutlined className="navbar_explorericon" />
-                                </div>
-                              </Button>
-                            </Dropdown>
-                          </Space>
-                        </Space>
-                      </div> */}
                     </div>
                     <div
                       className="navbar_searchlistContainer"
@@ -329,25 +311,28 @@ function SidebarMenu() {
                     </div>
                   </div>
                 </Col>
-                <Col xs={24} sm={24} md={11} lg={11}>
-                  <div className="logoutavatar_container">
-                    <Space direction="vertical">
-                      <Space wrap>
-                        <Dropdown menu={menu} placement="bottomRight" arrow>
-                          <Avatar
-                            size={40}
-                            style={{
-                              backgroundColor: "#25a17d",
-                              fontWeight: "600",
-                              cursor: "pointer",
-                            }}
-                          >
-                            {/* {avatarName} */}B
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={11}
+                  lg={11}
+                  className="logoutavatar_container"
+                >
+                  <Space direction="vertical">
+                    <Space wrap>
+                      <Dropdown
+                        dropdownRender={CustomDropdownContent}
+                        placement="bottomRight"
+                        arrow
+                      >
+                        <div>
+                          <Avatar size={35} className="header_avatar">
+                            {userName[0]}
                           </Avatar>
-                        </Dropdown>
-                      </Space>
+                        </div>
+                      </Dropdown>
                     </Space>
-                  </div>
+                  </Space>
                 </Col>
               </Row>
             </Header>

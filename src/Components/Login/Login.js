@@ -54,9 +54,9 @@ const Login = () => {
     try {
       const response = await LoginApi(request);
       console.log("Loginnn response", response);
-      // CommonToaster("Login Successfully", "success");
-      // localStorage.setItem("Accesstoken", response.data.token);
-      // localStorage.setItem("LoginUserInfo", JSON.stringify(response.data.user));
+      CommonToaster("Login Successfully", "success");
+      localStorage.setItem("Accesstoken", response.data.token);
+      localStorage.setItem("LoginUserInfo", JSON.stringify(response.data.user));
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
