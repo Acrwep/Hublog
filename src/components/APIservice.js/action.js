@@ -34,15 +34,6 @@ export const LoginApi = async (loginCredential) => {
   }
 };
 
-export const getUsers = async (userDetails) => {
-  try {
-    const response = await api.post("/api/Admin/GetUsers", userDetails);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getScreenShots = async (request) => {
   try {
     const response = await api.post("/api/Admin/GetScreenShots", request);
@@ -60,22 +51,22 @@ export const getDesignation = async () => {
     throw error;
   }
 };
-export const createDesignation = async (designrequest) => {
+export const createDesignation = async (designpayload) => {
   try {
     const response = await api.post(
       "/api/Designation/InsertDesignation",
-      designrequest
+      designpayload
     );
     return response;
   } catch (error) {
     throw error;
   }
 };
-export const updateDesignation = async (designrequest) => {
+export const updateDesignation = async (designpayload) => {
   try {
     const response = await api.put(
       "/api/Designation/UpdateDesignation",
-      designrequest
+      designpayload
     );
     return response;
   } catch (error) {
@@ -93,17 +84,70 @@ export const getTeams = async (organizationId) => {
     throw error;
   }
 };
-export const createTeams = async (teamrequest) => {
+export const createTeams = async (teampayload) => {
   try {
-    const response = await api.post("/api/Team/CreateTeam", teamrequest);
+    const response = await api.post("/api/Team/CreateTeam", teampayload);
     return response;
   } catch (error) {
     throw error;
   }
 };
-export const updateTeams = async (teamrequest) => {
+export const updateTeams = async (teamID, teampayload) => {
   try {
-    const response = await api.post("/api/Team/UpdateTeam", teamrequest);
+    const response = await api.put(
+      `/api/Team/UpdateTeam/${teamID}`,
+      teampayload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//role
+export const getRole = async () => {
+  try {
+    const response = await api.get("api/Role/GetRoleAll");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createRole = async (rolepayload) => {
+  try {
+    const response = await api.post("/api/Role/InsertRole", rolepayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateRole = async (teamID, rolepayload) => {
+  try {
+    const response = await api.put("/api/Role/UpdateRole", rolepayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//users
+export const getUsers = async () => {
+  try {
+    const response = await api.get("api/Users/GetAllUsers");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createUser = async (userpayload) => {
+  try {
+    const response = await api.post("/api/Users/InsertUser", userpayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateUser = async (userpayload) => {
+  try {
+    const response = await api.put("/api/Users/UpdateUser", userpayload);
     return response;
   } catch (error) {
     throw error;

@@ -1,4 +1,5 @@
 const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
+const descriptionRegex = /^(?!\s*$).+/;
 const emailRegex = /^[a-zA-Z0-9._-]{3,}@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/;
 const mobileRegex = /^[0-9]+$/;
 
@@ -22,9 +23,11 @@ export const lastNameValidator = (name) => {
 
 export const descriptionValidator = (name) => {
   let error = "";
+  const trimmedName = name.trim();
 
-  if (!name || name.length <= 0) error = " is required";
-  else if (name.length < 3) error = " is not valid";
+  if (!trimmedName || trimmedName.length <= 0) error = " is required";
+  else if (!descriptionRegex.test(trimmedName) || trimmedName.length < 2)
+    error = " must be 2 characters";
 
   return error;
 };

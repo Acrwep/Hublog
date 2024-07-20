@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
 import { Row, Col, Space, Dropdown, Modal } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
@@ -20,9 +20,17 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import Loader from "../../../Components/Common/Loader";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { CommonToaster } from "../../Common/CommonToaster";
+import {
+  createUser,
+  getDesignation,
+  getRole,
+  getTeams,
+  getUsers,
+  updateUser,
+} from "../../APIservice.js/action";
 
 const Users = () => {
-  const [data, setData] = useState([]);
+  const [userId, setUserId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastName, setLastName] = useState("");
@@ -60,16 +68,57 @@ const Users = () => {
   ]);
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [tableLoading, setTableLoading] = useState(false);
 
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name", width: 150 },
+    {
+      title: "Name",
+      dataIndex: "usersName",
+      key: "usersName",
+      width: 150,
+    },
     { title: "Email", dataIndex: "email", key: "email", width: 250 },
     { title: "Team", dataIndex: "teamName", key: "teamName" },
     { title: "Role", dataIndex: "roleName", key: "roleName" },
-    { title: "DOB", dataIndex: "dob", key: "dob" },
-    { title: "DOJ", dataIndex: "doj", key: "doj" },
-    { title: "Status", dataIndex: "active", key: "active" },
+    {
+      title: "DOB",
+      dataIndex: "dob",
+      key: "dob",
+      render: (text, record) => {
+        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+      },
+    },
+    {
+      title: "DOJ",
+      dataIndex: "doj",
+      key: "doj",
+      render: (text, record) => {
+        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+      },
+    },
+    { title: "Employee Id", dataIndex: "employeeID", key: "employeeID" },
+    {
+      title: "Status",
+      dataIndex: "active",
+      key: "active",
+      render: (text, record) => {
+        if (text === true) {
+          return (
+            <div className="logsreport_mappingActivetextContainer">
+              <p>Active</p>
+            </div>
+          );
+        } else {
+          return (
+            <div className="logsreport_statusInActivetextContainer">
+              <p>Inactive</p>
+            </div>
+          );
+        }
+      },
+    },
     {
       title: "Action",
       dataIndex: "accessLevel",
@@ -81,7 +130,10 @@ const Users = () => {
           {
             key: "1",
             label: (
-              <div style={{ display: "flex" }}>
+              <div
+                style={{ display: "flex" }}
+                onClick={() => handleEdit(record)}
+              >
                 <AiOutlineEdit size={19} className="users_tableeditbutton" />
                 <button onClick={() => console.log(record)}>Edit</button>
               </div>
@@ -120,130 +172,78 @@ const Users = () => {
       },
     },
   ];
-  const [dummydatas, setDummyDatas] = useState([
-    {
-      key: "1",
-      name: "John Brown",
-      email: "john.brown@example.com",
-      teamName: "Team A",
-      roleName: "Developer",
-      dob: "1990-01-01",
-      doj: "2020-01-01",
-      active: "Active",
-      accessLevel: "Admin",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      email: "jim.green@example.com",
-      teamName: "Team B",
-      roleName: "Manager",
-      dob: "1985-01-01",
-      doj: "2018-01-01",
-      active: "Inactive",
-      accessLevel: "User",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      email: "joe.black@example.com",
-      teamName: "Team C",
-      roleName: "Tester",
-      dob: "1992-01-01",
-      doj: "2019-01-01",
-      active: "Active",
-      accessLevel: "User",
-    },
-    {
-      key: "4",
-      name: "Disabled User",
-      email: "disabled.user@example.com",
-      teamName: "Team D",
-      roleName: "Support",
-      dob: "1980-01-01",
-      doj: "2010-01-01",
-      active: "Inactive",
-      accessLevel: "Admin",
-    },
-  ]);
-
-  const [duplicateDummydatas, setDuplicateDummyDatas] = useState([
-    {
-      key: "1",
-      name: "John Brown",
-      email: "john.brown@example.com",
-      teamName: "Team A",
-      roleName: "Developer",
-      dob: "1990-01-01",
-      doj: "2020-01-01",
-      active: "Active",
-      accessLevel: "Admin",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      email: "jim.green@example.com",
-      teamName: "Team B",
-      roleName: "Manager",
-      dob: "1985-01-01",
-      doj: "2018-01-01",
-      active: "Inactive",
-      accessLevel: "User",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      email: "joe.black@example.com",
-      teamName: "Team C",
-      roleName: "Tester",
-      dob: "1992-01-01",
-      doj: "2019-01-01",
-      active: "Active",
-      accessLevel: "User",
-    },
-    {
-      key: "4",
-      name: "Disabled User",
-      email: "disabled.user@example.com",
-      teamName: "Team D",
-      roleName: "Support",
-      dob: "1980-01-01",
-      doj: "2010-01-01",
-      active: "Inactive",
-      accessLevel: "Admin",
-    },
-  ]);
+  const [data, setData] = useState([]);
+  const [dummyData, setDummyData] = useState([]);
 
   useEffect(() => {
     const token =
       "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQEh1YmxvZy5jb20iLCJ1c2VySWQiOjEsInJvbGUiOiJBRE1JTiIsInN1YiI6MSwibmJmIjoxNzEzMTg4ODY0LjAsImlhdCI6MTcxMzE4ODg2NC4wLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjQ0MzAwLyIsImF1ZCI6InNlY3VyZWFwaXVzZXIiLCJleHAiOjE3MTMxOTYwNjQuMH0.VbXKnhK0SB1viG2bmWXuPCOBt6UwU2WfOlt2wYVLZhg";
-
-    fetch("http://65.1.247.242:8002/api/Admin/GetUsers", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("data", data);
-        setData(data?.user);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    getUsersData();
   }, []);
 
+  const getUsersData = async (status) => {
+    console.log("statussssss", status);
+    setLoading(status === "false" ? false : true);
+    try {
+      const response = await getUsers();
+      console.log("users response", response.data);
+      setData(response.data);
+      setDummyData(response.data);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        if (status === "fasle") {
+          return;
+        } else {
+          getDesignationData();
+        }
+      }, 1000);
+    }
+  };
+
+  const getDesignationData = async () => {
+    try {
+      const response = await getDesignation();
+      console.log("Designation response", response.data);
+      setDesignationOptions(response.data);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getTeamData();
+      }, 1000);
+    }
+  };
+
+  const getTeamData = async () => {
+    try {
+      const response = await getTeams(1);
+      console.log("teams response", response.data);
+      const teamList = response.data;
+      setTeamOptions(teamList);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getRoleData();
+      }, 1000);
+    }
+  };
+
+  const getRoleData = async () => {
+    try {
+      const response = await getRole();
+      console.log("role response", response.data);
+      setRoleOptions(response.data);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
   const formReset = () => {
     setOpen(false);
     setFirstName("");
@@ -266,6 +266,7 @@ const Users = () => {
     setTeam("");
     setTeamError("");
     setEmployeeId("");
+    setEdit(false);
   };
   const onClose = () => {
     formReset();
@@ -292,17 +293,34 @@ const Users = () => {
   const handleSearch = (value) => {
     console.log("Search value:", value);
     if (value === "") {
-      setDummyDatas(duplicateDummydatas);
+      setData(dummyData);
       return;
     }
-    const filterData = dummydatas.filter((item) =>
-      item.name.toLowerCase().includes(value)
+    const filterData = data.filter((item) =>
+      item.usersName.toLowerCase().includes(value)
     );
     console.log("filter", filterData);
-    setDummyDatas(filterData);
+    setData(filterData);
   };
 
-  const handleSubmit = (e) => {
+  const handleEdit = (record) => {
+    console.log("eeeeeee", record);
+    setEdit(true);
+    setOpen(true);
+    setUserId(record.id);
+    setFirstName(record.first_Name);
+    setLastName(record.last_Name);
+    setEmail(record.email);
+    setDateOfBirth(record.dob);
+    setDateOfJoining(record.doj);
+    setPhone(record.phone);
+    setDesignation(record.designationId);
+    setTeam(record.teamId);
+    setGender(record.gender === "Male" ? 1 : 2);
+    setRole(record.roleId);
+    setEmployeeId(record.employeeID);
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(dateofBirth);
 
@@ -339,22 +357,71 @@ const Users = () => {
     )
       return;
 
-    const object = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      dateOfBirsth: dateofBirth,
-      dateOfJoining: dateofJoining,
-      phone: phone,
-      gender: gender,
-      designation: designation,
-      team: team,
-      employeeId: employeeId,
+    const selectedDesignation = designationOptions.find(
+      (design) => design.id === designation
+    );
+    console.log("designnn", selectedDesignation);
+    const designationName = selectedDesignation.name;
+
+    const selectedTeam = teamOptions.find((t) => t.id === team);
+    console.log("teammmm", selectedTeam);
+    const teamName = selectedTeam.name;
+
+    const request = {
+      First_Name: firstName,
+      Last_Name: lastName,
+      Email: email,
+      DOB: moment(dateofBirth).format("MM/DD/YYYY"),
+      DOJ: moment(dateofJoining).format("MM/DD/YYYY"),
+      Phone: phone,
+      UsersName: firstName + lastName,
+      Password: "Hublog",
+      Gender: gender === 1 ? "Male" : "Female",
+      OrganizationId: 1,
+      RoleName: "Employee",
+      RoleId: 3,
+      DesignationName: designationName,
+      DesignationId: designation,
+      TeamId: team,
+      TeamName: teamName,
+      EmployeeID: employeeId,
+      Active: true,
+      ...(edit && { id: userId }),
     };
-    console.log("response", object);
-    formReset();
-    CommonToaster("User created successfully", "success");
-    // alert("Success");
+    console.log("user payload", request);
+    if (edit) {
+      setTableLoading(true);
+      try {
+        const response = await updateUser(request);
+        console.log("user update response", response);
+        CommonToaster("User updated successfully", "success");
+        getUsersData("false");
+        formReset();
+      } catch (error) {
+        console.log("update designation error", error);
+        CommonToaster(error.response.data.message, "error");
+      } finally {
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 1000);
+      }
+    } else {
+      try {
+        setTableLoading(true);
+        const response = await createUser(request);
+        console.log("user create response", response);
+        CommonToaster("User created successfully", "success");
+        getUsersData("false");
+        formReset();
+      } catch (error) {
+        console.log("designation error", error);
+        CommonToaster(error.response.data.message, "error");
+      } finally {
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 1000);
+      }
+    }
   };
 
   return (
@@ -377,15 +444,23 @@ const Users = () => {
               lg={12}
               className="users_adduserbuttonContainer"
             >
-              <CommonAddButton name="Add User" onClick={() => setOpen(true)} />
+              <CommonAddButton
+                name="Add User"
+                onClick={() => {
+                  setOpen(true);
+                  setEdit(false);
+                }}
+              />
             </Col>
           </Row>
 
           <CommonTable
             columns={columns}
-            dataSource={dummydatas}
-            scroll={{ x: 1200 }}
-            dataPerPage={4}
+            dataSource={data}
+            scroll={{ x: 1400 }}
+            dataPerPage={10}
+            loading={tableLoading}
+            checkBox="false"
           />
         </div>
       )}

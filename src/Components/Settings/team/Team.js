@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Tabs, Modal, Button } from "antd";
 import CommonSearchField from "../../Common/CommonSearchbar";
 import CommonInputField from "../../Common/CommonInputField";
-import { nameValidator, selectValidator } from "../../Common/Validation";
+import { descriptionValidator, selectValidator } from "../../Common/Validation";
 import TeamInfo from "./TeamInfo";
 import TeamMember from "./TeamMember";
 import { addteamMembers } from "../../Redux/slice";
@@ -19,7 +19,6 @@ import { AiOutlineEdit } from "react-icons/ai";
 const Team = () => {
   const dispatch = useDispatch();
   const memberList = useSelector((state) => state.teamMembers);
-  const [id, setId] = useState("");
   const [teamId, setTeamId] = useState("");
   const [teamList, setTeamList] = useState([]);
 
@@ -124,8 +123,8 @@ const Team = () => {
   };
 
   const handleOk = async () => {
-    const nameValidate = nameValidator(name);
-    const descriptionValidate = nameValidator(description);
+    const nameValidate = descriptionValidator(name);
+    const descriptionValidate = descriptionValidator(description);
 
     setNameError(nameValidate);
     setDescriptionError(descriptionValidate);
@@ -137,12 +136,13 @@ const Team = () => {
       Description: description,
       Active: true,
       OrganizationId: 1,
-      ...(edit && { id: id }),
+      ...(edit && { id: teamId }),
       Parentid: 1,
     };
+    console.log("payload", request);
     if (edit) {
       try {
-        const response = await updateTeams(request);
+        const response = await updateTeams(teamId, request);
         console.log("team update response", response);
         CommonToaster("Team updated successfully", "success");
         getTeamsData();
@@ -172,6 +172,15 @@ const Team = () => {
     if (changeteamValidate) return;
 
     setChangeTeamModal(false);
+  };
+
+  const handleEdit = () => {
+    const selectedTeam = teamList.find((f) => f.id === teamId);
+    console.log("selectedteam", selectedTeam);
+    setName(selectedTeam.name);
+    setDescription(selectedTeam.description);
+    setIsModalOpen(true);
+    setEdit(true);
   };
   return (
     <div>
@@ -221,7 +230,7 @@ const Team = () => {
             alignItems: "center",
           }}
         >
-          <Button type="primary">
+          <Button type="primary" onClick={handleEdit}>
             <AiOutlineEdit size={17} style={{ marginRight: "6px" }} />
             {"  "} Edit
           </Button>
@@ -295,7 +304,7 @@ const Team = () => {
           label="Team Name"
           onChange={(e) => {
             setName(e.target.value);
-            setNameError(nameValidator(e.target.value));
+            setNameError(descriptionValidator(e.target.value));
           }}
           value={name}
           error={nameError}
@@ -306,7 +315,7 @@ const Team = () => {
           label="Description"
           onChange={(e) => {
             setDescription(e.target.value);
-            setDescriptionError(nameValidator(e.target.value));
+            setDescriptionError(descriptionValidator(e.target.value));
           }}
           value={description}
           error={descriptionError}

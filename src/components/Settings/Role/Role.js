@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Modal } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
 import CommonInputField from "../../../Components/Common/CommonInputField";
-import { nameValidator } from "../../../Components/Common/Validation";
+import { descriptionValidator } from "../../../Components/Common/Validation";
 import CommonAddButton from "../../Common/CommonAddButton";
+import { createRole, getRole, updateRole } from "../../APIservice.js/action";
+import { CommonToaster } from "../../Common/CommonToaster";
 
 export default function Role() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [roleId, setroleId] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [edit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [tableLoading, setTableLoading] = useState(false);
   const columns = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Description", dataIndex: "description", key: "description" },
@@ -28,90 +34,104 @@ export default function Role() {
       key: "deniedmodules",
     },
   ];
-  const [dummydatas, setDummyDatas] = useState([
-    {
-      key: "1",
-      name: "Developer",
-      description: "Lorem ipsum dolor",
-    },
-    {
-      key: "2",
-      name: "Tester",
-      description: "Lorem ipsum dolor",
-    },
-    {
-      key: "3",
-      name: "Sales Executive",
-      description: "Lorem ipsum dolor",
-    },
-    {
-      name: "HR",
-      description: "Lorem ipsum dolor",
-    },
-    {
-      name: "Manager",
-      description: "Lorem ipsum dolor sit",
-    },
-    { name: "SEO", description: "" },
-    {
-      name: "BPO",
-      description: "Lorem ipsum dolor sit",
-    },
-  ]);
+  const [data, setData] = useState([]);
+  const [dummyData, setDummyData] = useState([]);
 
-  const [duplicateDummydatas, setDuplicateDummyDatas] = useState([
-    {
-      key: "1",
-      name: "OPERATION",
-      description: "",
-    },
-    {
-      key: "2",
-      name: "EXTERNAL HR",
-      description: "",
-    },
-    {
-      key: "3",
-      name: "Sales Executive",
-      description: "sales",
-    },
-    {
-      name: "INTERNAL HR",
-      description: "",
-    },
-    {
-      name: "QUALITY",
-      description: "",
-    },
-    { name: "SEO", description: "" },
-    { name: "BOE", description: "" },
-  ]);
+  useEffect(() => {
+    getRoleData();
+  }, []);
 
-  const handleOk = () => {
-    const nameValidate = nameValidator(name);
-    const descriptionValidate = nameValidator(description);
+  const getRoleData = async () => {
+    setLoading(true);
+    try {
+      const response = await getRole();
+      console.log("role response", response.data);
+      setData(response.data);
+      // setDummyData(response.data);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
+
+  const formReset = () => {
+    setName("");
+    setNameError("");
+    setDescription("");
+    setDescriptionError("");
+    setIsModalOpen(false);
+    setEdit(false);
+  };
+
+  const handleOk = async () => {
+    const nameValidate = descriptionValidator(name);
+    const descriptionValidate = descriptionValidator(description);
 
     setNameError(nameValidate);
     setDescriptionError(descriptionValidate);
 
     if (nameValidate || descriptionValidate) return;
 
-    setIsModalOpen(false);
+    const request = {
+      Name: name,
+      Description: description,
+      Active: true,
+      OrganizationId: 1,
+      ...(edit && { id: roleId }),
+    };
+    if (edit) {
+      setTableLoading(true);
+      try {
+        const response = await updateRole(request);
+        console.log("role update response", response);
+        CommonToaster("Role updated successfully", "success");
+        getRoleData();
+        formReset();
+      } catch (error) {
+        console.log("update role error", error);
+        CommonToaster(error.response.data.message, "error");
+      } finally {
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 1000);
+      }
+    } else {
+      try {
+        setTableLoading(true);
+        const response = await createRole(request);
+        console.log("role create response", response);
+        CommonToaster("Role created successfully", "success");
+        getRoleData();
+        formReset();
+      } catch (error) {
+        console.log("role error", error);
+        CommonToaster(error.response.data.message, "error");
+      } finally {
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 1000);
+      }
+    }
   };
+
   const handleCancel = () => {
-    setIsModalOpen(false);
+    formReset();
   };
+
   const handleSearch = (value) => {
     console.log("Search value:", value);
     if (value === "") {
-      setDummyDatas(duplicateDummydatas);
+      setData(dummyData);
       return;
     }
-    const filterData = dummydatas.filter((item) =>
+    const filterData = data.filter((item) =>
       item.name.toLowerCase().includes(value)
     );
     console.log("filter", filterData);
-    setDummyDatas(filterData);
+    setData(filterData);
   };
   return (
     <div>
@@ -138,9 +158,10 @@ export default function Role() {
 
       <CommonTable
         columns={columns}
-        dataSource={dummydatas}
+        dataSource={data}
         scroll={{ x: 600 }}
-        dataPerPage={4}
+        dataPerPage={10}
+        loading={tableLoading}
       />
 
       {/* addrole modal */}
@@ -159,7 +180,7 @@ export default function Role() {
           label="Name"
           onChange={(e) => {
             setName(e.target.value);
-            setNameError(nameValidator(e.target.value));
+            setNameError(descriptionValidator(e.target.value));
           }}
           value={name}
           error={nameError}
@@ -170,7 +191,7 @@ export default function Role() {
           label="Description"
           onChange={(e) => {
             setDescription(e.target.value);
-            setDescriptionError(nameValidator(e.target.value));
+            setDescriptionError(descriptionValidator(e.target.value));
           }}
           value={description}
           error={descriptionError}

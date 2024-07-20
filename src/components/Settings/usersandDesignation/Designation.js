@@ -5,10 +5,7 @@ import "../styles.css";
 import moment from "moment";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
-import {
-  descriptionValidator,
-  nameValidator,
-} from "../../../Components/Common/Validation";
+import { descriptionValidator } from "../../../Components/Common/Validation";
 import CommonAddButton from "../../Common/CommonAddButton";
 import {
   getDesignation,
@@ -97,7 +94,7 @@ export default function Designation() {
   };
 
   const handleOk = async () => {
-    const nameValidate = nameValidator(name);
+    const nameValidate = descriptionValidator(name);
     const descriptionValidate = descriptionValidator(description);
 
     setNameError(nameValidate);
@@ -219,7 +216,7 @@ export default function Designation() {
               label="Name"
               onChange={(e) => {
                 setName(e.target.value);
-                setNameError(nameValidator(e.target.value));
+                setNameError(descriptionValidator(e.target.value));
               }}
               value={name}
               error={nameError}
