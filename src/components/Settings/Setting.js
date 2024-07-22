@@ -39,6 +39,7 @@ const Settings = () => {
     { id: 11, name: "Compliance", icon: <VscShield size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
+  const [visited, setVisited] = useState(false);
 
   const handlePageChange = (id) => {
     setActivePage(id === activePage ? activePage : id);
@@ -119,7 +120,7 @@ const Settings = () => {
         >
           {activePage === 1 && (
             <div>
-              <UserandDesignation />
+              <UserandDesignation visited={visited} />
             </div>
           )}
           {activePage === 2 && (

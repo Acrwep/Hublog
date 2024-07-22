@@ -37,7 +37,7 @@ export default function CommonSelectField({
         onChange={onChange}
         options={options.map((item) => ({
           value: item.id,
-          label: item.name,
+          label: item.first_Name ? item.first_Name : item.name,
         }))}
         value={value}
         error={error}

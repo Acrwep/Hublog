@@ -153,3 +153,14 @@ export const updateUser = async (userpayload) => {
     throw error;
   }
 };
+//attendance
+export const getUserAttendance = async (userId, startDate, endDate) => {
+  try {
+    const response = await api.get(
+      `api/Users/GetUserAttendanceDetails?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

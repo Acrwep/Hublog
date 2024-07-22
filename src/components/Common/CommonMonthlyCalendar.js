@@ -12,7 +12,7 @@ export default function CommonMonthlyCalendar() {
     const isCurrentMonth = value.month() === moment().month();
     const isSunday = value.day() === 0;
     const isToday = value.isSame(currentDate, "day");
-    console.log("calendarrrrrr", isToday);
+    // console.log("calendarrrrrr", isToday);
 
     if (isCurrentMonth && isSunday) {
       return (
@@ -32,7 +32,10 @@ export default function CommonMonthlyCalendar() {
 
     return value.date();
   };
-
+  const disabledDate = (current) => {
+    // Disable dates that are after today
+    return current && current > moment().endOf("day");
+  };
   return (
     <div>
       <Calendar
@@ -41,6 +44,7 @@ export default function CommonMonthlyCalendar() {
         onPanelChange={onPanelChange}
         mode="month"
         fullCellRender={dateFullCellRender}
+        disabledDate={disabledDate}
         headerRender={() => {
           <p>Hii</p>;
         }}

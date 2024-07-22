@@ -62,6 +62,8 @@ const Users = () => {
   const [teamOptions, setTeamOptions] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
+  const [dummyData, setDummyData] = useState([]);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
@@ -166,8 +168,6 @@ const Users = () => {
       },
     },
   ];
-  const [data, setData] = useState([]);
-  const [dummyData, setDummyData] = useState([]);
 
   useEffect(() => {
     const token =

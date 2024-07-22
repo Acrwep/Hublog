@@ -121,11 +121,21 @@ function SidebarMenu() {
   }, []);
 
   useEffect(() => {
+    const accessToken = localStorage.getItem("Accesstoken");
+    console.log("Access Token:::::", accessToken);
+    if (accessToken) {
+      navigation(location.pathname);
+    } else {
+      navigation("/login");
+    }
     const getItem = localStorage.getItem("LoginUserInfo");
-    const userDetails = JSON.parse(getItem);
-    console.log("login user details", userDetails);
-    setUserName(userDetails.first_Name);
-    setUserEmail(userDetails.email);
+    console.log("userInfoooo", getItem);
+    if (getItem != null) {
+      const userDetails = JSON.parse(getItem);
+      console.log("login user details", userDetails);
+      setUserName(userDetails.first_Name ? userDetails.first_Name : "");
+      setUserEmail(userDetails.email);
+    }
     const menuList = Object.values(SideMenuConfig).map((item) => {
       return { ...item };
     });
