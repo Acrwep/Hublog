@@ -153,11 +153,22 @@ export const updateUser = async (userpayload) => {
     throw error;
   }
 };
-//attendance
+//userdetail attendance
 export const getUserAttendance = async (userId, startDate, endDate) => {
   try {
     const response = await api.get(
       `api/Users/GetUserAttendanceDetails?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//userdetail break
+export const getUserBreak = async (userId, startDate, endDate) => {
+  try {
+    const response = await api.get(
+      `api/Users/GetUserBreakRecordDetails?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
     );
     return response;
   } catch (error) {

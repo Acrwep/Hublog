@@ -8,6 +8,12 @@
   color: rgb(20, 184, 166);
   background-color: rgba(20, 184, 166, 0.1);
 }
+.userdetail_usermail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+  color: gray;
+}
 @media (min-width: 300px) and (max-width: 424px) {
   .userdetail_usermail {
     font-size: 12px;

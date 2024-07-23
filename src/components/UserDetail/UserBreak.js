@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import CommonTable from "../../Components/Common/CommonTable";
+import { useSelector } from "react-redux";
+import Loader from "../Common/Loader";
 import "./styles.css";
 
-export default function UserBreak() {
+export default function UserBreak({ loading }) {
+  const userBreakDetails = useSelector((state) => state.userAttendance);
+
   const columns = [
     { title: "Date", dataIndex: "date", key: "date", width: 160 },
     {
@@ -108,28 +112,40 @@ export default function UserBreak() {
     },
   };
   return (
-    <div>
-      <div className="userbreak_linechartContainer">
-        <ReactApexChart
-          options={datas.options}
-          series={datas.series}
-          type="line"
-          height={300}
-        />
-      </div>
+    <>
+      {loading === true ? (
+        <Loader />
+      ) : (
+        <div>
+          <div className="userbreak_linechartContainer">
+            <ReactApexChart
+              options={datas.options}
+              series={datas.series}
+              type="line"
+              height={300}
+            />
+          </div>
 
-      <div className="userbreaktable_Container">
-        <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
-          Detail
-        </p>
+          <div className="userbreaktable_Container">
+            <p
+              style={{
+                fontWeight: 600,
+                fontSize: "17px",
+                marginBottom: "10px",
+              }}
+            >
+              Detail
+            </p>
 
-        <CommonTable
-          columns={columns}
-          dataSource={dummydatas}
-          scroll={{ x: 600 }}
-          dataPerPage={4}
-        />
-      </div>
-    </div>
+            <CommonTable
+              columns={columns}
+              dataSource={userBreakDetails}
+              scroll={{ x: 600 }}
+              dataPerPage={4}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Modal } from "antd";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
@@ -15,8 +15,12 @@ import {
 import { AiOutlineEdit } from "react-icons/ai";
 import { CommonToaster } from "../../Common/CommonToaster";
 import Loader from "../../Common/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { storeDesignation } from "../../Redux/slice";
 
-export default function Designation() {
+export default function Designation({ loading }) {
+  const dispatch = useDispatch();
+  const designationList = useSelector((state) => state.designation);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -25,7 +29,6 @@ export default function Designation() {
   const [descriptionError, setDescriptionError] = useState("");
   const [createdDate, setCreatedDate] = useState(new Date());
   const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
   const columns = [
     { title: "Name", dataIndex: "name", key: "name", width: "200px" },
@@ -57,25 +60,24 @@ export default function Designation() {
       },
     },
   ];
-  const [data, setData] = useState([]);
   const [dummyData, setDummyData] = useState([]);
 
   useEffect(() => {
-    getDesignationData();
+    setDummyData(designationList);
   }, []);
 
   const getDesignationData = async () => {
-    setLoading(true);
+    setTableLoading(true);
     try {
       const response = await getDesignation();
       console.log("Designation response", response.data);
-      setData(response.data);
-      setDummyData(response.data);
+      const allDesignation = response.data;
+      dispatch(storeDesignation(allDesignation));
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        setTableLoading(false);
       }, 1000);
     }
   };
@@ -157,18 +159,18 @@ export default function Designation() {
   const handleSearch = (value) => {
     console.log("Search value:", value);
     if (value === "") {
-      setData(dummyData);
+      dispatch(storeDesignation(dummyData));
       return;
     }
-    const filterData = data.filter((item) =>
+    const filterData = designationList.filter((item) =>
       item.name.toLowerCase().includes(value)
     );
     console.log("filter", filterData);
-    setData(filterData);
+    dispatch(storeDesignation(filterData));
   };
   return (
     <>
-      {loading ? (
+      {loading === true ? (
         <Loader />
       ) : (
         <div>
@@ -194,7 +196,7 @@ export default function Designation() {
           </Row>
           <CommonTable
             columns={columns}
-            dataSource={data}
+            dataSource={designationList}
             scroll={{ x: 760 }}
             dataPerPage={10}
             loading={tableLoading}

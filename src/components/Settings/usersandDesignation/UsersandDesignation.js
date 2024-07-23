@@ -5,29 +5,19 @@ import "../styles.css";
 import Users from "./Users";
 import Designation from "./Designation";
 
-const UserandDesignation = ({ visited }) => {
+const UserandDesignation = ({ loading }) => {
   const location = useLocation();
-
-  // useEffect(() => {
-  //   console.log("ooooooo", visited);
-  //   if (visited == false) {
-  //     console.log("eeeeeeeeee", visited);
-  //     visited = true;
-  //   } else {
-  //     visited(false);
-  //   }
-  // }, []);
 
   const items = [
     {
       key: "1",
       label: "Users",
-      children: <Users />,
+      children: <Users loading={loading} />,
     },
     {
       key: "2",
       label: "Designation",
-      children: <Designation />,
+      children: <Designation loading={loading} />,
     },
   ];
   return (

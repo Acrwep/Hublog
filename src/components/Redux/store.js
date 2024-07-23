@@ -1,10 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { teamMemberReducer, userAttendanceReducer } from "./slice";
+import {
+  usersReducer,
+  designationReducer,
+  teamsReducer,
+  teamMemberReducer,
+  userAttendanceReducer,
+  userBreakReducer,
+} from "./slice";
 
 export const store = configureStore({
   devTools: true,
   reducer: {
+    users: usersReducer,
+    designation: designationReducer,
+    teams: teamsReducer,
     teamMembers: teamMemberReducer,
     userAttendance: userAttendanceReducer,
+    userBreak: userBreakReducer,
   },
 });

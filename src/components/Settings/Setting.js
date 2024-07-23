@@ -17,10 +17,17 @@ import Workplace from "./Workplace";
 import Goals from "./Goals/Goals";
 import Compliance from "./Compliance/Compliance";
 import "./styles.css";
+import { useDispatch, useSelector } from "react-redux";
 import Break from "./Break/Break";
+import { getDesignation, getTeams, getUsers } from "../APIservice.js/action";
 import AlertRules from "./AlertRules/AlertRules";
+import { storeDesignation, storeTeams, storeUsers } from "../Redux/slice";
+import { CommonToaster } from "../Common/CommonToaster";
 
 const Settings = () => {
+  const dispatch = useDispatch();
+  const usersList = useSelector((state) => state.users);
+  const [loading, setLoading] = useState(false);
   const settingsList = [
     {
       id: 1,
@@ -39,10 +46,63 @@ const Settings = () => {
     { id: 11, name: "Compliance", icon: <VscShield size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
-  const [visited, setVisited] = useState(false);
+  const [userPageVisited, setUserPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
     setActivePage(id === activePage ? activePage : id);
+  };
+
+  useEffect(() => {
+    if (userPageVisited === false) {
+      getUsersData();
+    }
+  }, []);
+
+  const getUsersData = async () => {
+    setLoading(true);
+    try {
+      const response = await getUsers();
+      console.log("users response", response.data);
+      const usersList = response.data;
+      dispatch(storeUsers(usersList));
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getDesignationData();
+        setUserPageVisited(true);
+      }, 1000);
+    }
+  };
+
+  const getDesignationData = async () => {
+    try {
+      const response = await getDesignation();
+      console.log("Designation response", response.data);
+      const designationList = response.data;
+      dispatch(storeDesignation(designationList));
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getTeamData();
+      }, 1000);
+    }
+  };
+
+  const getTeamData = async () => {
+    try {
+      const response = await getTeams(1);
+      console.log("teamsssssss response", response.data);
+      const teamList = response.data;
+      dispatch(storeTeams(teamList));
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
   };
 
   return (
@@ -120,12 +180,12 @@ const Settings = () => {
         >
           {activePage === 1 && (
             <div>
-              <UserandDesignation visited={visited} />
+              <UserandDesignation loading={loading} />
             </div>
           )}
           {activePage === 2 && (
             <div>
-              <Team />
+              <Team loading={loading} />
             </div>
           )}
           {activePage === 3 && (

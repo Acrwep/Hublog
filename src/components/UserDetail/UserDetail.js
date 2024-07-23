@@ -5,7 +5,7 @@ import { IoRocketOutline } from "react-icons/io5";
 import { FiActivity } from "react-icons/fi";
 import { MdCalendarMonth } from "react-icons/md";
 import { FaUserLarge } from "react-icons/fa6";
-import { Row, Col, Avatar } from "antd";
+import { Row, Col, Avatar, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import UserAttendance from "./UserAttendance";
 import "./styles.css";
@@ -15,11 +15,15 @@ import UserProductivity from "./UserProductivity";
 import UserActivity from "./UserActivity";
 import UserAppsUrls from "./UserApps&Urls";
 import { CommonToaster } from "../Common/CommonToaster";
-import { getUserAttendance, getUsers } from "../APIservice.js/action";
+import {
+  getUserAttendance,
+  getUserBreak,
+  getUsers,
+} from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
-import { storeuserAttendance } from "../Redux/slice";
-import { useDispatch, useSelector } from "react-redux";
+import { storeuserAttendance, storeuserBreak } from "../Redux/slice";
+import { useDispatch } from "react-redux";
 
 const UserDetail = () => {
   const dispatch = useDispatch();
@@ -39,7 +43,9 @@ const UserDetail = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
-  const [attendanceLoading, setAttendanceLoading] = useState(false);
+  //loadings
+  const [attendanceLoading, setAttendanceLoading] = useState(true);
+  const [breakLoading, setBreakLoading] = useState(true);
 
   const handlePageChange = (id) => {
     setActivePage(id === activePage ? activePage : id);
@@ -90,20 +96,23 @@ const UserDetail = () => {
   const getUsersData = async () => {
     try {
       const response = await getUsers();
-      console.log("users response", response.data);
-      setUserList(response.data);
-      setUser(response.data[0].id);
-      getuserAttendanceData(response.data[0].id);
+      const userDetail = response?.data;
+      console.log("users response", userDetail);
+      setUserList(userDetail);
+      setUser(userDetail[0].id);
+      setName(userDetail[0].usersName);
+      setEmail(userDetail[0].email);
+      getuserDetailsData(response.data[0].id);
       getCurrentandPreviousweekDate();
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     }
   };
 
-  const getuserAttendanceData = async (userId, startDate, endDate) => {
-    setAttendanceLoading(true);
+  const getuserDetailsData = async (userId, startDate, endDate) => {
     console.log(startDate, endDate);
     if (activePage === 1) {
+      setAttendanceLoading(true);
       try {
         const response = await getUserAttendance(
           userId,
@@ -112,10 +121,9 @@ const UserDetail = () => {
         );
         console.log("user attendance response", response.data);
         const details = response.data;
-        setName(details[0].firstName);
-        setEmail(details[0].email);
         dispatch(storeuserAttendance(details));
       } catch (error) {
+        console.log("attendance error", error);
         CommonToaster(error.response?.data?.message, "error");
         const details = [];
         dispatch(storeuserAttendance(details));
@@ -125,11 +133,33 @@ const UserDetail = () => {
         }, 1500);
       }
     }
+    if (activePage === 2) {
+      setBreakLoading(true);
+      try {
+        const response = await getUserBreak(
+          userId,
+          startDate != undefined ? startDate : selectedDates[0],
+          endDate != undefined ? endDate : selectedDates[1]
+        );
+        console.log("user break response", response.data);
+        const details = response.data;
+        dispatch(storeuserBreak(details));
+      } catch (error) {
+        console.log("break error", error);
+        CommonToaster(error.response?.data, "error");
+        const details = [];
+        dispatch(storeuserBreak(details));
+      } finally {
+        setTimeout(() => {
+          setBreakLoading(false);
+        }, 1500);
+      }
+    }
   };
 
   const handleUser = async (value) => {
     setUser(value);
-    getuserAttendanceData(value);
+    getuserDetailsData(value);
   };
 
   const handleDateChange = (dates, dateStrings) => {
@@ -137,7 +167,7 @@ const UserDetail = () => {
     const startDate = dateStrings[0];
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
-      getuserAttendanceData(user, startDate, endDate);
+      getuserDetailsData(user, startDate, endDate);
     }
   };
   return (
@@ -197,13 +227,17 @@ const UserDetail = () => {
           lg={6}
           className="settinglist_columnOneContainer"
         >
-          <div className="userdetail_profileContainer">
-            <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
-            <div style={{ flexDirection: "column", padding: "12px" }}>
+          <Row className="userdetail_profileContainer">
+            <Col span={8}>
+              <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
+            </Col>
+            <Col span={16}>
               <p className="userdetail_username">{name}</p>
-              <p className="userdetail_usermail">{email}</p>
-            </div>
-          </div>
+              <Tooltip placement="top" title={email}>
+                <p className="userdetail_usermail">{email}</p>
+              </Tooltip>
+            </Col>
+          </Row>
           <div className="settings_sidebarContainer">
             {usermenuList.map((item) => (
               <div
@@ -241,7 +275,7 @@ const UserDetail = () => {
           )}
           {activePage === 2 && (
             <div>
-              <UserBreak />
+              <UserBreak loading={breakLoading} />
             </div>
           )}
           {activePage === 3 && (

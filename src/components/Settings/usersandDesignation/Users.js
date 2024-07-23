@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useId } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Space, Dropdown, Modal } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
@@ -23,13 +23,18 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import {
   createUser,
   getDesignation,
-  getRole,
   getTeams,
   getUsers,
   updateUser,
 } from "../../APIservice.js/action";
+import { useDispatch, useSelector } from "react-redux";
+import { storeUsers } from "../../Redux/slice";
 
-const Users = () => {
+const Users = ({ loading }) => {
+  const dispatch = useDispatch();
+  const usersList = useSelector((state) => state.users);
+  const designationList = useSelector((state) => state.designation);
+  const teamList = useSelector((state) => state.teams);
   const [userId, setUserId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
@@ -56,24 +61,23 @@ const Users = () => {
   ]);
   const [roleError, setRoleError] = useState("");
   const [designation, setDesignation] = useState("");
-  const [designationOptions, setDesignationOptions] = useState([]);
   const [team, setTeam] = useState("");
   const [teamError, setTeamError] = useState("");
-  const [teamOptions, setTeamOptions] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
   const [dummyData, setDummyData] = useState([]);
   const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
 
   const columns = [
     {
       title: "Name",
-      dataIndex: "usersName",
-      key: "usersName",
+      dataIndex: "name",
+      key: "name",
       width: 150,
+      render: (text, record) => {
+        return <p>{record.first_Name + " " + record.last_Name} </p>;
+      },
     },
     { title: "Email", dataIndex: "email", key: "email", width: 250 },
     { title: "Team", dataIndex: "teamName", key: "teamName" },
@@ -170,57 +174,22 @@ const Users = () => {
   ];
 
   useEffect(() => {
-    const token =
-      "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQEh1YmxvZy5jb20iLCJ1c2VySWQiOjEsInJvbGUiOiJBRE1JTiIsInN1YiI6MSwibmJmIjoxNzEzMTg4ODY0LjAsImlhdCI6MTcxMzE4ODg2NC4wLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjQ0MzAwLyIsImF1ZCI6InNlY3VyZWFwaXVzZXIiLCJleHAiOjE3MTMxOTYwNjQuMH0.VbXKnhK0SB1viG2bmWXuPCOBt6UwU2WfOlt2wYVLZhg";
-    getUsersData();
+    setDummyData(usersList);
   }, []);
 
-  const getUsersData = async (status) => {
-    console.log("statussssss", status);
-    setLoading(status === "false" ? false : true);
+  const getUsersData = async () => {
+    setTableLoading(true);
     try {
       const response = await getUsers();
-      console.log("users response", response.data);
-      setData(response.data);
-      setDummyData(response.data);
+      console.log("users response", response?.data);
+      const allUsers = response?.data;
+      dispatch(storeUsers(allUsers));
+      setDummyData(allUsers);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        if (status === "fasle") {
-          return;
-        } else {
-          getDesignationData();
-        }
-      }, 1000);
-    }
-  };
-
-  const getDesignationData = async () => {
-    try {
-      const response = await getDesignation();
-      console.log("Designation response", response.data);
-      setDesignationOptions(response.data);
-    } catch (error) {
-      CommonToaster(error.response.data.message, "error");
-    } finally {
-      setTimeout(() => {
-        getTeamData();
-      }, 1000);
-    }
-  };
-
-  const getTeamData = async () => {
-    try {
-      const response = await getTeams(1);
-      console.log("teams response", response.data);
-      const teamList = response.data;
-      setTeamOptions(teamList);
-    } catch (error) {
-      CommonToaster(error.response.data.message, "error");
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
+        setTableLoading(false);
       }, 1000);
     }
   };
@@ -274,14 +243,14 @@ const Users = () => {
   const handleSearch = (value) => {
     console.log("Search value:", value);
     if (value === "") {
-      setData(dummyData);
+      dispatch(storeUsers(dummyData));
       return;
     }
-    const filterData = data.filter((item) =>
+    const filterData = usersList.filter((item) =>
       item.usersName.toLowerCase().includes(value)
     );
     console.log("filter", filterData);
-    setData(filterData);
+    dispatch(storeUsers(filterData));
   };
 
   const handleEdit = (record) => {
@@ -338,13 +307,13 @@ const Users = () => {
     )
       return;
 
-    const selectedDesignation = designationOptions.find(
+    const selectedDesignation = designationList.find(
       (design) => design.id === designation
     );
     console.log("designnn", selectedDesignation);
     const designationName = selectedDesignation.name;
 
-    const selectedTeam = teamOptions.find((t) => t.id === team);
+    const selectedTeam = teamList.find((t) => t.id === team);
     console.log("teammmm", selectedTeam);
     const teamName = selectedTeam.name;
 
@@ -376,7 +345,7 @@ const Users = () => {
         const response = await updateUser(request);
         console.log("user update response", response);
         CommonToaster("User updated successfully", "success");
-        getUsersData("false");
+        getUsersData();
         formReset();
       } catch (error) {
         console.log("update designation error", error);
@@ -392,7 +361,7 @@ const Users = () => {
         const response = await createUser(request);
         console.log("user create response", response);
         CommonToaster("User created successfully", "success");
-        getUsersData("false");
+        getUsersData();
         formReset();
       } catch (error) {
         console.log("designation error", error);
@@ -407,7 +376,7 @@ const Users = () => {
 
   return (
     <div>
-      {loading ? (
+      {loading === true ? (
         <Loader />
       ) : (
         <div>
@@ -437,7 +406,7 @@ const Users = () => {
 
           <CommonTable
             columns={columns}
-            dataSource={data}
+            dataSource={usersList}
             scroll={{ x: 1400 }}
             dataPerPage={10}
             loading={tableLoading}
@@ -564,7 +533,7 @@ const Users = () => {
             <CommonSelectField
               label="Designation"
               onChange={(value) => setDesignation(value)}
-              options={designationOptions}
+              options={designationList}
               value={designation}
             />
           </Col>
@@ -575,7 +544,7 @@ const Users = () => {
                 setTeam(value);
                 setTeamError(selectValidator(value));
               }}
-              options={teamOptions}
+              options={teamList}
               value={team}
               error={teamError}
               mandatory

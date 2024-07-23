@@ -31,13 +31,56 @@ const teamMemberSlice = createSlice({
   },
 });
 
-// const windowWidth = "";
+const usersSlice = createSlice({
+  name: "users",
+  initialState,
+  reducers: {
+    storeUsers(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const designationSlice = createSlice({
+  name: "designation",
+  initialState,
+  reducers: {
+    storeDesignation(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const teamsSlice = createSlice({
+  name: "teams",
+  initialState,
+  reducers: {
+    storeTeams(state, action) {
+      console.log("teams action payload", action.payload);
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const userAttendanceSlice = createSlice({
   name: "userAttendance",
   initialState,
   reducers: {
     storeuserAttendance(state, action) {
-      console.log("Action payload", action.payload);
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const userBreakSlice = createSlice({
+  name: "userBreak",
+  initialState,
+  reducers: {
+    storeuserBreak(state, action) {
       state = action.payload;
       return state;
     },
@@ -47,7 +90,15 @@ const userAttendanceSlice = createSlice({
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeuserAttendance } = userAttendanceSlice.actions;
+export const { storeuserBreak } = userBreakSlice.actions;
+export const { storeUsers } = usersSlice.actions;
+export const { storeDesignation } = designationSlice.actions;
+export const { storeTeams } = teamsSlice.actions;
 // export default teamMemberSlice.reducer;
 
 export const teamMemberReducer = teamMemberSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
+export const userBreakReducer = userBreakSlice.reducer;
+export const usersReducer = usersSlice.reducer;
+export const designationReducer = designationSlice.reducer;
+export const teamsReducer = teamsSlice.reducer;
