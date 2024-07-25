@@ -67,6 +67,7 @@ export default function CommonAvatar({ itemName, avatarSize, avatarfontSize }) {
           color: avatarTextColor,
           fontWeight: "600",
           fontSize: avatarfontSize ? avatarfontSize : "15px",
+          textTransform: "uppercase",
         }}
       >
         {getInitials(itemName)}

@@ -13,6 +13,13 @@ export default function CommonDatePicker({
   mandatory,
   style,
 }) {
+  const handleChange = (date) => {
+    const dates = new Date(date.$d);
+
+    // Format the date using toString method
+    const formattedDate = dates.toString();
+    onChange(formattedDate);
+  };
   return (
     <div style={style}>
       <div style={{ display: "flex" }}>
@@ -22,7 +29,7 @@ export default function CommonDatePicker({
       <Space direction="vertical" style={{ width: "100%" }}>
         <DatePicker
           picker={month === "true" ? "month" : "date"}
-          onChange={onChange}
+          onChange={handleChange}
           value={value ? dayJs(value) : null}
           defaultValue={defaultValue}
           format="DD-MM-YYYY"

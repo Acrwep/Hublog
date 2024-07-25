@@ -72,7 +72,7 @@ const UserDetail = () => {
 
     console.log("Current Date:", formattedCurrentDate);
     let dates = [];
-    dates.push(formattedCurrentDate, formattedPreviousWeekDate);
+    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
     setSelectedDates(dates);
     console.log("Previous Week Date:", formattedPreviousWeekDate);
   };
@@ -119,7 +119,7 @@ const UserDetail = () => {
           startDate != undefined ? startDate : selectedDates[0],
           endDate != undefined ? endDate : selectedDates[1]
         );
-        console.log("user attendance response", response.data);
+        console.log("user attendance response", response);
         const details = response.data;
         dispatch(storeuserAttendance(details));
       } catch (error) {
@@ -159,6 +159,9 @@ const UserDetail = () => {
 
   const handleUser = async (value) => {
     setUser(value);
+    const findSelectedUser = userList.find((f) => f.id === value);
+    setName(findSelectedUser.usersName);
+    setEmail(findSelectedUser.email);
     getuserDetailsData(value);
   };
 

@@ -44,7 +44,7 @@ export default function UserAttendance({ loading }) {
       key: "total_Time",
       width: 120,
       render: (text, record) => {
-        return <p>{moment(text).format("hh:mm")} </p>;
+        return <p>{moment(text).format("H[h]:mm[m]")} </p>;
       },
     },
   ];

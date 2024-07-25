@@ -34,9 +34,11 @@ export const LoginApi = async (loginCredential) => {
   }
 };
 
-export const getScreenShots = async (request) => {
+export const getScreenShots = async (userId, organizationId, date) => {
   try {
-    const response = await api.post("/api/Admin/GetScreenShots", request);
+    const response = await api.get(
+      `/api/Users/GetUserScreenShots?userId=${userId}&organizationId=${organizationId}&date=${date}`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -132,6 +134,16 @@ export const updateRole = async (teamID, rolepayload) => {
 export const getUsers = async () => {
   try {
     const response = await api.get("api/Users/GetAllUsers");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getUsersByTeamId = async (teamId) => {
+  try {
+    const response = await api.get(
+      `api/Users/GetUsersByTeamId?TeamId=${teamId}`
+    );
     return response;
   } catch (error) {
     throw error;

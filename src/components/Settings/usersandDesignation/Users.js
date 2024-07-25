@@ -80,8 +80,29 @@ const Users = ({ loading }) => {
       },
     },
     { title: "Email", dataIndex: "email", key: "email", width: 250 },
-    { title: "Team", dataIndex: "teamName", key: "teamName" },
-    { title: "Role", dataIndex: "roleName", key: "roleName" },
+    {
+      title: "Team",
+      dataIndex: "teamId",
+      key: "teamId",
+      render: (text, record) => {
+        const findTeam = teamList.find((f) => f.id === text);
+        return <p>{findTeam.name} </p>;
+      },
+    },
+    {
+      title: "Role",
+      dataIndex: "roleId",
+      key: "roleId",
+      render: (text, record) => {
+        if (text === 1) {
+          return <p>Admin</p>;
+        } else if (text === 2) {
+          return <p>Admin </p>;
+        } else {
+          return <p>User</p>;
+        }
+      },
+    },
     {
       title: "DOB",
       dataIndex: "dob",
@@ -247,7 +268,7 @@ const Users = ({ loading }) => {
       return;
     }
     const filterData = usersList.filter((item) =>
-      item.usersName.toLowerCase().includes(value)
+      item.first_Name.toLowerCase().includes(value.toLowerCase())
     );
     console.log("filter", filterData);
     dispatch(storeUsers(filterData));
@@ -348,8 +369,8 @@ const Users = ({ loading }) => {
         getUsersData();
         formReset();
       } catch (error) {
-        console.log("update designation error", error);
-        CommonToaster(error.response.data.message, "error");
+        console.log("update user error", error);
+        CommonToaster(error?.response?.data?.message, "error");
       } finally {
         setTimeout(() => {
           setTableLoading(false);
@@ -365,7 +386,7 @@ const Users = ({ loading }) => {
         formReset();
       } catch (error) {
         console.log("designation error", error);
-        CommonToaster(error.response.data.message, "error");
+        CommonToaster(error?.response?.data?.message, "error");
       } finally {
         setTimeout(() => {
           setTableLoading(false);

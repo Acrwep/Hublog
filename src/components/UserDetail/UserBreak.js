@@ -3,24 +3,45 @@ import ReactApexChart from "react-apexcharts";
 import CommonTable from "../../Components/Common/CommonTable";
 import { useSelector } from "react-redux";
 import Loader from "../Common/Loader";
+import moment from "moment";
 import "./styles.css";
 
 export default function UserBreak({ loading }) {
-  const userBreakDetails = useSelector((state) => state.userAttendance);
+  const userBreakDetails = useSelector((state) => state.userBreak);
 
   const columns = [
-    { title: "Date", dataIndex: "date", key: "date", width: 160 },
+    {
+      title: "Date",
+      dataIndex: "start_Time",
+      key: "start_Time",
+      width: 160,
+      render: (text, record) => {
+        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+      },
+    },
     {
       title: "Break Type",
-      dataIndex: "breaktype",
-      key: "breaktype",
+      dataIndex: "breakType",
+      key: "breakType",
       width: 170,
     },
     {
       title: "Break Start",
-      dataIndex: "breakstart",
-      key: "breakstart",
+      dataIndex: "start_Time",
+      key: "start_Time",
       width: 170,
+      render: (text, record) => {
+        return <p>{moment(text).format("hh:mm A")} </p>;
+      },
+    },
+    {
+      title: "Break End",
+      dataIndex: "end_Time",
+      key: "end_Time",
+      width: 170,
+      render: (text, record) => {
+        return <p>{moment(text).format("hh:mm A")} </p>;
+      },
     },
   ];
   const [dummydatas, setDummyDatas] = useState([
