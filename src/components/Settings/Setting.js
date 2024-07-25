@@ -26,7 +26,6 @@ import { CommonToaster } from "../Common/CommonToaster";
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const usersList = useSelector((state) => state.users);
   const [loading, setLoading] = useState(false);
   const settingsList = [
     {
