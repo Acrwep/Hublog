@@ -56,6 +56,10 @@ const Login = () => {
       console.log("Loginnn response", response);
       CommonToaster("Login Successfully", "success");
       localStorage.setItem("Accesstoken", response.data.token);
+      localStorage.setItem(
+        "organizationId",
+        response?.data?.user?.organizationId
+      );
       localStorage.setItem("LoginUserInfo", JSON.stringify(response.data.user));
       setTimeout(() => {
         navigate("/dashboard");

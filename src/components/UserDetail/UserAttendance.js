@@ -8,7 +8,7 @@ import "./styles.css";
 import Loader from "../Common/Loader";
 import moment from "moment";
 
-export default function UserAttendance({ loading }) {
+export default function UserAttendance({ attendanceSummary, loading }) {
   const userAttendanceDetails = useSelector((state) => state.userAttendance);
   const columns = [
     {
@@ -66,7 +66,10 @@ export default function UserAttendance({ loading }) {
                 <CommonDonutChart
                   labels={["Present", "Absent"]}
                   colors={["#25a17d", "#ABB3B3"]}
-                  series={series}
+                  series={[
+                    attendanceSummary.daysPresent,
+                    attendanceSummary.daysLeave,
+                  ]}
                   labelsfontSize="19px"
                 />
               </div>

@@ -337,6 +337,7 @@ const Users = ({ loading }) => {
     const selectedTeam = teamList.find((t) => t.id === team);
     console.log("teammmm", selectedTeam);
     const teamName = selectedTeam.name;
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
       First_Name: firstName,
@@ -348,7 +349,7 @@ const Users = ({ loading }) => {
       UsersName: firstName + lastName,
       Password: "Hublog",
       Gender: gender === 1 ? "Male" : "Female",
-      OrganizationId: 1,
+      OrganizationId: orgId,
       RoleName: "Employee",
       RoleId: role,
       DesignationName: designationName,

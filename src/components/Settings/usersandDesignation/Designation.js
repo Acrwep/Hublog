@@ -103,13 +103,14 @@ export default function Designation({ loading }) {
     setDescriptionError(descriptionValidate);
 
     if (nameValidate || descriptionValidate) return;
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
       Name: name,
       Description: description,
       Active: true,
       Created_date: moment(createdDate).format("YYYY-MM-DDTHH:mm:ss.SSSSSSSZ"),
-      OrganizationId: 1,
+      OrganizationId: orgId,
       ...(edit && { id: id }),
     };
     if (edit) {

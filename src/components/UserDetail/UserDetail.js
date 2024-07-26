@@ -46,13 +46,14 @@ const UserDetail = () => {
   //loadings
   const [attendanceLoading, setAttendanceLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
+  const [attendanceSummary, setAttendanceSummary] = useState("");
 
   const handlePageChange = (id) => {
     setActivePage(id === activePage ? activePage : id);
   };
 
   const [userList, setUserList] = useState([]);
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     getUsersData();
@@ -94,6 +95,10 @@ const UserDetail = () => {
   };
 
   const getUsersData = async () => {
+    if (user != null) {
+      getuserDetailsData(user);
+      return;
+    }
     try {
       const response = await getUsers();
       const userDetail = response?.data;
@@ -120,8 +125,9 @@ const UserDetail = () => {
           endDate != undefined ? endDate : selectedDates[1]
         );
         console.log("user attendance response", response);
-        const details = response.data;
+        const details = response?.data?.attendanceDetails;
         dispatch(storeuserAttendance(details));
+        setAttendanceSummary(response?.data?.attendanceSummary);
       } catch (error) {
         console.log("attendance error", error);
         CommonToaster(error.response?.data?.message, "error");
@@ -273,7 +279,10 @@ const UserDetail = () => {
         >
           {activePage === 1 && (
             <div>
-              <UserAttendance loading={attendanceLoading} />
+              <UserAttendance
+                loading={attendanceLoading}
+                attendanceSummary={attendanceSummary}
+              />
             </div>
           )}
           {activePage === 2 && (

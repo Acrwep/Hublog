@@ -41,8 +41,8 @@ const Team = ({ loading }) => {
   const [changeTeamError, setChangeTeamError] = useState("");
   const [edit, setEdit] = useState(false);
   const [userDetails, setuserDetails] = useState("");
-  const [addModalTitle, setAddModalTitle] = useState("");
   const [teamMemberLoading, setTeamMemberLoading] = useState(false);
+  const [organizationId, setOrganizationId] = useState(null);
 
   useEffect(() => {
     setTeamId(teamList[0].id);
@@ -59,15 +59,15 @@ const Team = ({ loading }) => {
       console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
       console.log("team members", teamMembersList);
+      setTeamMembers(teamMembersList);
 
+      //filter other team members
       if (teamId != undefined) {
         const others = allUsers.filter((f) => {
           return f.teamId !== teamId;
         });
-        console.log("otherssssssssss", others);
         setOtherUsers(others);
       }
-      setTeamMembers(teamMembersList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setTeamMembers([]);
@@ -79,7 +79,8 @@ const Team = ({ loading }) => {
   };
   const getTeamsData = async () => {
     try {
-      const response = await getTeams(1);
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      const response = await getTeams(orgId);
       console.log("teams response", response.data);
       const allTeams = response.data;
       dispatch(storeTeams(allTeams));
@@ -118,12 +119,13 @@ const Team = ({ loading }) => {
     setDescriptionError(descriptionValidate);
 
     if (nameValidate || descriptionValidate) return;
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
       Name: name,
       Description: description,
       Active: true,
-      OrganizationId: 1,
+      OrganizationId: orgId,
       ...(edit && { id: teamId }),
       Parentid: 1,
     };
@@ -162,6 +164,7 @@ const Team = ({ loading }) => {
       if (changeteamValidate) return;
     }
     setChangeTeamModal(false);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
       id: addTeamModal ? userDetails.id : userDetails.userId,
@@ -174,7 +177,7 @@ const Team = ({ loading }) => {
       UsersName: userDetails.usersName,
       Password: "Hublog",
       Gender: userDetails.gender,
-      OrganizationId: 1,
+      OrganizationId: orgId,
       RoleName: "Employee",
       RoleId: userDetails.roleId,
       DesignationName: "",

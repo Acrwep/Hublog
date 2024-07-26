@@ -8,7 +8,12 @@ import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import { CommonToaster } from "../Common/CommonToaster";
 import { MdOutlineFileDownload } from "react-icons/md";
-import { getScreenShots, getUsers } from "../APIservice.js/action";
+import {
+  getScreenShots,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
 import CommonAvatar from "../Common/CommonAvatar";
 import moment from "moment";
 import Loader from "../Common/Loader";
@@ -16,8 +21,11 @@ import PrismaZoom from "react-prismazoom";
 
 const Screenshots = () => {
   const [date, setDate] = useState(new Date());
+  const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [organizationId, setOrganizationId] = useState(null);
   const [userName, setUserName] = useState("");
   const [screenshotData, setScreenshotData] = useState([]);
   const [image, setImage] = useState("");
@@ -26,13 +34,31 @@ const Screenshots = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUsersData();
+    getTeamData();
   }, []);
 
-  const getUsersData = async () => {
+  const getTeamData = async () => {
     setLoading(true);
+    try {
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      setOrganizationId(orgId);
+      const response = await getTeams(orgId);
+      console.log("teamsssssss response", response.data);
+      const teamList = response.data;
+      setTeamList(teamList);
+      setTeamId(null);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData();
+      }, 1000);
+    }
+  };
+
+  const getUsersData = async () => {
     let userIdd = null;
-    let organizationId = 1;
+    const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers();
       console.log("users response", response.data);
@@ -44,17 +70,17 @@ const Screenshots = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getScreenShotsData(userIdd, organizationId, date);
+        getScreenShotsData(userIdd, orgId, date);
       }, 1000);
     }
   };
 
-  const getScreenShotsData = async (user, organizationId, selectedDate) => {
+  const getScreenShotsData = async (user, orgId, selectedDate) => {
     setLoading(true);
     try {
       const response = await getScreenShots(
         user,
-        organizationId,
+        orgId,
         moment(selectedDate).format("YYYY-MM-DD")
       );
       console.log("screenshot response", response.data);
@@ -68,15 +94,41 @@ const Screenshots = () => {
     }
   };
 
+  const handleTeam = async (value) => {
+    console.log("clicked team", value);
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      console.log("user by teamId response", response?.data);
+      const teamMembersList = response?.data?.team?.users;
+      console.log("team members", teamMembersList);
+
+      const updatedArr = teamMembersList.map(
+        ({ firstName, lastName, userId, ...rest }) => ({
+          first_Name: firstName,
+          last_Name: lastName,
+          id: userId,
+          ...rest,
+        })
+      );
+      console.log("updateeeee", updatedArr);
+      setUserList(updatedArr);
+      setUserId(updatedArr[0].id);
+      getScreenShotsData(updatedArr[0].id, organizationId, date);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
   const onDateChange = (value) => {
     setDate(value);
-    let organizationId = 1;
     getScreenShotsData(userId, organizationId, value);
   };
 
   const handleUser = (value) => {
+    console.log("userIdddd", value);
     setUserId(value);
-    let organizationId = 1;
     getScreenShotsData(value, organizationId, date);
   };
   const handleScreenshot = (item) => {
@@ -100,13 +152,23 @@ const Screenshots = () => {
 
       <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
         <Col xs={24} sm={24} md={12} lg={12}>
-          <div style={{ width: "170px" }}>
-            <CommonSelectField
-              options={userList}
-              value={userId}
-              placeholder="Select User"
-              onChange={handleUser}
-            />
+          <div style={{ display: "flex" }}>
+            <div style={{ width: "170px", marginRight: "16px" }}>
+              <CommonSelectField
+                options={teamList}
+                value={teamId}
+                placeholder="Select Team"
+                onChange={handleTeam}
+              />
+            </div>
+            <div style={{ width: "170px" }}>
+              <CommonSelectField
+                options={userList}
+                value={userId}
+                placeholder="Select User"
+                onChange={handleUser}
+              />
+            </div>
           </div>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12}>
@@ -160,7 +222,10 @@ const Screenshots = () => {
                         backgroundColor:
                           userId === item.id ? "rgba(20, 184, 166, 0.1)" : "",
                       }}
-                      onClick={() => setUserId(item.id)}
+                      onClick={() => {
+                        setUserId(item.id);
+                        getScreenShotsData(item.id, organizationId, date);
+                      }}
                     >
                       <CommonAvatar
                         avatarSize={35}
