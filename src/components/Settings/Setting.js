@@ -90,8 +90,9 @@ const Settings = () => {
   };
 
   const getTeamData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
-      const response = await getTeams(1);
+      const response = await getTeams(orgId);
       console.log("teamsssssss response", response.data);
       const teamList = response.data;
       dispatch(storeTeams(teamList));

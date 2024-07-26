@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Tabs, Modal, Button } from "antd";
-import CommonSearchField from "../../Common/CommonSearchbar";
 import CommonInputField from "../../Common/CommonInputField";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
-import { addteamMembers, storeTeams } from "../../Redux/slice";
+import { storeTeams } from "../../Redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles.css";
 import CommonAddButton from "../../Common/CommonAddButton";
@@ -58,7 +57,6 @@ const Team = ({ loading }) => {
       );
       console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
-      console.log("team members", teamMembersList);
       setTeamMembers(teamMembersList);
 
       //filter other team members
@@ -77,11 +75,11 @@ const Team = ({ loading }) => {
       }, 1000);
     }
   };
+
   const getTeamsData = async () => {
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       const response = await getTeams(orgId);
-      console.log("teams response", response.data);
       const allTeams = response.data;
       dispatch(storeTeams(allTeams));
     } catch (error) {
@@ -133,7 +131,6 @@ const Team = ({ loading }) => {
     if (edit) {
       try {
         const response = await updateTeams(teamId, request);
-        console.log("team update response", response);
         CommonToaster("Team updated successfully", "success");
         getTeamsData();
         formReset();
@@ -144,7 +141,6 @@ const Team = ({ loading }) => {
     } else {
       try {
         const response = await createTeams(request);
-        console.log("team create response", response);
         CommonToaster("Team created successfully", "success");
         getTeamsData();
         formReset();
@@ -189,7 +185,6 @@ const Team = ({ loading }) => {
     };
 
     setTeamMemberLoading(true);
-    console.log("requestttttttt", request);
     try {
       const response = await updateUser(request);
       console.log("user update response", response);
@@ -244,14 +239,6 @@ const Team = ({ loading }) => {
   };
 
   const handleAddteam = (item) => {
-    console.log("addddddddddd", item);
-    // setAddModalTitle(
-    //   `Are you sure add ${
-    //     userDetails?.first_Name ||
-    //     userDetails.firstName + userDetails?.last_Name ||
-    //     userDetails.lastName
-    //   } in this team`
-    // );
     setuserDetails(item);
     setAddTeamModal(true);
   };
@@ -424,10 +411,9 @@ const Team = ({ loading }) => {
 
                         <Row gutter={16}>
                           <Col
-                            span={12}
+                            span={24}
                             style={{
                               display: "flex",
-                              justifyContent: "flex-end",
                             }}
                           >
                             <Button
