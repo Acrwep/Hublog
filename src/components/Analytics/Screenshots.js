@@ -102,7 +102,11 @@ const Screenshots = () => {
       console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
       console.log("team members", teamMembersList);
-
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
       const updatedArr = teamMembersList.map(
         ({ firstName, lastName, userId, ...rest }) => ({
           first_Name: firstName,
@@ -152,8 +156,8 @@ const Screenshots = () => {
 
       <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
         <Col xs={24} sm={24} md={12} lg={12}>
-          <div style={{ display: "flex" }}>
-            <div style={{ width: "170px", marginRight: "16px" }}>
+          <div className="screenshot_selectfieldsContainer">
+            <div className="screenshot_selectfields">
               <CommonSelectField
                 options={teamList}
                 value={teamId}
@@ -161,7 +165,7 @@ const Screenshots = () => {
                 onChange={handleTeam}
               />
             </div>
-            <div style={{ width: "170px" }}>
+            <div className="screenshot_selectfields">
               <CommonSelectField
                 options={userList}
                 value={userId}
@@ -169,6 +173,14 @@ const Screenshots = () => {
                 onChange={handleUser}
               />
             </div>
+            {/* <div style={{ width: "170px" }}>
+              <CommonSelectField
+                options={userList}
+                // value={userId}
+                placeholder="Select Interval"
+                // onChange={handleUser}
+              />
+            </div> */}
           </div>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12}>
@@ -207,38 +219,59 @@ const Screenshots = () => {
                   alignItems: "center",
                 }}
               >
-                <p className="screenshots_userheading">Total:30</p>
+                <p className="screenshots_userheading">
+                  Total:{userList.length}
+                </p>
               </div>
             </div>
 
             <hr className="screenshot_userhrtag" />
-            <div className="screenshots_usersnamemainContainer">
-              {userList.map((item) => {
-                return (
-                  <>
-                    <div
-                      className="screenshots_usersnameContainer"
-                      style={{
-                        backgroundColor:
-                          userId === item.id ? "rgba(20, 184, 166, 0.1)" : "",
-                      }}
-                      onClick={() => {
-                        setUserId(item.id);
-                        getScreenShotsData(item.id, organizationId, date);
-                      }}
-                    >
-                      <CommonAvatar
-                        avatarSize={35}
-                        itemName={item.first_Name}
-                        avatarfontSize="17px"
-                      />
+            <div
+              className={
+                userList.length <= 0
+                  ? "screenshots_nousersnamemainContainer"
+                  : "screenshots_usersnamemainContainer"
+              }
+            >
+              {userList.length >= 1 ? (
+                <>
+                  {userList &&
+                    userList.map((item) => {
+                      return (
+                        <>
+                          <div
+                            className="screenshots_usersnameContainer"
+                            style={{
+                              backgroundColor:
+                                userId === item.id
+                                  ? "rgba(20, 184, 166, 0.1)"
+                                  : "",
+                            }}
+                            onClick={() => {
+                              setUserId(item.id);
+                              getScreenShotsData(item.id, organizationId, date);
+                            }}
+                          >
+                            <CommonAvatar
+                              avatarSize={35}
+                              itemName={item.first_Name}
+                              avatarfontSize="17px"
+                            />
 
-                      <p>{item.first_Name + " " + item.last_Name}</p>
-                    </div>
-                    <hr className="screenshot_users_hrtag" />
-                  </>
-                );
-              })}
+                            <p>{item.first_Name + " " + item.last_Name}</p>
+                          </div>
+                          <hr className="screenshot_users_hrtag" />
+                        </>
+                      );
+                    })}
+                </>
+              ) : (
+                <div className="screenshots_nousertextContainer">
+                  <p className="screenshots_nousersfound">
+                    No users found in the selected team
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </Col>

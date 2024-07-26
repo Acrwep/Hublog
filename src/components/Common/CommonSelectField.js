@@ -45,7 +45,7 @@ export default function CommonSelectField({
         mode={mode}
         placeholder={placeholder}
         showSearch={showSearch}
-        allowClear={allowClear === "false" ? false : true}
+        allowClear={false}
         filterOption={(input, option) =>
           option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }

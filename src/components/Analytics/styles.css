@@ -57,7 +57,21 @@
 }
 .screenshots_usersnamemainContainer {
   overflow-y: auto;
-  height: 65vh;
+  height: 57vh;
+}
+.screenshots_nousersnamemainContainer {
+  overflow-y: auto;
+  height: 10vh;
+}
+.screenshots_nousertextContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.screenshots_nousersfound {
+  font-weight: 600;
+  font-size: 15px;
 }
 .screenshots_usersnameContainer {
   display: flex;
@@ -69,6 +83,23 @@
   border-top: none;
   border-bottom: 0px !important;
   border: 0.5px solid #e0e0e0;
+}
+.screenshot_selectfieldsContainer {
+  display: flex;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .screenshot_selectfieldsContainer {
+    flex-direction: column;
+  }
+}
+.screenshot_selectfields {
+  width: 170px;
+  margin-right: 16px;
+}
+@media (min-width: 426px) and (max-width: 768px) {
+  .screenshot_selectfields {
+    margin-bottom: 10px;
+  }
 }
 .screenshots_imagesContainer {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;

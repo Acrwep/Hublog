@@ -283,7 +283,6 @@ const Team = ({ loading }) => {
                 showSearch={true}
                 style={{ width: "170px" }}
                 onChange={handleTeam}
-                allowClear="false"
               />
             </Col>
             <Col

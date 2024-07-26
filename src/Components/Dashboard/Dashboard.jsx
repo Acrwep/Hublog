@@ -83,12 +83,30 @@ const Dashboard = () => {
     ],
   };
 
-  const options = {
+  var options = {
+    series: [
+      {
+        name: "TEAM A",
+        type: "column",
+        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+      },
+      {
+        name: "TEAM B",
+        type: "area",
+        data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+      },
+      {
+        name: "TEAM C",
+        type: "line",
+        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+      },
+    ],
     chart: {
-      type: "line", // Default type, can be overridden in series
       height: 350,
+      type: "line",
       stacked: false,
     },
+    colors: ["#25a17d", "#ABB3B3", "rgba(0,126,241,0.64)"], // Colors for TEAM A, TEAM B, and TEAM C respectively
     stroke: {
       width: [0, 2, 5],
       curve: "smooth",
@@ -98,65 +116,57 @@ const Dashboard = () => {
         columnWidth: "50%",
       },
     },
-    dataLabels: {
-      enabled: true,
-      enabledOnSeries: [2], // Enable data labels only for the third series
+
+    fill: {
+      opacity: [0.85, 0.25, 1],
+      gradient: {
+        inverseColors: false,
+        shade: "light",
+        type: "vertical",
+        opacityFrom: 0.85,
+        opacityTo: 0.55,
+        stops: [0, 100, 100, 100],
+      },
     },
     labels: [
-      "01/01/2023",
-      "02/01/2023",
-      "03/01/2023",
-      "04/01/2023",
-      "05/01/2023",
-      "06/01/2023",
-      "07/01/2023",
-      "08/01/2023",
-      "09/01/2023",
-      "10/01/2023",
-      "11/01/2023",
-      "12/01/2023",
+      "01/01/2003",
+      "02/01/2003",
+      "03/01/2003",
+      "04/01/2003",
+      "05/01/2003",
+      "06/01/2003",
+      "07/01/2003",
+      "08/01/2003",
+      "09/01/2003",
+      "10/01/2003",
+      "11/01/2003",
     ],
+    markers: {
+      size: 0,
+    },
     xaxis: {
       type: "datetime",
     },
     yaxis: {
       title: {
-        text: "Values",
+        text: "Points",
       },
-      min: 0,
     },
     tooltip: {
       shared: true,
       intersect: false,
       y: {
-        formatter: function (val) {
-          return val.toFixed(2);
+        formatter: function (y) {
+          if (typeof y !== "undefined") {
+            return y.toFixed(0) + " points";
+          }
+          return y;
         },
       },
     },
-    legend: {
-      position: "top",
-      horizontalAlign: "center",
-    },
   };
 
-  const series = [
-    {
-      name: "Column Series",
-      type: "column",
-      data: [23, 34, 45, 56, 67, 78, 89, 90, 100, 110, 120, 130],
-    },
-    {
-      name: "Area Series",
-      type: "area",
-      data: [11, 22, 33, 44, 55, 66, 77, 88, 99, 110, 121, 132],
-    },
-    {
-      name: "Line Series",
-      type: "line",
-      data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
-    },
-  ];
+  const series = options.series;
 
   const productiveTeamsItems = [
     { id: 1, name: "INTERNAL HR", percentage: 90 },
@@ -319,12 +329,12 @@ const Dashboard = () => {
           </Col>
           <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
-              {/* <ReactApexChart
+              <ReactApexChart
                 options={options}
                 series={series}
-                type="line"
+                // type="line"
                 height={350}
-              /> */}
+              />
             </div>
           </Col>
         </Row>
@@ -334,7 +344,7 @@ const Dashboard = () => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              <p>Hiii</p>
+              <p>No data found</p>
             </div>
           </Col>
           <Col xs={24} sm={24} md={9} lg={9}>
@@ -470,12 +480,12 @@ const Dashboard = () => {
           <h3 className="mb-3">Activity Trend</h3>
           <div className=" h-72">
             <hr />
-            {/* <LineCharts data={lineData1} /> */}
-            <ReactApexChart
+            <LineCharts data={lineData1} />
+            {/* <ReactApexChart
               options={activityTrend}
               series={series}
               height={350}
-            />
+            /> */}
           </div>
         </div>
         <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:grid-cols-1 max-sm:p-0">
