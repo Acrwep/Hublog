@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const API_URL = process.env.API_URL || "http://43.204.54.223:8001";
-const API_URL = process.env.API_URL || "https://localhost:44318";
+const API_URL = process.env.REACT_APP_API_URL;
 
 // Create an Axios instance
 const api = axios.create({
@@ -27,7 +27,7 @@ api.interceptors.request.use(
 
 export const LoginApi = async (loginCredential) => {
   try {
-    const response = await api.post("api/Login/AdminLogin", loginCredential);
+    const response = await api.post("/api/Login/AdminLogin", loginCredential);
     return response;
   } catch (error) {
     throw error;

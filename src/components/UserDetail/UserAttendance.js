@@ -35,6 +35,9 @@ export default function UserAttendance({ attendanceSummary, loading }) {
       key: "end_Time",
       width: 120,
       render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
         return <p>{moment(text).format("hh:mm A")} </p>;
       },
     },
@@ -44,6 +47,9 @@ export default function UserAttendance({ attendanceSummary, loading }) {
       key: "total_Time",
       width: 120,
       render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
         return <p>{moment(text).format("H[h]:mm[m]")} </p>;
       },
     },

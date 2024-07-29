@@ -10,7 +10,13 @@ import { store } from "./Components/Redux/store";
 function App() {
   // const accessToken = localStorage.getItem("Accesstoken");
   // console.log("Access Token:::::", accessToken);
-
+  if (process.env.NODE_ENV === "production") {
+    console.log = () => {};
+    console.debug = () => {};
+    console.info = () => {};
+    console.warn = () => {};
+    console.error = () => {};
+  }
   return (
     <Provider store={store}>
       <div className="App">
@@ -19,7 +25,7 @@ function App() {
         </BrowserRouter>
         <ToastContainer
           position="top-right"
-          autoClose={1000}
+          autoClose={700}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

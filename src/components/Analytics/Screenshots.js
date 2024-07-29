@@ -276,10 +276,13 @@ const Screenshots = () => {
           </div>
         </Col>
         <Col xs={24} sm={24} md={16} lg={16} style={{ height: "auto" }}>
-          <div className="screenshots_imagesContainer">
+          <div className="screenshots_imagesOuterContainer">
             <Row
-              gutter={30}
-              style={{ marginTop: "20px", marginBottom: "20px" }}
+              gutter={12}
+              style={{
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
             >
               {loading ? (
                 <Loader />
@@ -291,8 +294,14 @@ const Screenshots = () => {
                         screenshotData.map((item) => {
                           const base64String = `data:image/jpeg;base64,${item.imageData}`;
                           return (
-                            <Col xs={24} sm={24} md={12} lg={12}>
-                              <div style={{ display: "flex" }}>
+                            <Col
+                              xs={24}
+                              sm={24}
+                              md={12}
+                              lg={12}
+                              className="screenshot_columnContainer"
+                            >
+                              <div className="screenshot_imageandbuttnContainer">
                                 {/* <a href={base64String} download="Screenshot.png"> */}
                                 <img
                                   src={base64String}

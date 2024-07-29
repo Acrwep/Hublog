@@ -40,6 +40,9 @@ export default function UserBreak({ loading }) {
       key: "end_Time",
       width: 170,
       render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
         return <p>{moment(text).format("hh:mm A")} </p>;
       },
     },
@@ -162,7 +165,9 @@ export default function UserBreak({ loading }) {
               columns={columns}
               dataSource={userBreakDetails}
               scroll={{ x: 600 }}
-              dataPerPage={4}
+              dataPerPage={10}
+              checkBox="false"
+              bordered="false"
             />
           </div>
         </div>

@@ -54,7 +54,7 @@ const Login = () => {
     try {
       const response = await LoginApi(request);
       console.log("Loginnn response", response);
-      CommonToaster("Login Successfully", "success");
+      // CommonToaster("Login Successfully", "success");
       localStorage.setItem("Accesstoken", response.data.token);
       localStorage.setItem(
         "organizationId",

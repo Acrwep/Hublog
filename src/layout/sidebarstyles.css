@@ -228,3 +228,6 @@
     display: none;
   }
 }
+.disabled_sidemenulist {
+  cursor: auto !important;
+}

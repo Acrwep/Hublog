@@ -101,7 +101,17 @@
     margin-bottom: 10px;
   }
 }
-.screenshots_imagesContainer {
+.screenshot_columnContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.screenshot_imageandbuttnContainer {
+  position: relative;
+  width: 240px;
+}
+.screenshots_imagesOuterContainer {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   padding: 13px 12px;
   border-radius: 7px;
@@ -115,7 +125,7 @@
   font-size: 16px;
 }
 .screenshot_images {
-  width: 220px;
+  width: 100%;
   border-radius: 6px;
 }
 .screenshotimage_buttonmainContainer {
