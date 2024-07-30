@@ -84,7 +84,7 @@ const Settings = () => {
       setTimeout(() => {
         getDesignationData();
         setUserPageVisited(true);
-      }, 1000);
+      }, 350);
     }
   };
 
@@ -99,7 +99,7 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         getTeamData();
-      }, 1000);
+      }, 350);
     }
   };
 
@@ -116,7 +116,7 @@ const Settings = () => {
       setTimeout(() => {
         getBreakData();
         setLoading(false);
-      }, 1000);
+      }, 350);
     }
   };
 
@@ -132,7 +132,7 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         setBreakLoading(false);
-      }, 1000);
+      }, 350);
     }
   };
 

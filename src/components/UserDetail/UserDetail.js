@@ -44,6 +44,8 @@ const UserDetail = () => {
   const [email, setEmail] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
   const [roleId, setRoleId] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   //loadings
   const [attendanceLoading, setAttendanceLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
@@ -76,10 +78,11 @@ const UserDetail = () => {
     const formattedPreviousWeekDate = formatDate(previousWeekDate);
 
     console.log("Current Date:", formattedCurrentDate);
+    console.log("Previous Week Date:", formattedPreviousWeekDate);
     let dates = [];
     dates.push(formattedPreviousWeekDate, formattedCurrentDate);
+    console.log("datearray", dates);
     setSelectedDates(dates);
-    console.log("Previous Week Date:", formattedPreviousWeekDate);
   };
 
   const formatDate = (date) => {
@@ -99,9 +102,13 @@ const UserDetail = () => {
   };
 
   const getUsersData = async () => {
-    const roleId = localStorage.getItem("roleId");
-    setRoleId(parseInt(roleId));
+    const getuserInfo = localStorage.getItem("LoginUserInfo");
+    const loginUserDetails = JSON.parse(getuserInfo);
+    setFirstName(loginUserDetails.first_Name);
+    setLastName(loginUserDetails.last_Name);
+    setRoleId(parseInt(loginUserDetails.roleId));
 
+    getCurrentandPreviousweekDate();
     if (user != null) {
       getuserDetailsData(user);
       return;
@@ -115,21 +122,37 @@ const UserDetail = () => {
       setName(userDetail[0].usersName);
       setEmail(userDetail[0].email);
       getuserDetailsData(response.data[0].id);
-      getCurrentandPreviousweekDate();
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     }
   };
 
   const getuserDetailsData = async (userId, startDate, endDate) => {
-    console.log(startDate, endDate);
+    console.log(startDate, endDate, selectedDates);
+    const currentDate = new Date();
+
+    // Calculate previous week date (subtract 7 days)
+    const previousWeekDate = new Date(currentDate);
+    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
+
+    // Format dates
+    const formattedCurrentDate = formatDate(currentDate);
+    const formattedPreviousWeekDate = formatDate(previousWeekDate);
+
+    console.log("Current Date:", formattedCurrentDate);
+    console.log("Previous Week Date:", formattedPreviousWeekDate);
+    let dates = [];
+    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
+    console.log("datearray", dates);
+    // setSelectedDates(dates);
+
     if (activePage === 1) {
       setAttendanceLoading(true);
       try {
         const response = await getUserAttendance(
           userId,
-          startDate != undefined ? startDate : selectedDates[0],
-          endDate != undefined ? endDate : selectedDates[1]
+          startDate === undefined ? formattedPreviousWeekDate : startDate,
+          endDate === undefined ? formattedCurrentDate : endDate
         );
         console.log("user attendance response", response);
         const details = response?.data?.attendanceDetails;
@@ -143,7 +166,7 @@ const UserDetail = () => {
       } finally {
         setTimeout(() => {
           setAttendanceLoading(false);
-        }, 1500);
+        }, 350);
       }
     }
     if (activePage === 2) {
@@ -165,7 +188,7 @@ const UserDetail = () => {
       } finally {
         setTimeout(() => {
           setBreakLoading(false);
-        }, 1500);
+        }, 350);
       }
     }
   };
@@ -193,7 +216,7 @@ const UserDetail = () => {
           <FaUserLarge size={19} />
         </div>
         <h2 className="allpage_mainheadings">
-          User Detail{" "}
+          {roleId === 3 ? firstName + " " + lastName : "User Detail"}{" "}
           {activePage === 1
             ? "> Attendance"
             : activePage === 2
@@ -212,14 +235,18 @@ const UserDetail = () => {
       <div className="userdetail_userselectContainer">
         <Row>
           <Col xs={24} sm={24} md={12} lg={12}>
-            <CommonSelectField
-              placeholder="Select Users"
-              disabled={roleId === 3 ? true : false}
-              value={user}
-              options={userList}
-              onChange={handleUser}
-              className="userdetail_userselectfield"
-            />
+            {roleId === 3 ? (
+              ""
+            ) : (
+              <CommonSelectField
+                placeholder="Select Users"
+                disabled={roleId === 3 ? true : false}
+                value={user}
+                options={userList}
+                onChange={handleUser}
+                className="userdetail_userselectfield"
+              />
+            )}
           </Col>
           <Col
             xs={24}

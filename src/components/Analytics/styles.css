@@ -147,10 +147,11 @@
   position: absolute;
   bottom: 8px;
   right: 14px;
-  background-color: rgba(20, 184, 166, 0.1);
+  background-color: white;
   border-radius: 6px;
   padding: 2px;
   color: rgb(20, 184, 166);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
 }
 .screenshotModal_date {

@@ -10,6 +10,8 @@ const SidebarMenuList = () => {
   const location = useLocation();
   const [selectedKey, setSelectedKey] = useState("");
   const [roleId, setRoleId] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   useEffect(() => {
     const pathName = location.pathname.split("/")[1];
@@ -18,7 +20,9 @@ const SidebarMenuList = () => {
     const getuserInfo = localStorage.getItem("LoginUserInfo");
     console.log("loginuserInfooooinsidebar", getuserInfo);
     const userDetails = JSON.parse(getuserInfo);
-    setRoleId(userDetails.roleId);
+    setFirstName(userDetails.first_Name);
+    setLastName(userDetails.last_Name);
+    setRoleId(parseInt(userDetails.roleId));
 
     if (userDetails.roleId === 3 && pathName === "") {
       setSelectedKey("userdetail");
@@ -153,7 +157,11 @@ const SidebarMenuList = () => {
           ].includes(item.title) ? (
             <Link style={{ cursor: "default" }}>{item.title}</Link>
           ) : (
-            <Link to={`/${item.path}`}>{item.title}</Link>
+            <Link to={`/${item.path}`}>
+              {roleId === 3 && item.title === "User Detail"
+                ? firstName + " " + lastName
+                : item.title}
+            </Link>
           )}
         </Menu.Item>
       );

@@ -52,7 +52,7 @@ const Screenshots = () => {
     } finally {
       setTimeout(() => {
         getUsersData();
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -71,7 +71,7 @@ const Screenshots = () => {
     } finally {
       setTimeout(() => {
         getScreenShotsData(userIdd, orgId, date);
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -93,7 +93,7 @@ const Screenshots = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 1000);
+      }, 500);
     }
   };
 
