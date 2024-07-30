@@ -84,7 +84,10 @@ const Screenshots = () => {
         moment(selectedDate).format("YYYY-MM-DD")
       );
       console.log("screenshot response", response.data);
-      setScreenshotData(response.data);
+      const ScreenShotsData = response.data;
+      const reveseData = ScreenShotsData.reverse();
+
+      setScreenshotData(reveseData);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -236,10 +239,11 @@ const Screenshots = () => {
               {userList.length >= 1 ? (
                 <>
                   {userList &&
-                    userList.map((item) => {
+                    userList.map((item, index) => {
                       return (
                         <>
                           <div
+                            key={index}
                             className="screenshots_usersnameContainer"
                             style={{
                               backgroundColor:
@@ -278,11 +282,11 @@ const Screenshots = () => {
         <Col xs={24} sm={24} md={16} lg={16} style={{ height: "auto" }}>
           <div className="screenshots_imagesOuterContainer">
             <Row
-              gutter={12}
-              style={{
-                marginTop: "20px",
-                marginBottom: "20px",
-              }}
+              gutter={screenshotData.length <= 2 ? 16 : ""}
+              className="screenshots_imagesRowContainer"
+              // style={{
+              //   margin: "20px 66px",
+              // }}
             >
               {loading ? (
                 <Loader />
@@ -291,7 +295,7 @@ const Screenshots = () => {
                   {screenshotData.length >= 1 ? (
                     <>
                       {screenshotData &&
-                        screenshotData.map((item) => {
+                        screenshotData.map((item, index) => {
                           const base64String = `data:image/jpeg;base64,${item.imageData}`;
                           return (
                             <Col
@@ -300,6 +304,7 @@ const Screenshots = () => {
                               md={12}
                               lg={12}
                               className="screenshot_columnContainer"
+                              key={index}
                             >
                               <div className="screenshot_imageandbuttnContainer">
                                 {/* <a href={base64String} download="Screenshot.png"> */}
@@ -311,15 +316,20 @@ const Screenshots = () => {
                                   onClick={() => handleScreenshot(item)}
                                 />
                                 {/* </a> */}
-                                <div className="screenshotimage_buttonmainContainer">
-                                  <div className="screenshotimage_buttonContainer">
-                                    <a
-                                      href={base64String}
-                                      download="Screenshot.png"
-                                    >
-                                      <MdOutlineFileDownload size={24} />
-                                    </a>
-                                  </div>
+                                <div className="screenshot_imageTimeContainer">
+                                  <p>
+                                    {moment(item.screenShotDate).format(
+                                      "hh:mm A"
+                                    )}
+                                  </p>
+                                </div>
+                                <div className="screenshotimage_buttonContainer">
+                                  <a
+                                    href={base64String}
+                                    download="Screenshot.png"
+                                  >
+                                    <MdOutlineFileDownload size={24} />
+                                  </a>
                                 </div>
                               </div>
                             </Col>

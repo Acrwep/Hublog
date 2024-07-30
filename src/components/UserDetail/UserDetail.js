@@ -100,7 +100,6 @@ const UserDetail = () => {
 
   const getUsersData = async () => {
     const roleId = localStorage.getItem("roleId");
-    console.log("eeeeeeee", parseInt(roleId));
     setRoleId(parseInt(roleId));
 
     if (user != null) {

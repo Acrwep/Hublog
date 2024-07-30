@@ -16,8 +16,9 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { storesettingsBreak } from "../../Redux/slice";
+import Loader from "../../Common/Loader";
 
-export default function Break() {
+export default function Break({ loading }) {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [breakId, setBreakId] = useState(null);
@@ -218,78 +219,84 @@ export default function Break() {
   };
 
   return (
-    <div>
-      <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <CommonSearchField
-            placeholder="Search break..."
-            onSearch={handleSearch}
-          />
-        </Col>
-        <Col
-          xs={24}
-          sm={24}
-          md={12}
-          lg={12}
-          className="users_adduserbuttonContainer"
-        >
-          <CommonAddButton
-            name="Add Break"
-            onClick={() => setIsModalOpen(true)}
-          />
-        </Col>
-      </Row>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <CommonSearchField
+                placeholder="Search break..."
+                onSearch={handleSearch}
+              />
+            </Col>
+            <Col
+              xs={24}
+              sm={24}
+              md={12}
+              lg={12}
+              className="users_adduserbuttonContainer"
+            >
+              <CommonAddButton
+                name="Add Break"
+                onClick={() => setIsModalOpen(true)}
+              />
+            </Col>
+          </Row>
 
-      <CommonTable
-        columns={columns}
-        dataSource={breakList}
-        scroll={{ x: 600 }}
-        dataPerPage={10}
-        loading={tableLoading}
-        bordered="false"
-        checkBox="false"
-      />
+          <CommonTable
+            columns={columns}
+            dataSource={breakList}
+            scroll={{ x: 600 }}
+            dataPerPage={10}
+            loading={tableLoading}
+            bordered="false"
+            checkBox="false"
+          />
 
-      {/* addrole modal */}
-      <Modal
-        title="Add Break"
-        open={isModalOpen}
-        onOk={handleCreateBreak}
-        onCancel={handleCancel}
-        footer={[
-          <button
-            className="designation_submitbutton"
-            onClick={handleCreateBreak}
+          {/* addrole modal */}
+          <Modal
+            title="Add Break"
+            open={isModalOpen}
+            onOk={handleCreateBreak}
+            onCancel={handleCancel}
+            footer={[
+              <button
+                className="designation_submitbutton"
+                onClick={handleCreateBreak}
+              >
+                Submit
+              </button>,
+            ]}
           >
-            Submit
-          </button>,
-        ]}
-      >
-        <CommonInputField
-          label="Name"
-          onChange={(e) => {
-            setName(e.target.value);
-            setNameError(descriptionValidator(e.target.value));
-          }}
-          value={name}
-          error={nameError}
-          style={{ marginTop: "20px", marginBottom: "20px" }}
-          mandatory
-        />
-        <CommonInputField
-          label="Max Break Time"
-          onChange={(e) => {
-            setBreakTime(e.target.value);
-            setBreakTimeError(breakTimeValidator(e.target.value));
-          }}
-          value={breaktime}
-          error={breaktimeError}
-          suffix="min"
-          type="number"
-          style={{ marginTop: "20px", marginBottom: "20px" }}
-          mandatory
-        />
-      </Modal>
-    </div>
+            <CommonInputField
+              label="Name"
+              onChange={(e) => {
+                setName(e.target.value);
+                setNameError(descriptionValidator(e.target.value));
+              }}
+              value={name}
+              error={nameError}
+              style={{ marginTop: "20px", marginBottom: "20px" }}
+              mandatory
+            />
+            <CommonInputField
+              label="Max Break Time"
+              onChange={(e) => {
+                setBreakTime(e.target.value);
+                setBreakTimeError(breakTimeValidator(e.target.value));
+              }}
+              value={breaktime}
+              error={breaktimeError}
+              suffix="min"
+              type="number"
+              style={{ marginTop: "20px", marginBottom: "20px" }}
+              mandatory
+            />
+          </Modal>
+        </div>
+      )}
+    </>
   );
 }

@@ -37,6 +37,7 @@ import { CommonToaster } from "../Common/CommonToaster";
 const Settings = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [breakLoading, setBreakLoading] = useState(true);
   const settingsList = [
     {
       id: 1,
@@ -58,6 +59,9 @@ const Settings = () => {
   const [userPageVisited, setUserPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
+    if (id === 4 || id === 5 || id >= 7) {
+      return;
+    }
     setActivePage(id === activePage ? activePage : id);
   };
 
@@ -111,11 +115,13 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         getBreakData();
+        setLoading(false);
       }, 1000);
     }
   };
 
   const getBreakData = async () => {
+    setBreakLoading(true);
     try {
       const response = await getBreak();
       console.log("break response", response.data);
@@ -125,7 +131,7 @@ const Settings = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        setBreakLoading(false);
       }, 1000);
     }
   };
@@ -174,12 +180,17 @@ const Settings = () => {
           className="settinglist_columnOneContainer"
         >
           <div className="settings_sidebarContainer">
-            {settingsList.map((item) => (
+            {settingsList.map((item, index) => (
               <div
+                key={index}
                 className={
-                  item.id === activePage
+                  index === 3 || index === 4 || index >= 6
+                    ? "settings_disabledlistContainer"
+                    : item.id === activePage
                     ? "settings_activelistContainer"
-                    : "settings_inactivelistContainer"
+                    : item.id != activePage
+                    ? "settings_inactivelistContainer"
+                    : ""
                 }
                 onClick={() => handlePageChange(item.id)}
               >
@@ -225,7 +236,7 @@ const Settings = () => {
           )}
           {activePage === 6 && (
             <div>
-              <Break loading={loading} />
+              <Break loading={breakLoading} />
             </div>
           )}
           {activePage === 8 && (

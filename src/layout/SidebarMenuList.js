@@ -66,7 +66,6 @@ const SidebarMenuList = () => {
 
   const renderMenuItems = (menuConfig) => {
     return Object.entries(menuConfig).map(([key, item]) => {
-      console.log("subbbbbbbbbbbbbb", item);
       if (item.submenu) {
         return (
           <SubMenu

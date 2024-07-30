@@ -120,6 +120,9 @@
   justify-content: center;
   align-items: center;
 }
+.screenshots_imagesRowContainer {
+  margin: 20px 66px !important;
+}
 .screenshots_nodatafound {
   font-weight: 600;
   font-size: 16px;
@@ -128,12 +131,22 @@
   width: 100%;
   border-radius: 6px;
 }
-.screenshotimage_buttonmainContainer {
+.screenshot_imageTimeContainer {
   position: absolute;
-  bottom: 8px;
-  right: 22px;
+  top: 8px;
+  left: 16px;
+  padding: 2px 6px;
+  background-color: white;
+  color: rgb(20, 184, 166);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
 }
 .screenshotimage_buttonContainer {
+  position: absolute;
+  bottom: 8px;
+  right: 14px;
   background-color: rgba(20, 184, 166, 0.1);
   border-radius: 6px;
   padding: 2px;
