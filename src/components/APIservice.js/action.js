@@ -27,7 +27,7 @@ api.interceptors.request.use(
 
 export const LoginApi = async (loginCredential) => {
   try {
-    const response = await api.post("/api/Login/AdminLogin", loginCredential);
+    const response = await api.post("/api/Login/Login", loginCredential);
     return response;
   } catch (error) {
     throw error;
@@ -181,6 +181,38 @@ export const getUserBreak = async (userId, startDate, endDate) => {
   try {
     const response = await api.get(
       `api/Users/GetUserBreakRecordDetails?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//settings break
+export const getBreak = async () => {
+  try {
+    const response = await api.get("/api/Admin/GetAllBreakMasters");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createBreak = async (breakpayload) => {
+  try {
+    const response = await api.post(
+      "/api/Admin/InsertBreakMaster",
+      breakpayload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateBreak = async (breakpayload) => {
+  try {
+    const response = await api.put(
+      "/api/Admin/UpdateBreakMaster",
+      breakpayload
     );
     return response;
   } catch (error) {

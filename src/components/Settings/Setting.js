@@ -19,9 +19,19 @@ import Compliance from "./Compliance/Compliance";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import Break from "./Break/Break";
-import { getDesignation, getTeams, getUsers } from "../APIservice.js/action";
+import {
+  getBreak,
+  getDesignation,
+  getTeams,
+  getUsers,
+} from "../APIservice.js/action";
 import AlertRules from "./AlertRules/AlertRules";
-import { storeDesignation, storeTeams, storeUsers } from "../Redux/slice";
+import {
+  storeDesignation,
+  storesettingsBreak,
+  storeTeams,
+  storeUsers,
+} from "../Redux/slice";
 import { CommonToaster } from "../Common/CommonToaster";
 
 const Settings = () => {
@@ -96,6 +106,21 @@ const Settings = () => {
       console.log("teamsssssss response", response.data);
       const teamList = response.data;
       dispatch(storeTeams(teamList));
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getBreakData();
+      }, 1000);
+    }
+  };
+
+  const getBreakData = async () => {
+    try {
+      const response = await getBreak();
+      console.log("break response", response.data);
+      const allbreakDetails = response.data;
+      dispatch(storesettingsBreak(allbreakDetails));
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -200,7 +225,7 @@ const Settings = () => {
           )}
           {activePage === 6 && (
             <div>
-              <Break />
+              <Break loading={loading} />
             </div>
           )}
           {activePage === 8 && (

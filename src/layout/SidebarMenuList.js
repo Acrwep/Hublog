@@ -9,10 +9,22 @@ const SidebarMenuList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKey, setSelectedKey] = useState("");
+  const [roleId, setRoleId] = useState(null);
 
   useEffect(() => {
     const pathName = location.pathname.split("/")[1];
     console.log("Current PathName", pathName);
+
+    const getuserInfo = localStorage.getItem("LoginUserInfo");
+    console.log("userInfooooinsidebar", getuserInfo);
+    const userDetails = JSON.parse(getuserInfo);
+    setRoleId(userDetails.roleId);
+
+    if (userDetails.roleId === 3 && pathName === "") {
+      setSelectedKey("userdetail");
+      return;
+    }
+
     if (pathName === "") {
       setSelectedKey("dashboard");
       return;
@@ -50,7 +62,13 @@ const SidebarMenuList = () => {
             key={key}
             icon={item.icon}
             title={item.title}
-            style={{ marginBottom: "12px" }}
+            style={{
+              marginBottom: "12px",
+              display:
+                roleId === 3 && ["Real Time", "Analytics"].includes(item.title)
+                  ? "none"
+                  : "block",
+            }}
           >
             {item.submenu.map((subItem) => (
               <Menu.Item key={subItem.path} icon={subItem.icon}>
@@ -64,7 +82,24 @@ const SidebarMenuList = () => {
         <Menu.Item
           key={item.path}
           icon={item.icon}
-          style={{ marginBottom: "12px", padding: "0px 24px" }}
+          style={{
+            marginBottom: "12px",
+            padding: "0px 24px",
+            display:
+              roleId === 3 &&
+              [
+                "Dashboard",
+                "Attendance",
+                "Devices",
+                "Manual Time",
+                "Alerts",
+                "Reports",
+                "Projects",
+                "Settings",
+              ].includes(item.title)
+                ? "none"
+                : "block",
+          }}
         >
           <Link to={`/${item.path}`}>{item.title}</Link>
         </Menu.Item>

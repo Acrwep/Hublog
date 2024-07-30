@@ -31,6 +31,18 @@ const teamMemberSlice = createSlice({
   },
 });
 
+let userInfo = {};
+const userInfoSlice = createSlice({
+  name: "userInfo",
+  userInfo,
+  reducers: {
+    storeUserInfo(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -87,6 +99,17 @@ const userBreakSlice = createSlice({
   },
 });
 
+const SettingsBreakSlice = createSlice({
+  name: "settingsbreak",
+  initialState,
+  reducers: {
+    storesettingsBreak(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeuserAttendance } = userAttendanceSlice.actions;
@@ -94,6 +117,8 @@ export const { storeuserBreak } = userBreakSlice.actions;
 export const { storeUsers } = usersSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
+export const { storesettingsBreak } = SettingsBreakSlice.actions;
+export const { storeUserInfo } = userInfoSlice.actions;
 // export default teamMemberSlice.reducer;
 
 export const teamMemberReducer = teamMemberSlice.reducer;
@@ -102,3 +127,5 @@ export const userBreakReducer = userBreakSlice.reducer;
 export const usersReducer = usersSlice.reducer;
 export const designationReducer = designationSlice.reducer;
 export const teamsReducer = teamsSlice.reducer;
+export const settingsBreakReducer = SettingsBreakSlice.reducer;
+export const userInfoReducer = userInfoSlice.reducer;

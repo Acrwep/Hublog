@@ -81,6 +81,7 @@ import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
+import { useSelector } from "react-redux";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -88,6 +89,8 @@ function SidebarMenu() {
   // console.log("Access Token:::::", accessToken);
   const navigation = useNavigate();
   const location = useLocation();
+  const userInformation = useSelector((state) => state.userInfo);
+
   const [collapsed, setCollapsed] = useState(false);
   const [sidemenuList, setSidemenuList] = useState([]);
   const [dummySidemenuList, setDummySidemenuList] = useState([]);
@@ -128,20 +131,13 @@ function SidebarMenu() {
     } else {
       navigation("/login");
     }
-    const getItem = localStorage.getItem("LoginUserInfo");
-    console.log("userInfoooo", getItem);
-    if (getItem != null) {
-      const userDetails = JSON.parse(getItem);
-      console.log("login user details", userDetails);
-      setUserName(userDetails.first_Name ? userDetails.first_Name : "");
-      setUserEmail(userDetails.email);
-    }
+
     const menuList = Object.values(SideMenuConfig).map((item) => {
       return { ...item };
     });
 
     const filterItems = menuList.filter((f) => !f.submenu);
-
+    console.log("sidemenuuuuuuuu", filterItems);
     filterItems.push(
       { title: "Livestream", icon: <CiStreamOn size={17} /> },
       { title: "Field", icon: <GrMapLocation size={17} /> },
@@ -209,12 +205,14 @@ function SidebarMenu() {
             textTransform: "uppercase",
           }}
         >
-          {userName[0]}
+          {userInformation.first_Name[0]}
         </Avatar>
 
         <div>
-          <p className="header_logoutmenuname">{userName}</p>
-          <p className="header_logoutmenuemail">{userEmail}</p>
+          <p className="header_logoutmenuname">
+            {userInformation.first_Name + " " + userInformation.last_Name}
+          </p>
+          <p className="header_logoutmenuemail">{userInformation.email}</p>
         </div>
       </div>
       <Divider style={{ margin: "0" }} />
@@ -337,7 +335,7 @@ function SidebarMenu() {
                       >
                         <div>
                           <Avatar size={35} className="header_avatar">
-                            {userName[0]}
+                            {userInformation.first_Name[0]}
                           </Avatar>
                         </div>
                       </Dropdown>

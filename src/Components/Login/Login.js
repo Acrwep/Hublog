@@ -9,9 +9,12 @@ import "./login.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import { emailValidator } from "../Common/Validation";
 import CommonSpinner from "../Common/CommonSpinner";
+import { useDispatch } from "react-redux";
+import { storeUserInfo } from "../Redux/slice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -55,15 +58,28 @@ const Login = () => {
       const response = await LoginApi(request);
       console.log("Loginnn response", response);
       // CommonToaster("Login Successfully", "success");
-      localStorage.setItem("Accesstoken", response.data.token);
+      localStorage.setItem("Accesstoken", response?.data?.token);
+      const loginUserInformation = response?.data?.user;
+
       localStorage.setItem(
         "organizationId",
-        response?.data?.user?.organizationId
+        loginUserInformation.organizationId
       );
-      localStorage.setItem("LoginUserInfo", JSON.stringify(response.data.user));
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
+      localStorage.setItem(
+        "LoginUserInfo",
+        JSON.stringify(loginUserInformation)
+      );
+      dispatch(storeUserInfo(loginUserInformation)); //store login user information in redux
+
+      if (loginUserInformation.roleId === 3) {
+        setTimeout(() => {
+          navigate("/userdetail");
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      }
     } catch (error) {
       console.log("login error", error);
       CommonToaster(

@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import SidebarMenu from "./Layout/SidebarMenu";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -17,6 +17,11 @@ function App() {
     console.warn = () => {};
     console.error = () => {};
   }
+
+  useEffect(() => {
+    const getItem = localStorage.getItem("LoginUserInfo");
+    console.log("app.jssssssssssss", getItem);
+  }, []);
   return (
     <Provider store={store}>
       <div className="App">

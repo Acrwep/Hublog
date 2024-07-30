@@ -58,6 +58,10 @@ h6 {
   background: #25a17d !important;
 }
 
+/* antd input */
+.ant-input-suffix {
+  color: #808080a6;
+}
 /* tab color change */
 .ant-tabs-ink-bar {
   border-bottom: 2px solid #25a17d;
