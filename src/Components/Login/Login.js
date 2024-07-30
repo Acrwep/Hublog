@@ -10,7 +10,6 @@ import { CommonToaster } from "../Common/CommonToaster";
 import { emailValidator } from "../Common/Validation";
 import CommonSpinner from "../Common/CommonSpinner";
 import { useDispatch } from "react-redux";
-import { storeUserInfo } from "../Redux/slice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -65,11 +64,13 @@ const Login = () => {
         "organizationId",
         loginUserInformation.organizationId
       );
+      localStorage.setItem("roleId", loginUserInformation.roleId);
       localStorage.setItem(
         "LoginUserInfo",
         JSON.stringify(loginUserInformation)
       );
-      dispatch(storeUserInfo(loginUserInformation)); //store login user information in redux
+      const event = new Event("localStorageUpdated");
+      window.dispatchEvent(event);
 
       if (loginUserInformation.roleId === 3) {
         setTimeout(() => {

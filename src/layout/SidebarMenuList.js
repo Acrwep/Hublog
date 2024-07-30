@@ -16,7 +16,7 @@ const SidebarMenuList = () => {
     console.log("Current PathName", pathName);
 
     const getuserInfo = localStorage.getItem("LoginUserInfo");
-    console.log("userInfooooinsidebar", getuserInfo);
+    console.log("loginuserInfooooinsidebar", getuserInfo);
     const userDetails = JSON.parse(getuserInfo);
     setRoleId(userDetails.roleId);
 
@@ -51,17 +51,29 @@ const SidebarMenuList = () => {
 
   const handleMenuClick = (e) => {
     console.log("menuuuuuuu", e);
+    if (
+      e.key === "attendance" ||
+      e.key === "devices" ||
+      e.key === "manualtime" ||
+      e.key === "alerts" ||
+      e.key === "reports" ||
+      e.key === "projects"
+    ) {
+      return;
+    }
     navigate(`/${e.key}`);
   };
 
   const renderMenuItems = (menuConfig) => {
     return Object.entries(menuConfig).map(([key, item]) => {
+      console.log("subbbbbbbbbbbbbb", item);
       if (item.submenu) {
         return (
           <SubMenu
             key={key}
             icon={item.icon}
             title={item.title}
+            disabled={["Real Time"].includes(item.title) ? true : false}
             style={{
               marginBottom: "12px",
               display:
@@ -71,8 +83,32 @@ const SidebarMenuList = () => {
             }}
           >
             {item.submenu.map((subItem) => (
-              <Menu.Item key={subItem.path} icon={subItem.icon}>
-                <Link to={`/${subItem.path}`}>{subItem.title}</Link>
+              <Menu.Item
+                key={subItem.path}
+                icon={subItem.icon}
+                disabled={
+                  [
+                    "Timeline",
+                    "Activity",
+                    "Productivity",
+                    "App $ URLs",
+                    "Wellness",
+                  ].includes(subItem.title)
+                    ? true
+                    : false
+                }
+              >
+                {[
+                  "Timeline",
+                  "Activity",
+                  "Productivity",
+                  "App $ URLs",
+                  "Wellness",
+                ].includes(subItem.title) ? (
+                  <Link style={{ cursor: "default" }}>{subItem.title}</Link>
+                ) : (
+                  <Link to={`/${subItem.path}`}>{subItem.title}</Link>
+                )}
               </Menu.Item>
             ))}
           </SubMenu>
@@ -82,6 +118,13 @@ const SidebarMenuList = () => {
         <Menu.Item
           key={item.path}
           icon={item.icon}
+          disabled={
+            ["Dashboard", "Notebook", "User Detail", "Settings"].includes(
+              item.title
+            )
+              ? false
+              : true
+          }
           style={{
             marginBottom: "12px",
             padding: "0px 24px",
@@ -101,7 +144,18 @@ const SidebarMenuList = () => {
                 : "block",
           }}
         >
-          <Link to={`/${item.path}`}>{item.title}</Link>
+          {[
+            "Attendance",
+            "Devices",
+            "Manual Time",
+            "Alerts",
+            "Reports",
+            "Projects",
+          ].includes(item.title) ? (
+            <Link style={{ cursor: "default" }}>{item.title}</Link>
+          ) : (
+            <Link to={`/${item.path}`}>{item.title}</Link>
+          )}
         </Menu.Item>
       );
     });

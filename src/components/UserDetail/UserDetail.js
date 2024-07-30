@@ -43,12 +43,16 @@ const UserDetail = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
+  const [roleId, setRoleId] = useState(null);
   //loadings
   const [attendanceLoading, setAttendanceLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [attendanceSummary, setAttendanceSummary] = useState("");
 
   const handlePageChange = (id) => {
+    if (id >= 3) {
+      return;
+    }
     setActivePage(id === activePage ? activePage : id);
   };
 
@@ -95,6 +99,10 @@ const UserDetail = () => {
   };
 
   const getUsersData = async () => {
+    const roleId = localStorage.getItem("roleId");
+    console.log("eeeeeeee", parseInt(roleId));
+    setRoleId(parseInt(roleId));
+
     if (user != null) {
       getuserDetailsData(user);
       return;
@@ -207,6 +215,7 @@ const UserDetail = () => {
           <Col xs={24} sm={24} md={12} lg={12}>
             <CommonSelectField
               placeholder="Select Users"
+              disabled={roleId === 3 ? true : false}
               value={user}
               options={userList}
               onChange={handleUser}
@@ -248,12 +257,17 @@ const UserDetail = () => {
             </Col>
           </Row>
           <div className="settings_sidebarContainer">
-            {usermenuList.map((item) => (
+            {usermenuList.map((item, index) => (
               <div
+                key={index}
                 className={
-                  item.id === activePage
+                  index >= 2
+                    ? "settings_disabledlistContainer"
+                    : item.id === activePage
                     ? "settings_activelistContainer"
-                    : "settings_inactivelistContainer"
+                    : item.id != activePage
+                    ? "settings_inactivelistContainer"
+                    : ""
                 }
                 onClick={() => handlePageChange(item.id)}
               >

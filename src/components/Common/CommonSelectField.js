@@ -16,6 +16,7 @@ export default function CommonSelectField({
   showSearch,
   defaultValue,
   allowClear,
+  disabled,
 }) {
   return (
     <div style={style} className={className}>
@@ -45,6 +46,7 @@ export default function CommonSelectField({
         mode={mode}
         placeholder={placeholder}
         showSearch={showSearch}
+        disabled={disabled}
         allowClear={false}
         filterOption={(input, option) =>
           option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0

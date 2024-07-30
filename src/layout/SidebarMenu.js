@@ -89,17 +89,14 @@ function SidebarMenu() {
   // console.log("Access Token:::::", accessToken);
   const navigation = useNavigate();
   const location = useLocation();
-  const userInformation = useSelector((state) => state.userInfo);
+  // const userInformation = useSelector((state) => state.userInfo);
 
   const [collapsed, setCollapsed] = useState(false);
   const [sidemenuList, setSidemenuList] = useState([]);
   const [dummySidemenuList, setDummySidemenuList] = useState([]);
   const [search, setSearch] = useState("");
   const [searchbarHover, setSearchbarHover] = useState(false);
-  const [logMenu, setLogMenu] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [screenWidth, setScreenWidth] = useState("");
+  const [loginUserInfo, setLoginUserInfo] = useState("");
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -124,6 +121,24 @@ function SidebarMenu() {
   }, []);
 
   useEffect(() => {
+    const handleStorageUpdate = () => {
+      const getItem = localStorage.getItem("LoginUserInfo");
+      const convertLoginInfoAsJson = JSON.parse(getItem);
+      console.log("logininfoooooooo", convertLoginInfoAsJson);
+      setLoginUserInfo(convertLoginInfoAsJson);
+    };
+
+    window.addEventListener("localStorageUpdated", handleStorageUpdate);
+
+    // Initial load
+    handleStorageUpdate();
+
+    return () => {
+      window.removeEventListener("localStorageUpdated", handleStorageUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
     const accessToken = localStorage.getItem("Accesstoken");
     console.log("Access Token:::::", accessToken);
     if (accessToken) {
@@ -132,12 +147,15 @@ function SidebarMenu() {
       navigation("/login");
     }
 
+    // const getItem = localStorage.getItem("LoginUserInfo");
+    // const convertLoginInfoAsJson = JSON.parse(getItem);
+    // console.log("logininfoooooooo", convertLoginInfoAsJson);
+
     const menuList = Object.values(SideMenuConfig).map((item) => {
       return { ...item };
     });
 
     const filterItems = menuList.filter((f) => !f.submenu);
-    console.log("sidemenuuuuuuuu", filterItems);
     filterItems.push(
       { title: "Livestream", icon: <CiStreamOn size={17} /> },
       { title: "Field", icon: <GrMapLocation size={17} /> },
@@ -205,14 +223,16 @@ function SidebarMenu() {
             textTransform: "uppercase",
           }}
         >
-          {userInformation.first_Name[0]}
+          {loginUserInfo.first_Name ? loginUserInfo.first_Name[0] : ""}
         </Avatar>
 
         <div>
           <p className="header_logoutmenuname">
-            {userInformation.first_Name + " " + userInformation.last_Name}
+            {loginUserInfo.first_Name + " " + loginUserInfo.last_Name}
           </p>
-          <p className="header_logoutmenuemail">{userInformation.email}</p>
+          <p className="header_logoutmenuemail">
+            {loginUserInfo.email ? loginUserInfo.email : ""}
+          </p>
         </div>
       </div>
       <Divider style={{ margin: "0" }} />
@@ -335,7 +355,9 @@ function SidebarMenu() {
                       >
                         <div>
                           <Avatar size={35} className="header_avatar">
-                            {userInformation.first_Name[0]}
+                            {loginUserInfo.first_Name
+                              ? loginUserInfo.first_Name[0]
+                              : ""}
                           </Avatar>
                         </div>
                       </Dropdown>

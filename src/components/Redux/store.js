@@ -7,7 +7,6 @@ import {
   userAttendanceReducer,
   userBreakReducer,
   settingsBreakReducer,
-  userInfoReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -20,6 +19,5 @@ export const store = configureStore({
     userAttendance: userAttendanceReducer,
     userBreak: userBreakReducer,
     settingsBreak: settingsBreakReducer,
-    userInfo: userInfoReducer,
   },
 });

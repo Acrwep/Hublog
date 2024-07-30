@@ -69,6 +69,17 @@
 .settings_inactivelistContainer:hover .settings_inactivelisttext {
   color: #25a17d;
 }
+.settings_disabledlistContainer {
+  align-items: center;
+  border-radius: 5px;
+  display: flex;
+  gap: 15px;
+  height: 40px;
+  padding: 6px 10px;
+  margin-bottom: 15px;
+  cursor: default;
+  color: #808080a6;
+}
 .settinglist_icons {
   width: 24px !important;
 }
