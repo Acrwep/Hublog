@@ -81,7 +81,6 @@ import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
-import { useSelector } from "react-redux";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -135,6 +134,21 @@ function SidebarMenu() {
 
     return () => {
       window.removeEventListener("localStorageUpdated", handleStorageUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleTokenExpire = () => {
+      navigation("/login");
+    };
+
+    window.addEventListener("tokenExpireUpdated", handleTokenExpire);
+
+    // Initial load
+    handleTokenExpire();
+
+    return () => {
+      window.removeEventListener("tokenExpireUpdated", handleTokenExpire);
     };
   }, []);
 

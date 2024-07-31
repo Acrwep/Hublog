@@ -13,21 +13,13 @@ import {
   mobileValidator,
 } from "../../../Components/Common/Validation";
 import moment from "moment";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import { AiOutlineEdit } from "react-icons/ai";
-import { RiDeleteBin7Line } from "react-icons/ri";
 import Loader from "../../../Components/Common/Loader";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { CommonToaster } from "../../Common/CommonToaster";
 import { MdOutlineFileDownload } from "react-icons/md";
-import {
-  createUser,
-  getDesignation,
-  getTeams,
-  getUsers,
-  updateUser,
-} from "../../APIservice.js/action";
+import { createUser, getUsers, updateUser } from "../../APIservice.js/action";
 import { useDispatch, useSelector } from "react-redux";
 import { storeUsers } from "../../Redux/slice";
 
@@ -427,9 +419,9 @@ const Users = ({ loading }) => {
                 placeholder="Search user..."
                 onSearch={handleSearch}
               />
-              <a href="http://172.31.43.0:8085/EMP.exe" download>
+              {/* <a href="http://3.111.144.69:8080/api/download" download>
                 <MdOutlineFileDownload size={24} />
-              </a>
+              </a> */}
             </Col>
             <Col
               xs={24}

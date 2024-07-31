@@ -158,3 +158,26 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
+/* sessionexpiremodal */
+.sessionmodal_okbuttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.sessionmodal_okbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 30px;
+  width: 64px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+.sessionmodal_okbutton:hover {
+  background-color: #009737;
+}
+.sessionmodal_okbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
