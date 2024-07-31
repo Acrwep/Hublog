@@ -19,14 +19,16 @@ const SidebarMenuList = () => {
 
     const getuserInfo = localStorage.getItem("LoginUserInfo");
     console.log("loginuserInfooooinsidebar", getuserInfo);
-    const userDetails = JSON.parse(getuserInfo);
-    setFirstName(userDetails.first_Name);
-    setLastName(userDetails.last_Name);
-    setRoleId(parseInt(userDetails.roleId));
+    if (getuserInfo) {
+      const userDetails = JSON.parse(getuserInfo);
+      setFirstName(userDetails.first_Name);
+      setLastName(userDetails.last_Name);
+      setRoleId(parseInt(userDetails.roleId));
 
-    if (userDetails.roleId === 3 && pathName === "") {
-      setSelectedKey("userdetail");
-      return;
+      if (userDetails.roleId === 3 && pathName === "") {
+        setSelectedKey("userdetail");
+        return;
+      }
     }
 
     if (pathName === "") {

@@ -75,11 +75,11 @@ const Login = () => {
       if (loginUserInformation.roleId === 3) {
         setTimeout(() => {
           navigate("/userdetail");
-        }, 2000);
+        }, 500);
       } else {
         setTimeout(() => {
           navigate("/dashboard");
-        }, 2000);
+        }, 500);
       }
     } catch (error) {
       console.log("login error", error);
@@ -91,7 +91,7 @@ const Login = () => {
     } finally {
       setTimeout(() => {
         setButtonDisable(false);
-      }, 2000);
+      }, 500);
     }
   };
 

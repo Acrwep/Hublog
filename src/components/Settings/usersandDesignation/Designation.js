@@ -16,7 +16,8 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { CommonToaster } from "../../Common/CommonToaster";
 import Loader from "../../Common/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { storeDesignation } from "../../Redux/slice";
+import { storeActiveDesignation, storeDesignation } from "../../Redux/slice";
+import CommonSelectField from "../../Common/CommonSelectField";
 
 export default function Designation({ loading }) {
   const dispatch = useDispatch();
@@ -28,6 +29,11 @@ export default function Designation({ loading }) {
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [createdDate, setCreatedDate] = useState(new Date());
+  const statusOptions = [
+    { id: 1, name: "Active" },
+    { id: 0, name: "In Active" },
+  ];
+  const [status, setStatus] = useState(1);
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const columns = [
@@ -36,14 +42,36 @@ export default function Designation({ loading }) {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      width: "310px",
+      width: 290,
     },
     {
       title: "Created At",
       dataIndex: "created_date",
       key: "created_date",
+      width: 140,
       render: (text, record) => {
         return <p>{moment(record).format("DD/MM/YYYY")}</p>;
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "active",
+      key: "active",
+      width: 110,
+      render: (text, record) => {
+        if (text === true) {
+          return (
+            <div className="logsreport_mappingActivetextContainer">
+              <p>Active</p>
+            </div>
+          );
+        } else {
+          return (
+            <div className="logsreport_statusInActivetextContainer">
+              <p>In Active</p>
+            </div>
+          );
+        }
       },
     },
     {
@@ -51,6 +79,7 @@ export default function Designation({ loading }) {
       dataIndex: "active",
       key: "active",
       align: "center",
+      width: 100,
       render: (text, record) => {
         return (
           <button onClick={() => handleEdit(record)}>
@@ -73,6 +102,11 @@ export default function Designation({ loading }) {
       console.log("Designation response", response.data);
       const allDesignation = response.data;
       dispatch(storeDesignation(allDesignation));
+      //filter active designation
+      const filterActivedesignation = allDesignation.filter(
+        (f) => f.active === true
+      );
+      dispatch(storeActiveDesignation(filterActivedesignation));
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -87,6 +121,7 @@ export default function Designation({ loading }) {
     setNameError("");
     setDescription("");
     setDescriptionError("");
+    setStatus(1);
     setIsModalOpen(false);
     setEdit(false);
   };
@@ -108,7 +143,7 @@ export default function Designation({ loading }) {
     const request = {
       Name: name,
       Description: description,
-      Active: true,
+      Active: status,
       Created_date: moment(createdDate).format("YYYY-MM-DDTHH:mm:ss.SSSSSSSZ"),
       OrganizationId: orgId,
       ...(edit && { id: id }),
@@ -149,11 +184,11 @@ export default function Designation({ loading }) {
   };
 
   const handleEdit = async (record) => {
-    console.log("Clicked Item", record);
     setEdit(true);
     setIsModalOpen(true);
     setId(record.id);
     setName(record.name);
+    setStatus(record.active === true ? 1 : 0);
     setDescription(record.description);
   };
 
@@ -198,7 +233,7 @@ export default function Designation({ loading }) {
           <CommonTable
             columns={columns}
             dataSource={designationList}
-            scroll={{ x: 760 }}
+            scroll={{ x: 900 }}
             dataPerPage={10}
             loading={tableLoading}
             checkBox="false"
@@ -223,7 +258,7 @@ export default function Designation({ loading }) {
               }}
               value={name}
               error={nameError}
-              style={{ marginTop: "20px", marginBottom: "20px" }}
+              style={{ marginTop: "16px" }}
               mandatory
             />
             <CommonInputField
@@ -234,7 +269,15 @@ export default function Designation({ loading }) {
               }}
               value={description}
               error={descriptionError}
+              style={{ marginTop: "16px" }}
               mandatory
+            />
+            <CommonSelectField
+              label="Status"
+              options={statusOptions}
+              onChange={(value) => setStatus(value)}
+              value={status}
+              style={{ marginTop: "16px" }}
             />
           </Modal>
         </div>

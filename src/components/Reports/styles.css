@@ -213,7 +213,7 @@
 /* logs styles */
 .logsreport_mappingActivetextContainer {
   border-radius: 7px;
-  background-color: rgba(20, 184, 166, 0.1);
+  background-color: rgb(20 184 166 / 19%);
   color: rgb(20, 184, 166);
   font-weight: 600;
   display: flex;
@@ -224,13 +224,13 @@
 }
 .logsreport_statusInActivetextContainer {
   border-radius: 7px;
-  background-color: #fef3c9;
-  color: #92410f;
+  background-color: #fef3c9e8;
+  color: #92410fbf;
   font-weight: 600;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3px 0px;
+  padding: 2px 0px;
   font-size: 13px;
 }
 /* teamreport styles */

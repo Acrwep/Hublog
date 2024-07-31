@@ -53,6 +53,17 @@ const designationSlice = createSlice({
   },
 });
 
+const activeDesignationSlice = createSlice({
+  name: "activedesignation",
+  initialState,
+  reducers: {
+    storeActiveDesignation(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const teamsSlice = createSlice({
   name: "teams",
   initialState,
@@ -104,6 +115,7 @@ export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
 export const { storeUsers } = usersSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
+export const { storeActiveDesignation } = activeDesignationSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
 // export default teamMemberSlice.reducer;
@@ -113,5 +125,6 @@ export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
 export const usersReducer = usersSlice.reducer;
 export const designationReducer = designationSlice.reducer;
+export const activeDesignationReducer = activeDesignationSlice.reducer;
 export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;

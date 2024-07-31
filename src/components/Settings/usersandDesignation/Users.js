@@ -20,6 +20,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import Loader from "../../../Components/Common/Loader";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { CommonToaster } from "../../Common/CommonToaster";
+import { MdOutlineFileDownload } from "react-icons/md";
 import {
   createUser,
   getDesignation,
@@ -34,6 +35,7 @@ const Users = ({ loading }) => {
   const dispatch = useDispatch();
   const usersList = useSelector((state) => state.users);
   const designationList = useSelector((state) => state.designation);
+  const activeDesignationList = useSelector((state) => state.activedesignation);
   const teamList = useSelector((state) => state.teams);
   const [userId, setUserId] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -84,9 +86,20 @@ const Users = ({ loading }) => {
       title: "Team",
       dataIndex: "teamId",
       key: "teamId",
+      width: 190,
       render: (text, record) => {
         const findTeam = teamList.find((f) => f.id === text);
         return <p>{findTeam.name} </p>;
+      },
+    },
+    {
+      title: "Designation",
+      dataIndex: "designationId",
+      key: "designationId",
+      width: 190,
+      render: (text, record) => {
+        const findDesignation = designationList.find((f) => f.id === text);
+        return <p>{findDesignation.name} </p>;
       },
     },
     {
@@ -124,6 +137,7 @@ const Users = ({ loading }) => {
       title: "Status",
       dataIndex: "active",
       key: "active",
+      width: 110,
       render: (text, record) => {
         if (text === true) {
           return (
@@ -145,50 +159,56 @@ const Users = ({ loading }) => {
       dataIndex: "accessLevel",
       key: "accessLevel",
       fixed: "right",
+      align: "center",
       width: 90,
       render: (text, record) => {
-        const items = [
-          {
-            key: "1",
-            label: (
-              <div
-                style={{ display: "flex" }}
-                onClick={() => handleEdit(record)}
-              >
-                <AiOutlineEdit size={19} className="users_tableeditbutton" />
-                <button onClick={() => console.log(record)}>Edit</button>
-              </div>
-            ),
-          },
-          {
-            key: "2",
-            label: (
-              <div style={{ display: "flex" }}>
-                <RiDeleteBin7Line
-                  size={19}
-                  className="users_tabledeletebutton"
-                />
-                <button onClick={() => console.log(record)}>Delete</button>
-              </div>
-            ),
-          },
-        ];
+        // const items = [
+        //   {
+        //     key: "1",
+        //     label: (
+        //       <div
+        //         style={{ display: "flex" }}
+        //         onClick={() => handleEdit(record)}
+        //       >
+        //         <AiOutlineEdit size={19} className="users_tableeditbutton" />
+        //         <button onClick={() => console.log(record)}>Edit</button>
+        //       </div>
+        //     ),
+        //   },
+        //   {
+        //     key: "2",
+        //     label: (
+        //       <div style={{ display: "flex" }}>
+        //         <RiDeleteBin7Line
+        //           size={19}
+        //           className="users_tabledeletebutton"
+        //         />
+        //         <button onClick={() => console.log(record)}>Delete</button>
+        //       </div>
+        //     ),
+        //   },
+        // ];
+        // return (
+        //   <Space direction="vertical">
+        //     <Space wrap>
+        //       <Dropdown
+        //         menu={{
+        //           items,
+        //         }}
+        //         placement="bottomLeft"
+        //         arrow
+        //       >
+        //         <button className="usertable_actionbutton">
+        //           <BsThreeDotsVertical />
+        //         </button>
+        //       </Dropdown>
+        //     </Space>
+        //   </Space>
+        // );
         return (
-          <Space direction="vertical">
-            <Space wrap>
-              <Dropdown
-                menu={{
-                  items,
-                }}
-                placement="bottomLeft"
-                arrow
-              >
-                <button className="usertable_actionbutton">
-                  <BsThreeDotsVertical />
-                </button>
-              </Dropdown>
-            </Space>
-          </Space>
+          <button onClick={() => handleEdit(record)}>
+            <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
+          </button>
         );
       },
     },
@@ -275,7 +295,6 @@ const Users = ({ loading }) => {
   };
 
   const handleEdit = (record) => {
-    console.log("eeeeeee", record);
     setEdit(true);
     setOpen(true);
     setUserId(record.id);
@@ -408,6 +427,9 @@ const Users = ({ loading }) => {
                 placeholder="Search user..."
                 onSearch={handleSearch}
               />
+              <a href="http://172.31.43.0:8085/EMP.exe" download>
+                <MdOutlineFileDownload size={24} />
+              </a>
             </Col>
             <Col
               xs={24}
@@ -429,7 +451,7 @@ const Users = ({ loading }) => {
           <CommonTable
             columns={columns}
             dataSource={usersList}
-            scroll={{ x: 1400 }}
+            scroll={{ x: 1600 }}
             dataPerPage={10}
             loading={tableLoading}
             checkBox="false"
@@ -555,7 +577,7 @@ const Users = ({ loading }) => {
             <CommonSelectField
               label="Designation"
               onChange={(value) => setDesignation(value)}
-              options={designationList}
+              options={activeDesignationList}
               value={designation}
             />
           </Col>

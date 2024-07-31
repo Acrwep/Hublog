@@ -12,11 +12,10 @@ import CommonTable from "../../../Components/Common/CommonTable";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { createBreak, getBreak, updateBreak } from "../../APIservice.js/action";
 import { AiOutlineEdit } from "react-icons/ai";
-import { RiDeleteBin7Line } from "react-icons/ri";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { storesettingsBreak } from "../../Redux/slice";
 import Loader from "../../Common/Loader";
+import CommonSelectField from "../../Common/CommonSelectField";
 
 export default function Break({ loading }) {
   const dispatch = useDispatch();
@@ -27,6 +26,11 @@ export default function Break({ loading }) {
   const [nameError, setNameError] = useState("");
   const [breaktime, setBreakTime] = useState("");
   const [breaktimeError, setBreakTimeError] = useState("");
+  const statusOptions = [
+    { id: 1, name: "Active" },
+    { id: 0, name: "In Active" },
+  ];
+  const [status, setStatus] = useState(1);
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const [dummyData, setDummyData] = useState([]);
@@ -45,7 +49,7 @@ export default function Break({ loading }) {
       title: "Status",
       dataIndex: "active",
       key: "active",
-      width: 120,
+      width: 110,
       render: (text, record) => {
         if (text === true) {
           return (
@@ -56,7 +60,7 @@ export default function Break({ loading }) {
         } else {
           return (
             <div className="logsreport_statusInActivetextContainer">
-              <p>Inactive</p>
+              <p>In Active</p>
             </div>
           );
         }
@@ -64,49 +68,13 @@ export default function Break({ loading }) {
     },
     {
       title: "Action",
+      align: "center",
+      width: 100,
       render: (text, record) => {
-        const items = [
-          {
-            key: "1",
-            label: (
-              <div
-                style={{ display: "flex" }}
-                onClick={() => handleEdit(record)}
-              >
-                <AiOutlineEdit size={19} className="users_tableeditbutton" />
-                <button onClick={() => console.log(record)}>Edit</button>
-              </div>
-            ),
-          },
-          {
-            key: "2",
-            label: (
-              <div style={{ display: "flex" }}>
-                <RiDeleteBin7Line
-                  size={19}
-                  className="users_tabledeletebutton"
-                />
-                <button onClick={() => console.log(record)}>Delete</button>
-              </div>
-            ),
-          },
-        ];
         return (
-          <Space direction="vertical">
-            <Space wrap>
-              <Dropdown
-                menu={{
-                  items,
-                }}
-                placement="bottomLeft"
-                arrow
-              >
-                <button className="usertable_actionbutton">
-                  <BsThreeDotsVertical />
-                </button>
-              </Dropdown>
-            </Space>
-          </Space>
+          <button onClick={() => handleEdit(record)}>
+            <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
+          </button>
         );
       },
     },
@@ -137,6 +105,7 @@ export default function Break({ loading }) {
     setNameError("");
     setBreakTime("");
     setBreakTimeError("");
+    setStatus(1);
     setIsModalOpen(false);
     setEdit(false);
   };
@@ -145,6 +114,7 @@ export default function Break({ loading }) {
     setBreakId(record.id);
     setName(record.name);
     setBreakTime(record.max_Break_Time);
+    setStatus(record.active === true ? 1 : 0);
     setIsModalOpen(true);
     setEdit(true);
   };
@@ -153,7 +123,7 @@ export default function Break({ loading }) {
     const breaktimeValidate = breakTimeValidator(breaktime);
 
     setNameError(nameValidate);
-    setBreakTime(breaktimeValidate);
+    setBreakTimeError(breaktimeValidate);
 
     if (nameValidate || breaktimeValidate) return;
 
@@ -161,7 +131,7 @@ export default function Break({ loading }) {
     const request = {
       Name: name,
       Max_Break_Time: parseInt(breaktime),
-      Active: true,
+      Active: status,
       OrganizationId: orgId,
       ...(edit && { id: breakId }),
     };
@@ -202,7 +172,7 @@ export default function Break({ loading }) {
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    formReset();
   };
 
   const handleSearch = (value) => {
@@ -278,7 +248,7 @@ export default function Break({ loading }) {
               }}
               value={name}
               error={nameError}
-              style={{ marginTop: "20px", marginBottom: "20px" }}
+              style={{ marginTop: "16px" }}
               mandatory
             />
             <CommonInputField
@@ -291,8 +261,15 @@ export default function Break({ loading }) {
               error={breaktimeError}
               suffix="min"
               type="number"
-              style={{ marginTop: "20px", marginBottom: "20px" }}
+              style={{ marginTop: "16px" }}
               mandatory
+            />
+            <CommonSelectField
+              label="Status"
+              options={statusOptions}
+              onChange={(value) => setStatus(value)}
+              value={status}
+              style={{ marginTop: "16px" }}
             />
           </Modal>
         </div>

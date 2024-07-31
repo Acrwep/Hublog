@@ -321,11 +321,11 @@ function SidebarMenu() {
                       onMouseEnter={() => setSearchbarHover(true)}
                       onMouseLeave={() => setSearchbarHover(false)}
                     >
-                      {sidemenuList.map((item) => (
+                      {sidemenuList.map((item, index) => (
                         <>
                           <div
                             className="searchlist_innerContainer"
-                            key={item.title}
+                            key={index}
                             onClick={() => handleSearchLists(item.title)}
                           >
                             <div style={{ marginRight: "12px" }}>

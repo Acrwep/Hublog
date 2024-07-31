@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import {
   usersReducer,
   designationReducer,
+  activeDesignationReducer,
   teamsReducer,
   teamMemberReducer,
   userAttendanceReducer,
@@ -14,6 +15,7 @@ export const store = configureStore({
   reducer: {
     users: usersReducer,
     designation: designationReducer,
+    activedesignation: activeDesignationReducer,
     teams: teamsReducer,
     teamMembers: teamMemberReducer,
     userAttendance: userAttendanceReducer,

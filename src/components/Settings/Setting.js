@@ -27,6 +27,7 @@ import {
 } from "../APIservice.js/action";
 import AlertRules from "./AlertRules/AlertRules";
 import {
+  storeActiveDesignation,
   storeDesignation,
   storesettingsBreak,
   storeTeams,
@@ -94,6 +95,11 @@ const Settings = () => {
       console.log("Designation response", response.data);
       const designationList = response.data;
       dispatch(storeDesignation(designationList));
+      //filter active designation
+      const filterActivedesignation = designationList.filter(
+        (f) => f.active === true
+      );
+      dispatch(storeActiveDesignation(filterActivedesignation));
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -128,6 +134,8 @@ const Settings = () => {
       const allbreakDetails = response.data;
       dispatch(storesettingsBreak(allbreakDetails));
     } catch (error) {
+      const allbreakDetails = [];
+      dispatch(storesettingsBreak(allbreakDetails));
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {

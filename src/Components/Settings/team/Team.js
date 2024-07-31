@@ -72,7 +72,7 @@ const Team = ({ loading }) => {
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -201,7 +201,7 @@ const Team = ({ loading }) => {
     } finally {
       setTimeout(() => {
         getUsersData();
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -225,7 +225,7 @@ const Team = ({ loading }) => {
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
-      }, 1000);
+      }, 500);
     }
   };
 
