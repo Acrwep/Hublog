@@ -27,7 +27,8 @@ import { CiStreamOn } from "react-icons/ci";
 import { GrMapLocation } from "react-icons/gr";
 import { VscGraphLine } from "react-icons/vsc";
 import { FiActivity } from "react-icons/fi";
-import { GiLotus } from "react-icons/gi";
+import { GiNotebook, GiLotus } from "react-icons/gi";
+import { RiUser3Fill } from "react-icons/ri";
 
 import {
   MenuFoldOutlined,
@@ -96,6 +97,7 @@ function SidebarMenu() {
   const [search, setSearch] = useState("");
   const [searchbarHover, setSearchbarHover] = useState(false);
   const [loginUserInfo, setLoginUserInfo] = useState("");
+  const [showPages, setShowPages] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -121,10 +123,93 @@ function SidebarMenu() {
 
   useEffect(() => {
     const handleStorageUpdate = () => {
+      //handle navigation by accesstoken
+      const accessToken = localStorage.getItem("Accesstoken");
+      const seessionStorageAccessToken = sessionStorage.getItem(
+        "SessionStorageAccesstoken"
+      );
+      if (accessToken && seessionStorageAccessToken) {
+        setShowPages(true);
+        navigation(location.pathname);
+      } else {
+        navigation("/login");
+      }
+      //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
       const convertLoginInfoAsJson = JSON.parse(getItem);
-      console.log("logininfoooooooo", convertLoginInfoAsJson);
+      console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
       setLoginUserInfo(convertLoginInfoAsJson);
+
+      if (
+        convertLoginInfoAsJson != null &&
+        convertLoginInfoAsJson.roleId === 3
+      ) {
+        let userMenuList = [];
+        userMenuList.push(
+          {
+            title: "Notebook",
+            icon: <GiNotebook size={17} />,
+            path: "notebook",
+          },
+          {
+            title: convertLoginInfoAsJson.usersName
+              ? convertLoginInfoAsJson.usersName
+              : "",
+            icon: <RiUser3Fill size={17} />,
+            path: "userdetail",
+          }
+        );
+        setSidemenuList(userMenuList);
+        setDummySidemenuList(userMenuList);
+      } else {
+        const menuList = Object.values(SideMenuConfig).map((item) => {
+          return { ...item };
+        });
+
+        const filterItems = menuList.filter((f) => !f.submenu);
+        filterItems.push(
+          {
+            title: "Livestream",
+            icon: <CiStreamOn size={17} />,
+            path: "livestream",
+          },
+          { title: "Field", icon: <GrMapLocation size={17} />, path: "field" },
+          {
+            title: "Timeline",
+            icon: <VscGraphLine size={17} />,
+            path: "timeline",
+          },
+          {
+            title: "Activity",
+            icon: <FiActivity size={17} />,
+            path: "activity",
+          },
+          {
+            title: "Productivity",
+            icon: <MdRocketLaunch size={17} />,
+            path: "productivity",
+          },
+          {
+            title: "Screenshots",
+            icon: <MdScreenshotMonitor size={17} />,
+            path: "screenshots",
+          },
+          {
+            title: "App $ URLs",
+            icon: <FaAppStore size={17} />,
+            path: "app$urls",
+          },
+          {
+            title: "Wellness",
+            icon: <GiLotus size={17} />,
+            path: "wellness",
+          }
+        );
+        console.log("filterItems", filterItems);
+
+        setSidemenuList(filterItems);
+        setDummySidemenuList(filterItems);
+      }
     };
 
     window.addEventListener("localStorageUpdated", handleStorageUpdate);
@@ -154,55 +239,61 @@ function SidebarMenu() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("Accesstoken");
+    const seessionStorageAccessToken = sessionStorage.getItem(
+      "SessionStorageAccesstoken"
+    );
     console.log("Access Token:::::", accessToken);
-    if (accessToken) {
+    console.log("Session Access Token:::::", accessToken);
+    if (accessToken && seessionStorageAccessToken) {
+      setShowPages(true);
       navigation(location.pathname);
     } else {
       navigation("/login");
+      return;
     }
 
     // const getItem = localStorage.getItem("LoginUserInfo");
     // const convertLoginInfoAsJson = JSON.parse(getItem);
     // console.log("logininfoooooooo", convertLoginInfoAsJson);
 
-    const menuList = Object.values(SideMenuConfig).map((item) => {
-      return { ...item };
-    });
+    // const menuList = Object.values(SideMenuConfig).map((item) => {
+    //   return { ...item };
+    // });
 
-    const filterItems = menuList.filter((f) => !f.submenu);
-    filterItems.push(
-      { title: "Livestream", icon: <CiStreamOn size={17} /> },
-      { title: "Field", icon: <GrMapLocation size={17} /> },
-      {
-        title: "Timeline",
-        icon: <VscGraphLine size={17} />,
-      },
-      {
-        title: "Activity",
-        icon: <FiActivity size={17} />,
-      },
-      {
-        title: "Productivity",
-        icon: <MdRocketLaunch size={17} />,
-      },
-      {
-        title: "Screenshots",
-        icon: <MdScreenshotMonitor size={17} />,
-      },
-      {
-        title: "App $ URLs",
-        icon: <FaAppStore size={17} />,
-      },
-      {
-        title: "Wellness",
-        icon: <GiLotus size={17} />,
-        path: "wellness",
-      }
-    );
-    console.log("filterItems", filterItems);
+    // const filterItems = menuList.filter((f) => !f.submenu);
+    // filterItems.push(
+    //   { title: "Livestream", icon: <CiStreamOn size={17} /> },
+    //   { title: "Field", icon: <GrMapLocation size={17} /> },
+    //   {
+    //     title: "Timeline",
+    //     icon: <VscGraphLine size={17} />,
+    //   },
+    //   {
+    //     title: "Activity",
+    //     icon: <FiActivity size={17} />,
+    //   },
+    //   {
+    //     title: "Productivity",
+    //     icon: <MdRocketLaunch size={17} />,
+    //   },
+    //   {
+    //     title: "Screenshots",
+    //     icon: <MdScreenshotMonitor size={17} />,
+    //   },
+    //   {
+    //     title: "App $ URLs",
+    //     icon: <FaAppStore size={17} />,
+    //   },
+    //   {
+    //     title: "Wellness",
+    //     icon: <GiLotus size={17} />,
+    //     path: "wellness",
+    //   }
+    // );
+    // console.log("filterItems", filterItems);
 
-    setSidemenuList(filterItems);
-    setDummySidemenuList(filterItems);
+    // setSidemenuList(filterItems);
+    // setDummySidemenuList(filterItems);
   }, []);
 
   const handleSearch = (e) => {
@@ -219,10 +310,11 @@ function SidebarMenu() {
     setSidemenuList(filterData);
   };
 
-  const handleSearchLists = (title) => {
-    const removespace = title.split(" ").join("");
-    console.log("spaceeeee", removespace);
-    navigation(`/${removespace.toLowerCase()}`);
+  const handleSearchLists = (item) => {
+    console.log("searchitemmmmmmm", item);
+    // const removespace = title.split(" ").join("");
+    // console.log("spaceeeee", removespace);
+    navigation(`/${item.path}`);
     setSearch("");
   };
   const CustomDropdownContent = () => (
@@ -242,7 +334,11 @@ function SidebarMenu() {
 
         <div>
           <p className="header_logoutmenuname">
-            {loginUserInfo.first_Name + " " + loginUserInfo.last_Name}
+            {loginUserInfo.first_Name
+              ? loginUserInfo.first_Name
+              : "" + " " + loginUserInfo.last_Name
+              ? loginUserInfo.last_Name
+              : ""}
           </p>
           <p className="header_logoutmenuemail">
             {loginUserInfo.email ? loginUserInfo.email : ""}
@@ -264,7 +360,7 @@ function SidebarMenu() {
             <Route path="/login" element={<Login />} />
           </Routes>
         </div>
-      ) : (
+      ) : showPages === true ? (
         <Layout>
           <Sider trigger={null} collapsible collapsed={collapsed}>
             <div className="demo-logo-vertical">
@@ -340,7 +436,7 @@ function SidebarMenu() {
                           <div
                             className="searchlist_innerContainer"
                             key={index}
-                            onClick={() => handleSearchLists(item.title)}
+                            onClick={() => handleSearchLists(item)}
                           >
                             <div style={{ marginRight: "12px" }}>
                               {item.icon}
@@ -389,7 +485,6 @@ function SidebarMenu() {
               }}
             >
               <Routes>
-                <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/attendance" element={<Attendance />} />
                 <Route path="/livestream" element={<LiveStream />} />
@@ -441,6 +536,8 @@ function SidebarMenu() {
             </Content>
           </Layout>
         </Layout>
+      ) : (
+        ""
       )}
     </div>
   );

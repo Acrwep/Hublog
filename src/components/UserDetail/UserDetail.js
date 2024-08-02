@@ -102,7 +102,7 @@ const UserDetail = () => {
   };
 
   const getUsersData = async () => {
-    const getuserInfo = localStorage.getItem("LoginUserInfo");
+    const getuserInfo = sessionStorage.getItem("LoginUserInfo");
     const loginUserDetails = JSON.parse(getuserInfo);
     setFirstName(loginUserDetails.first_Name);
     setLastName(loginUserDetails.last_Name);

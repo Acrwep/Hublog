@@ -13,22 +13,30 @@ const SidebarMenuList = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  useEffect(() => {
-    const pathName = location.pathname.split("/")[1];
-    console.log("Current PathName", pathName);
-
-    const getuserInfo = localStorage.getItem("LoginUserInfo");
-    console.log("loginuserInfooooinsidebar", getuserInfo);
-    if (getuserInfo) {
-      const userDetails = JSON.parse(getuserInfo);
+  const loadUserInfo = () => {
+    const getUserInfo = sessionStorage.getItem("LoginUserInfo");
+    console.log("loginuserInfooooinsidebar", getUserInfo);
+    if (getUserInfo) {
+      const userDetails = JSON.parse(getUserInfo);
       setFirstName(userDetails.first_Name);
       setLastName(userDetails.last_Name);
       setRoleId(parseInt(userDetails.roleId));
+    } else {
+      setRoleId(null);
+      setFirstName("");
+      setLastName("");
+    }
+  };
 
-      if (userDetails.roleId === 3 && pathName === "") {
-        setSelectedKey("userdetail");
-        return;
-      }
+  useEffect(() => {
+    loadUserInfo();
+
+    const pathName = location.pathname.split("/")[1];
+    console.log("Current PathName", pathName);
+
+    if (roleId === 3 && pathName === "") {
+      setSelectedKey("userdetail");
+      return;
     }
 
     if (pathName === "") {
@@ -53,7 +61,7 @@ const SidebarMenuList = () => {
       return;
     }
     setSelectedKey(pathName);
-  }, [location.pathname]);
+  }, [location.pathname, roleId]);
 
   const handleMenuClick = (e) => {
     console.log("menuuuuuuu", e);
@@ -69,6 +77,20 @@ const SidebarMenuList = () => {
     }
     navigate(`/${e.key}`);
   };
+
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      if (event.key === "LoginUserInfo") {
+        loadUserInfo();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   const renderMenuItems = (menuConfig) => {
     return Object.entries(menuConfig).map(([key, item]) => {

@@ -4,16 +4,14 @@ import Vector from "../../assets/images/vector.png";
 import { useNavigate } from "react-router-dom";
 import MWService from "../MWService";
 import { LoginApi } from "../APIservice.js/action";
-import { Input, Row, Col } from "antd";
+import { Input, Row, Col, Button } from "antd";
 import "./login.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import { emailValidator } from "../Common/Validation";
 import CommonSpinner from "../Common/CommonSpinner";
-import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -21,13 +19,25 @@ const Login = () => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   localStorage.removeItem("Accesstoken");
+  // }, []);
+
   useEffect(() => {
-    localStorage.removeItem("Accesstoken");
+    const listener = (event) => {
+      if (event.code === "Enter" || event.code === "NumpadEnter") {
+        console.log("Enter key was pressed. Run your function.");
+        event.preventDefault();
+        handleLogin();
+      }
+    };
+    document.addEventListener("keydown", listener);
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
     if (buttonDisable) return;
 
     const emailValidate = emailValidator(email);
@@ -58,6 +68,10 @@ const Login = () => {
       console.log("Loginnn response", response);
       // CommonToaster("Login Successfully", "success");
       localStorage.setItem("Accesstoken", response?.data?.token);
+      sessionStorage.setItem(
+        "SessionStorageAccesstoken",
+        response?.data?.token
+      );
       const loginUserInformation = response?.data?.user;
 
       localStorage.setItem(
@@ -66,6 +80,10 @@ const Login = () => {
       );
       localStorage.setItem("roleId", loginUserInformation.roleId);
       localStorage.setItem(
+        "LoginUserInfo",
+        JSON.stringify(loginUserInformation)
+      );
+      sessionStorage.setItem(
         "LoginUserInfo",
         JSON.stringify(loginUserInformation)
       );
