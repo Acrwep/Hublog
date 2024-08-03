@@ -17,8 +17,26 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const AccessToken = localStorage.getItem("Accesstoken");
-    console.log("AccessToken", AccessToken);
-    if (AccessToken) {
+    const sessionStorageAccessToken = sessionStorage.getItem(
+      "SessionStorageAccesstoken"
+    );
+    console.log(
+      "AccessToken",
+      AccessToken,
+      "session token",
+      sessionStorageAccessToken
+    );
+    if (sessionStorageAccessToken) {
+      console.log("actionsecccccccc");
+      const expired = isTokenExpired(sessionStorageAccessToken);
+      console.log("Token expire status", expired);
+      if (expired === true) {
+        ShowModal();
+        return Promise.reject(new Error("Token is expired"));
+      }
+      config.headers.Authorization = `Bearer ${sessionStorageAccessToken}`;
+    } else if (AccessToken) {
+      console.log("actionlolllllllllllll");
       const expired = isTokenExpired(AccessToken);
       console.log("Token expire status", expired);
       if (expired === true) {

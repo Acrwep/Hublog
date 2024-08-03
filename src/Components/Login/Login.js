@@ -73,12 +73,19 @@ const Login = () => {
         response?.data?.token
       );
       const loginUserInformation = response?.data?.user;
-
+      //store organization Id
       localStorage.setItem(
         "organizationId",
         loginUserInformation.organizationId
       );
+      sessionStorage.setItem(
+        "organizationId",
+        loginUserInformation.organizationId
+      );
+      //store role Id
       localStorage.setItem("roleId", loginUserInformation.roleId);
+      sessionStorage.setItem("roleId", loginUserInformation.roleId);
+      //store login information
       localStorage.setItem(
         "LoginUserInfo",
         JSON.stringify(loginUserInformation)

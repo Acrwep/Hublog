@@ -111,8 +111,11 @@ const Settings = () => {
 
   const getTeamData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const orgIdfromSession = sessionStorage.getItem("organizationId");
     try {
-      const response = await getTeams(orgId);
+      const response = await getTeams(
+        orgIdfromSession ? orgIdfromSession : orgId
+      );
       console.log("teamsssssss response", response.data);
       const teamList = response.data;
       dispatch(storeTeams(teamList));
@@ -136,7 +139,7 @@ const Settings = () => {
     } catch (error) {
       const allbreakDetails = [];
       dispatch(storesettingsBreak(allbreakDetails));
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data.message, "error");
     } finally {
       setTimeout(() => {
         setBreakLoading(false);

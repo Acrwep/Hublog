@@ -92,7 +92,7 @@ export default function Break({ loading }) {
       const allbreakDetails = response.data;
       dispatch(storesettingsBreak(allbreakDetails));
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
         setTableLoading(false);
@@ -128,11 +128,12 @@ export default function Break({ loading }) {
     if (nameValidate || breaktimeValidate) return;
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const orgIdfromSession = sessionStorage.getItem("organizationId");
     const request = {
       Name: name,
       Max_Break_Time: parseInt(breaktime),
       Active: status,
-      OrganizationId: orgId,
+      OrganizationId: orgIdfromSession ? orgIdfromSession : orgId,
       ...(edit && { id: breakId }),
     };
 

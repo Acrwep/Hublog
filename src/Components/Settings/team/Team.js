@@ -77,9 +77,12 @@ const Team = ({ loading }) => {
   };
 
   const getTeamsData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const orgIdfromSession = sessionStorage.getItem("organizationId");
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-      const response = await getTeams(orgId);
+      const response = await getTeams(
+        orgIdfromSession ? orgIdfromSession : orgId
+      );
       const allTeams = response.data;
       dispatch(storeTeams(allTeams));
     } catch (error) {
@@ -118,12 +121,13 @@ const Team = ({ loading }) => {
 
     if (nameValidate || descriptionValidate) return;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const orgIdfromSession = sessionStorage.getItem("organizationId");
 
     const request = {
       Name: name,
       Description: description,
       Active: true,
-      OrganizationId: orgId,
+      OrganizationId: orgIdfromSession ? orgIdfromSession : orgId,
       ...(edit && { id: teamId }),
       Parentid: 1,
     };
@@ -161,6 +165,7 @@ const Team = ({ loading }) => {
     }
     setChangeTeamModal(false);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const orgIdfromSession = sessionStorage.getItem("organizationId");
 
     const request = {
       id: addTeamModal ? userDetails.id : userDetails.userId,
@@ -173,7 +178,7 @@ const Team = ({ loading }) => {
       UsersName: userDetails.usersName,
       Password: "Hublog",
       Gender: userDetails.gender,
-      OrganizationId: orgId,
+      OrganizationId: orgIdfromSession ? orgIdfromSession : orgId,
       RoleName: "Employee",
       RoleId: userDetails.roleId,
       DesignationName: "",

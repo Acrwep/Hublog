@@ -139,13 +139,13 @@ export default function Designation({ loading }) {
 
     if (nameValidate || descriptionValidate) return;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-
+    const orgIdfromSession = sessionStorage.getItem("organizationId");
     const request = {
       Name: name,
       Description: description,
       Active: status,
       Created_date: moment(createdDate).format("YYYY-MM-DDTHH:mm:ss.SSSSSSSZ"),
-      OrganizationId: orgId,
+      OrganizationId: orgIdfromSession ? orgIdfromSession : orgId,
       ...(edit && { id: id }),
     };
     if (edit) {

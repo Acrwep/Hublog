@@ -102,11 +102,28 @@ const UserDetail = () => {
   };
 
   const getUsersData = async () => {
-    const getuserInfo = sessionStorage.getItem("LoginUserInfo");
-    const loginUserDetails = JSON.parse(getuserInfo);
-    setFirstName(loginUserDetails.first_Name);
-    setLastName(loginUserDetails.last_Name);
-    setRoleId(parseInt(loginUserDetails.roleId));
+    const getUserInfofromLocal = localStorage.getItem("LoginUserInfo");
+    const getUserInfofromSession = sessionStorage.getItem("LoginUserInfo");
+    console.log("userdetaillocaltoken", getUserInfofromLocal);
+    console.log("userdetailsessiontoken", getUserInfofromSession);
+
+    if (getUserInfofromSession) {
+      console.log("sesssssssss");
+      const loginUserDetails = JSON.parse(getUserInfofromSession);
+      setFirstName(loginUserDetails.first_Name);
+      setLastName(loginUserDetails.last_Name);
+      setRoleId(parseInt(loginUserDetails.roleId));
+    } else if (getUserInfofromLocal) {
+      console.log("localllllllllll");
+      const loginUserDetails = JSON.parse(getUserInfofromLocal);
+      setFirstName(loginUserDetails.first_Name);
+      setLastName(loginUserDetails.last_Name);
+      setRoleId(parseInt(loginUserDetails.roleId));
+    } else {
+      setFirstName("");
+      setLastName("");
+      setRoleId(null);
+    }
 
     getCurrentandPreviousweekDate();
     if (user != null) {

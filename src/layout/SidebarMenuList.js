@@ -14,17 +14,19 @@ const SidebarMenuList = () => {
   const [lastName, setLastName] = useState("");
 
   const loadUserInfo = () => {
-    const getUserInfo = sessionStorage.getItem("LoginUserInfo");
-    console.log("loginuserInfooooinsidebar", getUserInfo);
-    if (getUserInfo) {
-      const userDetails = JSON.parse(getUserInfo);
+    const getItem = localStorage.getItem("LoginUserInfo");
+    const getItemfromSession = sessionStorage.getItem("LoginUserInfo");
+
+    if (getItemfromSession) {
+      const userDetails = JSON.parse(getItemfromSession);
       setFirstName(userDetails.first_Name);
       setLastName(userDetails.last_Name);
       setRoleId(parseInt(userDetails.roleId));
     } else {
-      setRoleId(null);
-      setFirstName("");
-      setLastName("");
+      const userDetails = JSON.parse(getItem);
+      setFirstName(userDetails.first_Name);
+      setLastName(userDetails.last_Name);
+      setRoleId(parseInt(userDetails.roleId));
     }
   };
 
