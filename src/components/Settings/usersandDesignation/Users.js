@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Space, Dropdown, Modal } from "antd";
+import { Row, Col, Space, Dropdown, Input, Modal } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
 import "../styles.css";
@@ -36,6 +36,9 @@ const Users = ({ loading }) => {
   const [lastNameError, setLastNameError] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [dateofBirth, setDateOfBirth] = useState(null);
   const [dateofBirthError, setDateOfBirthError] = useState("");
   const [dateofJoining, setDateOfJoining] = useState(null);
@@ -235,6 +238,9 @@ const Users = ({ loading }) => {
     setLastNameError("");
     setEmail("");
     setEmailError("");
+    setPassword("");
+    setPasswordError("");
+    setPasswordVisible(false);
     setDateOfBirth("");
     setDateOfBirthError("");
     setDateOfJoining("");
@@ -293,6 +299,7 @@ const Users = ({ loading }) => {
     setFirstName(record.first_Name);
     setLastName(record.last_Name);
     setEmail(record.email);
+    setPassword(record.password);
     setDateOfBirth(record.dob);
     setDateOfJoining(record.doj);
     setPhone(record.phone);
@@ -309,6 +316,15 @@ const Users = ({ loading }) => {
     const firstnameValidate = nameValidator(firstName);
     const lastnameValidate = lastNameValidator(lastName);
     const emailValidate = emailValidator(email);
+    let passwordValidate = "";
+
+    if (password === "") {
+      passwordValidate = " Password is required";
+    } else if (password < 3) {
+      passwordValidate = " Password is not valid";
+    } else {
+      passwordValidate = "";
+    }
     const dateofbirthValidate = selectValidator(dateofBirth);
     const dateofjoiningValidate = selectValidator(dateofJoining);
     const phoneValidate = mobileValidator(phone);
@@ -319,6 +335,7 @@ const Users = ({ loading }) => {
     setFirstNameError(firstnameValidate);
     setLastNameError(lastnameValidate);
     setEmailError(emailValidate);
+    setPasswordError(passwordValidate);
     setDateOfBirthError(dateofbirthValidate);
     setDateOfJoiningError(dateofjoiningValidate);
     setPhoneError(phoneValidate);
@@ -330,6 +347,7 @@ const Users = ({ loading }) => {
       firstnameValidate ||
       lastnameValidate ||
       emailValidate ||
+      passwordValidate ||
       dateofbirthValidate ||
       dateofjoiningValidate ||
       phoneValidate ||
@@ -358,7 +376,7 @@ const Users = ({ loading }) => {
       DOJ: moment(dateofJoining).format("MM/DD/YYYY"),
       Phone: phone,
       UsersName: firstName + lastName,
-      Password: "Hublog",
+      Password: password,
       Gender: gender === 1 ? "Male" : "Female",
       OrganizationId: orgId,
       RoleName: "Employee",
@@ -503,6 +521,35 @@ const Users = ({ loading }) => {
             />
           </Col>
           <Col span={12}>
+            <label style={{ fontWeight: "500", marginBottom: "6px" }}>
+              Password <span style={{ color: "red" }}>*</span>
+            </label>
+            <Input.Password
+              className="users_passwordinputfield"
+              visibilityToggle={{
+                visible: passwordVisible,
+                onVisibleChange: setPasswordVisible,
+              }}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (e.target.value === "") {
+                  setPasswordError(" Password is required");
+                } else if (e.target.value.length < 3) {
+                  setPasswordError(" Password is not valid");
+                } else {
+                  setPasswordError("");
+                }
+              }}
+              status={passwordError ? "error" : ""}
+            />
+            {passwordError && (
+              <p className="login_errormessage">{passwordError}</p>
+            )}
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ marginTop: "20px" }}>
+          <Col span={12}>
             <CommonCalendar
               label="Date of Birth"
               onChange={handleDateOfBirth}
@@ -511,8 +558,6 @@ const Users = ({ loading }) => {
               mandatory
             />
           </Col>
-        </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonCalendar
               label="Date of Joining"
@@ -522,6 +567,8 @@ const Users = ({ loading }) => {
               mandatory
             />
           </Col>
+        </Row>
+        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonInputField
               label="Phone"
@@ -535,8 +582,6 @@ const Users = ({ loading }) => {
               mandatory
             />
           </Col>
-        </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Gender"
@@ -550,6 +595,8 @@ const Users = ({ loading }) => {
               mandatory
             />
           </Col>
+        </Row>
+        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Role"
@@ -563,8 +610,6 @@ const Users = ({ loading }) => {
               mandatory
             />
           </Col>
-        </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Designation"
@@ -573,6 +618,8 @@ const Users = ({ loading }) => {
               value={designation}
             />
           </Col>
+        </Row>
+        <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Team"
@@ -586,8 +633,6 @@ const Users = ({ loading }) => {
               mandatory
             />
           </Col>
-        </Row>
-        <Row style={{ marginTop: "20px" }}>
           <Col span={12}>
             <CommonInputField
               label="Employee Id"

@@ -1,45 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logoImg from "../../assets/images/logo-re-3.png";
-import Vector from "../../assets/images/vector.png";
 import { useNavigate } from "react-router-dom";
-import MWService from "../MWService";
 import { LoginApi } from "../APIservice.js/action";
-import { Input, Row, Col, Button } from "antd";
+import { Input, Row, Col } from "antd";
 import "./login.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import { emailValidator } from "../Common/Validation";
 import CommonSpinner from "../Common/CommonSpinner";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.removeItem("Accesstoken");
   }, []);
 
-  useEffect(() => {
-    const listener = (event) => {
-      if (event.code === "Enter" || event.code === "NumpadEnter") {
-        console.log("Enter key was pressed. Run your function.");
-        event.preventDefault();
-        console.log("emaillllll", email);
-        handleLogin();
-      }
-    };
-    document.addEventListener("keydown", listener);
-    return () => {
-      document.removeEventListener("keydown", listener);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const listener = (event) => {
+  //     if (event.code === "Enter" || event.code === "13") {
+  //       console.log("Enter key was pressed. Run your function.");
+  //       event.preventDefault();
+  //       console.log("passworddd", password);
+  //       handleLogin();
+  //     }
+  //   };
+  //   document.addEventListener("keydown", listener);
+  // }, []);
 
-  const handleLogin = async () => {
-    // e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
     if (buttonDisable) return;
 
     const emailValidate = emailValidator(email);
@@ -135,7 +131,7 @@ const Login = () => {
               </div>
             </Col>
             <Col span={12} className="login_cardrightContainer">
-              <div>
+              <form>
                 <div className="loginlogo_container">
                   <img src={logoImg} className="login_logo" />
                 </div>
@@ -144,6 +140,7 @@ const Login = () => {
                 <label className="inputfields_label">Email</label>
                 <Input
                   className="login_inputfields"
+                  name="email"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -158,6 +155,7 @@ const Login = () => {
                   <label className="inputfields_label">Password</label>
                   <Input.Password
                     className="login_inputfields"
+                    name="password"
                     visibilityToggle={{
                       visible: passwordVisible,
                       onVisibleChange: setPasswordVisible,
@@ -186,12 +184,13 @@ const Login = () => {
                   className={
                     buttonDisable ? "login_buttondisable" : "login_button"
                   }
+                  type="submit"
                   disabled={buttonDisable}
                   onClick={handleLogin}
                 >
                   {buttonDisable ? <CommonSpinner /> : "Sign In"}
                 </button>
-              </div>
+              </form>
             </Col>
           </Row>
         </div>

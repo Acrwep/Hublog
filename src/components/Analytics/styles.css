@@ -105,7 +105,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 12px;
+  position: relative;
 }
 .screenshot_imageandbuttnContainer {
   position: relative;
@@ -113,8 +114,9 @@
 }
 .screenshots_imagesOuterContainer {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  padding: 13px 12px;
   border-radius: 7px;
+  margin-top: 20px;
+  padding: 12px;
   width: 100%;
   display: flex;
   justify-content: center;

@@ -46,6 +46,22 @@ export default function UserBreak({ loading }) {
         return <p>{moment(text).format("hh:mm A")} </p>;
       },
     },
+    {
+      title: "Duration",
+      dataIndex: "breakDuration",
+      key: "breakDuration",
+      width: 170,
+      render: (text, record) => {
+        if (text === null) {
+          return null;
+        } else {
+          const hour = text.split(":")[0];
+          const covertHourAsInteger = parseInt(hour);
+          const minute = text.split(":")[1];
+          return <p>{covertHourAsInteger + "h:" + minute + "m"}</p>;
+        }
+      },
+    },
   ];
   const [dummydatas, setDummyDatas] = useState([
     {

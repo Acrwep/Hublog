@@ -210,8 +210,9 @@ const Screenshots = () => {
         </Col>
       </Row>
 
-      <Row gutter={16}>
-        <Col xs={24} sm={24} md={8} lg={8} style={{ height: "75vh" }}>
+      <div>
+        <Row gutter={16} className="screenshots_imagesOuterContainer">
+          {/* <Col xs={24} sm={24} md={8} lg={8} style={{ height: "75vh" }}>
           <div className="screenshots_usersmainContainer">
             <div className="screenshots_userlistheaderContainer">
               <p className="screenshots_userheading">Users</p>
@@ -278,8 +279,8 @@ const Screenshots = () => {
               )}
             </div>
           </div>
-        </Col>
-        <Col xs={24} sm={24} md={16} lg={16} style={{ height: "auto" }}>
+        </Col> */}
+          {/* <Col xs={24} sm={24} md={16} lg={16} style={{ height: "auto" }}>
           <div className="screenshots_imagesOuterContainer">
             <Row
               gutter={screenshotData.length <= 2 ? 16 : ""}
@@ -307,7 +308,6 @@ const Screenshots = () => {
                               key={index}
                             >
                               <div className="screenshot_imageandbuttnContainer">
-                                {/* <a href={base64String} download="Screenshot.png"> */}
                                 <img
                                   src={base64String}
                                   className="screenshot_images"
@@ -315,7 +315,6 @@ const Screenshots = () => {
                                   style={{ cursor: "pointer" }}
                                   onClick={() => handleScreenshot(item)}
                                 />
-                                {/* </a> */}
                                 <div className="screenshot_imageTimeContainer">
                                   <p>
                                     {moment(item.screenShotDate).format(
@@ -343,9 +342,64 @@ const Screenshots = () => {
               )}
             </Row>
           </div>
-        </Col>
-      </Row>
-
+        </Col> */}
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              {screenshotData.length >= 1 ? (
+                <>
+                  {screenshotData &&
+                    screenshotData.map((item, index) => {
+                      const base64String = `data:image/jpeg;base64,${item.imageData}`;
+                      return (
+                        <>
+                          <Col
+                            xs={24}
+                            sm={24}
+                            md={6}
+                            lg={6}
+                            className="screenshot_columnContainer"
+                            key={index}
+                          >
+                            <div className="screenshot_imageandbuttnContainer">
+                              <img
+                                src={base64String}
+                                className="screenshot_images"
+                                alt="Base64 Image"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleScreenshot(item)}
+                              />
+                              <div className="screenshot_imageTimeContainer">
+                                <p>
+                                  {moment(item.screenShotDate).format(
+                                    "hh:mm A"
+                                  )}
+                                </p>
+                              </div>
+                              <div className="screenshotimage_buttonContainer">
+                                <a
+                                  href={base64String}
+                                  download="Screenshot.png"
+                                >
+                                  <MdOutlineFileDownload size={24} />
+                                </a>
+                              </div>
+                            </div>
+                          </Col>
+                        </>
+                      );
+                    })}
+                </>
+              ) : (
+                <div style={{ padding: "12px" }}>
+                  <p className="screenshots_nodatafound">No data found</p>
+                </div>
+              )}
+            </>
+          )}
+        </Row>
+      </div>
       <Modal
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}

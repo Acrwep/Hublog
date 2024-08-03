@@ -126,6 +126,18 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
+.users_passwordinputfield {
+  height: 32px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 5px;
+}
 .users_submitbutton {
   color: #fff;
   background-color: #25a17d;
