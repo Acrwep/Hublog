@@ -133,18 +133,9 @@ function SidebarMenu() {
       }
       //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
-      const getItemfromSession = sessionStorage.getItem("LoginUserInfo");
-
-      let convertLoginInfoAsJson;
-      if (getItemfromSession) {
-        convertLoginInfoAsJson = JSON.parse(getItemfromSession);
-        console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
-        setLoginUserInfo(convertLoginInfoAsJson);
-      } else {
-        convertLoginInfoAsJson = JSON.parse(getItem);
-        console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
-        setLoginUserInfo(convertLoginInfoAsJson);
-      }
+      const convertLoginInfoAsJson = JSON.parse(getItem);
+      console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
+      setLoginUserInfo(convertLoginInfoAsJson);
 
       if (
         convertLoginInfoAsJson != null &&
@@ -246,17 +237,12 @@ function SidebarMenu() {
   useEffect(() => {
     const accessToken = localStorage.getItem("Accesstoken");
     console.log("Access Token:::::", accessToken);
-    const getItem = localStorage.getItem("LoginUserInfo");
     if (accessToken) {
       setShowPages(true);
-      navigation(location.pathname);
-      console.log("locationpathnameeeeee", location.pathname);
-      const userDetails = JSON.parse(getItem);
-
-      if (userDetails.roleId === 3) {
-        navigation("/userdetail");
-      } else if (userDetails.roleId === 2) {
+      if (location.pathname === "/") {
         navigation("/dashboard");
+      } else {
+        navigation(location.pathname);
       }
     } else {
       navigation("/login");
@@ -266,6 +252,7 @@ function SidebarMenu() {
     // const getItem = localStorage.getItem("LoginUserInfo");
     // const convertLoginInfoAsJson = JSON.parse(getItem);
     // console.log("logininfoooooooo", convertLoginInfoAsJson);
+    // setLoginUserInfo(convertLoginInfoAsJson);
 
     // const menuList = Object.values(SideMenuConfig).map((item) => {
     //   return { ...item };

@@ -13,30 +13,22 @@ const SidebarMenuList = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const loadUserInfo = () => {
-    const getItem = localStorage.getItem("LoginUserInfo");
-    const getItemfromSession = sessionStorage.getItem("LoginUserInfo");
-
-    if (getItemfromSession) {
-      const userDetails = JSON.parse(getItemfromSession);
-      setFirstName(userDetails.first_Name);
-      setLastName(userDetails.last_Name);
-      setRoleId(parseInt(userDetails.roleId));
-    } else {
-      const userDetails = JSON.parse(getItem);
-      setFirstName(userDetails.first_Name);
-      setLastName(userDetails.last_Name);
-      setRoleId(parseInt(userDetails.roleId));
-    }
-  };
-
   useEffect(() => {
-    loadUserInfo();
-
+    const accessToken = localStorage.getItem("Accesstoken");
+    if (accessToken === null) {
+      navigate("/login");
+      return;
+    }
     const pathName = location.pathname.split("/")[1];
     console.log("Current PathName", pathName);
 
-    if (roleId === 3 && pathName === "") {
+    const getItem = localStorage.getItem("LoginUserInfo");
+    const userDetails = JSON.parse(getItem);
+    setFirstName(userDetails.first_Name);
+    setLastName(userDetails.last_Name);
+    setRoleId(parseInt(userDetails.roleId));
+
+    if (userDetails.roleId === 3 && pathName === "") {
       setSelectedKey("userdetail");
       return;
     }
@@ -63,7 +55,7 @@ const SidebarMenuList = () => {
       return;
     }
     setSelectedKey(pathName);
-  }, [location.pathname, roleId]);
+  }, [location.pathname]);
 
   const handleMenuClick = (e) => {
     console.log("menuuuuuuu", e);
@@ -79,20 +71,6 @@ const SidebarMenuList = () => {
     }
     navigate(`/${e.key}`);
   };
-
-  useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event.key === "LoginUserInfo") {
-        loadUserInfo();
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
 
   const renderMenuItems = (menuConfig) => {
     return Object.entries(menuConfig).map(([key, item]) => {

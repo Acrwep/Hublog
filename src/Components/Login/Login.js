@@ -19,15 +19,16 @@ const Login = () => {
   const [buttonDisable, setButtonDisable] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   localStorage.removeItem("Accesstoken");
-  // }, []);
+  useEffect(() => {
+    localStorage.removeItem("Accesstoken");
+  }, []);
 
   useEffect(() => {
     const listener = (event) => {
       if (event.code === "Enter" || event.code === "NumpadEnter") {
         console.log("Enter key was pressed. Run your function.");
         event.preventDefault();
+        console.log("emaillllll", email);
         handleLogin();
       }
     };
@@ -38,6 +39,7 @@ const Login = () => {
   }, []);
 
   const handleLogin = async () => {
+    // e.preventDefault();
     if (buttonDisable) return;
 
     const emailValidate = emailValidator(email);
@@ -68,32 +70,23 @@ const Login = () => {
       console.log("Loginnn response", response);
       // CommonToaster("Login Successfully", "success");
       localStorage.setItem("Accesstoken", response?.data?.token);
-      sessionStorage.setItem(
-        "SessionStorageAccesstoken",
-        response?.data?.token
-      );
       const loginUserInformation = response?.data?.user;
+
       //store organization Id
       localStorage.setItem(
         "organizationId",
         loginUserInformation.organizationId
       );
-      sessionStorage.setItem(
-        "organizationId",
-        loginUserInformation.organizationId
-      );
+
       //store role Id
       localStorage.setItem("roleId", loginUserInformation.roleId);
-      sessionStorage.setItem("roleId", loginUserInformation.roleId);
+
       //store login information
       localStorage.setItem(
         "LoginUserInfo",
         JSON.stringify(loginUserInformation)
       );
-      sessionStorage.setItem(
-        "LoginUserInfo",
-        JSON.stringify(loginUserInformation)
-      );
+
       const event = new Event("localStorageUpdated");
       window.dispatchEvent(event);
 

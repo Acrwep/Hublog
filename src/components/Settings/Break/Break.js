@@ -128,12 +128,11 @@ export default function Break({ loading }) {
     if (nameValidate || breaktimeValidate) return;
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const orgIdfromSession = sessionStorage.getItem("organizationId");
     const request = {
       Name: name,
       Max_Break_Time: parseInt(breaktime),
       Active: status,
-      OrganizationId: orgIdfromSession ? orgIdfromSession : orgId,
+      OrganizationId: orgId,
       ...(edit && { id: breakId }),
     };
 

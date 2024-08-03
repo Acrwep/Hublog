@@ -111,11 +111,8 @@ const Settings = () => {
 
   const getTeamData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const orgIdfromSession = sessionStorage.getItem("organizationId");
     try {
-      const response = await getTeams(
-        orgIdfromSession ? orgIdfromSession : orgId
-      );
+      const response = await getTeams(orgId);
       console.log("teamsssssss response", response.data);
       const teamList = response.data;
       dispatch(storeTeams(teamList));
