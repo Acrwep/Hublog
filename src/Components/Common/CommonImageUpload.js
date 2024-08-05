@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { InboxOutlined, CloudUploadOutlined } from "@ant-design/icons";
-import { message, Upload } from "antd";
+import React from "react";
+import { CloudUploadOutlined } from "@ant-design/icons";
+import { Upload } from "antd";
 import { CommonToaster } from "./CommonToaster";
 import { MdDeleteOutline } from "react-icons/md";
-import { AiOutlineCloudUpload } from "react-icons/ai";
 import "./commonstyles.css";
 
 const CommonImageUpload = ({
@@ -83,9 +82,15 @@ const CommonImageUpload = ({
       ) : (
         ""
       )}
-      {error && (
+      <div
+        className={
+          error
+            ? "commoninput_errormessage_activediv"
+            : "commoninput_errormessagediv"
+        }
+      >
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>
-      )}
+      </div>
     </div>
   );
 };

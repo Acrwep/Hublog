@@ -449,7 +449,7 @@ const Team = ({ loading }) => {
               }}
               value={name}
               error={nameError}
-              style={{ marginTop: "20px", marginBottom: "20px" }}
+              style={{ marginTop: "22px", marginBottom: "22px" }}
               mandatory
             />
             <CommonInputField

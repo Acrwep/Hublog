@@ -248,7 +248,7 @@ export default function Break({ loading }) {
               }}
               value={name}
               error={nameError}
-              style={{ marginTop: "16px" }}
+              style={{ marginTop: "22px" }}
               mandatory
             />
             <CommonInputField
@@ -261,7 +261,7 @@ export default function Break({ loading }) {
               error={breaktimeError}
               suffix="min"
               type="number"
-              style={{ marginTop: "16px" }}
+              style={{ marginTop: "22px" }}
               mandatory
             />
             <CommonSelectField
@@ -269,7 +269,7 @@ export default function Break({ loading }) {
               options={statusOptions}
               onChange={(value) => setStatus(value)}
               value={status}
-              style={{ marginTop: "16px" }}
+              style={{ marginTop: "22px" }}
             />
           </Modal>
         </div>

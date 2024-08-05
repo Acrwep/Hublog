@@ -18,7 +18,7 @@ const CommonInputField = ({
   suffix,
 }) => {
   return (
-    <div style={style}>
+    <div style={style} className="commonInputfield_container">
       {label && (
         <div style={{ display: "flex" }}>
           <label className="commonfield_label">{label}</label>
@@ -45,9 +45,15 @@ const CommonInputField = ({
         type={type}
         suffix={suffix}
       />
-      {error && (
+      <div
+        className={
+          error
+            ? "commoninput_errormessage_activediv"
+            : "commoninput_errormessagediv"
+        }
+      >
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>
-      )}
+      </div>
     </div>
   );
 };

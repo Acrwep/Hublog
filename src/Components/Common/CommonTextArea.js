@@ -1,5 +1,7 @@
 import React from "react";
 import { Input } from "antd";
+import "./commonstyles.css";
+
 const { TextArea } = Input;
 
 const CommonTextArea = ({
@@ -26,9 +28,15 @@ const CommonTextArea = ({
         status={error ? "error" : ""}
         maxLength={maxLength}
       />
-      {error && (
+      <div
+        className={
+          error
+            ? "commoninput_errormessage_activediv"
+            : "commoninput_errormessagediv"
+        }
+      >
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>
-      )}
+      </div>
     </div>
   );
 };

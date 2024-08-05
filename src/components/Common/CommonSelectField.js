@@ -53,9 +53,15 @@ export default function CommonSelectField({
         }
         defaultValue={defaultValue}
       />
-      {error && (
+      <div
+        className={
+          error
+            ? "commoninput_errormessage_activediv"
+            : "commoninput_errormessagediv"
+        }
+      >
         <p style={{ color: "#ff4d4f", marginTop: "2px" }}>{label + error}</p>
-      )}
+      </div>
     </div>
   );
 }

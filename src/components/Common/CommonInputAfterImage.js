@@ -33,11 +33,17 @@ const CommonInputAfterImage = ({
             status={error ? "error" : ""}
             maxLength={maxLength}
           />
-          {error && (
+          <div
+            className={
+              error
+                ? "commoninput_errormessage_activediv"
+                : "commoninput_errormessagediv"
+            }
+          >
             <p style={{ color: "#ff4d4f", marginTop: "2px" }}>
               {label + error}
             </p>
-          )}
+          </div>
         </div>
         <div className="inputafterimage_imageContainer" style={addonAfterStyle}>
           <p style={{ padding: "2px 4px" }}>{addonAfter}</p>

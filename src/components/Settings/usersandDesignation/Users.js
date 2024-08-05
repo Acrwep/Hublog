@@ -5,6 +5,7 @@ import CommonInputField from "../../../Components/Common/CommonInputField";
 import "../styles.css";
 import CommonCalendar from "../../../Components/Common/CommonCalendar";
 import CommonSelectField from "../../../Components/Common/CommonSelectField";
+import "../../Common/commonstyles.css";
 import {
   nameValidator,
   lastNameValidator,
@@ -71,17 +72,17 @@ const Users = ({ loading }) => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 150,
+      width: 170,
       render: (text, record) => {
         return <p>{record.first_Name + " " + record.last_Name} </p>;
       },
     },
-    { title: "Email", dataIndex: "email", key: "email", width: 250 },
+    { title: "Email", dataIndex: "email", key: "email", width: 320 },
     {
       title: "Team",
       dataIndex: "teamId",
       key: "teamId",
-      width: 190,
+      width: 220,
       render: (text, record) => {
         const findTeam = teamList.find((f) => f.id === text);
         return <p>{findTeam.name} </p>;
@@ -91,7 +92,7 @@ const Users = ({ loading }) => {
       title: "Designation",
       dataIndex: "designationId",
       key: "designationId",
-      width: 190,
+      width: 260,
       render: (text, record) => {
         const findDesignation = designationList.find((f) => f.id === text);
         return <p>{findDesignation.name} </p>;
@@ -457,7 +458,7 @@ const Users = ({ loading }) => {
           <CommonTable
             columns={columns}
             dataSource={usersList}
-            scroll={{ x: 1600 }}
+            scroll={{ x: 1790 }}
             dataPerPage={10}
             loading={tableLoading}
             checkBox="false"
@@ -503,7 +504,7 @@ const Users = ({ loading }) => {
             />
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
+        <Row gutter={16} style={{ marginTop: "22px" }}>
           <Col span={12}>
             <CommonInputField
               label="Email"
@@ -539,12 +540,23 @@ const Users = ({ loading }) => {
               }}
               status={passwordError ? "error" : ""}
             />
-            {passwordError && (
+            <div
+              className={
+                passwordError
+                  ? "commoninput_errormessage_activediv"
+                  : "commoninput_errormessagediv"
+              }
+            >
+              <p style={{ color: "#ff4d4f", marginTop: "2px" }}>
+                {passwordError}
+              </p>
+            </div>
+            {/* {passwordError && (
               <p className="login_errormessage">{passwordError}</p>
-            )}
+            )} */}
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
+        <Row gutter={16} style={{ marginTop: "22px" }}>
           <Col span={12}>
             <CommonCalendar
               label="Date of Birth"
@@ -564,7 +576,7 @@ const Users = ({ loading }) => {
             />
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
+        <Row gutter={16} style={{ marginTop: "22px" }}>
           <Col span={12}>
             <CommonInputField
               label="Phone"
@@ -592,7 +604,7 @@ const Users = ({ loading }) => {
             />
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
+        <Row gutter={16} style={{ marginTop: "22px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Role"
@@ -615,7 +627,7 @@ const Users = ({ loading }) => {
             />
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginTop: "20px" }}>
+        <Row gutter={16} style={{ marginTop: "22px" }}>
           <Col span={12}>
             <CommonSelectField
               label="Team"

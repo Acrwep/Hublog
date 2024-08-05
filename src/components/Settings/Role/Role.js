@@ -149,10 +149,10 @@ export default function Role() {
           lg={12}
           className="users_adduserbuttonContainer"
         >
-          <CommonAddButton
+          {/* <CommonAddButton
             name="Add Role"
             onClick={() => setIsModalOpen(true)}
-          />
+          /> */}
         </Col>
       </Row>
 
@@ -184,7 +184,7 @@ export default function Role() {
           }}
           value={name}
           error={nameError}
-          style={{ marginTop: "20px", marginBottom: "20px" }}
+          style={{ marginTop: "22px", marginBottom: "22px" }}
           mandatory
         />
         <CommonInputField

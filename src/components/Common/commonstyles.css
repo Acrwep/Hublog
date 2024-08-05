@@ -1,3 +1,7 @@
+.commonInputfield_container {
+  position: relative;
+  transition: all 0.3s ease;
+}
 .commonInputfield {
   height: 32px;
   background-color: #ffffff;
@@ -18,6 +22,19 @@
   border-color: #80bdff;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+.commoninput_errormessagediv {
+  position: absolute;
+  left: -50%;
+  opacity: 0;
+}
+.commoninput_errormessage_activediv {
+  top: 99%;
+  /* transform: translateY(2%); */
+  transform: translateX(2%);
+  opacity: 1;
+  position: absolute;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .commonSelectfield {

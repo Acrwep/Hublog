@@ -253,7 +253,7 @@ export default function Designation({ loading }) {
               }}
               value={name}
               error={nameError}
-              style={{ marginTop: "16px" }}
+              style={{ marginTop: "22px" }}
               mandatory
             />
             <CommonInputField
@@ -264,7 +264,7 @@ export default function Designation({ loading }) {
               }}
               value={description}
               error={descriptionError}
-              style={{ marginTop: "16px" }}
+              style={{ marginTop: "22px" }}
               mandatory
             />
             <CommonSelectField
@@ -272,7 +272,7 @@ export default function Designation({ loading }) {
               options={statusOptions}
               onChange={(value) => setStatus(value)}
               value={status}
-              style={{ marginTop: "16px" }}
+              style={{ marginTop: "22px" }}
             />
           </Modal>
         </div>
