@@ -151,12 +151,10 @@ export default function Designation({ loading }) {
       setTableLoading(true);
       try {
         const response = await updateDesignation(request);
-        console.log("designation update response", response);
         CommonToaster("Designation updated successfully", "success");
         getDesignationData();
         formReset();
       } catch (error) {
-        console.log("update designation error", error);
         CommonToaster(error.response.data.message, "error");
       } finally {
         setTimeout(() => {
@@ -167,12 +165,10 @@ export default function Designation({ loading }) {
       try {
         setTableLoading(true);
         const response = await createDesignation(request);
-        console.log("Designation create response", response);
         CommonToaster("Designation created successfully", "success");
         getDesignationData();
         formReset();
       } catch (error) {
-        console.log("designation error", error);
         CommonToaster(error.response.data.message, "error");
       } finally {
         setTimeout(() => {

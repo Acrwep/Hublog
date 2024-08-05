@@ -76,7 +76,6 @@ const Settings = () => {
     setLoading(true);
     try {
       const response = await getUsers();
-      console.log("users response", response.data);
       const usersList = response.data;
       dispatch(storeUsers(usersList));
     } catch (error) {
@@ -92,7 +91,6 @@ const Settings = () => {
   const getDesignationData = async () => {
     try {
       const response = await getDesignation();
-      console.log("Designation response", response.data);
       const designationList = response.data;
       dispatch(storeDesignation(designationList));
       //filter active designation
@@ -113,7 +111,6 @@ const Settings = () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(orgId);
-      console.log("teamsssssss response", response.data);
       const teamList = response.data;
       dispatch(storeTeams(teamList));
     } catch (error) {

@@ -8,8 +8,6 @@ import { Provider } from "react-redux";
 import { store } from "./Components/Redux/store";
 
 function App() {
-  // const accessToken = localStorage.getItem("Accesstoken");
-  // console.log("Access Token:::::", accessToken);
   if (process.env.NODE_ENV === "production") {
     console.log = () => {};
     console.debug = () => {};

@@ -394,12 +394,10 @@ const Users = ({ loading }) => {
       setTableLoading(true);
       try {
         const response = await updateUser(request);
-        console.log("user update response", response);
         CommonToaster("User updated successfully", "success");
         getUsersData();
         formReset();
       } catch (error) {
-        console.log("update user error", error);
         CommonToaster(error?.response?.data?.message, "error");
       } finally {
         setTimeout(() => {
@@ -410,12 +408,10 @@ const Users = ({ loading }) => {
       try {
         setTableLoading(true);
         const response = await createUser(request);
-        console.log("user create response", response);
         CommonToaster("User created successfully", "success");
         getUsersData();
         formReset();
       } catch (error) {
-        console.log("designation error", error);
         CommonToaster(error?.response?.data?.message, "error");
       } finally {
         setTimeout(() => {

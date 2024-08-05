@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Modal } from "antd";
 import "../Common/commonstyles.css";
+
 let isModalVisible = false;
 let modalInstance = null; // Track modal instance for manual control
 
@@ -17,6 +18,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const AccessToken = localStorage.getItem("Accesstoken");
+
     console.log("AccessToken", AccessToken);
     if (AccessToken) {
       const expired = isTokenExpired(AccessToken);
@@ -59,11 +61,17 @@ const handleSessionModal = () => {
   const event = new Event("tokenExpireUpdated");
   window.dispatchEvent(event);
   if (modalInstance) {
-    modalInstance.destroy(); // manually close the modal
+    modalInstance.destroy(); // Manually close the modal
+    modalInstance = null;
   }
+  isModalVisible = false;
 };
 
 const ShowModal = () => {
+  if (isModalVisible) {
+    return; // Don't open a new modal if one is already visible
+  }
+
   isModalVisible = true;
 
   modalInstance = Modal.warning({
@@ -74,10 +82,10 @@ const ShowModal = () => {
       handleSessionModal();
     },
     onCancel() {
-      isModalVisible = false;
+      handleSessionModal();
     },
     onClose() {
-      isModalVisible = false;
+      handleSessionModal();
     },
     footer: [
       <div className="sessionmodal_okbuttonContainer">
