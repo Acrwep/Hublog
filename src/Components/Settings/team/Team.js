@@ -280,7 +280,6 @@ const Team = ({ loading }) => {
                 label="Select team"
                 options={teamList}
                 value={teamId}
-                showSearch={true}
                 style={{ width: "170px" }}
                 onChange={handleTeam}
               />

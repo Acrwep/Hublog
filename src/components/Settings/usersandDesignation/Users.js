@@ -434,9 +434,9 @@ const Users = ({ loading }) => {
                 placeholder="Search user..."
                 onSearch={handleSearch}
               />
-              {/* <a href="http://3.111.144.69:8085/EMP.exe" download>
+              <a href="http://hublog.org:8085/hublogsetup.exe" download>
                 <MdOutlineFileDownload size={24} />
-              </a> */}
+              </a>
             </Col>
             <Col
               xs={24}
@@ -551,9 +551,6 @@ const Users = ({ loading }) => {
                 {passwordError}
               </p>
             </div>
-            {/* {passwordError && (
-              <p className="login_errormessage">{passwordError}</p>
-            )} */}
           </Col>
         </Row>
         <Row gutter={16} style={{ marginTop: "22px" }}>
@@ -649,17 +646,6 @@ const Users = ({ loading }) => {
             />
           </Col>
         </Row>
-        {/* <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "30px",
-          }}
-        >
-          <button className="users_submitbutton" onClick={handleSubmit}>
-            Submit
-          </button>
-        </div> */}
       </Modal>
     </div>
   );

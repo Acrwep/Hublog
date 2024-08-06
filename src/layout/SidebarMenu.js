@@ -82,6 +82,7 @@ import MonthlyInandOutReport from "../Components/Reports/MonthlyInandOutReport";
 import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
+import Downloads from "../Components/Login/downloads";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -129,7 +130,8 @@ function SidebarMenu() {
         setShowPages(true);
         navigation(location.pathname);
       } else {
-        navigation("/login");
+        setShowPages(false);
+        navigation(location.pathname);
       }
       //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
@@ -237,6 +239,7 @@ function SidebarMenu() {
   useEffect(() => {
     const accessToken = localStorage.getItem("Accesstoken");
     console.log("Access Token:::::", accessToken);
+    console.log("locccccc", location.pathname);
     if (accessToken) {
       setShowPages(true);
       if (location.pathname === "/") {
@@ -245,7 +248,8 @@ function SidebarMenu() {
         navigation(location.pathname);
       }
     } else {
-      navigation("/login");
+      setShowPages(false);
+      navigation(location.pathname);
       return;
     }
 
@@ -356,6 +360,12 @@ function SidebarMenu() {
         <div>
           <Routes>
             <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+      ) : location.pathname === "/downloads" ? (
+        <div>
+          <Routes>
+            <Route path="/downloads" element={<Downloads />} />
           </Routes>
         </div>
       ) : showPages === true ? (

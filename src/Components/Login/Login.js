@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginApi } from "../APIservice.js/action";
 import { Input, Row, Col } from "antd";
 import "./login.css";
+import "../Common/commonstyles.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import { emailValidator } from "../Common/Validation";
 import CommonSpinner from "../Common/CommonSpinner";
@@ -137,21 +138,31 @@ const Login = () => {
                 </div>
                 <p className="signin_heading">Sign in to your account</p>
 
-                <label className="inputfields_label">Email</label>
-                <Input
-                  className="login_inputfields"
-                  name="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setEmailError(emailValidator(e.target.value));
-                  }}
-                  status={emailError ? "error" : ""}
-                />
-                {emailError && (
-                  <p className="login_errormessage">{`Email ${emailError}`}</p>
-                )}
-                <div style={{ marginTop: "14px" }}>
+                <div style={{ position: "relative" }}>
+                  <label className="inputfields_label">Email</label>
+                  <Input
+                    className="login_inputfields"
+                    name="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEmailError(emailValidator(e.target.value));
+                    }}
+                    status={emailError ? "error" : ""}
+                  />
+                  <div
+                    className={
+                      emailError
+                        ? "commoninput_errormessage_activediv"
+                        : "commoninput_errormessagediv"
+                    }
+                  >
+                    <p style={{ color: "#ff4d4f", marginTop: "2px" }}>
+                      {`Email ${emailError}`}
+                    </p>
+                  </div>
+                </div>
+                <div style={{ marginTop: "22px", position: "relative" }}>
                   <label className="inputfields_label">Password</label>
                   <Input.Password
                     className="login_inputfields"
@@ -173,9 +184,17 @@ const Login = () => {
                     }}
                     status={passwordError ? "error" : ""}
                   />
-                  {passwordError && (
-                    <p className="login_errormessage">{passwordError}</p>
-                  )}
+                  <div
+                    className={
+                      passwordError
+                        ? "commoninput_errormessage_activediv"
+                        : "commoninput_errormessagediv"
+                    }
+                  >
+                    <p style={{ color: "#ff4d4f", marginTop: "2px" }}>
+                      {passwordError}
+                    </p>
+                  </div>
                 </div>
 
                 <p className="fotgotpassword_text">Forgot Password?</p>

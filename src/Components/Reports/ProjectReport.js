@@ -188,7 +188,6 @@ const ProjectReport = () => {
             </div>
             <div style={{ width: "170px" }}>
               <CommonSelectField
-                showSearch={true}
                 options={assigneeList}
                 placeholder="Search Assignee..."
               />

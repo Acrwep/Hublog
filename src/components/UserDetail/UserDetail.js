@@ -40,7 +40,7 @@ const UserDetail = () => {
     { id: 6, name: "Apps & URLs", icon: <IoRocketOutline size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
-  const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
   const [roleId, setRoleId] = useState(null);
@@ -77,8 +77,6 @@ const UserDetail = () => {
     const formattedCurrentDate = formatDate(currentDate);
     const formattedPreviousWeekDate = formatDate(previousWeekDate);
 
-    console.log("Current Date:", formattedCurrentDate);
-    console.log("Previous Week Date:", formattedPreviousWeekDate);
     let dates = [];
     dates.push(formattedPreviousWeekDate, formattedCurrentDate);
     console.log("datearray", dates);
@@ -126,7 +124,7 @@ const UserDetail = () => {
       console.log("users response", userDetail);
       setUserList(userDetail);
       setUser(userDetail[0].id);
-      setName(userDetail[0].usersName);
+      setFullName(userDetail[0].first_Name + " " + userDetail[0].last_Name);
       setEmail(userDetail[0].email);
       getuserDetailsData(response.data[0].id);
     } catch (error) {
@@ -146,8 +144,6 @@ const UserDetail = () => {
     const formattedCurrentDate = formatDate(currentDate);
     const formattedPreviousWeekDate = formatDate(previousWeekDate);
 
-    console.log("Current Date:", formattedCurrentDate);
-    console.log("Previous Week Date:", formattedPreviousWeekDate);
     let dates = [];
     dates.push(formattedPreviousWeekDate, formattedCurrentDate);
     console.log("datearray", dates);
@@ -203,7 +199,7 @@ const UserDetail = () => {
   const handleUser = async (value) => {
     setUser(value);
     const findSelectedUser = userList.find((f) => f.id === value);
-    setName(findSelectedUser.usersName);
+    setFullName(findSelectedUser.first_Name + " " + findSelectedUser.last_Name);
     setEmail(findSelectedUser.email);
     getuserDetailsData(value);
   };
@@ -283,7 +279,7 @@ const UserDetail = () => {
               <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
             </Col>
             <Col span={16}>
-              <p className="userdetail_username">{name}</p>
+              <p className="userdetail_username">{fullName}</p>
               <Tooltip placement="top" title={email}>
                 <p className="userdetail_usermail">{email}</p>
               </Tooltip>

@@ -13,7 +13,6 @@ export default function CommonSelectField({
   placeholder,
   className,
   style,
-  showSearch,
   defaultValue,
   allowClear,
   disabled,
@@ -45,7 +44,7 @@ export default function CommonSelectField({
         status={error ? "error" : ""}
         mode={mode}
         placeholder={placeholder}
-        showSearch={showSearch}
+        showSearch={true}
         disabled={disabled}
         allowClear={false}
         filterOption={(input, option) =>
