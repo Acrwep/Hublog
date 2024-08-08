@@ -37,7 +37,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f0f4f3;
+  /* background-color: #f0f4f3; */
+  background: linear-gradient(#73c8f7, #63f097);
 }
 .loginlogo_container {
   display: flex;
@@ -109,7 +110,7 @@
   border-bottom-left-radius: 9px;
 }
 .login_cardrightContainer {
-  padding: 65px 30px;
+  padding: 65px 12px !important;
   background-color: #fff;
   border-top-right-radius: 9px;
   border-bottom-right-radius: 9px;
@@ -133,6 +134,7 @@
 .signin_heading {
   color: #706f6fee;
   font-weight: 500;
+  margin-top: 3px;
   margin-bottom: 30px;
   text-align: center;
 }
@@ -149,7 +151,7 @@
   border-radius: 6px;
   transition: all 0.2s;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 .login_errormessage {
   color: #ff4d4f;
@@ -196,18 +198,18 @@
 .downloads_mainContainer {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #14b8a61a;
-  /* background-color: #f0f4f3; */
+  background: linear-gradient(#73c8f7, #63f097);
 }
 .downloads_card {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
     rgba(0, 0, 0, 0.05) 0px 5px 10px;
-  width: 400px;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+  width: 370px;
   border-radius: 9px;
   z-index: 1;
-  padding: 24px 12px;
   background-color: white;
   border-color: 1px solid #14b8a61a;
 }
@@ -215,15 +217,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 6px;
+  flex-direction: column;
+  border-radius: 6px;
+  margin-top: 16px;
+  padding: 19px 0px;
+}
+.downloads_heading {
+  font-weight: 700;
+  margin-top: 12px;
+  font-size: 17px !important;
+  padding: 0 !important;
 }
 .downloads_contentcontainer {
-  padding: 12px 40px;
+  padding: 0px 40px;
 }
 .downloads_content {
   color: gray;
   font-size: 14px;
   line-height: 24px;
+}
+.downloads_buttonCard {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
+    rgba(0, 0, 0, 0.05) 0px 5px 10px;
+  width: 370px;
+  border-radius: 6px;
+  z-index: 1;
+  background-color: white;
+  border-color: 2px solid #14b8a61a;
+  margin-top: 1px;
 }
 .exedownload_button {
   display: flex;
@@ -238,7 +259,8 @@
   color: #fff;
   display: flex;
   font-weight: 600;
-  margin-top: 30px;
+  margin-top: 27px;
+  margin-bottom: 29px;
 }
 .exedownload_button:hover {
   background-color: #009737 !important;

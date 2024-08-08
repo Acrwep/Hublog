@@ -434,9 +434,9 @@ const Users = ({ loading }) => {
                 placeholder="Search user..."
                 onSearch={handleSearch}
               />
-              <a href="http://hublog.org:8085/hublogsetup.exe" download>
+              {/* <a href="http://hublog.org:8085/hublogsetup.exe" download>
                 <MdOutlineFileDownload size={24} />
-              </a>
+              </a> */}
             </Col>
             <Col
               xs={24}

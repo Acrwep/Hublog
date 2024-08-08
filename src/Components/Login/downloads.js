@@ -9,6 +9,7 @@ export default function Downloads() {
       <div className="downloads_card">
         <div className="dowloadslogo_container">
           <img src={logoImg} className="login_logo" />
+          <p className="downloads_heading">Download the Hublog App</p>
         </div>
 
         <div className="downloads_contentcontainer">
@@ -20,7 +21,7 @@ export default function Downloads() {
           <div>
             <Button
               className="exedownload_button"
-              href="http://hublog.org:8085/hublogsetup.exe"
+              href="https://hublog.org:8085/hublogbetasetup.exe"
               download
             >
               Download Hublog .exe

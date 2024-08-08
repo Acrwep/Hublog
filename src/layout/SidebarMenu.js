@@ -124,20 +124,36 @@ function SidebarMenu() {
 
   useEffect(() => {
     const handleStorageUpdate = () => {
-      //handle navigation by accesstoken
-      const accessToken = localStorage.getItem("Accesstoken");
-      if (accessToken) {
-        setShowPages(true);
-        navigation(location.pathname);
-      } else {
-        setShowPages(false);
-        navigation(location.pathname);
-      }
       //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
       const convertLoginInfoAsJson = JSON.parse(getItem);
       console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
       setLoginUserInfo(convertLoginInfoAsJson);
+
+      //handle navigation by accesstoken
+      const accessToken = localStorage.getItem("Accesstoken");
+      if (accessToken) {
+        setShowPages(true);
+        if (location.pathname === "/") {
+          if (convertLoginInfoAsJson.roleId === 3) {
+            navigation("/userdetail");
+          } else {
+            navigation("/dashboard");
+          }
+        } else {
+          if (convertLoginInfoAsJson.roleId === 3) {
+            navigation("/userdetail");
+          } else {
+            navigation("/dashboard");
+          }
+        }
+      } else {
+        if (location.pathname === "/") {
+          navigation("/login");
+        } else {
+          navigation(location.pathname);
+        }
+      }
 
       if (
         convertLoginInfoAsJson != null &&
@@ -237,19 +253,32 @@ function SidebarMenu() {
   }, []);
 
   useEffect(() => {
+    //handle login userinformation
+    const getItem = localStorage.getItem("LoginUserInfo");
+    const convertLoginInfoAsJson = JSON.parse(getItem);
+    console.log("render sidemenu useffect", convertLoginInfoAsJson);
+
     const accessToken = localStorage.getItem("Accesstoken");
     console.log("Access Token:::::", accessToken);
     console.log("locccccc", location.pathname);
     if (accessToken) {
       setShowPages(true);
       if (location.pathname === "/") {
-        navigation("/dashboard");
+        if (convertLoginInfoAsJson.roleId === 3) {
+          navigation("/userdetail");
+        } else {
+          navigation("/dashboard");
+        }
       } else {
         navigation(location.pathname);
       }
     } else {
       setShowPages(false);
-      navigation(location.pathname);
+      if (location.pathname === "/") {
+        navigation("/login");
+      } else {
+        navigation(location.pathname);
+      }
       return;
     }
 
