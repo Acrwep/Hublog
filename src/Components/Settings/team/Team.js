@@ -206,8 +206,9 @@ const Team = ({ loading }) => {
   };
 
   const getUsersData = async () => {
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers();
+      const response = await getUsers(orgId);
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
@@ -340,7 +341,7 @@ const Team = ({ loading }) => {
                           </div>
                         </div>
 
-                        <Row gutter={16}>
+                        <Row gutter={16} className="teammember_changeteamrow">
                           <Col span={12}>
                             <Button className="teammembercard_buttons">
                               Make Manager
@@ -407,7 +408,7 @@ const Team = ({ loading }) => {
                           </div>
                         </div>
 
-                        <Row gutter={16}>
+                        <Row gutter={16} className="teammember_changeteamrow">
                           <Col
                             span={24}
                             style={{

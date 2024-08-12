@@ -102,13 +102,14 @@ const ShowModal = () => {
 //api functions
 export const LoginApi = async (loginCredential) => {
   try {
-    const response = await api.post("/api/Login/Login", loginCredential);
+    const response = await api.post("/api/Login/login", loginCredential);
     return response;
   } catch (error) {
     throw error;
   }
 };
 
+//screenshot
 export const getScreenShots = async (userId, organizationId, date) => {
   try {
     const response = await api.get(
@@ -120,9 +121,11 @@ export const getScreenShots = async (userId, organizationId, date) => {
   }
 };
 // designation
-export const getDesignation = async () => {
+export const getDesignation = async (organizationId) => {
   try {
-    const response = await api.get("/api/Designation/GetDesignationAll");
+    const response = await api.get(
+      `/api/Designation/GetDesignationAll?organizationId=${organizationId}`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -206,9 +209,11 @@ export const updateRole = async (teamID, rolepayload) => {
   }
 };
 //users
-export const getUsers = async () => {
+export const getUsers = async (organizationId) => {
   try {
-    const response = await api.get("api/Users/GetAllUsers");
+    const response = await api.get(
+      `api/Admin/GetAllUsers?organizationId=${organizationId}`
+    );
     return response;
   } catch (error) {
     throw error;

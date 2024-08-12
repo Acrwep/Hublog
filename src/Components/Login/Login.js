@@ -23,18 +23,6 @@ const Login = () => {
     localStorage.removeItem("Accesstoken");
   }, []);
 
-  // useEffect(() => {
-  //   const listener = (event) => {
-  //     if (event.code === "Enter" || event.code === "13") {
-  //       console.log("Enter key was pressed. Run your function.");
-  //       event.preventDefault();
-  //       console.log("passworddd", password);
-  //       handleLogin();
-  //     }
-  //   };
-  //   document.addEventListener("keydown", listener);
-  // }, []);
-
   const handleLogin = async (e) => {
     e.preventDefault();
     if (buttonDisable) return;
@@ -57,8 +45,8 @@ const Login = () => {
 
     setButtonDisable(true);
     const request = {
-      UserName: email,
-      Password: password,
+      userName: email,
+      password: password,
     };
     console.log("login request", request);
 

@@ -74,8 +74,9 @@ const Settings = () => {
 
   const getUsersData = async () => {
     setLoading(true);
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers();
+      const response = await getUsers(orgId);
       const usersList = response.data;
       dispatch(storeUsers(usersList));
     } catch (error) {
@@ -89,8 +90,9 @@ const Settings = () => {
   };
 
   const getDesignationData = async () => {
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getDesignation();
+      const response = await getDesignation(orgId);
       const designationList = response.data;
       dispatch(storeDesignation(designationList));
       //filter active designation

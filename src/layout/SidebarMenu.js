@@ -83,6 +83,7 @@ import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
 import Downloads from "../Components/Login/downloads";
+import Demo from "../Components/Typescript/demo.tsx";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -395,6 +396,12 @@ function SidebarMenu() {
         <div>
           <Routes>
             <Route path="/downloads" element={<Downloads />} />
+          </Routes>
+        </div>
+      ) : location.pathname === "/typescript" ? (
+        <div>
+          <Routes>
+            <Route path="/typescript" element={<Demo />} />
           </Routes>
         </div>
       ) : showPages === true ? (

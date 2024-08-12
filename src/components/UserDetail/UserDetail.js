@@ -118,8 +118,9 @@ const UserDetail = () => {
       getuserDetailsData(user);
       return;
     }
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers();
+      const response = await getUsers(orgId);
       const userDetail = response?.data;
       console.log("users response", userDetail);
       setUserList(userDetail);
@@ -159,7 +160,8 @@ const UserDetail = () => {
         );
         console.log("user attendance response", response);
         const details = response?.data?.attendanceDetails;
-        dispatch(storeuserAttendance(details));
+        const reverseData = details.reverse();
+        dispatch(storeuserAttendance(reverseData));
         setAttendanceSummary(response?.data?.attendanceSummary);
       } catch (error) {
         console.log("attendance error", error);
@@ -182,7 +184,8 @@ const UserDetail = () => {
         );
         console.log("user break response", response.data);
         const details = response.data;
-        dispatch(storeuserBreak(details));
+        const reverseData = details.reverse();
+        dispatch(storeuserBreak(reverseData));
       } catch (error) {
         console.log("break error", error);
         CommonToaster(error.response?.data, "error");

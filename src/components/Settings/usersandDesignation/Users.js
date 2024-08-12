@@ -216,8 +216,9 @@ const Users = ({ loading }) => {
 
   const getUsersData = async () => {
     setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers();
+      const response = await getUsers(orgId);
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));

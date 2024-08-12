@@ -60,7 +60,7 @@ const Screenshots = () => {
     let userIdd = null;
     const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers();
+      const response = await getUsers(orgId);
       console.log("users response", response.data);
       const usersList = response?.data;
       setUserList(usersList);

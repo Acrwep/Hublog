@@ -97,8 +97,9 @@ export default function Designation({ loading }) {
 
   const getDesignationData = async () => {
     setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getDesignation();
+      const response = await getDesignation(orgId);
       console.log("Designation response", response.data);
       const allDesignation = response.data;
       dispatch(storeDesignation(allDesignation));
