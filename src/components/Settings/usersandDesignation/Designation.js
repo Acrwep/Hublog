@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Space, Dropdown, Button } from "antd";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import "../styles.css";
 import moment from "moment";
@@ -11,8 +11,13 @@ import {
   getDesignation,
   createDesignation,
   updateDesignation,
+  deleteDesignation,
 } from "../../APIservice.js/action";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineEdit } from "react-icons/ai";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import CommonWarningModal from "../../Common/CommonWarningModal";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import { CommonToaster } from "../../Common/CommonToaster";
 import Loader from "../../Common/Loader";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,6 +41,7 @@ export default function Designation({ loading }) {
   const [status, setStatus] = useState(1);
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
+
   const columns = [
     { title: "Name", dataIndex: "name", key: "name", width: "200px" },
     {
@@ -80,11 +86,66 @@ export default function Designation({ loading }) {
       key: "active",
       align: "center",
       width: 100,
+      fixed: "right",
       render: (text, record) => {
+        const items = [
+          {
+            key: "1",
+            label: (
+              <div
+                style={{ display: "flex" }}
+                onClick={() => handleEdit(record)}
+              >
+                <AiOutlineEdit size={19} className="users_tableeditbutton" />
+                <button>Edit</button>
+              </div>
+            ),
+          },
+          {
+            key: "2",
+            label: (
+              <div
+                style={{ display: "flex" }}
+                onClick={() => {
+                  CommonWarningModal({
+                    title: (
+                      <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                        {"Do you want to delete "}
+                        <span style={{ fontWeight: "700", fontSize: "16px" }}>
+                          {record.name}
+                        </span>
+                        {" designation"}
+                      </p>
+                    ),
+                    onDelete: () => handleDeleteDesignation(record.id),
+                  });
+                }}
+              >
+                <RiDeleteBin7Line
+                  size={19}
+                  className="users_tabledeletebutton"
+                />
+                <button onClick={() => console.log(record)}>Delete</button>
+              </div>
+            ),
+          },
+        ];
         return (
-          <button onClick={() => handleEdit(record)}>
-            <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
-          </button>
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <button className="usertable_actionbutton">
+                  <BsThreeDotsVertical />
+                </button>
+              </Dropdown>
+            </Space>
+          </Space>
         );
       },
     },
@@ -109,7 +170,7 @@ export default function Designation({ loading }) {
       );
       dispatch(storeActiveDesignation(filterActivedesignation));
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error, "error");
     } finally {
       setTimeout(() => {
         setTableLoading(false);
@@ -141,18 +202,18 @@ export default function Designation({ loading }) {
     if (nameValidate || descriptionValidate) return;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     const request = {
-      Name: name,
-      Description: description,
-      Active: status,
-      Created_date: moment(createdDate).format("YYYY-MM-DDTHH:mm:ss.SSSSSSSZ"),
-      OrganizationId: orgId,
+      name: name,
+      description: description,
+      active: status === 1 ? true : false,
+      created_date: moment(createdDate).format("YYYY-MM-DDTHH:mm:ss.SSSSSSSZ"),
+      organizationId: parseInt(orgId),
       ...(edit && { id: id }),
     };
     if (edit) {
       setTableLoading(true);
       try {
         const response = await updateDesignation(request);
-        CommonToaster("Designation updated successfully", "success");
+        CommonToaster("Designation updated", "success");
         getDesignationData();
         formReset();
       } catch (error) {
@@ -166,7 +227,7 @@ export default function Designation({ loading }) {
       try {
         setTableLoading(true);
         const response = await createDesignation(request);
-        CommonToaster("Designation created successfully", "success");
+        CommonToaster("Designation created", "success");
         getDesignationData();
         formReset();
       } catch (error) {
@@ -186,6 +247,27 @@ export default function Designation({ loading }) {
     setName(record.name);
     setStatus(record.active === true ? 1 : 0);
     setDescription(record.description);
+  };
+
+  const handleDeleteDesignation = async (id) => {
+    setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    try {
+      const response = await deleteDesignation(orgId, id);
+      getDesignationData();
+      CommonToaster("Designation deleted", "success");
+    } catch (error) {
+      const deleteError = error?.response?.data;
+      if (deleteError === "Error deleting designation") {
+        CommonToaster("This designation mapped to some users", "error");
+        return;
+      }
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
+    }
   };
 
   const handleSearch = (value) => {

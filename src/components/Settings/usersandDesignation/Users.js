@@ -313,7 +313,7 @@ const Users = ({ loading }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(dateofBirth);
+    console.log(dateofBirth, dateofJoining);
 
     const firstnameValidate = nameValidator(firstName);
     const lastnameValidate = lastNameValidator(lastName);
@@ -371,24 +371,24 @@ const Users = ({ loading }) => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
-      First_Name: firstName,
-      Last_Name: lastName,
-      Email: email,
-      DOB: moment(dateofBirth).format("MM/DD/YYYY"),
-      DOJ: moment(dateofJoining).format("MM/DD/YYYY"),
-      Phone: phone,
-      UsersName: firstName + lastName,
-      Password: password,
-      Gender: gender === 1 ? "Male" : "Female",
-      OrganizationId: orgId,
-      RoleName: "Employee",
-      RoleId: role,
-      DesignationName: designationName,
-      DesignationId: designation,
-      TeamId: team,
-      TeamName: teamName,
-      EmployeeID: employeeId,
-      Active: true,
+      first_Name: firstName,
+      last_Name: lastName,
+      email: email,
+      dob: dateofBirth,
+      doj: dateofJoining,
+      phone: phone,
+      usersName: firstName + lastName,
+      password: password,
+      gender: gender === 1 ? "Male" : "Female",
+      organizationId: parseInt(orgId),
+      roleName: "",
+      roleId: role,
+      designationName: designationName,
+      designationId: designation,
+      teamId: team,
+      teamName: teamName,
+      employeeID: employeeId,
+      active: true,
       ...(edit && { id: userId }),
     };
     console.log("user payload", request);
@@ -396,7 +396,7 @@ const Users = ({ loading }) => {
       setTableLoading(true);
       try {
         const response = await updateUser(request);
-        CommonToaster("User updated successfully", "success");
+        CommonToaster("User Updated", "success");
         getUsersData();
         formReset();
       } catch (error) {
@@ -410,7 +410,7 @@ const Users = ({ loading }) => {
       try {
         setTableLoading(true);
         const response = await createUser(request);
-        CommonToaster("User created successfully", "success");
+        CommonToaster("User Created", "success");
         getUsersData();
         formReset();
       } catch (error) {

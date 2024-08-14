@@ -198,3 +198,11 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
+/* warning modal */
+.warning_modal_cancelbutton {
+  margin-right: 20px;
+}
+.warning_modal_cancelbutton:hover {
+  border-color: #25a17d !important;
+  color: #25a17d !important;
+}

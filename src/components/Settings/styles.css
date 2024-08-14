@@ -301,6 +301,15 @@
   font-size: 16px;
   text-align: center;
 }
+.teams_actionbutton {
+  padding: 7px 7px;
+  border-radius: 6px;
+  color: #25a17d;
+  border: 1px solid #25a17d !important;
+}
+.teams_actionbutton:hover {
+  border: 1px solid rgb(226 223 239/ 1) !important;
+}
 /* break styles */
 .breakstatus_container {
   border-radius: 9px;

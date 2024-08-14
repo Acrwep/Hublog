@@ -129,10 +129,10 @@ export default function Break({ loading }) {
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     const request = {
-      Name: name,
-      Max_Break_Time: parseInt(breaktime),
-      Active: status,
-      OrganizationId: orgId,
+      name: name,
+      max_Break_Time: parseInt(breaktime),
+      active: status === 1 ? true : false,
+      organizationId: orgId,
       ...(edit && { id: breakId }),
     };
 
@@ -141,7 +141,7 @@ export default function Break({ loading }) {
       try {
         const response = await updateBreak(request);
         console.log("break update response", response);
-        CommonToaster("Break updated successfully", "success");
+        CommonToaster("Break updated", "success");
         formReset();
         getBreakData();
       } catch (error) {
@@ -157,7 +157,7 @@ export default function Break({ loading }) {
       try {
         const response = await createBreak(request);
         console.log("break response", response);
-        CommonToaster("Break created successfully", "success");
+        CommonToaster("Break created", "success");
         formReset();
         getBreakData();
       } catch (error) {

@@ -153,6 +153,16 @@ export const updateDesignation = async (designpayload) => {
     throw error;
   }
 };
+export const deleteDesignation = async (organizationId, designationId) => {
+  try {
+    const response = await api.delete(
+      `/api/Designation/DeleteDesignation?organizationId=${organizationId}&designationId=${designationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //teams
 export const getTeams = async (organizationId) => {
   try {
@@ -172,10 +182,10 @@ export const createTeams = async (teampayload) => {
     throw error;
   }
 };
-export const updateTeams = async (teamID, teampayload) => {
+export const updateTeams = async (teamId, teampayload) => {
   try {
     const response = await api.put(
-      `/api/Team/UpdateTeam/${teamID}`,
+      `/api/Team/UpdateTeam?id=${teamId}`,
       teampayload
     );
     return response;
@@ -183,10 +193,20 @@ export const updateTeams = async (teamID, teampayload) => {
     throw error;
   }
 };
-//role
-export const getRole = async () => {
+export const deleteTeam = async (teamId) => {
   try {
-    const response = await api.get("api/Role/GetRoleAll");
+    const response = await api.delete(`/api/Team/DeleteTeam?id=${teamId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//role
+export const getRole = async (organizationId) => {
+  try {
+    const response = await api.get(
+      `/api/Role/GetRoleAll?organizationId=${organizationId}`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -270,7 +290,7 @@ export const getUserBreak = async (userId, startDate, endDate) => {
 //settings break
 export const getBreak = async () => {
   try {
-    const response = await api.get("/api/Admin/GetAllBreakMasters");
+    const response = await api.get("/api/Admin/GetBreakMaster");
     return response;
   } catch (error) {
     throw error;

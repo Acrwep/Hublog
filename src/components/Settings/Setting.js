@@ -94,6 +94,7 @@ const Settings = () => {
     try {
       const response = await getDesignation(orgId);
       const designationList = response.data;
+      console.log("designation list", designationList);
       dispatch(storeDesignation(designationList));
       //filter active designation
       const filterActivedesignation = designationList.filter(
@@ -129,7 +130,6 @@ const Settings = () => {
     setBreakLoading(true);
     try {
       const response = await getBreak();
-      console.log("break response", response.data);
       const allbreakDetails = response.data;
       dispatch(storesettingsBreak(allbreakDetails));
     } catch (error) {

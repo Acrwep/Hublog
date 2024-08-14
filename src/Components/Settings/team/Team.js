@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Tabs, Modal, Button } from "antd";
+import { Row, Col, Tabs, Modal, Button, Space, Dropdown } from "antd";
 import CommonInputField from "../../Common/CommonInputField";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
 import { storeTeams } from "../../Redux/slice";
@@ -15,12 +15,15 @@ import {
   getUsersByTeamId,
   updateUser,
   getUsers,
+  deleteTeam,
 } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
 import Loader from "../../Common/Loader";
 import { AiOutlineEdit } from "react-icons/ai";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { storeUsers } from "../../Redux/slice";
-import moment from "moment";
+import CommonWarningModal from "../../Common/CommonWarningModal";
 
 const Team = ({ loading }) => {
   const dispatch = useDispatch();
@@ -32,62 +35,72 @@ const Team = ({ loading }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeTeamModal, setChangeTeamModal] = useState(false);
   const [addTeamModal, setAddTeamModal] = useState(false);
+  const [teamName, setTeamName] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [status, setStatus] = useState(true);
+  const statusList = [
+    { id: true, name: "Active" },
+    { id: false, name: "In Active" },
+  ];
   const [changeTeamId, setChangeTeamId] = useState("");
   const [changeTeamError, setChangeTeamError] = useState("");
   const [edit, setEdit] = useState(false);
   const [userDetails, setuserDetails] = useState("");
   const [teamMemberLoading, setTeamMemberLoading] = useState(false);
-  const [organizationId, setOrganizationId] = useState(null);
 
   useEffect(() => {
-    setTeamId(teamList[0].id);
-    getUsersDataByTeamId();
-    getUsersData();
-  }, []);
+    if (loading === false) {
+      setTeamId(teamList[0].id);
+      setTeamName(teamList[0].name);
+      getUsersDataByTeamId(teamList[0].id);
+    }
+  }, [loading]);
 
-  const getUsersDataByTeamId = async (teamId) => {
+  const getUsersDataByTeamId = async (teamid) => {
     setTeamMemberLoading(true);
     try {
-      const response = await getUsersByTeamId(
-        teamId != undefined ? teamId : teamList[0].id
-      );
+      const response = await getUsersByTeamId(teamid);
       console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
       setTeamMembers(teamMembersList);
-
-      //filter other team members
-      if (teamId != undefined) {
-        const others = allUsers.filter((f) => {
-          return f.teamId !== teamId;
-        });
-        setOtherUsers(others);
-      }
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.message, "error");
       setTeamMembers([]);
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
-      }, 500);
+        getUsersData(teamid);
+      }, 350);
     }
   };
 
-  const getTeamsData = async () => {
+  const getTeamsData = async (comeFromDeleteButton) => {
+    const check = comeFromDeleteButton;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(orgId);
       const allTeams = response.data;
       dispatch(storeTeams(allTeams));
+
+      const selectedTeam = allTeams.find((f) => f.id === teamId);
+      console.log("selectedTeam", selectedTeam);
+      setTeamName(selectedTeam?.name);
+
+      if (check === "true") {
+        setTeamId(allTeams[0].id);
+        getUsersDataByTeamId(allTeams[0].id);
+      }
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data, "error");
     }
   };
 
   const handleTeam = (item) => {
+    const selectedTeam = teamList.find((f) => f.id === item);
+    setTeamName(selectedTeam.name);
     setTeamId(item);
     getUsersDataByTeamId(item);
   };
@@ -103,6 +116,7 @@ const Team = ({ loading }) => {
     setChangeTeamModal(false);
     setEdit(false);
     setAddTeamModal(false);
+    setStatus(true);
   };
 
   const handleCancel = () => {
@@ -120,33 +134,32 @@ const Team = ({ loading }) => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
-      Name: name,
-      Description: description,
-      Active: true,
-      OrganizationId: orgId,
-      ...(edit && { id: teamId }),
-      Parentid: 1,
+      name: name,
+      description: description,
+      active: status,
+      organizationId: parseInt(orgId),
+      parentid: 1,
     };
     console.log("payload", request);
     if (edit) {
       try {
         const response = await updateTeams(teamId, request);
-        CommonToaster("Team updated successfully", "success");
+        CommonToaster("Team updated", "success");
         getTeamsData();
         formReset();
       } catch (error) {
         console.log("update team error", error);
-        CommonToaster(error.response.data.message, "error");
+        CommonToaster(error?.response?.data, "error");
       }
     } else {
       try {
         const response = await createTeams(request);
-        CommonToaster("Team created successfully", "success");
+        CommonToaster("Team created", "success");
         getTeamsData();
         formReset();
       } catch (error) {
         console.log("team error", error);
-        CommonToaster(error.response.data.message, "error");
+        CommonToaster(error?.response?.data, "error");
       }
     }
   };
@@ -164,24 +177,24 @@ const Team = ({ loading }) => {
 
     const request = {
       id: addTeamModal ? userDetails.id : userDetails.userId,
-      First_Name: addTeamModal ? userDetails.first_Name : userDetails.firstName,
-      Last_Name: addTeamModal ? userDetails.last_Name : userDetails.lastName,
-      Email: userDetails.email,
-      DOB: moment(userDetails.dob).format("MM/DD/YYYY"),
-      DOJ: moment(userDetails.doj).format("MM/DD/YYYY"),
-      Phone: userDetails.phone,
-      UsersName: userDetails.usersName,
-      Password: "Hublog",
-      Gender: userDetails.gender,
-      OrganizationId: orgId,
-      RoleName: "Employee",
-      RoleId: userDetails.roleId,
-      DesignationName: "",
-      DesignationId: userDetails.designationId,
-      TeamId: addTeamModal ? teamId : changeTeamId,
-      TeamName: "",
-      EmployeeID: userDetails.employeeID,
-      Active: userDetails.active,
+      first_Name: addTeamModal ? userDetails.first_Name : userDetails.firstName,
+      last_Name: addTeamModal ? userDetails.last_Name : userDetails.lastName,
+      email: userDetails.email,
+      dob: userDetails.dob,
+      doj: userDetails.doj,
+      phone: userDetails.phone,
+      usersName: userDetails.usersName,
+      password: userDetails.password,
+      gender: userDetails.gender,
+      organizationId: parseInt(orgId),
+      roleName: "",
+      roleId: userDetails.roleId,
+      designationName: "",
+      designationId: userDetails.designationId,
+      teamId: addTeamModal ? teamId : changeTeamId,
+      teamName: "",
+      employeeID: userDetails.employeeID,
+      active: userDetails.active,
     };
 
     setTeamMemberLoading(true);
@@ -189,40 +202,41 @@ const Team = ({ loading }) => {
       const response = await updateUser(request);
       console.log("user update response", response);
       if (addTeamModal) {
-        CommonToaster("user added successfully", "success");
+        CommonToaster("User added", "success");
       } else {
-        CommonToaster("Team changed successfully", "success");
+        CommonToaster("Team changed", "success");
       }
       getUsersDataByTeamId(teamId);
       formReset();
     } catch (error) {
       console.log("update user error", error);
-      CommonToaster(error?.response?.data?.message, "error");
+      CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        getUsersData(teamId);
       }, 500);
     }
   };
 
-  const getUsersData = async () => {
+  const getUsersData = async (teamid) => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
+
       //take other teammembers
-      console.log("currrrrr", teamId);
+      console.log("current team id", teamId);
       const others = allUsers.filter((f) => {
-        const currentTeamId = teamId !== "" ? teamId : teamList[0].id;
         // Return true if the user's teamId is different from currentTeamId
-        return f.teamId !== currentTeamId;
+        return f.teamId !== teamid;
       });
       console.log("otherssssssssss from users", others);
       setOtherUsers(others);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      console.log("getallusersssss", error);
+      CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
@@ -239,10 +253,61 @@ const Team = ({ loading }) => {
     setEdit(true);
   };
 
+  const handleDeleteTeam = async () => {
+    try {
+      const response = await deleteTeam(teamId);
+      getTeamsData("true");
+      CommonToaster("Team deleted", "success");
+    } catch (error) {
+      const Error = error?.response?.data;
+      if (Error === "This team mapping some users") {
+        CommonToaster("This team mapped to some users", "error");
+        return;
+      }
+    }
+  };
+  const items = [
+    {
+      key: "1",
+      label: (
+        <div style={{ display: "flex" }} onClick={handleEdit}>
+          <AiOutlineEdit size={19} className="users_tableeditbutton" />
+          <button>Edit</button>
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div
+          style={{ display: "flex" }}
+          onClick={() => {
+            CommonWarningModal({
+              title: (
+                <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                  {"Do you want to delete "}
+                  <span style={{ fontWeight: "700", fontSize: "16px" }}>
+                    {teamName}
+                  </span>
+                  {" team"}
+                </p>
+              ),
+              onDelete: handleDeleteTeam,
+            });
+          }}
+        >
+          <RiDeleteBin7Line size={19} className="users_tabledeletebutton" />
+          <button>Delete</button>
+        </div>
+      ),
+    },
+  ];
+
   const handleAddteam = (item) => {
     setuserDetails(item);
     setAddTeamModal(true);
   };
+
   return (
     <>
       {loading ? (
@@ -293,10 +358,25 @@ const Team = ({ loading }) => {
                 alignItems: "center",
               }}
             >
-              <Button type="primary" onClick={handleEdit}>
+              {/* <Button type="primary" onClick={handleEdit}>
                 <AiOutlineEdit size={17} style={{ marginRight: "6px" }} />
                 {"  "} Edit
-              </Button>
+              </Button> */}
+              <Space direction="vertical">
+                <Space wrap>
+                  <Dropdown
+                    menu={{
+                      items,
+                    }}
+                    placement="bottomLeft"
+                    arrow
+                  >
+                    <button className="teams_actionbutton">
+                      <BsThreeDotsVertical />
+                    </button>
+                  </Dropdown>
+                </Space>
+              </Space>
             </Col>
           </Row>
 
@@ -310,12 +390,13 @@ const Team = ({ loading }) => {
               </p>
               <Row gutter={16} style={{ marginTop: "12px" }}>
                 {teamMembers.length >= 1 &&
-                  teamMembers.map((item) => (
+                  teamMembers.map((item, index) => (
                     <Col
                       xs={24}
                       sm={24}
                       md={8}
                       lg={8}
+                      key={index}
                       style={{ marginBottom: "20px" }}
                     >
                       <div className="teammember_card">
@@ -377,12 +458,13 @@ const Team = ({ loading }) => {
               <Row gutter={16} style={{ marginTop: "12px" }}>
                 {otherUsers &&
                   otherUsers.length >= 1 &&
-                  otherUsers.map((item) => (
+                  otherUsers.map((item, index) => (
                     <Col
                       xs={24}
                       sm={24}
                       md={8}
                       lg={8}
+                      key={index}
                       style={{ marginBottom: "20px" }}
                     >
                       <div className="teammember_card">
@@ -449,7 +531,7 @@ const Team = ({ loading }) => {
               }}
               value={name}
               error={nameError}
-              style={{ marginTop: "22px", marginBottom: "22px" }}
+              style={{ marginTop: "22px" }}
               mandatory
             />
             <CommonInputField
@@ -461,6 +543,15 @@ const Team = ({ loading }) => {
               value={description}
               error={descriptionError}
               mandatory
+              style={{ marginTop: "22px", marginBottom: "22px" }}
+            />
+            <CommonSelectField
+              label="Status"
+              options={statusList}
+              onChange={(value) => {
+                setStatus(value);
+              }}
+              value={status}
             />
           </Modal>
 

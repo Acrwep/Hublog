@@ -32,11 +32,12 @@ function App() {
           autoClose={700}
           hideProgressBar={false}
           newestOnTop={false}
-          closeOnClick
+          closeOnClick={false}
           rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
+          pauseOnFocusLoss={true}
+          draggable={false}
+          pauseOnHover={true}
+          pau
           theme="light"
         />
       </div>

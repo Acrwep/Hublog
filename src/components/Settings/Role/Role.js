@@ -43,13 +43,14 @@ export default function Role() {
 
   const getRoleData = async () => {
     setLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
-      const response = await getRole();
+      const response = await getRole(orgId);
       console.log("role response", response.data);
       setData(response.data);
       // setDummyData(response.data);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error.response.data, "error");
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -149,10 +150,10 @@ export default function Role() {
           lg={12}
           className="users_adduserbuttonContainer"
         >
-          {/* <CommonAddButton
+          <CommonAddButton
             name="Add Role"
             onClick={() => setIsModalOpen(true)}
-          /> */}
+          />
         </Col>
       </Row>
 
