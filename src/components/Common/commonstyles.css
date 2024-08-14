@@ -25,7 +25,7 @@
 }
 .commoninput_errormessagediv {
   position: absolute;
-  left: -50%;
+  left: 0%;
   opacity: 0;
 }
 .commoninput_errormessage_activediv {
