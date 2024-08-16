@@ -227,7 +227,7 @@ const Team = ({ loading }) => {
       dispatch(storeUsers(allUsers));
 
       //take other teammembers
-      console.log("current team id", teamId);
+      console.log("current team id", teamid);
       const others = allUsers.filter((f) => {
         // Return true if the user's teamId is different from currentTeamId
         return f.teamId !== teamid;
@@ -261,7 +261,7 @@ const Team = ({ loading }) => {
     } catch (error) {
       const Error = error?.response?.data;
       if (Error === "This team mapping some users") {
-        CommonToaster("This team mapped to some users", "error");
+        CommonToaster("Unable to delete. Mapped to user", "error");
         return;
       }
     }
@@ -270,7 +270,7 @@ const Team = ({ loading }) => {
     {
       key: "1",
       label: (
-        <div style={{ display: "flex" }} onClick={handleEdit}>
+        <div style={{ display: "flex", width: "100%" }} onClick={handleEdit}>
           <AiOutlineEdit size={19} className="users_tableeditbutton" />
           <button>Edit</button>
         </div>

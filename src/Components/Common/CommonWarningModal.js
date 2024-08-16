@@ -3,10 +3,12 @@ import { Modal, Button } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import "./commonstyles.css";
 
+const { confirm } = Modal;
 const CommonWarningModal = ({ onDelete, title }) => {
-  Modal.warning({
+  confirm({
     title: title,
     icon: <ExclamationCircleFilled />,
+    centered: true,
     footer: (
       <div
         style={{
@@ -17,7 +19,7 @@ const CommonWarningModal = ({ onDelete, title }) => {
         aria-hidden="false"
       >
         <Button
-          className="warning_modal_cancelbutton"
+          className="warningmodal_cancelbutton"
           onClick={() => {
             Modal.destroyAll();
           }}
@@ -25,7 +27,7 @@ const CommonWarningModal = ({ onDelete, title }) => {
           Cancel
         </Button>
         <Button
-          type="primary"
+          className="warningmodal_deletebutton"
           onClick={() => {
             onDelete();
             Modal.destroyAll();
@@ -35,6 +37,13 @@ const CommonWarningModal = ({ onDelete, title }) => {
         </Button>
       </div>
     ),
+    onOk() {
+      onDelete();
+      Modal.destroyAll();
+    },
+    onCancel() {
+      Modal.destroyAll();
+    },
   });
 };
 

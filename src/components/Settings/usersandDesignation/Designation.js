@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Modal, Space, Dropdown, Button } from "antd";
-import CommonSearchField from "../../../Components/Common/CommonSearchbar";
+import CommonSearchField from "../../Common/CommonSearchbar";
 import "../styles.css";
 import moment from "moment";
-import CommonTable from "../../../Components/Common/CommonTable";
-import CommonInputField from "../../../Components/Common/CommonInputField";
-import { descriptionValidator } from "../../../Components/Common/Validation";
+import CommonTable from "../../Common/CommonTable";
+import CommonInputField from "../../Common/CommonInputField";
+import { descriptionValidator } from "../../Common/Validation";
 import CommonAddButton from "../../Common/CommonAddButton";
 import {
   getDesignation,
@@ -259,7 +259,7 @@ export default function Designation({ loading }) {
     } catch (error) {
       const deleteError = error?.response?.data;
       if (deleteError === "Error deleting designation") {
-        CommonToaster("This designation mapped to some users", "error");
+        CommonToaster("Unable to delete. Mapped to user", "error");
         return;
       }
       CommonToaster(error?.response?.data, "error");

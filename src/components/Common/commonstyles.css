@@ -199,10 +199,20 @@
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
 /* warning modal */
-.warning_modal_cancelbutton {
+.warningmodal_cancelbutton {
   margin-right: 20px;
 }
-.warning_modal_cancelbutton:hover {
+.warningmodal_cancelbutton:hover {
   border-color: #25a17d !important;
   color: #25a17d !important;
+}
+.warningmodal_deletebutton {
+  border-color: #ff4d4f !important;
+  color: #ff4d4f !important;
+}
+.warningmodal_deletebutton:hover {
+  opacity: 0.7;
+}
+.warningmodal_deletebutton:active {
+  transform: scale(0.9);
 }

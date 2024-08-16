@@ -2,6 +2,27 @@ import React from "react";
 import { Input } from "antd";
 import "./commonstyles.css";
 
+/**
+ * @typedef {Object} CommonInputFieldProps
+ * @property {string} [label]
+ * @property {string} [placeholder]
+ * @property {(e: React.ChangeEvent<HTMLInputElement>) => void} [onChange]
+ * @property {string} [value]
+ * @property {string} [error]
+ * @property {number} [maxLength]
+ * @property {boolean} [mandatory]
+ * @property {React.CSSProperties} [style]
+ * @property {React.ReactNode} [addonAfter]
+ * @property {React.ReactNode} [prefix]
+ * @property {string} [className]
+ * @property {string} [type]
+ * @property {React.ReactNode} [suffix]
+ */
+
+/**
+ * @param {CommonInputFieldProps} props
+ */
+
 const CommonInputField = ({
   label,
   placeholder,

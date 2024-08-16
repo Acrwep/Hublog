@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "antd";
 
 const CommonTable = ({
@@ -11,17 +11,36 @@ const CommonTable = ({
   checkBox,
   loading,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: dataPerPage || 10,
+      showSizeChanger: true, // Enable the dropdown for changing page size
+      pageSizeOptions: ["10", "20", "50", "100"], // Options for page size
+    },
+  });
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  useEffect(() => {
+    setTableParams((prev) => ({
+      ...prev,
+      pagination: {
+        ...prev.pagination,
+        total: dataSource.length,
+      },
+    }));
+  }, [dataSource]);
 
-  const paginationConfig = {
-    current: currentPage,
-    pageSize: dataPerPage,
-    total: dataSource.length,
-    onChange: handlePageChange,
+  const handleTableChange = (pagination, filters, sorter) => {
+    setTableParams({
+      pagination: {
+        ...pagination,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"], // Keep the page size options
+      },
+      filters,
+      sortOrder: sorter.order,
+      sortField: sorter.field,
+    });
   };
 
   const rowSelection =
@@ -29,31 +48,25 @@ const CommonTable = ({
       ? null
       : {
           onChange: (selectedRowKeys, selectedRows) => {
-            console.log(
-              `selectedRowKeys: ${selectedRowKeys}`,
-              "selectedRows: ",
-              selectedRows
-            );
             if (selectedDatas) {
               selectedDatas(selectedRows);
             }
           },
-          getCheckboxProps: (record) => ({
-            disabled: record.name === "Disabled User",
-            name: record.name,
-          }),
         };
+
   return (
     <Table
       rowSelection={rowSelection}
       columns={columns}
       dataSource={dataSource}
-      scroll={scroll} // Enable horizontal scrolling
-      pagination={paginationConfig}
+      scroll={scroll}
+      pagination={tableParams.pagination}
+      onChange={handleTableChange}
       tableLayout="fixed"
-      bordered={bordered === "true" ? true : false}
+      bordered={bordered === "true"}
       loading={loading}
     />
   );
 };
+
 export default CommonTable;
