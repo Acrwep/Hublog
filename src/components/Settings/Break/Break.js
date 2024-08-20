@@ -182,7 +182,7 @@ export default function Break({ loading }) {
       return;
     }
     const filterData = breakList.filter((item) =>
-      item.name.toLowerCase().includes(value)
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     console.log("filter", filterData);
     dispatch(storesettingsBreak(filterData));

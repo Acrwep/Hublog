@@ -52,13 +52,17 @@ const Team = ({ loading }) => {
   const [teamMemberLoading, setTeamMemberLoading] = useState(false);
 
   useEffect(() => {
+    //loading comes from settings.js
+    //teamList comes from slice.js (redux)
     if (loading === false) {
       setTeamId(teamList[0].id);
       setTeamName(teamList[0].name);
+      //initally pass index 0 team id from teamList
       getUsersDataByTeamId(teamList[0].id);
     }
   }, [loading]);
 
+  //get team members by team id api function
   const getUsersDataByTeamId = async (teamid) => {
     setTeamMemberLoading(true);
     try {
@@ -72,17 +76,20 @@ const Team = ({ loading }) => {
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
-        getUsersData(teamid);
+        //call get user api function for get other team members list
+        getUsersData(teamid, "nodispatch");
       }, 350);
     }
   };
 
+  //get all teams api function
   const getTeamsData = async (comeFromDeleteButton) => {
     const check = comeFromDeleteButton;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(orgId);
       const allTeams = response.data;
+      //store teamlist to redux
       dispatch(storeTeams(allTeams));
 
       const selectedTeam = allTeams.find((f) => f.id === teamId);
@@ -98,6 +105,7 @@ const Team = ({ loading }) => {
     }
   };
 
+  //team select onchange function
   const handleTeam = (item) => {
     const selectedTeam = teamList.find((f) => f.id === item);
     setTeamName(selectedTeam.name);
@@ -105,6 +113,7 @@ const Team = ({ loading }) => {
     getUsersDataByTeamId(item);
   };
 
+  //reset all useStates
   const formReset = () => {
     setName("");
     setNameError("");
@@ -123,6 +132,7 @@ const Team = ({ loading }) => {
     formReset();
   };
 
+  //create and update team api function
   const handleOk = async () => {
     const nameValidate = descriptionValidator(name);
     const descriptionValidate = descriptionValidator(description);
@@ -149,7 +159,15 @@ const Team = ({ loading }) => {
         formReset();
       } catch (error) {
         console.log("update team error", error);
-        CommonToaster(error?.response?.data, "error");
+        const Error = error?.response?.data;
+        if (
+          Error ===
+          "User is already mapped to this team and cannot be updated to inactive"
+        ) {
+          CommonToaster("Unable to inactive. Mapped to user", "error", "error");
+        } else {
+          CommonToaster(Error, "error");
+        }
       }
     } else {
       try {
@@ -164,6 +182,7 @@ const Team = ({ loading }) => {
     }
   };
 
+  //handle team change function
   const handleChangeTeamSubmit = async () => {
     console.log("userdetailssssss", userDetails);
     if (addTeamModal === false) {
@@ -213,18 +232,22 @@ const Team = ({ loading }) => {
       CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
-        getUsersData(teamId);
+        getUsersData(teamId, "dispatch");
       }, 500);
     }
   };
 
-  const getUsersData = async (teamid) => {
+  //get uer api function
+  const getUsersData = async (teamid, dispatchStatus) => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
       console.log("users response", response?.data);
       const allUsers = response?.data;
-      dispatch(storeUsers(allUsers));
+      //store user list to redux only when team create or update
+      if (dispatchStatus === "dispatch") {
+        dispatch(storeUsers(allUsers));
+      }
 
       //take other teammembers
       console.log("current team id", teamid);
@@ -244,6 +267,7 @@ const Team = ({ loading }) => {
     }
   };
 
+  //fetching clicked item data to the team form
   const handleEdit = () => {
     const selectedTeam = teamList.find((f) => f.id === teamId);
     console.log("selectedteam", selectedTeam);
@@ -253,6 +277,7 @@ const Team = ({ loading }) => {
     setEdit(true);
   };
 
+  //team delete api function
   const handleDeleteTeam = async () => {
     try {
       const response = await deleteTeam(teamId);
@@ -303,6 +328,7 @@ const Team = ({ loading }) => {
     },
   ];
 
+  //add team modal function
   const handleAddteam = (item) => {
     setuserDetails(item);
     setAddTeamModal(true);

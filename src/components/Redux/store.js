@@ -8,6 +8,7 @@ import {
   userAttendanceReducer,
   userBreakReducer,
   settingsBreakReducer,
+  roleReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
     activedesignation: activeDesignationReducer,
     teams: teamsReducer,
     teamMembers: teamMemberReducer,
+    roles: roleReducer,
     userAttendance: userAttendanceReducer,
     userBreak: userBreakReducer,
     settingsBreak: settingsBreakReducer,

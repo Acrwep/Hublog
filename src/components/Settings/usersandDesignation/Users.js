@@ -63,7 +63,7 @@ const Users = ({ loading }) => {
   const [teamError, setTeamError] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [open, setOpen] = useState(false);
-  const [dummyData, setDummyData] = useState([]);
+  const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
 
@@ -211,9 +211,19 @@ const Users = ({ loading }) => {
   ];
 
   useEffect(() => {
-    setDummyData(usersList);
+    setTimeout(() => {
+      const searchValue = localStorage.getItem("usersearchvalue");
+      setSearch(searchValue);
+      //check searchvalue, because of if its not empty call the user search api with the already stored searchvalue
+      if (searchValue === "" || searchValue === null) {
+        return;
+      } else {
+        handleSearchfromUseEffect(searchValue);
+      }
+    }, 100);
   }, []);
 
+  //getuser api function
   const getUsersData = async () => {
     setTableLoading(true);
     const orgId = localStorage.getItem("organizationId");
@@ -222,16 +232,16 @@ const Users = ({ loading }) => {
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
-      setDummyData(allUsers);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
         setTableLoading(false);
-      }, 1000);
+      }, 350);
     }
   };
 
+  //reset all useStates
   const formReset = () => {
     setOpen(false);
     setFirstName("");
@@ -258,7 +268,10 @@ const Users = ({ loading }) => {
     setTeamError("");
     setEmployeeId("");
     setEdit(false);
+    setSearch("");
+    localStorage.removeItem("usersearchvalue");
   };
+
   const onClose = () => {
     formReset();
   };
@@ -281,19 +294,44 @@ const Users = ({ loading }) => {
     }
   };
 
-  const handleSearch = (value) => {
-    console.log("Search value:", value);
-    if (value === "") {
-      dispatch(storeUsers(dummyData));
-      return;
+  //user search function
+  const handleSearchfromUseEffect = async (value) => {
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId, value);
+      console.log("user filter response", response);
+      const allUsers = response?.data;
+      dispatch(storeUsers(allUsers));
+    } catch (error) {
+      const allUsers = [];
+      dispatch(storeUsers(allUsers));
     }
-    const filterData = usersList.filter((item) =>
-      item.first_Name.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log("filter", filterData);
-    dispatch(storeUsers(filterData));
   };
 
+  const handleSearch = async (event) => {
+    const value = event.target.value;
+    console.log("Search value:", value);
+    setSearch(value);
+    localStorage.setItem("usersearchvalue", value);
+    setTableLoading(true);
+
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId, value);
+      console.log("user filter response", response);
+      const allUsers = response?.data;
+      dispatch(storeUsers(allUsers));
+    } catch (error) {
+      const allUsers = [];
+      dispatch(storeUsers(allUsers));
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
+    }
+  };
+
+  //fetching clicked item data to the user form
   const handleEdit = (record) => {
     setEdit(true);
     setOpen(true);
@@ -311,6 +349,8 @@ const Users = ({ loading }) => {
     setRole(record.roleId);
     setEmployeeId(record.employeeID);
   };
+
+  //user create and update api function
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(dateofBirth, dateofJoining);
@@ -400,11 +440,11 @@ const Users = ({ loading }) => {
         getUsersData();
         formReset();
       } catch (error) {
-        CommonToaster(error?.response?.data?.message, "error");
+        CommonToaster(error?.response?.data, "error");
       } finally {
         setTimeout(() => {
           setTableLoading(false);
-        }, 1000);
+        }, 350);
       }
     } else {
       try {
@@ -414,11 +454,11 @@ const Users = ({ loading }) => {
         getUsersData();
         formReset();
       } catch (error) {
-        CommonToaster(error?.response?.data?.message, "error");
+        CommonToaster(error?.response?.data, "error");
       } finally {
         setTimeout(() => {
           setTableLoading(false);
-        }, 1000);
+        }, 350);
       }
     }
   };
@@ -433,7 +473,9 @@ const Users = ({ loading }) => {
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField
                 placeholder="Search user..."
-                onSearch={handleSearch}
+                // onSearch={handleSearch}
+                onChange={handleSearch}
+                value={search}
               />
               {/* <a href="http://hublog.org:8085/hublogsetup.exe" download>
                 <MdOutlineFileDownload size={24} />

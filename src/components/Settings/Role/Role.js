@@ -8,16 +8,22 @@ import { descriptionValidator } from "../../../Components/Common/Validation";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { createRole, getRole, updateRole } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
+import { storeRole } from "../../Redux/slice";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../../Common/Loader";
 
-export default function Role() {
+export default function Role({ loading }) {
+  const dispatch = useDispatch();
+  const roleList = useSelector((state) => state.roles);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [roleId, setroleId] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loadings, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
   const columns = [
     { title: "Name", dataIndex: "name", key: "name" },
@@ -38,23 +44,23 @@ export default function Role() {
   const [dummyData, setDummyData] = useState([]);
 
   useEffect(() => {
-    getRoleData();
+    const searchValue = localStorage.getItem("rolesearchvalue");
+    setSearch(searchValue);
+    if (searchValue === "" || searchValue === null) {
+      return;
+    } else {
+      handleSearchfromUseEffect(searchValue);
+    }
   }, []);
 
   const getRoleData = async () => {
-    setLoading(true);
-    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
-      const response = await getRole(orgId);
+      const response = await getRole();
       console.log("role response", response.data);
       setData(response.data);
       // setDummyData(response.data);
     } catch (error) {
       CommonToaster(error.response.data, "error");
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
     }
   };
 
@@ -122,83 +128,112 @@ export default function Role() {
     formReset();
   };
 
-  const handleSearch = (value) => {
+  //role search function
+  const handleSearchfromUseEffect = async (value) => {
+    try {
+      const response = await getRole();
+      const roles = response?.data;
+      const filterData = roles.filter((item) =>
+        item.name.toLowerCase().includes(value.toLowerCase())
+      );
+      console.log("filter", filterData);
+      dispatch(storeRole(filterData));
+    } catch (error) {
+      const roles = [];
+      dispatch(storeRole(roles));
+    }
+  };
+
+  const handleSearch = (event) => {
+    const value = event.target.value;
     console.log("Search value:", value);
+    setSearch(value);
+    localStorage.setItem("rolesearchvalue", value);
     if (value === "") {
-      setData(dummyData);
+      handleSearchfromUseEffect(value);
       return;
     }
-    const filterData = data.filter((item) =>
-      item.name.toLowerCase().includes(value)
+    const filterData = roleList.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     console.log("filter", filterData);
-    setData(filterData);
+    dispatch(storeRole(filterData));
   };
+
   return (
-    <div>
-      <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <CommonSearchField
-            placeholder="Search role..."
-            onSearch={handleSearch}
-          />
-        </Col>
-        <Col
-          xs={24}
-          sm={24}
-          md={12}
-          lg={12}
-          className="users_adduserbuttonContainer"
-        >
-          <CommonAddButton
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <CommonSearchField
+                placeholder="Search role..."
+                onChange={handleSearch}
+                value={search}
+              />
+            </Col>
+            <Col
+              xs={24}
+              sm={24}
+              md={12}
+              lg={12}
+              className="users_adduserbuttonContainer"
+            >
+              {/* <CommonAddButton
             name="Add Role"
             onClick={() => setIsModalOpen(true)}
+          /> */}
+            </Col>
+          </Row>
+
+          <CommonTable
+            columns={columns}
+            dataSource={roleList}
+            scroll={{ x: 600 }}
+            dataPerPage={10}
+            loading={tableLoading}
+            bordered="false"
+            checkBox="false"
           />
-        </Col>
-      </Row>
 
-      <CommonTable
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 600 }}
-        dataPerPage={10}
-        loading={tableLoading}
-      />
-
-      {/* addrole modal */}
-      <Modal
-        title="Add Role"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <button className="designation_submitbutton" onClick={handleOk}>
-            Submit
-          </button>,
-        ]}
-      >
-        <CommonInputField
-          label="Name"
-          onChange={(e) => {
-            setName(e.target.value);
-            setNameError(descriptionValidator(e.target.value));
-          }}
-          value={name}
-          error={nameError}
-          style={{ marginTop: "22px", marginBottom: "22px" }}
-          mandatory
-        />
-        <CommonInputField
-          label="Description"
-          onChange={(e) => {
-            setDescription(e.target.value);
-            setDescriptionError(descriptionValidator(e.target.value));
-          }}
-          value={description}
-          error={descriptionError}
-          mandatory
-        />
-      </Modal>
-    </div>
+          {/* addrole modal */}
+          <Modal
+            title="Add Role"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <button className="designation_submitbutton" onClick={handleOk}>
+                Submit
+              </button>,
+            ]}
+          >
+            <CommonInputField
+              label="Name"
+              onChange={(e) => {
+                setName(e.target.value);
+                setNameError(descriptionValidator(e.target.value));
+              }}
+              value={name}
+              error={nameError}
+              style={{ marginTop: "22px", marginBottom: "22px" }}
+              mandatory
+            />
+            <CommonInputField
+              label="Description"
+              onChange={(e) => {
+                setDescription(e.target.value);
+                setDescriptionError(descriptionValidator(e.target.value));
+              }}
+              value={description}
+              error={descriptionError}
+              mandatory
+            />
+          </Modal>
+        </div>
+      )}
+    </>
   );
 }

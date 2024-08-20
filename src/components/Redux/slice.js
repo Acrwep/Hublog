@@ -109,6 +109,18 @@ const SettingsBreakSlice = createSlice({
   },
 });
 
+const roleSlice = createSlice({
+  name: "role",
+  initialState,
+  reducers: {
+    storeRole(state, action) {
+      state = action.payload;
+      const removeSuperAdmin = state.filter((f) => f.id != 1);
+      return removeSuperAdmin;
+    },
+  },
+});
+
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeuserAttendance } = userAttendanceSlice.actions;
@@ -118,6 +130,7 @@ export const { storeDesignation } = designationSlice.actions;
 export const { storeActiveDesignation } = activeDesignationSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
+export const { storeRole } = roleSlice.actions;
 // export default teamMemberSlice.reducer;
 
 export const teamMemberReducer = teamMemberSlice.reducer;
@@ -128,3 +141,4 @@ export const designationReducer = designationSlice.reducer;
 export const activeDesignationReducer = activeDesignationSlice.reducer;
 export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;
+export const roleReducer = roleSlice.reducer;

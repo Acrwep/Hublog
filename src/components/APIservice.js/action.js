@@ -202,11 +202,9 @@ export const deleteTeam = async (teamId) => {
   }
 };
 //role
-export const getRole = async (organizationId) => {
+export const getRole = async () => {
   try {
-    const response = await api.get(
-      `/api/Role/GetRoleAll?organizationId=${organizationId}`
-    );
+    const response = await api.get("/api/Role/GetRoleAll");
     return response;
   } catch (error) {
     throw error;
@@ -229,10 +227,12 @@ export const updateRole = async (teamID, rolepayload) => {
   }
 };
 //users
-export const getUsers = async (organizationId) => {
+export const getUsers = async (organizationId, name) => {
   try {
     const response = await api.get(
-      `api/Admin/GetAllUsers?organizationId=${organizationId}`
+      `api/Users/GetAllUsers?organizationId=${organizationId}&searchQuery=${
+        name ? name : ""
+      }`
     );
     return response;
   } catch (error) {

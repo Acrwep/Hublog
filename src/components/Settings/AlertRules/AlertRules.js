@@ -137,7 +137,7 @@ export default function AlertRules() {
       return;
     }
     const filterData = dummydatas.filter((item) =>
-      item.name.toLowerCase().includes(value)
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     console.log("filter", filterData);
     setDummyDatas(filterData);

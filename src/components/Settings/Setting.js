@@ -22,6 +22,7 @@ import Break from "./Break/Break";
 import {
   getBreak,
   getDesignation,
+  getRole,
   getTeams,
   getUsers,
 } from "../APIservice.js/action";
@@ -29,6 +30,7 @@ import AlertRules from "./AlertRules/AlertRules";
 import {
   storeActiveDesignation,
   storeDesignation,
+  storeRole,
   storesettingsBreak,
   storeTeams,
   storeUsers,
@@ -39,6 +41,7 @@ const Settings = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [breakLoading, setBreakLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
   const settingsList = [
     {
       id: 1,
@@ -75,6 +78,7 @@ const Settings = () => {
   const getUsersData = async () => {
     setLoading(true);
     const orgId = localStorage.getItem("organizationId");
+    localStorage.removeItem("usersearchvalue");
     try {
       const response = await getUsers(orgId);
       const usersList = response.data;
@@ -138,7 +142,26 @@ const Settings = () => {
       CommonToaster(error?.response?.data.message, "error");
     } finally {
       setTimeout(() => {
+        getRoleData();
         setBreakLoading(false);
+      }, 350);
+    }
+  };
+
+  const getRoleData = async () => {
+    setRoleLoading(true);
+    try {
+      const response = await getRole();
+      console.log("role response", response.data);
+      const roleList = response.data;
+      dispatch(storeRole(roleList));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      const roleList = [];
+      dispatch(storeRole(roleList));
+    } finally {
+      setTimeout(() => {
+        setRoleLoading(false);
       }, 350);
     }
   };
@@ -233,7 +256,7 @@ const Settings = () => {
           )}
           {activePage === 3 && (
             <div>
-              <Role />
+              <Role loading={roleLoading} />
             </div>
           )}
           {activePage === 4 && (

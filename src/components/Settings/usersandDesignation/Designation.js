@@ -156,6 +156,7 @@ export default function Designation({ loading }) {
     setDummyData(designationList);
   }, []);
 
+  //get designation api function
   const getDesignationData = async () => {
     setTableLoading(true);
     const orgId = localStorage.getItem("organizationId");
@@ -217,7 +218,15 @@ export default function Designation({ loading }) {
         getDesignationData();
         formReset();
       } catch (error) {
-        CommonToaster(error.response.data.message, "error");
+        const Error = error?.response?.data?.message;
+        if (
+          Error ===
+          "Designation is currently mapped to a user and cannot be deactivated."
+        ) {
+          CommonToaster("Unable to inactive. Mapped to user", "error", "error");
+        } else {
+          CommonToaster(Error, "error");
+        }
       } finally {
         setTimeout(() => {
           setTableLoading(false);
@@ -277,7 +286,7 @@ export default function Designation({ loading }) {
       return;
     }
     const filterData = designationList.filter((item) =>
-      item.name.toLowerCase().includes(value)
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     console.log("filter", filterData);
     dispatch(storeDesignation(filterData));

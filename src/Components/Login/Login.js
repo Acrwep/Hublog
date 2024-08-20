@@ -32,7 +32,7 @@ const Login = () => {
 
     if (password === "") {
       passwordValidate = " Password is required";
-    } else if (password < 3) {
+    } else if (password.length < 3) {
       passwordValidate = " Password is not valid";
     } else {
       passwordValidate = "";
