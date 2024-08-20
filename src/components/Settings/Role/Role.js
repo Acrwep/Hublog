@@ -41,7 +41,6 @@ export default function Role({ loading }) {
     },
   ];
   const [data, setData] = useState([]);
-  const [dummyData, setDummyData] = useState([]);
 
   useEffect(() => {
     const searchValue = localStorage.getItem("rolesearchvalue");
