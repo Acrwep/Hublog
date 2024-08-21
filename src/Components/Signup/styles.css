@@ -1,0 +1,31 @@
+.signup_card {
+  width: 720px;
+  height: auto;
+  background-color: white;
+  border-radius: 9px;
+  padding: 29px;
+}
+.signup_headingtext {
+  color: gray;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 6px;
+}
+.signup_createbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 35px;
+  width: 32%;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-top: 30px;
+}
+.signup_createbutton:hover {
+  background-color: #009737;
+}
+.signup_createbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}

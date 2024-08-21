@@ -143,12 +143,13 @@ h6 {
   .ant-select-selector {
   border-color: #25a17d !important;
 }
-.ant-select-outlined:not(.ant-select-disabled):not(
-    .ant- select-customize-input
-  ):not(.ant-pagination- size-changer)
+.ant-select-focused:not(.ant-select-disabled):not(
+    .ant-select-customize-input
+  ):not(.ant-pagination-size-changer)
   .ant-select-selector {
   border-color: #d9d9d9 !important;
   box-shadow: 0 0 2px rgba(5, 241, 123, 0.1) !important;
+  outline: 0;
 }
 /* drag and drop image upload styles */
 .ant-upload-wrapper .ant-upload-drag:not(.ant-upload-disabled):hover {

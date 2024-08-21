@@ -37,7 +37,8 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { IoMdArrowDropdown } from "react-icons/io";
-//login
+//login and signup
+import Signup from "../Components/Signup/Signup.tsx";
 import Login from "../Components/Login/Login";
 //dashboard
 import Dashboard from "../Components/Dashboard/Dashboard";
@@ -392,6 +393,10 @@ function SidebarMenu() {
             <Route path="/login" element={<Login />} />
           </Routes>
         </div>
+      ) : location.pathname === "/signup" ? (
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
       ) : location.pathname === "/downloads" ? (
         <div>
           <Routes>

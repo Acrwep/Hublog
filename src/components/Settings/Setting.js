@@ -79,6 +79,7 @@ const Settings = () => {
     setLoading(true);
     const orgId = localStorage.getItem("organizationId");
     localStorage.removeItem("usersearchvalue");
+    localStorage.removeItem("rolesearchvalue");
     try {
       const response = await getUsers(orgId);
       const usersList = response.data;

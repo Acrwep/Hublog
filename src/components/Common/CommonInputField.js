@@ -7,7 +7,7 @@ import "./commonstyles.css";
  * @property {string} [label]
  * @property {string} [placeholder]
  * @property {(e: React.ChangeEvent<HTMLInputElement>) => void} [onChange]
- * @property {string} [value]
+ * @property {any} [value]
  * @property {string} [error]
  * @property {number} [maxLength]
  * @property {boolean} [mandatory]

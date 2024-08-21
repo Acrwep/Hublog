@@ -2,6 +2,25 @@ import React from "react";
 import { Select } from "antd";
 import "./commonstyles.css";
 
+/**
+ * @typedef {Object} CommonSelectFieldProps
+ * @property {string} [label]
+ * @property {string} [placeholder]
+ * @property {any} [onChange]
+ * @property {any} [value]
+ * @property {string} [error]
+ * @property {any[]} [options]
+ * @property {boolean} [mandatory]
+ * @property {React.CSSProperties} [style]
+ * @property {string} [defaultValue]
+ * @property {string} [className]
+ * @property {string} [mode]
+ * @property {boolean} [disabled]
+ */
+/**
+ * * @param {CommonSelectFieldProps} props
+ */
+
 export default function CommonSelectField({
   label,
   options,

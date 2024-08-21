@@ -43,13 +43,15 @@ export default function Role({ loading }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const searchValue = localStorage.getItem("rolesearchvalue");
-    setSearch(searchValue);
-    if (searchValue === "" || searchValue === null) {
-      return;
-    } else {
-      handleSearchfromUseEffect(searchValue);
-    }
+    setTimeout(() => {
+      const searchValue = localStorage.getItem("rolesearchvalue");
+      setSearch(searchValue);
+      if (searchValue === "" || searchValue === null) {
+        return;
+      } else {
+        handleSearchfromUseEffect(searchValue);
+      }
+    }, 100);
   }, []);
 
   const getRoleData = async () => {

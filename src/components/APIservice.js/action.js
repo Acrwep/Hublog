@@ -113,7 +113,7 @@ export const LoginApi = async (loginCredential) => {
 export const getScreenShots = async (userId, organizationId, date) => {
   try {
     const response = await api.get(
-      `/api/Users/GetUserScreenShots?userId=${userId}&organizationId=${organizationId}&date=${date}`
+      `/api/Screenshot/GetUserScreenShots?userId=${userId}&organizationId=${organizationId}&date=${date}`
     );
     return response;
   } catch (error) {
