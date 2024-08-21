@@ -123,7 +123,11 @@ const UserDetail = () => {
       const response = await getUsers(orgId);
       const userDetail = response?.data;
       console.log("users response", userDetail);
-      setUserList(userDetail);
+      //merge user fullname and lastname in full_name property
+      const updateUserList = userDetail.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      setUserList(updateUserList);
       setUser(userDetail[0].id);
       setFullName(userDetail[0].first_Name + " " + userDetail[0].last_Name);
       setEmail(userDetail[0].email);

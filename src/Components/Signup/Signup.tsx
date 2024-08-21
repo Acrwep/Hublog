@@ -43,7 +43,8 @@ export default function Signup() {
     setNameError(nameValidator(event.target.value));
   };
 
-  const handleCreate = () => {
+  const handleCreate = (event: any) => {
+    event.preventDefault();
     console.log("rangeee", employeeRange, employeeRangeError);
     const nameValidate: string = nameValidator(name);
     const emailValidate: string = emailValidator(email);
@@ -80,11 +81,11 @@ export default function Signup() {
       <div className="circle" />
       <div className="login_mainContainer">
         <div className="signup_card">
-          <div className="loginlogo_container">
-            <img src={logoImg} className="login_logo" />
-            <p className="signup_headingtext">Create an organization</p>
-          </div>
           <form>
+            <div className="loginlogo_container">
+              <img src={logoImg} className="login_logo" />
+              <p className="signup_headingtext">Create an organization</p>
+            </div>
             <Row gutter={16} style={{ marginTop: "22px" }}>
               <Col span={12}>
                 <CommonInputField

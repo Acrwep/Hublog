@@ -63,9 +63,16 @@ const Screenshots = () => {
       const response = await getUsers(orgId);
       console.log("users response", response.data);
       const usersList = response?.data;
-      setUserList(usersList);
-      userIdd = usersList[0].id;
-      setUserId(usersList[0].id);
+
+      //merge user fullname and lastname in full_name property
+      const updateUserList = usersList.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      console.log("update user list", updateUserList);
+
+      setUserList(updateUserList);
+      userIdd = updateUserList[0].id;
+      setUserId(updateUserList[0].id);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -118,10 +125,15 @@ const Screenshots = () => {
           ...rest,
         })
       );
-      console.log("updateeeee", updatedArr);
-      setUserList(updatedArr);
-      setUserId(updatedArr[0].id);
-      getScreenShotsData(updatedArr[0].id, organizationId, date);
+
+      //merge user fullname and lastname in full_name property
+      const adddFullName = updatedArr.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+
+      setUserList(adddFullName);
+      setUserId(adddFullName[0].id);
+      getScreenShotsData(adddFullName[0].id, organizationId, date);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -138,6 +150,7 @@ const Screenshots = () => {
     setUserId(value);
     getScreenShotsData(value, organizationId, date);
   };
+
   const handleScreenshot = (item) => {
     console.log("itemmm", item);
     setIsModalOpen(true);

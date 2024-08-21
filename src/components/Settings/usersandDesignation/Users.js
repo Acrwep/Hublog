@@ -72,7 +72,7 @@ const Users = ({ loading }) => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 170,
+      width: 190,
       render: (text, record) => {
         return <p>{record.first_Name + " " + record.last_Name} </p>;
       },
@@ -436,7 +436,7 @@ const Users = ({ loading }) => {
       setTableLoading(true);
       try {
         const response = await updateUser(request);
-        CommonToaster("User Updated", "success");
+        CommonToaster("User updated", "success");
         getUsersData();
         formReset();
       } catch (error) {
@@ -450,7 +450,7 @@ const Users = ({ loading }) => {
       try {
         setTableLoading(true);
         const response = await createUser(request);
-        CommonToaster("User Created", "success");
+        CommonToaster("User created", "success");
         getUsersData();
         formReset();
       } catch (error) {
@@ -501,7 +501,7 @@ const Users = ({ loading }) => {
           <CommonTable
             columns={columns}
             dataSource={usersList}
-            scroll={{ x: 1790 }}
+            scroll={{ x: 1800 }}
             dataPerPage={10}
             loading={tableLoading}
             checkBox="false"
