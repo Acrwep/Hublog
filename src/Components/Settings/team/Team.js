@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Tabs, Modal, Button, Space, Dropdown } from "antd";
 import CommonInputField from "../../Common/CommonInputField";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
-import { storeTeams } from "../../Redux/slice";
+import { addteamMembers, storeTeams } from "../../Redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles.css";
 import CommonAddButton from "../../Common/CommonAddButton";
@@ -28,6 +28,7 @@ import CommonWarningModal from "../../Common/CommonWarningModal";
 const Team = ({ loading }) => {
   const dispatch = useDispatch();
   const teamList = useSelector((state) => state.teams);
+  const teamMembersList = useSelector((state) => state.teamMembers);
   const allUsers = useSelector((state) => state.users);
   const [teamId, setTeamId] = useState("");
   const [teamMembers, setTeamMembers] = useState([]);
@@ -52,27 +53,22 @@ const Team = ({ loading }) => {
   const [teamMemberLoading, setTeamMemberLoading] = useState(false);
 
   useEffect(() => {
-    //loading comes from settings.js
-    //teamList comes from slice.js (redux)
-    if (loading === false) {
-      setTeamId(teamList[0].id);
-      setTeamName(teamList[0].name);
-      //initally pass index 0 team id from teamList
-      getUsersDataByTeamId(teamList[0].id);
-    }
-  }, [loading]);
+    setTeamId(teamList[0].id);
+    setTeamName(teamList[0].name);
+    getUsersData(teamList[0].id);
+  }, []);
 
   //get team members by team id api function
   const getUsersDataByTeamId = async (teamid) => {
     setTeamMemberLoading(true);
     try {
       const response = await getUsersByTeamId(teamid);
-      console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
-      setTeamMembers(teamMembersList);
+      dispatch(addteamMembers(teamMembersList));
     } catch (error) {
       CommonToaster(error?.message, "error");
-      setTeamMembers([]);
+      const teamMembersList = [];
+      dispatch(addteamMembers(teamMembersList));
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
@@ -93,7 +89,6 @@ const Team = ({ loading }) => {
       dispatch(storeTeams(allTeams));
 
       const selectedTeam = allTeams.find((f) => f.id === teamId);
-      console.log("selectedTeam", selectedTeam);
       setTeamName(selectedTeam?.name);
 
       if (check === "true") {
@@ -176,7 +171,6 @@ const Team = ({ loading }) => {
         getTeamsData();
         formReset();
       } catch (error) {
-        console.log("team error", error);
         CommonToaster(error?.response?.data, "error");
       }
     }
@@ -184,7 +178,6 @@ const Team = ({ loading }) => {
 
   //handle team change function
   const handleChangeTeamSubmit = async () => {
-    console.log("userdetailssssss", userDetails);
     if (addTeamModal === false) {
       const changeteamValidate = selectValidator(changeTeamId);
       setChangeTeamError(changeteamValidate);
@@ -228,7 +221,6 @@ const Team = ({ loading }) => {
       getUsersDataByTeamId(teamId);
       formReset();
     } catch (error) {
-      console.log("update user error", error);
       CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
@@ -240,37 +232,42 @@ const Team = ({ loading }) => {
   //get uer api function
   const getUsersData = async (teamid, dispatchStatus) => {
     const orgId = localStorage.getItem("organizationId");
-    try {
-      const response = await getUsers(orgId);
-      console.log("users response", response?.data);
-      const allUsers = response?.data;
-      //store user list to redux only when team create or update
-      if (dispatchStatus === "dispatch") {
-        dispatch(storeUsers(allUsers));
-      }
+    const others = allUsers.filter((f) => {
+      // Return true if the user's teamId is different from currentTeamId
+      return f.teamId !== teamid;
+    });
+    console.log("filter other team users", others);
+    setOtherUsers(others);
 
-      //take other teammembers
-      console.log("current team id", teamid);
-      const others = allUsers.filter((f) => {
-        // Return true if the user's teamId is different from currentTeamId
-        return f.teamId !== teamid;
-      });
-      console.log("otherssssssssss from users", others);
-      setOtherUsers(others);
-    } catch (error) {
-      console.log("getallusersssss", error);
-      CommonToaster(error?.response?.data, "error");
-    } finally {
-      setTimeout(() => {
-        setTeamMemberLoading(false);
-      }, 500);
+    if (dispatchStatus === "dispatch") {
+      try {
+        const response = await getUsers(orgId);
+        const allUsers = response?.data;
+        //store user list to redux only when team create or update
+        if (dispatchStatus === "dispatch") {
+          dispatch(storeUsers(allUsers));
+        }
+
+        //take other teammembers
+        const others = allUsers.filter((f) => {
+          // Return true if the user's teamId is different from currentTeamId
+          return f.teamId !== teamid;
+        });
+        console.log("other team users", others);
+        setOtherUsers(others);
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+      } finally {
+        setTimeout(() => {
+          setTeamMemberLoading(false);
+        }, 500);
+      }
     }
   };
 
   //fetching clicked item data to the team form
   const handleEdit = () => {
     const selectedTeam = teamList.find((f) => f.id === teamId);
-    console.log("selectedteam", selectedTeam);
     setName(selectedTeam.name);
     setDescription(selectedTeam.description);
     setIsModalOpen(true);
@@ -411,12 +408,14 @@ const Team = ({ loading }) => {
           ) : (
             <>
               <p className="teammembers_count">
-                <span style={{ fontSize: "15px" }}>({teamMembers.length})</span>{" "}
+                <span style={{ fontSize: "15px" }}>
+                  ({teamMembersList.length})
+                </span>{" "}
                 Members
               </p>
               <Row gutter={16} style={{ marginTop: "12px" }}>
-                {teamMembers.length >= 1 &&
-                  teamMembers.map((item, index) => (
+                {teamMembersList.length >= 1 &&
+                  teamMembersList.map((item, index) => (
                     <Col
                       xs={24}
                       sm={24}
@@ -476,7 +475,7 @@ const Team = ({ loading }) => {
                     </Col>
                   ))}
               </Row>
-              {teamMembers.length <= 0 && (
+              {teamMembersList.length <= 0 && (
                 <p className="teammember_nodata">No data found</p>
               )}
 
@@ -535,6 +534,10 @@ const Team = ({ loading }) => {
                     </Col>
                   ))}
               </Row>
+
+              {otherUsers.length <= 0 && (
+                <p className="teammember_nodata">No data found</p>
+              )}
             </>
           )}
           {/* addteam modal */}

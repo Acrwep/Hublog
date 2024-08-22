@@ -31,6 +31,7 @@ const teamMemberSlice = createSlice({
   },
 });
 
+//users
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -42,6 +43,19 @@ const usersSlice = createSlice({
   },
 });
 
+const usersearchvalue = null;
+const userSearchValueSlice = createSlice({
+  name: "usersearchvalue",
+  initialState: usersearchvalue,
+  reducers: {
+    storeUserSearchValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+//designation
 const designationSlice = createSlice({
   name: "designation",
   initialState,
@@ -64,6 +78,7 @@ const activeDesignationSlice = createSlice({
   },
 });
 
+//team
 const teamsSlice = createSlice({
   name: "teams",
   initialState,
@@ -76,6 +91,7 @@ const teamsSlice = createSlice({
   },
 });
 
+//attendance
 const userAttendanceSlice = createSlice({
   name: "userAttendance",
   initialState,
@@ -87,6 +103,7 @@ const userAttendanceSlice = createSlice({
   },
 });
 
+// break
 const userBreakSlice = createSlice({
   name: "userBreak",
   initialState,
@@ -98,6 +115,7 @@ const userBreakSlice = createSlice({
   },
 });
 
+//settings break
 const SettingsBreakSlice = createSlice({
   name: "settingsbreak",
   initialState,
@@ -109,6 +127,7 @@ const SettingsBreakSlice = createSlice({
   },
 });
 
+//role
 const roleSlice = createSlice({
   name: "role",
   initialState,
@@ -121,24 +140,40 @@ const roleSlice = createSlice({
   },
 });
 
+const rolesearchvalue = null;
+const roleSearchValueSlice = createSlice({
+  name: "rolesearchvalue",
+  initialState: rolesearchvalue,
+  reducers: {
+    storeRoleSearchValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
 export const { storeUsers } = usersSlice.actions;
+export const { storeUserSearchValue } = userSearchValueSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
 export const { storeActiveDesignation } = activeDesignationSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
 export const { storeRole } = roleSlice.actions;
+export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 // export default teamMemberSlice.reducer;
 
 export const teamMemberReducer = teamMemberSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
 export const usersReducer = usersSlice.reducer;
+export const userSearchValueReducer = userSearchValueSlice.reducer;
 export const designationReducer = designationSlice.reducer;
 export const activeDesignationReducer = activeDesignationSlice.reducer;
 export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;
 export const roleReducer = roleSlice.reducer;
+export const roleSearchValueReducer = roleSearchValueSlice.reducer;

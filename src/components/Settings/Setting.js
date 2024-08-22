@@ -25,21 +25,26 @@ import {
   getRole,
   getTeams,
   getUsers,
+  getUsersByTeamId,
 } from "../APIservice.js/action";
 import AlertRules from "./AlertRules/AlertRules";
 import {
+  addteamMembers,
   storeActiveDesignation,
   storeDesignation,
   storeRole,
+  storeRoleSearchValue,
   storesettingsBreak,
   storeTeams,
   storeUsers,
+  storeUserSearchValue,
 } from "../Redux/slice";
 import { CommonToaster } from "../Common/CommonToaster";
 
 const Settings = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [teamLoading, setTeamLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
   const settingsList = [
@@ -60,25 +65,39 @@ const Settings = () => {
     { id: 11, name: "Compliance", icon: <VscShield size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
-  const [userPageVisited, setUserPageVisited] = useState(false);
+  const [teamPageVisited, setTeamPageVisited] = useState(false);
+  const [rolePageVisited, setRolePageVisited] = useState(false);
+  const [breakPageVisited, setBreakPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
     if (id === 4 || id === 5 || id >= 7) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
+
+    if (id === 2 && teamPageVisited === false) {
+      getTeamData();
+    }
+    if (id === 3 && rolePageVisited === false) {
+      getRoleData();
+    }
+    if (id === 6 && breakPageVisited === false) {
+      getBreakData();
+    }
   };
 
   useEffect(() => {
-    if (userPageVisited === false) {
-      getUsersData();
-    }
+    //null the usersearchvalue in redux
+    const searchValues = "";
+    dispatch(storeUserSearchValue(searchValues));
+    dispatch(storeRoleSearchValue(searchValues));
+    //call user get api function
+    getUsersData();
   }, []);
 
   const getUsersData = async () => {
     setLoading(true);
     const orgId = localStorage.getItem("organizationId");
-    localStorage.removeItem("usersearchvalue");
     localStorage.removeItem("rolesearchvalue");
     try {
       const response = await getUsers(orgId);
@@ -89,7 +108,7 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         getDesignationData();
-        setUserPageVisited(true);
+        // setUserPageVisited(true);
       }, 350);
     }
   };
@@ -110,22 +129,37 @@ const Settings = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getTeamData();
+        setLoading(false);
       }, 350);
     }
   };
 
   const getTeamData = async () => {
+    setTeamLoading(true);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(orgId);
       const teamList = response.data;
       dispatch(storeTeams(teamList));
+
+      //getusersByteamId api
+      try {
+        const response = await getUsersByTeamId(teamList[0].id);
+        console.log("user by teamId response", response?.data);
+        const teamMembersList = response?.data?.team?.users;
+        dispatch(addteamMembers(teamMembersList));
+      } catch (error) {
+        const teamMembersList = [];
+        dispatch(addteamMembers(teamMembersList));
+        CommonToaster(error?.message, "error");
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getBreakData();
+        // getBreakData();
+        setTeamPageVisited(true);
+        setTeamLoading(false);
         setLoading(false);
       }, 350);
     }
@@ -143,8 +177,8 @@ const Settings = () => {
       CommonToaster(error?.response?.data.message, "error");
     } finally {
       setTimeout(() => {
-        getRoleData();
         setBreakLoading(false);
+        setBreakPageVisited(true);
       }, 350);
     }
   };
@@ -163,6 +197,7 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         setRoleLoading(false);
+        setRolePageVisited(true);
       }, 350);
     }
   };
@@ -252,7 +287,7 @@ const Settings = () => {
           )}
           {activePage === 2 && (
             <div>
-              <Team loading={loading} />
+              <Team loading={teamLoading} />
             </div>
           )}
           {activePage === 3 && (

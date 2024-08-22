@@ -8,12 +8,13 @@ import { descriptionValidator } from "../../../Components/Common/Validation";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { createRole, getRole, updateRole } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
-import { storeRole } from "../../Redux/slice";
+import { storeRole, storeRoleSearchValue } from "../../Redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Common/Loader";
 
 export default function Role({ loading }) {
   const dispatch = useDispatch();
+  const roleSearchValue = useSelector((state) => state.rolesearchvalue);
   const roleList = useSelector((state) => state.roles);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [roleId, setroleId] = useState("");
@@ -43,15 +44,15 @@ export default function Role({ loading }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setTimeout(() => {
-      const searchValue = localStorage.getItem("rolesearchvalue");
-      setSearch(searchValue);
-      if (searchValue === "" || searchValue === null) {
+    if (loading === false) {
+      setSearch(roleSearchValue);
+      //check searchvalue, because of if its not empty call the user search api with the already stored searchvalue
+      if (roleSearchValue === "" || roleSearchValue === null) {
         return;
       } else {
-        handleSearchfromUseEffect(searchValue);
+        handleSearchfromUseEffect(roleSearchValue);
       }
-    }, 100);
+    }
   }, []);
 
   const getRoleData = async () => {
@@ -147,9 +148,9 @@ export default function Role({ loading }) {
 
   const handleSearch = (event) => {
     const value = event.target.value;
-    console.log("Search value:", value);
     setSearch(value);
-    localStorage.setItem("rolesearchvalue", value);
+    // localStorage.setItem("rolesearchvalue", value);
+    dispatch(storeRoleSearchValue(value));
     if (value === "") {
       handleSearchfromUseEffect(value);
       return;

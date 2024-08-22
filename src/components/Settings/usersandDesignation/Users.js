@@ -22,11 +22,12 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { createUser, getUsers, updateUser } from "../../APIservice.js/action";
 import { useDispatch, useSelector } from "react-redux";
-import { storeUsers } from "../../Redux/slice";
+import { storeUsers, storeUserSearchValue } from "../../Redux/slice";
 
 const Users = ({ loading }) => {
   const dispatch = useDispatch();
   const usersList = useSelector((state) => state.users);
+  const userSearchValue = useSelector((state) => state.usersearchvalue);
   const designationList = useSelector((state) => state.designation);
   const activeDesignationList = useSelector((state) => state.activedesignation);
   const teamList = useSelector((state) => state.teams);
@@ -211,16 +212,15 @@ const Users = ({ loading }) => {
   ];
 
   useEffect(() => {
-    setTimeout(() => {
-      const searchValue = localStorage.getItem("usersearchvalue");
-      setSearch(searchValue);
+    if (loading === false) {
+      setSearch(userSearchValue);
       //check searchvalue, because of if its not empty call the user search api with the already stored searchvalue
-      if (searchValue === "" || searchValue === null) {
+      if (userSearchValue === "" || userSearchValue === null) {
         return;
       } else {
-        handleSearchfromUseEffect(searchValue);
+        handleSearchfromUseEffect(userSearchValue);
       }
-    }, 100);
+    }
   }, []);
 
   //getuser api function
@@ -232,6 +232,10 @@ const Users = ({ loading }) => {
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
+      //null the search value
+      const searchValue = "";
+      dispatch(storeUserSearchValue(searchValue));
+      setSearch(searchValue);
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
     } finally {
@@ -268,8 +272,6 @@ const Users = ({ loading }) => {
     setTeamError("");
     setEmployeeId("");
     setEdit(false);
-    setSearch("");
-    localStorage.removeItem("usersearchvalue");
   };
 
   const onClose = () => {
@@ -312,7 +314,7 @@ const Users = ({ loading }) => {
     const value = event.target.value;
     console.log("Search value:", value);
     setSearch(value);
-    localStorage.setItem("usersearchvalue", value);
+    dispatch(storeUserSearchValue(value));
     setTableLoading(true);
 
     const orgId = localStorage.getItem("organizationId");

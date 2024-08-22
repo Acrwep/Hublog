@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col } from "antd";
+import "./declarations.d.ts";
 import logoImg from "../../assets/images/logo-re-3.png";
 import CommonInputField from "../Common/CommonInputField.js";
 import CommonSelectField from "../Common/CommonSelectField.js";
