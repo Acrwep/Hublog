@@ -31,7 +31,6 @@ const Team = ({ loading }) => {
   const teamMembersList = useSelector((state) => state.teamMembers);
   const allUsers = useSelector((state) => state.users);
   const [teamId, setTeamId] = useState("");
-  const [teamMembers, setTeamMembers] = useState([]);
   const [otherUsers, setOtherUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeTeamModal, setChangeTeamModal] = useState(false);
@@ -53,10 +52,12 @@ const Team = ({ loading }) => {
   const [teamMemberLoading, setTeamMemberLoading] = useState(false);
 
   useEffect(() => {
-    setTeamId(teamList[0].id);
-    setTeamName(teamList[0].name);
-    getUsersData(teamList[0].id);
-  }, []);
+    if (loading === false) {
+      setTeamId(teamList[0].id);
+      setTeamName(teamList[0].name);
+      getUsersData(teamList[0].id, "dispatch");
+    }
+  }, [loading]);
 
   //get team members by team id api function
   const getUsersDataByTeamId = async (teamid) => {
@@ -236,7 +237,6 @@ const Team = ({ loading }) => {
       // Return true if the user's teamId is different from currentTeamId
       return f.teamId !== teamid;
     });
-    console.log("filter other team users", others);
     setOtherUsers(others);
 
     if (dispatchStatus === "dispatch") {

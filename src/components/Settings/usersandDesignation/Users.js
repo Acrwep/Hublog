@@ -312,7 +312,6 @@ const Users = ({ loading }) => {
 
   const handleSearch = async (event) => {
     const value = event.target.value;
-    console.log("Search value:", value);
     setSearch(value);
     dispatch(storeUserSearchValue(value));
     setTableLoading(true);
@@ -320,7 +319,6 @@ const Users = ({ loading }) => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId, value);
-      console.log("user filter response", response);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
     } catch (error) {

@@ -22,7 +22,6 @@ api.interceptors.request.use(
     console.log("AccessToken", AccessToken);
     if (AccessToken) {
       const expired = isTokenExpired(AccessToken);
-      console.log("Token expire status", expired);
       if (expired === true) {
         ShowModal();
         return Promise.reject(new Error("Token is expired"));
@@ -121,10 +120,12 @@ export const getScreenShots = async (userId, organizationId, date) => {
   }
 };
 // designation
-export const getDesignation = async (organizationId) => {
+export const getDesignation = async (organizationId, name) => {
   try {
     const response = await api.get(
-      `/api/Designation/GetDesignationAll?organizationId=${organizationId}`
+      `/api/Designation/GetDesignationAll?organizationId=${organizationId}&searchQuery=${
+        name ? name : ""
+      }`
     );
     return response;
   } catch (error) {

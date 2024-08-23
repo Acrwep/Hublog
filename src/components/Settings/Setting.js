@@ -32,6 +32,8 @@ import {
   addteamMembers,
   storeActiveDesignation,
   storeDesignation,
+  storeDesignationSearchValue,
+  storeDuplicateDesignation,
   storeRole,
   storeRoleSearchValue,
   storesettingsBreak,
@@ -75,9 +77,9 @@ const Settings = () => {
     }
     setActivePage(id === activePage ? activePage : id);
 
-    if (id === 2 && teamPageVisited === false) {
-      getTeamData();
-    }
+    // if (id === 2 && teamPageVisited === false) {
+    //   getTeamData();
+    // }
     if (id === 3 && rolePageVisited === false) {
       getRoleData();
     }
@@ -88,9 +90,10 @@ const Settings = () => {
 
   useEffect(() => {
     //null the usersearchvalue in redux
-    const searchValues = "";
-    dispatch(storeUserSearchValue(searchValues));
-    dispatch(storeRoleSearchValue(searchValues));
+    const searchValue = "";
+    dispatch(storeUserSearchValue(searchValue));
+    dispatch(storeRoleSearchValue(searchValue));
+    dispatch(storeDesignationSearchValue(searchValue));
     //call user get api function
     getUsersData();
   }, []);
@@ -108,7 +111,6 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         getDesignationData();
-        // setUserPageVisited(true);
       }, 350);
     }
   };
@@ -118,8 +120,8 @@ const Settings = () => {
     try {
       const response = await getDesignation(orgId);
       const designationList = response.data;
-      console.log("designation list", designationList);
       dispatch(storeDesignation(designationList));
+      dispatch(storeDuplicateDesignation(designationList));
       //filter active designation
       const filterActivedesignation = designationList.filter(
         (f) => f.active === true
@@ -129,7 +131,7 @@ const Settings = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        getTeamData();
       }, 350);
     }
   };
@@ -145,7 +147,6 @@ const Settings = () => {
       //getusersByteamId api
       try {
         const response = await getUsersByTeamId(teamList[0].id);
-        console.log("user by teamId response", response?.data);
         const teamMembersList = response?.data?.team?.users;
         dispatch(addteamMembers(teamMembersList));
       } catch (error) {
@@ -158,8 +159,6 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         // getBreakData();
-        setTeamPageVisited(true);
-        setTeamLoading(false);
         setLoading(false);
       }, 350);
     }
@@ -187,7 +186,6 @@ const Settings = () => {
     setRoleLoading(true);
     try {
       const response = await getRole();
-      console.log("role response", response.data);
       const roleList = response.data;
       dispatch(storeRole(roleList));
     } catch (error) {
@@ -287,7 +285,7 @@ const Settings = () => {
           )}
           {activePage === 2 && (
             <div>
-              <Team loading={teamLoading} />
+              <Team loading={loading} />
             </div>
           )}
           {activePage === 3 && (

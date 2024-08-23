@@ -17,16 +17,23 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import CommonWarningModal from "../../Common/CommonWarningModal";
-import { ExclamationCircleFilled } from "@ant-design/icons";
 import { CommonToaster } from "../../Common/CommonToaster";
 import Loader from "../../Common/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { storeActiveDesignation, storeDesignation } from "../../Redux/slice";
+import {
+  storeActiveDesignation,
+  storeDesignation,
+  storeDesignationSearchValue,
+  storeDuplicateDesignation,
+} from "../../Redux/slice";
 import CommonSelectField from "../../Common/CommonSelectField";
 
 export default function Designation({ loading }) {
   const dispatch = useDispatch();
-  const designationList = useSelector((state) => state.designation);
+  const designationList = useSelector((state) => state.duplicatedesignation);
+  const designationSearchValue = useSelector(
+    (state) => state.designationsearchvalue
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -39,6 +46,7 @@ export default function Designation({ loading }) {
     { id: 0, name: "In Active" },
   ];
   const [status, setStatus] = useState(1);
+  const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
 
@@ -150,10 +158,17 @@ export default function Designation({ loading }) {
       },
     },
   ];
-  const [dummyData, setDummyData] = useState([]);
 
   useEffect(() => {
-    setDummyData(designationList);
+    if (loading === false) {
+      setSearch(designationSearchValue);
+      //check searchvalue, because of, if its not empty call the designation search api with the already stored searchvalue
+      if (designationSearchValue === "" || designationSearchValue === null) {
+        return;
+      } else {
+        handleSearchfromUseEffect(designationSearchValue);
+      }
+    }
   }, []);
 
   //get designation api function
@@ -165,11 +180,16 @@ export default function Designation({ loading }) {
       console.log("Designation response", response.data);
       const allDesignation = response.data;
       dispatch(storeDesignation(allDesignation));
+      dispatch(storeDuplicateDesignation(allDesignation));
       //filter active designation
       const filterActivedesignation = allDesignation.filter(
         (f) => f.active === true
       );
       dispatch(storeActiveDesignation(filterActivedesignation));
+      //null the search value
+      const searchValue = "";
+      dispatch(storeDesignationSearchValue(searchValue));
+      setSearch(searchValue);
     } catch (error) {
       CommonToaster(error, "error");
     } finally {
@@ -279,18 +299,46 @@ export default function Designation({ loading }) {
     }
   };
 
-  const handleSearch = (value) => {
-    console.log("Search value:", value);
-    if (value === "") {
-      dispatch(storeDesignation(dummyData));
-      return;
+  //user search function
+  const handleSearchfromUseEffect = async (value) => {
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getDesignation(orgId, value);
+      console.log("user filter response", response);
+      const allDesignation = response?.data;
+      dispatch(storeDuplicateDesignation(allDesignation));
+    } catch (error) {
+      const allDesignation = [];
+      dispatch(storeDuplicateDesignation(allDesignation));
     }
-    const filterData = designationList.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log("filter", filterData);
-    dispatch(storeDesignation(filterData));
   };
+
+  const handleSearch = async (event) => {
+    const value = event.target.value;
+    setSearch(value);
+    dispatch(storeDesignationSearchValue(value));
+
+    setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getDesignation(orgId, value);
+      const allDesignation = response.data;
+      dispatch(storeDuplicateDesignation(allDesignation));
+    } catch (error) {
+      if (error) {
+        const allDesignation = [];
+        dispatch(storeDuplicateDesignation(allDesignation));
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 350);
+      }
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
+    }
+  };
+
   return (
     <>
       {loading === true ? (
@@ -301,7 +349,8 @@ export default function Designation({ loading }) {
             <Col xs={24} sm={24} md={24} lg={12}>
               <CommonSearchField
                 placeholder="Search designation..."
-                onSearch={handleSearch}
+                onChange={handleSearch}
+                value={search}
               />
             </Col>
             <Col

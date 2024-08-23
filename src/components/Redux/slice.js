@@ -67,11 +67,34 @@ const designationSlice = createSlice({
   },
 });
 
+const duplicateDesignationSlice = createSlice({
+  name: "duplicatedesignation",
+  initialState,
+  reducers: {
+    storeDuplicateDesignation(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const activeDesignationSlice = createSlice({
   name: "activedesignation",
   initialState,
   reducers: {
     storeActiveDesignation(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const designationsearchvalue = null;
+const designationSearchValueSlice = createSlice({
+  name: "designationsearchvalue",
+  initialState: designationsearchvalue,
+  reducers: {
+    storeDesignationSearchValue(state, action) {
       state = action.payload;
       return state;
     },
@@ -159,7 +182,10 @@ export const { storeuserBreak } = userBreakSlice.actions;
 export const { storeUsers } = usersSlice.actions;
 export const { storeUserSearchValue } = userSearchValueSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
+export const { storeDuplicateDesignation } = duplicateDesignationSlice.actions;
 export const { storeActiveDesignation } = activeDesignationSlice.actions;
+export const { storeDesignationSearchValue } =
+  designationSearchValueSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
 export const { storeRole } = roleSlice.actions;
@@ -172,7 +198,10 @@ export const userBreakReducer = userBreakSlice.reducer;
 export const usersReducer = usersSlice.reducer;
 export const userSearchValueReducer = userSearchValueSlice.reducer;
 export const designationReducer = designationSlice.reducer;
+export const duplicateDesignationReducer = duplicateDesignationSlice.reducer;
 export const activeDesignationReducer = activeDesignationSlice.reducer;
+export const designationSearchValueReducer =
+  designationSearchValueSlice.reducer;
 export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;
 export const roleReducer = roleSlice.reducer;

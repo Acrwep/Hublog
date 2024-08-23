@@ -58,7 +58,6 @@ const SidebarMenuList = () => {
   }, [location.pathname]);
 
   const handleMenuClick = (e) => {
-    console.log("menuuuuuuu", e);
     if (
       e.key === "attendance" ||
       e.key === "devices" ||
