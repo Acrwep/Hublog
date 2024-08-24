@@ -21,6 +21,9 @@ import { CiStreamOn } from "react-icons/ci";
 import { GrMapLocation } from "react-icons/gr";
 import { VscGraphLine } from "react-icons/vsc";
 import { FiActivity } from "react-icons/fi";
+import { TbTicket } from "react-icons/tb";
+import { RiBillLine } from "react-icons/ri";
+
 export const SideMenuConfig = {
   1: {
     title: "Dashboard",
@@ -123,5 +126,10 @@ export const SideMenuConfig = {
     title: "Settings",
     icon: <MdSettings size={17} />,
     path: "settings",
+  },
+  13: {
+    title: "Billing",
+    icon: <RiBillLine size={17} />,
+    path: "billing",
   },
 };

@@ -10,6 +10,7 @@ const CommonTable = ({
   selectedDatas,
   checkBox,
   loading,
+  paginationStatus,
 }) => {
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -60,7 +61,7 @@ const CommonTable = ({
       columns={columns}
       dataSource={dataSource}
       scroll={scroll}
-      pagination={tableParams.pagination}
+      pagination={paginationStatus === false ? false : tableParams.pagination}
       onChange={handleTableChange}
       tableLayout="fixed"
       bordered={bordered === "true"}

@@ -125,9 +125,13 @@ const SidebarMenuList = () => {
           key={item.path}
           icon={item.icon}
           disabled={
-            ["Dashboard", "Notebook", "User Detail", "Settings"].includes(
-              item.title
-            )
+            [
+              "Dashboard",
+              "Notebook",
+              "User Detail",
+              "Settings",
+              "Billing",
+            ].includes(item.title)
               ? false
               : true
           }

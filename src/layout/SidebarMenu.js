@@ -85,6 +85,8 @@ import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
 import Downloads from "../Components/Login/downloads";
 import Demo from "../Components/Typescript/demo.tsx";
+//licence
+import Billing from "../Components/Licence/Billing.js";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -581,6 +583,7 @@ function SidebarMenu() {
                 <Route path="/userdetail" element={<UserDetail />} />
 
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/billing" element={<Billing />} />
               </Routes>
             </Content>
           </Layout>

@@ -1,0 +1,190 @@
+.billing_companynameContainer {
+  margin-top: 20px;
+}
+.billing_upgradeplan_coldiv {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.billing_card {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  border: 1px solid gray;
+  border-radius: 6px;
+  padding: 12px;
+  width: 409px;
+  background-color: rgba(20, 184, 166, 0.1);
+  border: 2px solid rgba(20, 184, 166, 0.1);
+  border-color: rgba(20, 184, 166, 0.1);
+}
+.billing_card_rowdiv {
+  width: 100%;
+  margin-bottom: 9px;
+}
+.billingcard_subheadings {
+  font-weight: 500;
+}
+.billing_companyname {
+  font-weight: 600;
+  font-size: 16px;
+  margin-left: 4px;
+}
+.billing_upgradebuttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+.invoicetable_heading {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 9px;
+}
+/* plan details drawer styles */
+.billing_planmainContainer {
+  background-color: #25a17d;
+  height: 50vh;
+  position: relative;
+}
+.billing_planinnerContainer {
+  position: absolute;
+  top: 11.2%;
+  width: 100%;
+  padding: 0px 100px;
+}
+.chooseplan_heading {
+  font-weight: 800;
+  font-size: 29px;
+}
+.billing_buttontabdiv {
+  display: flex;
+  background: #000000c7;
+  color: white;
+  border-radius: 25px;
+  padding: 6px 12px;
+  position: relative;
+}
+.monthlytab_text {
+  background-color: white;
+  color: black;
+  padding: 4px 12px;
+  border-radius: 50px;
+  margin-right: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.yearlytab_text {
+  background-color: white;
+  color: black;
+  padding: 4px 12px;
+  border-radius: 25px;
+  margin-left: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.monthlytab_inactivetext {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.billing_plandetailscard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #80808069;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .billing_plandetailscolumndiv {
+    margin-bottom: 20px;
+  }
+}
+.billing_planamount_container {
+  padding: 24px;
+  background-color: rgba(20, 184, 166, 0.1);
+}
+.billing_planname {
+  font-weight: 600;
+  font-size: 22px;
+  text-align: center;
+}
+.billing_planamount {
+  font-weight: 700;
+  font-size: 42px;
+  text-align: center;
+}
+.billing_permonthtext {
+  color: gray;
+  text-align: center;
+  margin-top: -10px;
+}
+.billing_getstartbuttondiv {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.billing_getstartbutton {
+  color: #fff;
+  border-color: #25a17d;
+  background-color: #25a17d;
+  font-weight: 600;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 140px;
+}
+.billing_getstartbutton:hover {
+  color: #fff !important;
+  border-color: #25a17d !important;
+  background-color: #009737 !important;
+}
+.billing_getstartbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
+.billing_modulesnameContainer {
+  display: flex;
+  margin-bottom: 12px;
+}
+.billing_modulesname_text {
+  font-weight: 500;
+  margin-left: 6px;
+}
+/* billing modal styles */
+.billing_modalplan_heading {
+  font-weight: 500;
+}
+.billing_modalplan_values {
+  font-weight: 600;
+  color: #25a17d;
+  font-size: 16px;
+}
+.billing_modalminusContainer {
+  background-color: rgba(20, 184, 166, 0.1);
+  border: 2px solid rgba(20, 184, 166, 0.1);
+  color: rgba(0, 0, 0, 0.836);
+  padding: 5px 7px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.billing_licencecount {
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #25a17d;
+}
+.billing_modal_permonthtext {
+  color: #8080808e;
+  font-size: 12px;
+}
