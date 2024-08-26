@@ -13,15 +13,16 @@ import CommonAddButton from "../../Common/CommonAddButton";
 import { createBreak, getBreak, updateBreak } from "../../APIservice.js/action";
 import { AiOutlineEdit } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { storesettingsBreak } from "../../Redux/slice";
+import { storeBreakSearchValue, storesettingsBreak } from "../../Redux/slice";
 import Loader from "../../Common/Loader";
 import CommonSelectField from "../../Common/CommonSelectField";
 
 export default function Break({ loading }) {
   const dispatch = useDispatch();
+  const breakList = useSelector((state) => state.settingsBreak);
+  const breakSearchValue = useSelector((state) => state.breaksearchvalue);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [breakId, setBreakId] = useState(null);
-  const breakList = useSelector((state) => state.settingsBreak);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [breaktime, setBreakTime] = useState("");
@@ -31,9 +32,9 @@ export default function Break({ loading }) {
     { id: 0, name: "In Active" },
   ];
   const [status, setStatus] = useState(1);
+  const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
-  const [dummyData, setDummyData] = useState([]);
   const columns = [
     { title: "Break Name", dataIndex: "name", key: "name", width: 260 },
     {
@@ -81,7 +82,9 @@ export default function Break({ loading }) {
   ];
 
   useEffect(() => {
-    setDummyData(breakList);
+    if (loading === false) {
+      setSearch(breakSearchValue);
+    }
   }, []);
 
   const getBreakData = async () => {
@@ -175,17 +178,31 @@ export default function Break({ loading }) {
     formReset();
   };
 
-  const handleSearch = (value) => {
-    console.log("Search value:", value);
-    if (value === "") {
-      dispatch(storesettingsBreak(dummyData));
-      return;
+  //break search
+  const handleSearch = async (event) => {
+    const value = event.target.value;
+    setSearch(value);
+    dispatch(storeBreakSearchValue(value));
+
+    setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getBreak(value);
+      const allbreakDetails = response.data;
+      dispatch(storesettingsBreak(allbreakDetails));
+    } catch (error) {
+      if (error) {
+        const allbreakDetails = [];
+        dispatch(storesettingsBreak(allbreakDetails));
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 350);
+      }
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
     }
-    const filterData = breakList.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log("filter", filterData);
-    dispatch(storesettingsBreak(filterData));
   };
 
   return (
@@ -198,7 +215,8 @@ export default function Break({ loading }) {
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField
                 placeholder="Search break..."
-                onSearch={handleSearch}
+                onChange={handleSearch}
+                value={search}
               />
             </Col>
             <Col

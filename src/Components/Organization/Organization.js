@@ -221,7 +221,7 @@ export default function Organization() {
         title="Create organization"
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        width="50%"
+        width="42%"
         styles={{ body: { padding: "0px 12px" } }}
       >
         <div>

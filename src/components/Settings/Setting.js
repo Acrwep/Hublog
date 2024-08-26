@@ -32,6 +32,7 @@ import {
   addteamMembers,
   storeActiveDesignation,
   storeActiveTeam,
+  storeBreakSearchValue,
   storeDesignation,
   storeDesignationSearchValue,
   storeRole,
@@ -94,6 +95,7 @@ const Settings = () => {
     dispatch(storeUserSearchValue(searchValue));
     dispatch(storeDesignationSearchValue(searchValue));
     dispatch(storeRoleSearchValue(searchValue));
+    dispatch(storeBreakSearchValue(searchValue));
     //call user get api function
     getUsersData();
   }, []);

@@ -148,7 +148,17 @@ const SettingsBreakSlice = createSlice({
     },
   },
 });
-
+const breaksearchvalue = null;
+const breakSearchValueSlice = createSlice({
+  name: "breaksearchvalue",
+  initialState: breaksearchvalue,
+  reducers: {
+    storeBreakSearchValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //role
 const roleSlice = createSlice({
   name: "role",
@@ -187,6 +197,7 @@ export const { storeDesignationSearchValue } =
   designationSearchValueSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
+export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 // export default teamMemberSlice.reducer;
@@ -203,5 +214,6 @@ export const designationSearchValueReducer =
   designationSearchValueSlice.reducer;
 export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;
+export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;

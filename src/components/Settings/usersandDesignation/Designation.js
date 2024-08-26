@@ -161,16 +161,6 @@ export default function Designation({ loading }) {
   useEffect(() => {
     if (loading === false) {
       setSearch(designationSearchValue);
-      //check searchvalue, because of, if its not empty call the designation search api with the already stored searchvalue
-      if (
-        designationSearchValue === "" ||
-        designationSearchValue === null ||
-        designationList.length < 1
-      ) {
-        return;
-      } else {
-        handleSearchfromUseEffect(designationSearchValue);
-      }
     }
   }, []);
 
@@ -302,19 +292,6 @@ export default function Designation({ loading }) {
   };
 
   //user search function
-  const handleSearchfromUseEffect = async (value) => {
-    const orgId = localStorage.getItem("organizationId");
-    try {
-      const response = await getDesignation(orgId, value);
-      console.log("user filter response", response);
-      const allDesignation = response?.data;
-      dispatch(storeDesignation(allDesignation));
-    } catch (error) {
-      const allDesignation = [];
-      dispatch(storeDesignation(allDesignation));
-    }
-  };
-
   const handleSearch = async (event) => {
     const value = event.target.value;
     setSearch(value);

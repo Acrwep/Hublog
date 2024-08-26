@@ -11,6 +11,7 @@ import {
   userAttendanceReducer,
   userBreakReducer,
   settingsBreakReducer,
+  breakSearchValueReducer,
   roleReducer,
   roleSearchValueReducer,
 } from "./slice";
@@ -31,5 +32,6 @@ export const store = configureStore({
     userAttendance: userAttendanceReducer,
     userBreak: userBreakReducer,
     settingsBreak: settingsBreakReducer,
+    breaksearchvalue: breakSearchValueReducer,
   },
 });

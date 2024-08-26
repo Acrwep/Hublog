@@ -289,9 +289,11 @@ export const getUserBreak = async (userId, startDate, endDate) => {
   }
 };
 //settings break
-export const getBreak = async () => {
+export const getBreak = async (name) => {
   try {
-    const response = await api.get("/api/Admin/GetBreakMaster");
+    const response = await api.get(
+      `/api/Admin/GetBreakMaster?seachQuery=${name ? name : ""}`
+    );
     return response;
   } catch (error) {
     throw error;
