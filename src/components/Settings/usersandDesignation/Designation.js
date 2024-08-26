@@ -24,13 +24,12 @@ import {
   storeActiveDesignation,
   storeDesignation,
   storeDesignationSearchValue,
-  storeDuplicateDesignation,
 } from "../../Redux/slice";
 import CommonSelectField from "../../Common/CommonSelectField";
 
 export default function Designation({ loading }) {
   const dispatch = useDispatch();
-  const designationList = useSelector((state) => state.duplicatedesignation);
+  const designationList = useSelector((state) => state.designation);
   const designationSearchValue = useSelector(
     (state) => state.designationsearchvalue
   );
@@ -163,7 +162,11 @@ export default function Designation({ loading }) {
     if (loading === false) {
       setSearch(designationSearchValue);
       //check searchvalue, because of, if its not empty call the designation search api with the already stored searchvalue
-      if (designationSearchValue === "" || designationSearchValue === null) {
+      if (
+        designationSearchValue === "" ||
+        designationSearchValue === null ||
+        designationList.length < 1
+      ) {
         return;
       } else {
         handleSearchfromUseEffect(designationSearchValue);
@@ -180,7 +183,6 @@ export default function Designation({ loading }) {
       console.log("Designation response", response.data);
       const allDesignation = response.data;
       dispatch(storeDesignation(allDesignation));
-      dispatch(storeDuplicateDesignation(allDesignation));
       //filter active designation
       const filterActivedesignation = allDesignation.filter(
         (f) => f.active === true
@@ -306,10 +308,10 @@ export default function Designation({ loading }) {
       const response = await getDesignation(orgId, value);
       console.log("user filter response", response);
       const allDesignation = response?.data;
-      dispatch(storeDuplicateDesignation(allDesignation));
+      dispatch(storeDesignation(allDesignation));
     } catch (error) {
       const allDesignation = [];
-      dispatch(storeDuplicateDesignation(allDesignation));
+      dispatch(storeDesignation(allDesignation));
     }
   };
 
@@ -323,11 +325,11 @@ export default function Designation({ loading }) {
     try {
       const response = await getDesignation(orgId, value);
       const allDesignation = response.data;
-      dispatch(storeDuplicateDesignation(allDesignation));
+      dispatch(storeDesignation(allDesignation));
     } catch (error) {
       if (error) {
         const allDesignation = [];
-        dispatch(storeDuplicateDesignation(allDesignation));
+        dispatch(storeDesignation(allDesignation));
         setTimeout(() => {
           setTableLoading(false);
         }, 350);

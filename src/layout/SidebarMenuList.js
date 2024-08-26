@@ -131,6 +131,7 @@ const SidebarMenuList = () => {
               "User Detail",
               "Settings",
               "Billing",
+              "Organization",
             ].includes(item.title)
               ? false
               : true

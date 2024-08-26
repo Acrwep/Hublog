@@ -87,6 +87,7 @@ import Downloads from "../Components/Login/downloads";
 import Demo from "../Components/Typescript/demo.tsx";
 //licence
 import Billing from "../Components/Licence/Billing.js";
+import Organization from "../Components/Organization/Organization.js";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -584,6 +585,7 @@ function SidebarMenu() {
 
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/billing" element={<Billing />} />
+                <Route path="/organization" element={<Organization />} />
               </Routes>
             </Content>
           </Layout>

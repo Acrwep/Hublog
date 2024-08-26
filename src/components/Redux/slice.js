@@ -31,6 +31,16 @@ const teamMemberSlice = createSlice({
   },
 });
 
+const activeTeamSlice = createSlice({
+  name: "activeteam",
+  initialState,
+  reducers: {
+    storeActiveTeam(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //users
 const usersSlice = createSlice({
   name: "users",
@@ -61,17 +71,6 @@ const designationSlice = createSlice({
   initialState,
   reducers: {
     storeDesignation(state, action) {
-      state = action.payload;
-      return state;
-    },
-  },
-});
-
-const duplicateDesignationSlice = createSlice({
-  name: "duplicatedesignation",
-  initialState,
-  reducers: {
-    storeDuplicateDesignation(state, action) {
       state = action.payload;
       return state;
     },
@@ -177,12 +176,12 @@ const roleSearchValueSlice = createSlice({
 
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
+export const { storeActiveTeam } = activeTeamSlice.actions;
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
 export const { storeUsers } = usersSlice.actions;
 export const { storeUserSearchValue } = userSearchValueSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
-export const { storeDuplicateDesignation } = duplicateDesignationSlice.actions;
 export const { storeActiveDesignation } = activeDesignationSlice.actions;
 export const { storeDesignationSearchValue } =
   designationSearchValueSlice.actions;
@@ -193,12 +192,12 @@ export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 // export default teamMemberSlice.reducer;
 
 export const teamMemberReducer = teamMemberSlice.reducer;
+export const activeTeamReducer = activeTeamSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
 export const usersReducer = usersSlice.reducer;
 export const userSearchValueReducer = userSearchValueSlice.reducer;
 export const designationReducer = designationSlice.reducer;
-export const duplicateDesignationReducer = duplicateDesignationSlice.reducer;
 export const activeDesignationReducer = activeDesignationSlice.reducer;
 export const designationSearchValueReducer =
   designationSearchValueSlice.reducer;

@@ -31,6 +31,7 @@ const Users = ({ loading }) => {
   const designationList = useSelector((state) => state.designation);
   const activeDesignationList = useSelector((state) => state.activedesignation);
   const teamList = useSelector((state) => state.teams);
+  const activeTeamList = useSelector((state) => state.activeteams);
   const [userId, setUserId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
@@ -80,24 +81,16 @@ const Users = ({ loading }) => {
     },
     { title: "Email", dataIndex: "email", key: "email", width: 320 },
     {
-      title: "Team",
-      dataIndex: "teamId",
-      key: "teamId",
-      width: 220,
-      render: (text, record) => {
-        const findTeam = teamList.find((f) => f.id === text);
-        return <p>{findTeam.name} </p>;
-      },
+      title: "Designation",
+      dataIndex: "designationName",
+      key: "designationName",
+      width: 260,
     },
     {
-      title: "Designation",
-      dataIndex: "designationId",
-      key: "designationId",
-      width: 260,
-      render: (text, record) => {
-        const findDesignation = designationList.find((f) => f.id === text);
-        return <p>{findDesignation.name} </p>;
-      },
+      title: "Team",
+      dataIndex: "teamName",
+      key: "teamName",
+      width: 220,
     },
     {
       title: "Role",
@@ -215,7 +208,11 @@ const Users = ({ loading }) => {
     if (loading === false) {
       setSearch(userSearchValue);
       //check searchvalue, because of if its not empty call the user search api with the already stored searchvalue
-      if (userSearchValue === "" || userSearchValue === null) {
+      if (
+        userSearchValue === "" ||
+        userSearchValue === null ||
+        usersList.length < 1
+      ) {
         return;
       } else {
         handleSearchfromUseEffect(userSearchValue);
@@ -675,7 +672,7 @@ const Users = ({ loading }) => {
                 setTeam(value);
                 setTeamError(selectValidator(value));
               }}
-              options={teamList}
+              options={activeTeamList}
               value={team}
               error={teamError}
               mandatory

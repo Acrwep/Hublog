@@ -31,9 +31,9 @@ import AlertRules from "./AlertRules/AlertRules";
 import {
   addteamMembers,
   storeActiveDesignation,
+  storeActiveTeam,
   storeDesignation,
   storeDesignationSearchValue,
-  storeDuplicateDesignation,
   storeRole,
   storeRoleSearchValue,
   storesettingsBreak,
@@ -92,8 +92,8 @@ const Settings = () => {
     //null the usersearchvalue in redux
     const searchValue = "";
     dispatch(storeUserSearchValue(searchValue));
-    dispatch(storeRoleSearchValue(searchValue));
     dispatch(storeDesignationSearchValue(searchValue));
+    dispatch(storeRoleSearchValue(searchValue));
     //call user get api function
     getUsersData();
   }, []);
@@ -121,7 +121,6 @@ const Settings = () => {
       const response = await getDesignation(orgId);
       const designationList = response.data;
       dispatch(storeDesignation(designationList));
-      dispatch(storeDuplicateDesignation(designationList));
       //filter active designation
       const filterActivedesignation = designationList.filter(
         (f) => f.active === true
@@ -143,7 +142,9 @@ const Settings = () => {
       const response = await getTeams(orgId);
       const teamList = response.data;
       dispatch(storeTeams(teamList));
-
+      //filter active teams
+      const filterActiveteams = teamList.filter((f) => f.active === true);
+      dispatch(storeActiveTeam(filterActiveteams));
       //getusersByteamId api
       try {
         const response = await getUsersByTeamId(teamList[0].id);

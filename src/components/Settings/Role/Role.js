@@ -47,7 +47,11 @@ export default function Role({ loading }) {
     if (loading === false) {
       setSearch(roleSearchValue);
       //check searchvalue, because of if its not empty call the user search api with the already stored searchvalue
-      if (roleSearchValue === "" || roleSearchValue === null) {
+      if (
+        roleSearchValue === "" ||
+        roleSearchValue === null ||
+        roleList.length < 1
+      ) {
         return;
       } else {
         handleSearchfromUseEffect(roleSearchValue);

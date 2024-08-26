@@ -23,6 +23,7 @@ import { VscGraphLine } from "react-icons/vsc";
 import { FiActivity } from "react-icons/fi";
 import { TbTicket } from "react-icons/tb";
 import { RiBillLine } from "react-icons/ri";
+import { VscOrganization } from "react-icons/vsc";
 
 export const SideMenuConfig = {
   1: {
@@ -131,5 +132,10 @@ export const SideMenuConfig = {
     title: "Billing",
     icon: <RiBillLine size={17} />,
     path: "billing",
+  },
+  14: {
+    title: "Organization",
+    icon: <VscOrganization size={17} />,
+    path: "organization",
   },
 };

@@ -1,0 +1,55 @@
+.org_totalorgheading_container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+.org_totalheading {
+  font-weight: 500;
+  font-size: 16px;
+}
+.org_totalcount {
+  font-size: 24px;
+  font-weight: 700;
+  color: #25a17d;
+  margin-left: 2px;
+}
+.org_createorgbutton_container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.org_tableheading {
+  font-weight: 600;
+  font-size: 17px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.orgtable_urlsContainer {
+  color: #2d90fa;
+  text-decoration: underline;
+}
+.plandetails_icon {
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+.plandetails_icon:hover {
+  transform: scale(1.1);
+}
+.org_createbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 35px;
+  width: 140px;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-top: 30px;
+}
+.org_createbutton:hover {
+  background-color: #009737;
+}
+.org_createbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
