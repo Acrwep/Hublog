@@ -53,6 +53,17 @@ const usersSlice = createSlice({
   },
 });
 
+const usersForTeamstabSlice = createSlice({
+  name: "usersforteamstab",
+  initialState,
+  reducers: {
+    storeUsersForTeamsTab(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const usersearchvalue = null;
 const userSearchValueSlice = createSlice({
   name: "usersearchvalue",
@@ -190,6 +201,7 @@ export const { storeActiveTeam } = activeTeamSlice.actions;
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
 export const { storeUsers } = usersSlice.actions;
+export const { storeUsersForTeamsTab } = usersForTeamstabSlice.actions;
 export const { storeUserSearchValue } = userSearchValueSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
 export const { storeActiveDesignation } = activeDesignationSlice.actions;
@@ -207,6 +219,7 @@ export const activeTeamReducer = activeTeamSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
 export const usersReducer = usersSlice.reducer;
+export const usersforteamstabReducer = usersForTeamstabSlice.reducer;
 export const userSearchValueReducer = userSearchValueSlice.reducer;
 export const designationReducer = designationSlice.reducer;
 export const activeDesignationReducer = activeDesignationSlice.reducer;

@@ -41,6 +41,7 @@ import {
   storeTeams,
   storeUsers,
   storeUserSearchValue,
+  storeUsersForTeamsTab,
 } from "../Redux/slice";
 import { CommonToaster } from "../Common/CommonToaster";
 
@@ -108,8 +109,9 @@ const Settings = () => {
       const response = await getUsers(orgId);
       const usersList = response.data;
       dispatch(storeUsers(usersList));
+      dispatch(storeUsersForTeamsTab(usersList));
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
         getDesignationData();
@@ -147,16 +149,6 @@ const Settings = () => {
       //filter active teams
       const filterActiveteams = teamList.filter((f) => f.active === true);
       dispatch(storeActiveTeam(filterActiveteams));
-      //getusersByteamId api
-      try {
-        const response = await getUsersByTeamId(teamList[0].id);
-        const teamMembersList = response?.data?.team?.users;
-        dispatch(addteamMembers(teamMembersList));
-      } catch (error) {
-        const teamMembersList = [];
-        dispatch(addteamMembers(teamMembersList));
-        CommonToaster(error?.message, "error");
-      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {

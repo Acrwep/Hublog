@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Tabs, Modal, Button, Space, Dropdown } from "antd";
 import CommonInputField from "../../Common/CommonInputField";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
-import { addteamMembers, storeTeams } from "../../Redux/slice";
+import { storeActiveTeam, storeTeams } from "../../Redux/slice";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles.css";
 import CommonAddButton from "../../Common/CommonAddButton";
@@ -22,20 +22,21 @@ import Loader from "../../Common/Loader";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { storeUsers } from "../../Redux/slice";
+import { storeUsers, storeUsersForTeamsTab } from "../../Redux/slice";
 import CommonWarningModal from "../../Common/CommonWarningModal";
 
 const Team = ({ loading }) => {
   const dispatch = useDispatch();
   const teamList = useSelector((state) => state.teams);
-  const teamMembersList = useSelector((state) => state.teamMembers);
-  const allUsers = useSelector((state) => state.users);
+  const allUsersforteamsTab = useSelector((state) => state.usersforteamstabs);
+  //usestates
   const [teamId, setTeamId] = useState("");
   const [otherUsers, setOtherUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeTeamModal, setChangeTeamModal] = useState(false);
   const [addTeamModal, setAddTeamModal] = useState(false);
   const [teamName, setTeamName] = useState("");
+  const [teamMembersList, setTeamMembersList] = useState([]);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [description, setDescription] = useState("");
@@ -55,7 +56,8 @@ const Team = ({ loading }) => {
     if (loading === false) {
       setTeamId(teamList[0].id);
       setTeamName(teamList[0].name);
-      getUsersData(teamList[0].id, "dispatch");
+      getUsersDataByTeamId(teamList[0].id);
+      getUsersData(teamList[0].id, "notdispatch");
     }
   }, [loading]);
 
@@ -65,11 +67,11 @@ const Team = ({ loading }) => {
     try {
       const response = await getUsersByTeamId(teamid);
       const teamMembersList = response?.data?.team?.users;
-      dispatch(addteamMembers(teamMembersList));
+      setTeamMembersList(teamMembersList);
     } catch (error) {
       CommonToaster(error?.message, "error");
       const teamMembersList = [];
-      dispatch(addteamMembers(teamMembersList));
+      setTeamMembersList(teamMembersList);
     } finally {
       setTimeout(() => {
         setTeamMemberLoading(false);
@@ -88,6 +90,9 @@ const Team = ({ loading }) => {
       const allTeams = response.data;
       //store teamlist to redux
       dispatch(storeTeams(allTeams));
+      //filter active teams
+      const filterActiveteams = allTeams.filter((f) => f.active === true);
+      dispatch(storeActiveTeam(filterActiveteams));
 
       const selectedTeam = allTeams.find((f) => f.id === teamId);
       setTeamName(selectedTeam?.name);
@@ -233,7 +238,7 @@ const Team = ({ loading }) => {
   //get uer api function
   const getUsersData = async (teamid, dispatchStatus) => {
     const orgId = localStorage.getItem("organizationId");
-    const others = allUsers.filter((f) => {
+    const others = allUsersforteamsTab.filter((f) => {
       // Return true if the user's teamId is different from currentTeamId
       return f.teamId !== teamid;
     });
@@ -246,6 +251,7 @@ const Team = ({ loading }) => {
         //store user list to redux only when team create or update
         if (dispatchStatus === "dispatch") {
           dispatch(storeUsers(allUsers));
+          dispatch(storeUsersForTeamsTab(allUsers));
         }
 
         //take other teammembers
@@ -542,7 +548,7 @@ const Team = ({ loading }) => {
           )}
           {/* addteam modal */}
           <Modal
-            title="Add Team"
+            title={edit ? "Update Team" : "Add Team"}
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}

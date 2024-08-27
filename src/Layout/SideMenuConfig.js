@@ -128,14 +128,14 @@ export const SideMenuConfig = {
     icon: <MdSettings size={17} />,
     path: "settings",
   },
-  13: {
-    title: "Billing",
-    icon: <RiBillLine size={17} />,
-    path: "billing",
-  },
-  14: {
-    title: "Organization",
-    icon: <VscOrganization size={17} />,
-    path: "organization",
-  },
+  // 13: {
+  //   title: "Billing",
+  //   icon: <RiBillLine size={17} />,
+  //   path: "billing",
+  // },
+  // 14: {
+  //   title: "Organization",
+  //   icon: <VscOrganization size={17} />,
+  //   path: "organization",
+  // },
 };

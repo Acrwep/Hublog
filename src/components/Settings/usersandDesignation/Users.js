@@ -22,7 +22,11 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { createUser, getUsers, updateUser } from "../../APIservice.js/action";
 import { useDispatch, useSelector } from "react-redux";
-import { storeUsers, storeUserSearchValue } from "../../Redux/slice";
+import {
+  storeUsers,
+  storeUserSearchValue,
+  storeUsersForTeamsTab,
+} from "../../Redux/slice";
 
 const Users = ({ loading }) => {
   const dispatch = useDispatch();
@@ -82,15 +86,23 @@ const Users = ({ loading }) => {
     { title: "Email", dataIndex: "email", key: "email", width: 320 },
     {
       title: "Designation",
-      dataIndex: "designationName",
-      key: "designationName",
+      dataIndex: "designationId",
+      key: "designationId",
       width: 260,
+      render: (text, record) => {
+        const findDesign = activeDesignationList.find((f) => f.id === text);
+        return <p>{findDesign.name} </p>;
+      },
     },
     {
       title: "Team",
-      dataIndex: "teamName",
-      key: "teamName",
+      dataIndex: "teamId",
+      key: "teamId",
       width: 220,
+      render: (text, record) => {
+        const findTeam = teamList.find((f) => f.id === text);
+        return <p>{findTeam.name} </p>;
+      },
     },
     {
       title: "Role",
@@ -229,6 +241,7 @@ const Users = ({ loading }) => {
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
+      dispatch(storeUsersForTeamsTab(allUsers));
       //null the search value
       const searchValue = "";
       dispatch(storeUserSearchValue(searchValue));
@@ -507,7 +520,7 @@ const Users = ({ loading }) => {
       )}
       {/* user creation drawer */}
       <Modal
-        title="Add user"
+        title={edit ? "Update User" : "Add User"}
         open={open}
         onOk={handleSubmit}
         onCancel={onClose}
