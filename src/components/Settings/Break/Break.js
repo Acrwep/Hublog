@@ -245,7 +245,7 @@ export default function Break({ loading }) {
 
           {/* addrole modal */}
           <Modal
-            title="Add Break"
+            title={edit ? "Update Break" : "Add Break"}
             open={isModalOpen}
             onOk={handleCreateBreak}
             onCancel={handleCancel}

@@ -355,7 +355,7 @@ export default function Designation({ loading }) {
           />
           {/* adddesignation modal */}
           <Modal
-            title="Add Designation"
+            title={edit ? "Update Designation" : "Add Designation"}
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}

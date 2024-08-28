@@ -87,8 +87,7 @@ const Login = () => {
     } catch (error) {
       console.log("login error", error);
       CommonToaster(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again later.",
+        error.response?.data || "Something went wrong. Please try again later.",
         "error"
       );
     } finally {
