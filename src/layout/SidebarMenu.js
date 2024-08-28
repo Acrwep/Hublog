@@ -36,7 +36,7 @@ import {
   DownOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { BiSpreadsheet } from "react-icons/bi";
 //login and signup
 import Signup from "../Components/Signup/Signup.tsx";
 import Login from "../Components/Login/Login";
@@ -380,6 +380,14 @@ function SidebarMenu() {
             {loginUserInfo.email ? loginUserInfo.email : ""}
           </p>
         </div>
+      </div>
+      <Divider style={{ margin: "0" }} />
+      <div
+        className="headerlogoutmenu_logiconContainer"
+        onClick={() => navigation("/billing")}
+      >
+        <BiSpreadsheet size={25} style={{ marginRight: "27px" }} />
+        <p className="header_logoutmenulogout">Billing</p>
       </div>
       <Divider style={{ margin: "0" }} />
       <div className="headerlogoutmenu_logiconContainer" onClick={handleLogout}>

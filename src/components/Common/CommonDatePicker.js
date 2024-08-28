@@ -36,6 +36,7 @@ export default function CommonDatePicker({
           placeholder={placeholder}
           status={error ? "error" : ""}
           style={{ width: "100%" }}
+          allowClear={false}
         />
       </Space>
       <div

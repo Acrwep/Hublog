@@ -93,24 +93,16 @@ const SidebarMenuList = () => {
                 key={subItem.path}
                 icon={subItem.icon}
                 disabled={
-                  [
-                    "Timeline",
-                    "Activity",
-                    "Productivity",
-                    "App $ URLs",
-                    "Wellness",
-                  ].includes(subItem.title)
+                  ["Timeline", "Activity", "Productivity", "Wellness"].includes(
+                    subItem.title
+                  )
                     ? true
                     : false
                 }
               >
-                {[
-                  "Timeline",
-                  "Activity",
-                  "Productivity",
-                  "App $ URLs",
-                  "Wellness",
-                ].includes(subItem.title) ? (
+                {["Timeline", "Activity", "Productivity", "Wellness"].includes(
+                  subItem.title
+                ) ? (
                   <Link style={{ cursor: "default" }}>{subItem.title}</Link>
                 ) : (
                   <Link to={`/${subItem.path}`}>{subItem.title}</Link>
@@ -130,7 +122,6 @@ const SidebarMenuList = () => {
               "Notebook",
               "User Detail",
               "Settings",
-              "Billing",
               "Organization",
             ].includes(item.title)
               ? false

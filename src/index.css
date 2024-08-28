@@ -62,6 +62,13 @@ h6 {
 .ant-input-suffix {
   color: #808080a6;
 }
+/* antd picker styles */
+/* .ant-picker-outlined:hover {
+  border-color: #25a17d !important;
+}
+.ant-picker-outlined:focus-within {
+  box-shadow: 0 0 0 2px #25a17e48 !important;
+} */
 /* tab color change */
 .ant-tabs-ink-bar {
   border-bottom: 2px solid #25a17d;

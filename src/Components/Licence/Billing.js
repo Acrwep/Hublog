@@ -7,7 +7,7 @@ import { GiCheckMark } from "react-icons/gi";
 import { MdCurrencyRupee, MdOutlineAdd } from "react-icons/md";
 import { FaMinus } from "react-icons/fa6";
 import { FaRegArrowAltCircleUp } from "react-icons/fa";
-import { RiBillLine } from "react-icons/ri";
+import { BiSpreadsheet } from "react-icons/bi";
 
 export default function Billing() {
   const columns = [
@@ -79,7 +79,7 @@ export default function Billing() {
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
-          <RiBillLine size={20} />
+          <BiSpreadsheet size={20} />
         </div>
         <h2 className="allpage_mainheadings">Billing</h2>
       </div>

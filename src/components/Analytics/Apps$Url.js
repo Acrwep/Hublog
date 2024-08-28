@@ -19,23 +19,31 @@ const Apps$Url = () => {
   const barchartoptions = {
     chart: {
       type: "bar",
-      height: 350,
+      height: 990,
     },
     plotOptions: {
       bar: {
-        borderRadius: 4,
+        borderRadius: 0,
         borderRadiusApplication: "end",
         horizontal: true,
       },
     },
-    colors: ["#00952e"],
-    // tooltip: {
-    //   custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-    //     return `<div class="arrow_box">
-    //       <span>${w.globals.labels[dataPointIndex]}</span>
-    //       </div>`;
-    //   },
-    // },
+    colors: ["#25a17d"],
+    tooltip: {
+      enabled: true,
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        const xValue = w.globals.labels[dataPointIndex];
+        const yValue = series[seriesIndex][dataPointIndex];
+        const color = w.config.colors[seriesIndex]; // Get the color of the series
+
+        return `
+          <div style="padding: 5px 9px;">
+            <span style="display:inline-block; width: 10px; height: 10px; background-color: ${color}; border-radius: 50%; margin-right: 5px;"></span>
+            <strong>${xValue}</strong>: ${yValue}%
+          </div>
+        `;
+      },
+    },
   };
 
   const barchartseries = [
@@ -167,7 +175,7 @@ const Apps$Url = () => {
                 options={barchartoptions}
                 series={barchartseries}
                 type="bar"
-                height={320}
+                height={250}
               />
             </div>
           </Col>
@@ -188,7 +196,7 @@ const Apps$Url = () => {
                 options={barchartoptions}
                 series={barchartseries}
                 type="bar"
-                height={320}
+                height={250}
               />
             </div>
           </Col>
