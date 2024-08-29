@@ -19,7 +19,11 @@ export default function CommonCalendar({
         {mandatory ? <p style={{ color: "red", marginLeft: "4px" }}>*</p> : ""}
       </div>
       <DatePicker
-        className="commonInputfield"
+        className={
+          error === "" || error === null || error === undefined
+            ? "commonInputfield"
+            : "commonInputfield_error"
+        }
         format={dateFormat}
         onChange={onChange}
         mandatory={mandatory}

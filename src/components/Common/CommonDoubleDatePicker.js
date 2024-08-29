@@ -22,6 +22,7 @@ export default function CommonDoubleDatePicker({ onChange, value }) {
     <div>
       <Space direction="vertical" size={12}>
         <RangePicker
+          className="commonInputfield"
           value={value ? [dayJs(value[0]), dayJs(value[1])] : null}
           onChange={handleRangePickerChange}
           disabledDate={disabledDate}

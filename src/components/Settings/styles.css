@@ -138,6 +138,28 @@
   width: 100%;
   margin-top: 5px;
 }
+.users_passwordinputfield:hover {
+  border-color: #25a17d !important;
+}
+.users_passwordinputfield:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17;
+}
+.users_passwordinputfielderror {
+  height: 32px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 5px;
+}
+.users_passwordinputfielderror:hover {
+  border-color: #ffa39e !important;
+}
 .users_submitbutton {
   color: #fff;
   background-color: #25a17d;

@@ -28,6 +28,11 @@ export default function CommonDatePicker({
       </div>
       <Space direction="vertical" style={{ width: "100%" }}>
         <DatePicker
+          className={
+            error === "" || error === null || error === undefined
+              ? "commonInputfield"
+              : "commonInputfield_error"
+          }
           picker={month === "true" ? "month" : "date"}
           onChange={handleChange}
           value={value ? dayJs(value) : null}

@@ -48,6 +48,7 @@ export default function Designation({ loading }) {
   const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
+  const [validationTrigger, setValidationTrigger] = useState(false);
 
   const columns = [
     { title: "Name", dataIndex: "name", key: "name", width: "200px" },
@@ -199,6 +200,7 @@ export default function Designation({ loading }) {
     setStatus(1);
     setIsModalOpen(false);
     setEdit(false);
+    setValidationTrigger(false);
   };
 
   const handleCancel = () => {
@@ -206,6 +208,8 @@ export default function Designation({ loading }) {
   };
 
   const handleOk = async () => {
+    setValidationTrigger(true);
+
     const nameValidate = descriptionValidator(name);
     const descriptionValidate = descriptionValidator(description);
 
@@ -369,7 +373,9 @@ export default function Designation({ loading }) {
               label="Name"
               onChange={(e) => {
                 setName(e.target.value);
-                setNameError(descriptionValidator(e.target.value));
+                if (validationTrigger) {
+                  setNameError(descriptionValidator(e.target.value));
+                }
               }}
               value={name}
               error={nameError}
@@ -380,7 +386,9 @@ export default function Designation({ loading }) {
               label="Description"
               onChange={(e) => {
                 setDescription(e.target.value);
-                setDescriptionError(descriptionValidator(e.target.value));
+                if (validationTrigger) {
+                  setDescriptionError(descriptionValidator(e.target.value));
+                }
               }}
               value={description}
               error={descriptionError}

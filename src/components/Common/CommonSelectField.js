@@ -51,7 +51,11 @@ export default function CommonSelectField({
         ""
       )}
       <Select
-        className="commonSelectfield"
+        className={
+          error === "" || error === null || error === undefined
+            ? "commonSelectfield"
+            : ""
+        }
         style={{ width: "100%" }}
         onChange={onChange}
         options={options.map((item) => ({

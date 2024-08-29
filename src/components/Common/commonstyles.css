@@ -14,15 +14,24 @@
   width: 100%;
 }
 .commonInputfield:hover {
-  border-color: #d9d9d9;
+  /* border-color: #d9d9d9; */
+  border-color: #25a17d !important;
 }
-/* .commonInputfield:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-} */
+.commonInputfield:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17;
+}
+.commonInputfield_error {
+  height: 32px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+}
 .commoninput_errormessagediv {
   position: absolute;
   left: 0%;
@@ -36,8 +45,8 @@
   position: absolute;
   transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
 }
-.commonSelectfield:hover {
-  border-color: #009737 !important;
+.commonSelectfield:hover .ant-select-selector {
+  border-color: #25a17d !important;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .commonSelectfield {
@@ -51,15 +60,12 @@
     margin-bottom: 14px;
   }
 }
-.commonsearchbar:hover {
-  border-color: #d9d9d9;
+.commonsearchbar:hover .ant-input-outlined:hover {
+  border-color: #25a17d !important;
 }
-.commonsearchbar:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+.commonsearchbar .ant-input-outlined:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e6b !important;
 }
 .commonfield_label {
   font-weight: 500 !important;

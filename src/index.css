@@ -90,13 +90,6 @@ select:focus {
 .ant-input-suffix {
   color: #808080a6;
 }
-.ant-input-outlined:hover {
-  border-color: #25a17d !important;
-}
-.ant-input-outlined:focus-within {
-  border-color: #25a17d !important;
-  box-shadow: 0 0 0 0.2rem #25a17e69;
-}
 /* antd search styles */
 .ant-input-search
   > .ant-input-group
@@ -105,22 +98,6 @@ select:focus {
   color: #25a17d !important;
 }
 .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
-  border-color: #25a17d !important;
-}
-/* antd picker styles */
-.ant-select-selector:hover {
-  border-color: #25a17d !important;
-}
-.ant-select-selector:focus-within {
-  box-shadow: 0 0 0 0.2rem #25a17e69;
-}
-.ant-picker-outlined:hover {
-  border-color: #25a17d !important;
-}
-.ant-picker-outlined:focus-within {
-  box-shadow: 0 0 0 2px #25a17e6b !important;
-}
-.ant-picker-outlined:focus-within {
   border-color: #25a17d !important;
 }
 .ant-picker-header-view button:hover {

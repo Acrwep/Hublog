@@ -575,7 +575,11 @@ const Users = ({ loading }) => {
               Password <span style={{ color: "red" }}>*</span>
             </label>
             <Input.Password
-              className="users_passwordinputfield"
+              className={
+                passwordError
+                  ? "users_passwordinputfielderror"
+                  : "users_passwordinputfield"
+              }
               visibilityToggle={{
                 visible: passwordVisible,
                 onVisibleChange: setPasswordVisible,

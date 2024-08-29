@@ -51,8 +51,12 @@ const CommonInputField = ({
         </div>
       )}
       <Input
-        // className="commonInputfield"
-        className={`commonInputfield ${className}`}
+        // className={`commonInputfield ${className}`}
+        className={`${
+          error === "" || error === null || error === undefined
+            ? "commonInputfield"
+            : "commonInputfield_error"
+        } ${className}`}
         label={label}
         placeholder={placeholder}
         onChange={onChange}
