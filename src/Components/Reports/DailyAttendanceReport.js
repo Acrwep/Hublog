@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -10,125 +10,208 @@ import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import CommonAvatar from "../Common/CommonAvatar";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
+import { CommonToaster } from "../Common/CommonToaster";
+import {
+  getDailyAttendanceReport,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
+import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
+import moment from "moment";
 
 const DailyAttendanceReport = () => {
   const navigation = useNavigate();
+
   const [date, setDate] = useState(new Date());
-  const teamList = [{ id: 1, name: "Operation" }];
-  const userList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Karthick" },
-  ];
-  const data = [
-    {
-      key: "1",
-      employee: "Balaji",
-      shift: "",
-      arrival: "",
-      in: "09:15 AM",
-      out: "06:32 PM",
-      workingtime: "06h:23m:15s",
-      onlinetime: "05h:29m:31s",
-      remarks: "Present",
-    },
-    {
-      key: "2",
-      employee: "Rubi",
-      shift: "",
-      arrival: "",
-      in: "09:15 AM",
-      out: "06:32 PM",
-      workingtime: "06h:23m:15s",
-      onlinetime: "05h:29m:31s",
-      remarks: "Present",
-    },
-    {
-      key: "3",
-      employee: "Vickey",
-      shift: "",
-      arrival: "",
-      in: "09:15 AM",
-      out: "06:32 PM",
-      workingtime: "06h:23m:15s",
-      onlinetime: "05h:29m:31s",
-      remarks: "Present",
-    },
-    {
-      key: "4",
-      employee: "Yogi",
-      shift: "",
-      arrival: "",
-      in: "09:15 AM",
-      out: "06:32 PM",
-      workingtime: "06h:23m:15s",
-      onlinetime: "05h:29m:31s",
-      remarks: "Present",
-    },
-  ];
+  const [teamList, setTeamList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [organizationId, setOrganizationId] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const columns = [
     {
       title: "Employee",
       dataIndex: "employee",
       key: "employee",
-      width: "170px",
+      width: 140,
       fixed: "left",
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarfontSize="17px" itemName={record.employee} />
-            <p className="reports_avatarname">{record.employee}</p>
+            <CommonAvatar avatarfontSize="17px" itemName={text} />
+            <p className="reports_avatarname">{text}</p>
           </div>
         );
       },
     },
     {
-      title: "Shift",
-      dataIndex: "shift",
-      key: "shift",
-      width: "120px",
-    },
-    {
-      title: "Arrival",
-      dataIndex: "arrival",
-      key: "arrival",
-      width: "120px",
-    },
-    {
       title: "In",
-      dataIndex: "in",
-      key: "in",
-      width: "120px",
+      dataIndex: "inTime",
+      key: "inTime",
+      width: 90,
+      render: (text, record) => {
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <HiArrowNarrowDown style={{ marginRight: "6px" }} size={16} />
+            <p>{moment(text).format("hh:mm A")}</p>
+          </div>
+        );
+      },
     },
     {
       title: "Out",
       dataIndex: "out",
       key: "out",
-      width: "120px",
+      width: 90,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <HiArrowNarrowUp style={{ marginRight: "6px" }} size={16} />
+            <p>{moment(text).format("hh:mm A")}</p>
+          </div>
+        );
+      },
     },
     {
       title: "Working time",
-      dataIndex: "workingtime",
-      key: "workingtime",
-      width: "150px",
-    },
-    {
-      title: "Online time",
-      dataIndex: "onlinetime",
-      key: "onlinetime",
-      width: "150px",
-    },
-    {
-      title: "Remarks",
-      dataIndex: "remarks",
-      key: "remarks",
-      width: "150px",
+      dataIndex: "totalTime",
+      key: "totalTime",
+      width: "190px",
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
+        return <p>{moment(text).format("HH[h]:mm[m]")}</p>;
+      },
     },
   ];
 
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
+  useEffect(() => {
+    getTeamData();
+  }, []);
+
+  const getTeamData = async () => {
+    setLoading(true);
+    try {
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      setOrganizationId(orgId);
+      const response = await getTeams(orgId);
+      console.log("teamsssssss response", response.data);
+      const teamList = response.data;
+      setTeamList(teamList);
+      setTeamId(null);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData();
+      }, 500);
+    }
+  };
+
+  const getUsersData = async () => {
+    let userIdd = null;
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId);
+      console.log("users response", response.data);
+      const usersList = response?.data;
+
+      //merge user fullname and lastname in full_name property
+      const updateUserList = usersList.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      console.log("update user list", updateUserList);
+
+      setUserList(updateUserList);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getAttendanceData(userId, teamId, orgId, date);
+      }, 500);
+    }
+  };
+
+  const getAttendanceData = async (user, team, orgId, selectedDate) => {
+    setLoading(true);
+    const payload = {
+      ...(user && { userId: user }),
+      ...(team && { teamId: team }),
+      organizationId: parseInt(orgId),
+      date: moment(selectedDate).format("YYYY-MM-DD"),
+    };
+    console.log("payloadddd", payload);
+    try {
+      const response = await getDailyAttendanceReport(payload);
+      console.log("daily attendance report response", response.data);
+      const ScreenShotsData = response.data;
+      const reveseData = ScreenShotsData.reverse();
+
+      setData(reveseData);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+
+  const handleTeam = async (value) => {
+    console.log("clicked team", value);
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      console.log("user by teamId response", response?.data);
+      const teamMembersList = response?.data?.team?.users;
+      console.log("team members", teamMembersList);
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+      const updatedArr = teamMembersList.map(
+        ({ firstName, lastName, userId, ...rest }) => ({
+          first_Name: firstName,
+          last_Name: lastName,
+          id: userId,
+          ...rest,
+        })
+      );
+
+      //merge user fullname and lastname in full_name property
+      const adddFullName = updatedArr.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+
+      setUserList(adddFullName);
+      const userIdd = null;
+      setUserId(userIdd);
+      getAttendanceData(userIdd, value, organizationId, date);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
+  const onDateChange = (value) => {
+    setDate(value);
+    getAttendanceData(userId, teamId, organizationId, value);
+  };
+
+  const handleUser = (value) => {
+    console.log("userIdddd", value);
+    setUserId(value);
+    getAttendanceData(value, teamId, organizationId, date);
   };
 
   return (
@@ -154,10 +237,20 @@ const DailyAttendanceReport = () => {
             style={{ display: "flex" }}
           >
             <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+              />
             </div>
             <div style={{ width: "170px" }}>
-              <CommonSelectField options={userList} placeholder="Select User" />
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />
             </div>
           </div>
         </Col>
@@ -192,10 +285,11 @@ const DailyAttendanceReport = () => {
         <CommonTable
           columns={columns}
           dataSource={data}
-          scroll={{ x: 1200 }}
-          dataPerPage={4}
+          scroll={{ x: 600 }}
+          dataPerPage={10}
           checkBox="false"
           bordered="true"
+          loading={loading}
         />
       </div>
     </div>

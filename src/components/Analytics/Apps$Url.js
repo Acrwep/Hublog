@@ -28,6 +28,9 @@ const Apps$Url = () => {
         horizontal: true,
       },
     },
+    dataLabels: {
+      enabled: false, // Disable the value labels on the bars
+    },
     colors: ["#25a17d"],
     tooltip: {
       enabled: true,
@@ -147,7 +150,7 @@ const Apps$Url = () => {
 
       <div style={{ marginTop: "25px" }}>
         <Row gutter={16}>
-          <Col xs={24} sm={24} md={12} lg={12}>
+          {/* <Col xs={24} sm={24} md={24} lg={24}>
             <div className="devices_chartsContainer">
               <p
                 className="devices_chartheading"
@@ -162,15 +165,10 @@ const Apps$Url = () => {
                 labelsfontSize="17px"
               />
             </div>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12}>
+          </Col> */}
+          <Col span={24}>
             <div className="userproductivity_topContainers">
-              <p
-                className="devices_chartheading"
-                style={{ marginBottom: "20px" }}
-              >
-                Application Usage
-              </p>
+              <p className="devices_chartheading">Application Usage</p>
               <ReactApexChart
                 options={barchartoptions}
                 series={barchartseries}
@@ -186,12 +184,7 @@ const Apps$Url = () => {
         <Row>
           <Col xs={24} sm={24} md={12} lg={12}>
             <div className="userproductivity_topContainers">
-              <p
-                className="devices_chartheading"
-                style={{ marginBottom: "20px" }}
-              >
-                URL Usage
-              </p>
+              <p className="devices_chartheading">URL Usage</p>
               <ReactApexChart
                 options={barchartoptions}
                 series={barchartseries}

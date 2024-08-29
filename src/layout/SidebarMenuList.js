@@ -122,6 +122,7 @@ const SidebarMenuList = () => {
               "Notebook",
               "User Detail",
               "Settings",
+              "Reports",
               "Organization",
             ].includes(item.title)
               ? false
@@ -151,7 +152,6 @@ const SidebarMenuList = () => {
             "Devices",
             "Manual Time",
             "Alerts",
-            "Reports",
             "Projects",
           ].includes(item.title) ? (
             <Link style={{ cursor: "default" }}>{item.title}</Link>

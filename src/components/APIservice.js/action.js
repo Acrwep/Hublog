@@ -322,3 +322,28 @@ export const updateBreak = async (breakpayload) => {
     throw error;
   }
 };
+
+//reports
+
+//daily attendance report
+export const getDailyAttendanceReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/AttendanceReport`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//break report
+export const getBreakReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/BreakReport`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

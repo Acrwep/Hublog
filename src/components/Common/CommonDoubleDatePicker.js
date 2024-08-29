@@ -25,6 +25,7 @@ export default function CommonDoubleDatePicker({ onChange, value }) {
           value={value ? [dayJs(value[0]), dayJs(value[1])] : null}
           onChange={handleRangePickerChange}
           disabledDate={disabledDate}
+          allowClear={false}
         />
       </Space>
     </div>

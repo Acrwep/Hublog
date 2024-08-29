@@ -16,13 +16,13 @@
 .commonInputfield:hover {
   border-color: #d9d9d9;
 }
-.commonInputfield:focus {
+/* .commonInputfield:focus {
   color: #495057;
   background-color: #fff;
   border-color: #80bdff;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
+} */
 .commoninput_errormessagediv {
   position: absolute;
   left: 0%;
@@ -35,6 +35,9 @@
   opacity: 1;
   position: absolute;
   transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+.commonSelectfield:hover {
+  border-color: #009737 !important;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .commonSelectfield {

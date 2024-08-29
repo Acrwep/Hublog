@@ -18,6 +18,7 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
+  const [validationTrigger, setValidationTrigger] = useState(false);
 
   useEffect(() => {
     localStorage.removeItem("Accesstoken");
@@ -25,6 +26,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setValidationTrigger(true);
     if (buttonDisable) return;
 
     const emailValidate = emailValidator(email);
@@ -133,7 +135,9 @@ const Login = () => {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      setEmailError(emailValidator(e.target.value));
+                      if (validationTrigger) {
+                        setEmailError(emailValidator(e.target.value));
+                      }
                     }}
                     status={emailError ? "error" : ""}
                   />
@@ -161,12 +165,14 @@ const Login = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      if (e.target.value === "") {
-                        setPasswordError(" Password is required");
-                      } else if (e.target.value.length < 3) {
-                        setPasswordError(" Password is not valid");
-                      } else {
-                        setPasswordError("");
+                      if (validationTrigger) {
+                        if (e.target.value === "") {
+                          setPasswordError(" Password is required");
+                        } else if (e.target.value.length < 3) {
+                          setPasswordError(" Password is not valid");
+                        } else {
+                          setPasswordError("");
+                        }
                       }
                     }}
                     status={passwordError ? "error" : ""}
