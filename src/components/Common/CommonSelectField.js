@@ -54,7 +54,7 @@ export default function CommonSelectField({
         className={
           error === "" || error === null || error === undefined
             ? "commonSelectfield"
-            : ""
+            : "commonSelectfield_error"
         }
         style={{ width: "100%" }}
         onChange={onChange}

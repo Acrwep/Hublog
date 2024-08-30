@@ -14,7 +14,6 @@
   width: 100%;
 }
 .commonInputfield:hover {
-  /* border-color: #d9d9d9; */
   border-color: #25a17d !important;
 }
 .commonInputfield:focus-within {
@@ -54,6 +53,12 @@
     margin-bottom: 14px;
   }
 }
+/* .commonSelectfield_error:focus
+  .ant-select
+  .ant-select-outlined
+  .ant-select-status-error {
+  border-color: #ff4d4f !important;
+} */
 @media (min-width: 300px) and (max-width: 768px) {
   .commonsearchbar {
     width: 100% !important;

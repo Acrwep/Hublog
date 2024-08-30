@@ -83,7 +83,6 @@ const BreakReports = () => {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
-      console.log("teamsssssss response", response.data);
       const teamList = response.data;
       setTeamList(teamList);
       setTeamId(null);
@@ -101,15 +100,12 @@ const BreakReports = () => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
-      console.log("users response", response.data);
       const usersList = response?.data;
 
       //merge user fullname and lastname in full_name property
       const updateUserList = usersList.map((item) => {
         return { ...item, full_Name: item.first_Name + " " + item.last_Name };
       });
-      console.log("update user list", updateUserList);
-
       setUserList(updateUserList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
@@ -128,10 +124,9 @@ const BreakReports = () => {
       organizationId: parseInt(orgId),
       date: moment(selectedDate).format("YYYY-MM-DD"),
     };
-    console.log("payloadddd", payload);
     try {
       const response = await getBreakReport(payload);
-      console.log("daily attendance report response", response.data);
+      console.log("break report response", response.data);
       const ScreenShotsData = response.data;
       const reveseData = ScreenShotsData.reverse();
 
@@ -146,13 +141,10 @@ const BreakReports = () => {
   };
 
   const handleTeam = async (value) => {
-    console.log("clicked team", value);
     setTeamId(value);
     try {
       const response = await getUsersByTeamId(value);
-      console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
-      console.log("team members", teamMembersList);
       if (teamMembersList.length <= 0) {
         setUserList([]);
         setUserId(null);
@@ -188,7 +180,6 @@ const BreakReports = () => {
   };
 
   const handleUser = (value) => {
-    console.log("userIdddd", value);
     setUserId(value);
     getBreakReportData(value, teamId, organizationId, date);
   };

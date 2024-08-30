@@ -72,6 +72,7 @@ const Users = ({ loading }) => {
   const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
+  const [validationTrigger, setValidationTrigger] = useState(false);
 
   const columns = [
     {
@@ -282,6 +283,7 @@ const Users = ({ loading }) => {
     setTeamError("");
     setEmployeeId("");
     setEdit(false);
+    setValidationTrigger(false);
   };
 
   const onClose = () => {
@@ -291,7 +293,9 @@ const Users = ({ loading }) => {
   const handleDateOfBirth = (date) => {
     if (date) {
       setDateOfBirth(date.toDate());
-      setDateOfBirthError(selectValidator(date.toDate()));
+      if (validationTrigger) {
+        setDateOfBirthError(selectValidator(date.toDate()));
+      }
     } else {
       setDateOfBirth(null);
     }
@@ -300,7 +304,9 @@ const Users = ({ loading }) => {
   const handleDateOfJoining = (date) => {
     if (date) {
       setDateOfJoining(date.toDate());
-      setDateOfJoiningError(selectValidator(date.toDate()));
+      if (validationTrigger) {
+        setDateOfJoiningError(selectValidator(date.toDate()));
+      }
     } else {
       setDateOfJoining(null);
     }
@@ -311,7 +317,6 @@ const Users = ({ loading }) => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId, value);
-      console.log("user filter response", response);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
     } catch (error) {
@@ -363,7 +368,7 @@ const Users = ({ loading }) => {
   //user create and update api function
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(dateofBirth, dateofJoining);
+    setValidationTrigger(true);
 
     const firstnameValidate = nameValidator(firstName);
     const lastnameValidate = lastNameValidator(lastName);
@@ -412,12 +417,11 @@ const Users = ({ loading }) => {
     const selectedDesignation = designationList.find(
       (design) => design.id === designation
     );
-    console.log("designnn", selectedDesignation);
     const designationName = selectedDesignation.name;
 
     const selectedTeam = teamList.find((t) => t.id === team);
-    console.log("teammmm", selectedTeam);
     const teamName = selectedTeam.name;
+
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
@@ -537,7 +541,9 @@ const Users = ({ loading }) => {
               label="First Name"
               onChange={(e) => {
                 setFirstName(e.target.value);
-                setFirstNameError(nameValidator(e.target.value));
+                if (validationTrigger) {
+                  setFirstNameError(nameValidator(e.target.value));
+                }
               }}
               value={firstName}
               error={firstNameError}
@@ -550,7 +556,9 @@ const Users = ({ loading }) => {
               mandatory
               onChange={(e) => {
                 setLastName(e.target.value);
-                setLastNameError(lastNameValidator(e.target.value));
+                if (validationTrigger) {
+                  setLastNameError(lastNameValidator(e.target.value));
+                }
               }}
               value={lastName}
               error={lastNameError}
@@ -563,7 +571,9 @@ const Users = ({ loading }) => {
               label="Email"
               onChange={(e) => {
                 setEmail(e.target.value);
-                setEmailError(emailValidator(e.target.value));
+                if (validationTrigger) {
+                  setEmailError(emailValidator(e.target.value));
+                }
               }}
               value={email}
               error={emailError}
@@ -587,12 +597,14 @@ const Users = ({ loading }) => {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                if (e.target.value === "") {
-                  setPasswordError(" Password is required");
-                } else if (e.target.value.length < 3) {
-                  setPasswordError(" Password is not valid");
-                } else {
-                  setPasswordError("");
+                if (validationTrigger) {
+                  if (e.target.value === "") {
+                    setPasswordError(" Password is required");
+                  } else if (e.target.value.length < 3) {
+                    setPasswordError(" Password is not valid");
+                  } else {
+                    setPasswordError("");
+                  }
                 }
               }}
               status={passwordError ? "error" : ""}
@@ -636,7 +648,9 @@ const Users = ({ loading }) => {
               label="Phone"
               onChange={(e) => {
                 setPhone(e.target.value);
-                setPhoneError(mobileValidator(e.target.value));
+                if (validationTrigger) {
+                  setPhoneError(mobileValidator(e.target.value));
+                }
               }}
               value={phone}
               error={phoneError}
@@ -649,7 +663,9 @@ const Users = ({ loading }) => {
               label="Gender"
               onChange={(value) => {
                 setGender(value);
-                setGenderError(selectValidator(value));
+                if (validationTrigger) {
+                  setGenderError(selectValidator(value));
+                }
               }}
               options={genderOptions}
               value={gender}
@@ -664,7 +680,9 @@ const Users = ({ loading }) => {
               label="Role"
               onChange={(value) => {
                 setRole(value);
-                setRoleError(selectValidator(value));
+                if (validationTrigger) {
+                  setRoleError(selectValidator(value));
+                }
               }}
               options={roleOptions}
               value={role}
@@ -685,9 +703,12 @@ const Users = ({ loading }) => {
           <Col span={12}>
             <CommonSelectField
               label="Team"
+              l
               onChange={(value) => {
                 setTeam(value);
-                setTeamError(selectValidator(value));
+                if (validationTrigger) {
+                  setTeamError(selectValidator(value));
+                }
               }}
               options={activeTeamList}
               value={team}
