@@ -36,15 +36,16 @@ const DailyAttendanceReport = () => {
   const columns = [
     {
       title: "Employee",
-      dataIndex: "employee",
-      key: "employee",
+      dataIndex: "first_Name",
+      key: "first_Name",
       width: 140,
       fixed: "left",
       render: (text, record) => {
+        const fullName = record.first_Name + " " + record.last_Name;
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarfontSize="17px" itemName={text} />
-            <p className="reports_avatarname">{text}</p>
+            <CommonAvatar avatarfontSize="17px" itemName={fullName} />
+            <p className="reports_avatarname">{fullName}</p>
           </div>
         );
       },

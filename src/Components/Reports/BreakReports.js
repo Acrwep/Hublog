@@ -38,10 +38,11 @@ const BreakReports = () => {
       key: "first_Name",
       width: "150px",
       render: (text, record) => {
+        const fullName = record.first_Name + " " + record.last_Name;
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarfontSize="17px" itemName={record.first_Name} />
-            <p className="reports_avatarname">{record.first_Name}</p>
+            <CommonAvatar avatarfontSize="17px" itemName={fullName} />
+            <p className="reports_avatarname">{fullName}</p>
           </div>
         );
       },

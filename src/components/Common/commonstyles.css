@@ -65,7 +65,7 @@
 }
 .commonsearchbar .ant-input-outlined:focus-within {
   border-color: #25a17d !important;
-  box-shadow: 0 0 0 2px #25a17e6b !important;
+  box-shadow: 0 0 0 2px #25a17e17 !important;
 }
 .commonfield_label {
   font-weight: 500 !important;

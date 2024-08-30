@@ -27,6 +27,7 @@ const CommonInputField = ({
   label,
   placeholder,
   onChange,
+  name,
   value,
   error,
   maxLength,
@@ -59,6 +60,7 @@ const CommonInputField = ({
         } ${className}`}
         label={label}
         placeholder={placeholder}
+        name={name}
         onChange={onChange}
         value={value}
         mandatory={mandatory}

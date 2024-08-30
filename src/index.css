@@ -97,9 +97,9 @@ select:focus {
   .ant-input-search-button:not(.ant-btn-primary):hover {
   color: #25a17d !important;
 }
-.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+/* .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
   border-color: #25a17d !important;
-}
+} */
 .ant-picker-header-view button:hover {
   color: #25a17d !important;
 }
@@ -222,7 +222,7 @@ select:focus {
   .ant-select-selector {
   border-color: #25a17d !important;
   /* box-shadow: 0 0 2px rgba(5, 241, 123, 0.1) !important; */
-  box-shadow: 0 0 0 2px #25a17e62 !important;
+  box-shadow: 0 0 0 2px #25a17e17 !important;
   outline: 0;
 }
 .ant-table-wrapper .ant-table-pagination.ant-pagination {

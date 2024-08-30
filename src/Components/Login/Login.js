@@ -130,7 +130,11 @@ const Login = () => {
                 <div style={{ position: "relative" }}>
                   <label className="inputfields_label">Email</label>
                   <Input
-                    className="login_inputfields"
+                    className={
+                      emailError
+                        ? "login_errorinputfields"
+                        : "login_inputfields"
+                    }
                     name="email"
                     value={email}
                     onChange={(e) => {
@@ -156,7 +160,11 @@ const Login = () => {
                 <div style={{ marginTop: "22px", position: "relative" }}>
                   <label className="inputfields_label">Password</label>
                   <Input.Password
-                    className="login_inputfields"
+                    className={
+                      passwordError
+                        ? "login_errorinputfields"
+                        : "login_passwordinputfield"
+                    }
                     name="password"
                     visibilityToggle={{
                       visible: passwordVisible,
