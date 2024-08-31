@@ -107,6 +107,25 @@ select:focus {
 .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
   background: #25a17d !important;
 }
+:where(
+    .css-dev-only-do-not-override-1c0na6j
+  ).ant-picker-outlined.ant-picker-status-error:not(
+    .ant-picker-disabled
+  ):hover {
+  border-color: #ff7875 !important;
+}
+:where(
+    .css-dev-only-do-not-override-1c0na6j
+  ).ant-picker-outlined.ant-picker-status-error:not(
+    .ant-picker-disabled
+  ):focus-within {
+  border-color: #ff7875 !important;
+  box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06) !important;
+}
+:where(.css-dev-only-do-not-override-1c0na6j).ant-picker-outlined:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17 !important;
+}
 /* ant double datepicker styles */
 .ant-picker-range .ant-picker-active-bar {
   background: #25a17d !important;

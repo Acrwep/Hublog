@@ -92,7 +92,32 @@ const MonthlyAttendanceReport = () => {
       ...(user && { userId: user }),
       ...(team && { teamId: team }),
       organizationId: parseInt(orgId),
-      month: "08",
+      month:
+        month === "January"
+          ? "01"
+          : month === "February"
+          ? "02"
+          : month === "March"
+          ? "03"
+          : month === "April"
+          ? "04"
+          : month === "May"
+          ? "05"
+          : month === "June"
+          ? "06"
+          : month === "July"
+          ? "07"
+          : month === "August"
+          ? "08"
+          : month === "September"
+          ? "09"
+          : month === "October"
+          ? "10"
+          : month === "November"
+          ? "11"
+          : month === "December"
+          ? "12"
+          : "",
       year: year,
     };
     try {
@@ -113,79 +138,6 @@ const MonthlyAttendanceReport = () => {
     }
   };
 
-  // const prepareTableData = (data, monthname, year) => {
-  //   const abc = parseInt(year);
-  //   console.log("prepareeeeeeee", monthname, abc, data);
-  //   const currentMonthDates = getCurrentMonthDates(monthname, abc);
-  //   console.log("oiiiiiiiiiiiiiiiiii", currentMonthDates);
-  //   return data.map((item) => {
-  //     const rowData = {
-  //       key: item.first_name,
-  //       first_name: item.first_name,
-  //       last_name: item.last_name,
-  //     };
-
-  //     // Initialize each date column with null
-  //     currentMonthDates.forEach((date) => {
-  //       rowData[date] = null;
-  //     });
-
-  //     // Fill in the total_time if the log date matches the current month date
-  //     item.logs.forEach((log) => {
-  //       const logDate = moment(log.date);
-  //       const logDay = logDate.format("DD"); // Extract day in "DD" format
-  //       const logMonth = logDate.format("MMMM").toLowerCase(); // Extract month in "MMMM" format
-
-  //       // Check if the log's month and year match the specified month and year
-  //       console.log("logsssssss", logMonth, logDate);
-  //       if (
-  //         logMonth === moment().month(monthname).format("MMMM").toLowerCase() &&
-  //         logDate.year() === year &&
-  //         currentMonthDates.includes(logDay)
-  //       ) {
-  //         const hour = log.total_time.split(":")[0];
-  //         const minute = log.total_time.split(":")[1];
-  //         rowData[logDay] = hour + "h:" + minute + "m";
-  //       }
-  //     });
-
-  //     // Set "Weekly off" for Sundays
-  //     currentMonthDates.forEach((date) => {
-  //       const dateString = `${year}-${
-  //         moment().month(monthname).month() + 1
-  //       }-${date}`;
-  //       const isSunday = moment(dateString, "YYYY-M-D").day() === 0;
-  //       if (isSunday) {
-  //         rowData[date] = "weeklyoff";
-  //       }
-  //     });
-
-  //     return rowData;
-  //   });
-  // };
-
-  // const getCurrentMonthDates = (monthname, year) => {
-  //   console.log("monnnnnn", monthname, year);
-  //   // const monthname = "November";
-  //   // const year = 2024;
-  //   const monthIndex = moment().month(monthname).month(); // Get the zero-based index of the month (e.g., March -> 2)
-
-  //   // Create moment objects for the start and end of the specified month and year
-  //   const startOfMonth = moment([year, monthIndex, 1]);
-  //   const endOfMonth = startOfMonth.clone().endOf("month");
-
-  //   const dates = [];
-  //   let current = startOfMonth;
-
-  //   while (current.isSameOrBefore(endOfMonth)) {
-  //     dates.push(current.format("DD"));
-  //     current = current.add(1, "days");
-  //   }
-
-  //   console.log("Monthly", dates);
-  //   return dates;
-  // };
-
   const generateDatesForMonth = (monthName, year) => {
     const monthIndex = moment().month(monthName).month(); // Zero-based index
     const startOfMonth = moment([year, monthIndex, 1]);
@@ -203,8 +155,7 @@ const MonthlyAttendanceReport = () => {
 
   const prepareTableData = (data, monthname, year) => {
     const currentMonthDates = getCurrentMonthDates(monthname, year);
-    const datesToCheck = generateDatesForMonth(monthname, year);
-    console.log("eeeeeeeeeeeeee", datesToCheck);
+    // const datesToCheck = generateDatesForMonth(monthname, year);
     return data.map((item) => {
       const rowData = {
         key: item.first_name,
@@ -213,43 +164,52 @@ const MonthlyAttendanceReport = () => {
       };
 
       // Initialize each date column with null
-      datesToCheck.forEach((date) => {
+      currentMonthDates.forEach((date) => {
         rowData[date] = null;
       });
 
       // Fill in the total_time if the log date matches
       item.logs.forEach((log) => {
-        const logDate = moment(log.date).format("YYYY-MM-DD"); // Format log date
-        if (datesToCheck.includes(logDate)) {
+        const logDate = moment(log.date).format("DD"); // Format log date
+        if (currentMonthDates.includes(logDate)) {
           const [hour, minute] = log.total_time.split(":");
           rowData[logDate] = `${hour}h:${minute}m`;
         }
       });
+
       // Set "Weekly off" for Sundays
-      datesToCheck.forEach((date) => {
-        const isSunday = moment(date, "YYYY-MM-DD").day() === 0;
+      //use this if use datesToCheck
+      // currentMonthDates.forEach((date) => {
+      //   const isSunday = moment(date, "YYYY-MM-DD").day() === 0;
+      //   if (isSunday) {
+      //     rowData[date] = "weeklyoff";
+      //   }
+      // });
+      currentMonthDates.forEach((date) => {
+        const dateString = `${year}-${
+          moment().month(monthname).month() + 1
+        }-${date}`;
+        const isSunday = moment(dateString, "YYYY-M-D").day() === 0;
         if (isSunday) {
           rowData[date] = "weeklyoff";
         }
       });
-      //   console.log("rowwwwwwww", rowData);
-      //   return rowData;
-      // });
-      // Transform rowData into DD: value format
-      const formattedRowData = {
-        key: rowData.first_name,
-        first_name: rowData.first_name,
-        last_name: rowData.last_name,
-      };
-
-      for (const date of datesToCheck) {
-        const day = moment(date).format("DD"); // Get the day in DD format
-        formattedRowData[day] = rowData[date]; // Assign value to the day
-      }
-
-      console.log("Formatted row data:", formattedRowData);
-      return formattedRowData; // Return the formatted data
+      return rowData;
     });
+    // Transform rowData into DD: value format
+    //   const formattedRowData = {
+    //     key: rowData.first_name,
+    //     first_name: rowData.first_name,
+    //     last_name: rowData.last_name,
+    //   };
+
+    //   for (const date of datesToCheck) {
+    //     const day = moment(date).format("DD"); // Get the day in DD format
+    //     formattedRowData[day] = rowData[date]; // Assign value to the day
+    //   }
+
+    //   return formattedRowData; // Return the formatted data
+    // });
   };
 
   const getCurrentMonthDates = (monthname, year) => {
@@ -265,7 +225,6 @@ const MonthlyAttendanceReport = () => {
       dates.push(current.format("DD"));
       current = current.add(1, "days");
     }
-
     return dates;
   };
 
@@ -343,7 +302,6 @@ const MonthlyAttendanceReport = () => {
             <div className="breakreport_employeenameContainer">
               <CommonAvatar
                 itemName={record.first_name + " " + record.last_name}
-                avatarfontSize="17px"
               />
               <p className="reports_avatarname">
                 {record.first_name + " " + record.last_name}
@@ -359,14 +317,6 @@ const MonthlyAttendanceReport = () => {
   const columns = useMemo(() => {
     return generateColumns(monthName, year);
   }, [monthName, year]);
-
-  // const columns = generateColumns();
-
-  // useEffect(() => {
-  //   if (monthName && year) {
-  //     getMonthlyAttendanceData(userId, teamId, organizationId, monthName, year);
-  //   }
-  // }, [monthName, year, userId, teamId, organizationId]);
 
   const handleTeam = async (value) => {
     setTeamId(value);
@@ -409,7 +359,6 @@ const MonthlyAttendanceReport = () => {
 
   const onDateChange = (date, dateString) => {
     // Log the date and formatted date string
-    console.log(date, dateString);
     setDate(date);
     // If a date is selected, format it to get the month name and log it
     if (date) {
@@ -440,10 +389,9 @@ const MonthlyAttendanceReport = () => {
 
   const disabledDate = (current) => {
     // Disable all future dates
-    return (
-      current && current.isAfter(dayJs().endOf("month"), "day") // Disable dates after the end of the current month
-    );
+    return current && current > dayJs().endOf("month");
   };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -522,7 +470,7 @@ const MonthlyAttendanceReport = () => {
           columns={columns}
           dataSource={data}
           scroll={{ x: 1200 }}
-          dataPerPage={4}
+          dataPerPage={10}
           checkBox="false"
           bordered="true"
           loading={loading}

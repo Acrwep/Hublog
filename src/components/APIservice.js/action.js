@@ -358,3 +358,14 @@ export const getMonthlyAttendanceReport = async (reportPayload) => {
     throw error;
   }
 };
+//monthly InandOut report
+export const getMonthlyInandOutReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/GetMonthlyInOutReport`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
