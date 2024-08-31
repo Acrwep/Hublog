@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -12,22 +12,256 @@ import CommonSelectField from "../Common/CommonSelectField";
 import moment from "moment";
 import CommonAvatar from "../Common/CommonAvatar";
 import { dayJs } from "../Utils";
+import {
+  getMonthlyAttendanceReport,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
+import { CommonToaster } from "../Common/CommonToaster";
 
 const MonthlyAttendanceReport = () => {
   const navigation = useNavigate();
-  const [date, setDate] = useState(dayJs().subtract(1, "month"));
-  const teamList = [{ id: 1, name: "Operation" }];
-  const userList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Karthick" },
-  ];
-  const getCurrentMonthDates = () => {
-    const startOfMonth = moment().startOf("month");
-    const endOfMonth = moment().endOf("month");
+  const [date, setDate] = useState(dayJs().subtract(0, "month"));
+  const [teamList, setTeamList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [organizationId, setOrganizationId] = useState(null);
+  const [data, setData] = useState([]);
+  const [monthName, setMonthName] = useState("");
+  const [year, setYear] = useState();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getTeamData();
+  }, []);
+
+  const getTeamData = async () => {
+    setLoading(true);
+    try {
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      setOrganizationId(orgId);
+      const response = await getTeams(orgId);
+      const teamList = response.data;
+      setTeamList(teamList);
+      setTeamId(null);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData();
+      }, 500);
+    }
+  };
+
+  const getUsersData = async () => {
+    let userIdd = null;
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId);
+      const usersList = response?.data;
+
+      //merge user fullname and lastname in full_name property
+      const updateUserList = usersList.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      setUserList(updateUserList);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        const currentMonthName = moment().format("MMMM"); // get current month name
+        const currentYear = moment().year(); // get current year
+        setMonthName(currentMonthName);
+        setYear(currentYear);
+        getMonthlyAttendanceData(
+          userId,
+          teamId,
+          orgId,
+          currentMonthName,
+          currentYear
+        );
+      }, 500);
+    }
+  };
+
+  const getMonthlyAttendanceData = async (user, team, orgId, month, year) => {
+    setLoading(true);
+    const payload = {
+      ...(user && { userId: user }),
+      ...(team && { teamId: team }),
+      organizationId: parseInt(orgId),
+      month: "08",
+      year: year,
+    };
+    try {
+      const response = await getMonthlyAttendanceReport(payload);
+      console.log("monthly attendance report response", response.data);
+      const MonthlyAttendanceData = response.data.users;
+      const preparedData = prepareTableData(MonthlyAttendanceData, month, year);
+
+      console.log("tabledatasss", preparedData);
+      setData(preparedData);
+    } catch (error) {
+      setData([]);
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+
+  // const prepareTableData = (data, monthname, year) => {
+  //   const abc = parseInt(year);
+  //   console.log("prepareeeeeeee", monthname, abc, data);
+  //   const currentMonthDates = getCurrentMonthDates(monthname, abc);
+  //   console.log("oiiiiiiiiiiiiiiiiii", currentMonthDates);
+  //   return data.map((item) => {
+  //     const rowData = {
+  //       key: item.first_name,
+  //       first_name: item.first_name,
+  //       last_name: item.last_name,
+  //     };
+
+  //     // Initialize each date column with null
+  //     currentMonthDates.forEach((date) => {
+  //       rowData[date] = null;
+  //     });
+
+  //     // Fill in the total_time if the log date matches the current month date
+  //     item.logs.forEach((log) => {
+  //       const logDate = moment(log.date);
+  //       const logDay = logDate.format("DD"); // Extract day in "DD" format
+  //       const logMonth = logDate.format("MMMM").toLowerCase(); // Extract month in "MMMM" format
+
+  //       // Check if the log's month and year match the specified month and year
+  //       console.log("logsssssss", logMonth, logDate);
+  //       if (
+  //         logMonth === moment().month(monthname).format("MMMM").toLowerCase() &&
+  //         logDate.year() === year &&
+  //         currentMonthDates.includes(logDay)
+  //       ) {
+  //         const hour = log.total_time.split(":")[0];
+  //         const minute = log.total_time.split(":")[1];
+  //         rowData[logDay] = hour + "h:" + minute + "m";
+  //       }
+  //     });
+
+  //     // Set "Weekly off" for Sundays
+  //     currentMonthDates.forEach((date) => {
+  //       const dateString = `${year}-${
+  //         moment().month(monthname).month() + 1
+  //       }-${date}`;
+  //       const isSunday = moment(dateString, "YYYY-M-D").day() === 0;
+  //       if (isSunday) {
+  //         rowData[date] = "weeklyoff";
+  //       }
+  //     });
+
+  //     return rowData;
+  //   });
+  // };
+
+  // const getCurrentMonthDates = (monthname, year) => {
+  //   console.log("monnnnnn", monthname, year);
+  //   // const monthname = "November";
+  //   // const year = 2024;
+  //   const monthIndex = moment().month(monthname).month(); // Get the zero-based index of the month (e.g., March -> 2)
+
+  //   // Create moment objects for the start and end of the specified month and year
+  //   const startOfMonth = moment([year, monthIndex, 1]);
+  //   const endOfMonth = startOfMonth.clone().endOf("month");
+
+  //   const dates = [];
+  //   let current = startOfMonth;
+
+  //   while (current.isSameOrBefore(endOfMonth)) {
+  //     dates.push(current.format("DD"));
+  //     current = current.add(1, "days");
+  //   }
+
+  //   console.log("Monthly", dates);
+  //   return dates;
+  // };
+
+  const generateDatesForMonth = (monthName, year) => {
+    const monthIndex = moment().month(monthName).month(); // Zero-based index
+    const startOfMonth = moment([year, monthIndex, 1]);
+    const endOfMonth = startOfMonth.clone().endOf("month");
     const dates = [];
 
     let current = startOfMonth;
-    while (current <= endOfMonth) {
+    while (current.isSameOrBefore(endOfMonth)) {
+      dates.push(current.format("YYYY-MM-DD"));
+      current = current.add(1, "days");
+    }
+
+    return dates;
+  };
+
+  const prepareTableData = (data, monthname, year) => {
+    const currentMonthDates = getCurrentMonthDates(monthname, year);
+    const datesToCheck = generateDatesForMonth(monthname, year);
+    console.log("eeeeeeeeeeeeee", datesToCheck);
+    return data.map((item) => {
+      const rowData = {
+        key: item.first_name,
+        first_name: item.first_name,
+        last_name: item.last_name,
+      };
+
+      // Initialize each date column with null
+      datesToCheck.forEach((date) => {
+        rowData[date] = null;
+      });
+
+      // Fill in the total_time if the log date matches
+      item.logs.forEach((log) => {
+        const logDate = moment(log.date).format("YYYY-MM-DD"); // Format log date
+        if (datesToCheck.includes(logDate)) {
+          const [hour, minute] = log.total_time.split(":");
+          rowData[logDate] = `${hour}h:${minute}m`;
+        }
+      });
+      // Set "Weekly off" for Sundays
+      datesToCheck.forEach((date) => {
+        const isSunday = moment(date, "YYYY-MM-DD").day() === 0;
+        if (isSunday) {
+          rowData[date] = "weeklyoff";
+        }
+      });
+      //   console.log("rowwwwwwww", rowData);
+      //   return rowData;
+      // });
+      // Transform rowData into DD: value format
+      const formattedRowData = {
+        key: rowData.first_name,
+        first_name: rowData.first_name,
+        last_name: rowData.last_name,
+      };
+
+      for (const date of datesToCheck) {
+        const day = moment(date).format("DD"); // Get the day in DD format
+        formattedRowData[day] = rowData[date]; // Assign value to the day
+      }
+
+      console.log("Formatted row data:", formattedRowData);
+      return formattedRowData; // Return the formatted data
+    });
+  };
+
+  const getCurrentMonthDates = (monthname, year) => {
+    const monthIndex = moment().month(monthname).month();
+
+    const startOfMonth = moment([year, monthIndex, 1]);
+    const endOfMonth = startOfMonth.clone().endOf("month");
+
+    const dates = [];
+    let current = startOfMonth;
+
+    while (current.isSameOrBefore(endOfMonth)) {
       dates.push(current.format("DD"));
       current = current.add(1, "days");
     }
@@ -36,28 +270,84 @@ const MonthlyAttendanceReport = () => {
   };
 
   // Generate columns
-  const generateColumns = () => {
-    const currentMonthDates = getCurrentMonthDates();
+  const generateColumns = (monthName, year) => {
+    const currentMonthName = moment().format("MMMM"); // get current month name
+    const currentYear = moment().year(); // get current year
+
+    const currentMonthDates = getCurrentMonthDates(
+      monthName ? monthName : currentMonthName,
+      year ? year : currentYear
+    );
 
     const dateColumns = currentMonthDates.map((date) => ({
       title: date,
       dataIndex: date,
       key: date,
-      width: 100,
+      width: 120,
+      render: (text, record) => {
+        return <p>{text}</p>;
+      },
+
+      render: (record) => {
+        if (record === "weeklyoff") {
+          return {
+            props: {
+              style: {
+                background: "rgb(211 47 47 / 27%)",
+                borderRight: "none",
+                borderBottom: "1.7px solid white",
+                position: "relative",
+              },
+            },
+            children: (
+              <div>
+                <p className="monthlyattendance_monthlyweeklyofftext">
+                  Weekly Off
+                </p>
+              </div>
+            ),
+          };
+        } else if (record === undefined || record === null) {
+          return null;
+        } else {
+          return {
+            props: {
+              style: {
+                background:
+                  record === "weeklyoff"
+                    ? "rgb(211 47 47 / 27%)"
+                    : record === ""
+                    ? "white"
+                    : "rgb(20 184 166 / 20%)",
+              },
+            },
+            children: (
+              <div>
+                <p className="monthlyInOuttime_text">{record}</p>
+              </div>
+            ),
+          };
+        }
+      },
     }));
 
     return [
       {
         title: "Employee",
-        dataIndex: "employee",
-        key: "employee",
-        width: "170px",
+        dataIndex: "first_name",
+        key: "first_name",
+        width: 240,
         fixed: "left",
         render: (text, record) => {
           return (
             <div className="breakreport_employeenameContainer">
-              <CommonAvatar itemName={record.employee} />
-              <p className="reports_avatarname">{record.employee}</p>
+              <CommonAvatar
+                itemName={record.first_name + " " + record.last_name}
+                avatarfontSize="17px"
+              />
+              <p className="reports_avatarname">
+                {record.first_name + " " + record.last_name}
+              </p>
             </div>
           );
         },
@@ -66,32 +356,77 @@ const MonthlyAttendanceReport = () => {
     ];
   };
 
-  const columns = generateColumns();
+  const columns = useMemo(() => {
+    return generateColumns(monthName, year);
+  }, [monthName, year]);
 
-  // Sample data
-  const data = [
-    {
-      key: "1",
-      employee: "John Doe",
-      "01": "3h 0m",
-      "02": "5h 0m",
-    },
-    {
-      key: "2",
-      employee: "Maxy",
-      "01": "5h 0m",
-      "02": "3h 0m",
-    },
-    // Add more data as necessary
-  ];
+  // const columns = generateColumns();
+
+  // useEffect(() => {
+  //   if (monthName && year) {
+  //     getMonthlyAttendanceData(userId, teamId, organizationId, monthName, year);
+  //   }
+  // }, [monthName, year, userId, teamId, organizationId]);
+
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+      const updatedArr = teamMembersList.map(
+        ({ firstName, lastName, userId, ...rest }) => ({
+          first_Name: firstName,
+          last_Name: lastName,
+          id: userId,
+          ...rest,
+        })
+      );
+
+      //merge user fullname and lastname in full_name property
+      const adddFullName = updatedArr.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+
+      setUserList(adddFullName);
+      const userIdd = null;
+      setUserId(userIdd);
+      getMonthlyAttendanceData(userIdd, value, organizationId, monthName, year);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
+  const handleUser = (value) => {
+    setUserId(value);
+    getMonthlyAttendanceData(value, teamId, organizationId, monthName, year);
+  };
+
   const onDateChange = (date, dateString) => {
     // Log the date and formatted date string
     console.log(date, dateString);
     setDate(date);
     // If a date is selected, format it to get the month name and log it
     if (date) {
-      const monthName = date.format("MMMM");
-      console.log("Selected Month:", monthName);
+      const selectedMonthName = date.format("MMMM");
+      const selectedYear = date.format("YYYY");
+      console.log("Selected Month:", selectedMonthName, selectedYear);
+      setMonthName(selectedMonthName);
+      setYear(selectedYear);
+      generateColumns(selectedMonthName, selectedYear);
+
+      getMonthlyAttendanceData(
+        userId,
+        teamId,
+        organizationId,
+        selectedMonthName,
+        selectedYear
+      );
     }
   };
 
@@ -106,10 +441,7 @@ const MonthlyAttendanceReport = () => {
   const disabledDate = (current) => {
     // Disable all future dates
     return (
-      current &&
-      (current > dayJs().endOf("month") ||
-        (current.month() === dayJs().month() &&
-          current.year() === dayJs().year()))
+      current && current.isAfter(dayJs().endOf("month"), "day") // Disable dates after the end of the current month
     );
   };
   return (
@@ -135,10 +467,20 @@ const MonthlyAttendanceReport = () => {
             style={{ display: "flex" }}
           >
             <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
+              <CommonSelectField
+                placeholder="All Teams"
+                options={teamList}
+                onChange={handleTeam}
+                value={teamId}
+              />
             </div>
             <div style={{ width: "170px" }}>
-              <CommonSelectField options={userList} placeholder="Select User" />
+              <CommonSelectField
+                placeholder="Select User"
+                options={userList}
+                onChange={handleUser}
+                value={userId}
+              />
             </div>
           </div>
         </Col>
@@ -156,13 +498,14 @@ const MonthlyAttendanceReport = () => {
             value={date}
             format={getMonthName}
             disabledDate={disabledDate}
+            allowClear={false}
           />
           <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"
-              onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
-              }}
+              // onClick={() => {
+              //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+              // }}
             >
               <DownloadOutlined className="download_icon" />
             </Button>
@@ -182,6 +525,7 @@ const MonthlyAttendanceReport = () => {
           dataPerPage={4}
           checkBox="false"
           bordered="true"
+          loading={loading}
         />
       </div>
     </div>

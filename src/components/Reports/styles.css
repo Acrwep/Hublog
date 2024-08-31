@@ -195,6 +195,11 @@
 .reports_avatarname {
   word-break: break-all;
 }
+/* monthlyattendance report */
+.monthlyattendance_monthlyweeklyofftext {
+  font-weight: 600;
+  color: #d32f2f;
+}
 /* monthlyinandout styles */
 .monthlyInOuttime_text {
   color: rgb(20, 184, 166);

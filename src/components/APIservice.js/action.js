@@ -347,3 +347,14 @@ export const getBreakReport = async (reportPayload) => {
     throw error;
   }
 };
+//monthly attendance report
+export const getMonthlyAttendanceReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/GetMonthlyAttendanceReport`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

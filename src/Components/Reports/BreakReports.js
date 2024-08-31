@@ -27,7 +27,6 @@ const BreakReports = () => {
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
-  const [userName, setUserName] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
