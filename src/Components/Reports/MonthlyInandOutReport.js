@@ -327,7 +327,8 @@ const MonthlyInandOutReport = () => {
               };
             } else if (record === undefined) {
               return;
-            } else {
+            } else if (record === "0001-01-01T00:00:00") return null;
+            else {
               return {
                 props: {
                   style: {

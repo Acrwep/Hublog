@@ -93,7 +93,7 @@ const Reports = () => {
           </Col>
         </Row>
 
-        <p className="reports_headings">Analytics</p>
+        {/* <p className="reports_headings">Analytics</p>
         <Row gutter={16} className="reports_rowcontainer">
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
@@ -207,18 +207,6 @@ const Reports = () => {
               </p>
             </div>
           </Col>
-          {/* <Col xs={24} sm={24} md={12} lg={6}>
-            <div className="reports_card">
-              <div className="reports_dynamiciconContainer">
-                <MdDynamicFeed size={26} />
-              </div>
-              <p className="reports_cardheading">Dynamic Report</p>
-              <p className="reports_cardcontent">
-                Customise, save and download reports of the key indicators and
-                metrics of your organisation.
-              </p>
-            </div>
-          </Col> */}
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
@@ -234,7 +222,7 @@ const Reports = () => {
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={6}></Col>
-        </Row>
+        </Row> */}
       </div>
     </div>
   );
