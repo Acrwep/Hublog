@@ -212,13 +212,13 @@
   color: rgb(20, 184, 166);
   font-weight: 600;
 }
-.monthlyweeklyoff_text {
+.monthlyinout_weeklyoff_text {
   position: absolute;
   text-align: center;
   width: 100px;
   left: 50%;
   z-index: 1;
-  top: 34%;
+  top: 24%;
   font-weight: 600;
   color: #d32f2f;
 }

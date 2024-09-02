@@ -6,7 +6,7 @@ import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX.js";
 import CommonAvatar from "../Common/CommonAvatar";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
@@ -36,16 +36,15 @@ const DailyAttendanceReport = () => {
   const columns = [
     {
       title: "Employee",
-      dataIndex: "first_Name",
-      key: "first_Name",
+      dataIndex: "full_Name",
+      key: "full_Name",
       width: 140,
       fixed: "left",
       render: (text, record) => {
-        const fullName = record.first_Name + " " + record.last_Name;
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarfontSize="17px" itemName={fullName} />
-            <p className="reports_avatarname">{fullName}</p>
+            <CommonAvatar avatarSize={26} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
           </div>
         );
       },
@@ -153,11 +152,14 @@ const DailyAttendanceReport = () => {
     console.log("payloadddd", payload);
     try {
       const response = await getDailyAttendanceReport(payload);
-      console.log("daily attendance report response", response.data);
-      const ScreenShotsData = response.data;
-      const reveseData = ScreenShotsData.reverse();
+      console.log("break report response", response.data);
 
-      setData(reveseData);
+      const ReportData = response.data;
+      const addFullname = ReportData.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      const reverseData = addFullname.reverse();
+      setData(reverseData);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -269,7 +271,13 @@ const DailyAttendanceReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                DownloadTableAsXLSX(
+                  data,
+                  columns,
+                  `${moment(date).format(
+                    "DD-MM-YYYY"
+                  )} Daily Attendance Report.xlsx`
+                );
               }}
             >
               <DownloadOutlined className="download_icon" />
@@ -291,6 +299,7 @@ const DailyAttendanceReport = () => {
           checkBox="false"
           bordered="true"
           loading={loading}
+          size="small"
         />
       </div>
     </div>

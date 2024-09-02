@@ -11,6 +11,7 @@ const CommonTable = ({
   checkBox,
   loading,
   paginationStatus,
+  size,
 }) => {
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -66,6 +67,7 @@ const CommonTable = ({
       tableLayout="fixed"
       bordered={bordered === "true"}
       loading={loading}
+      size={size}
     />
   );
 };

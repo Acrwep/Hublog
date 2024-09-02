@@ -6,7 +6,7 @@ import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX.js";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -33,15 +33,14 @@ const BreakReports = () => {
   const columns = [
     {
       title: "Employee",
-      dataIndex: "first_Name",
-      key: "first_Name",
+      dataIndex: "full_Name",
+      key: "full_Name",
       width: "150px",
       render: (text, record) => {
-        const fullName = record.first_Name + " " + record.last_Name;
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarfontSize="17px" itemName={fullName} />
-            <p className="reports_avatarname">{fullName}</p>
+            <CommonAvatar avatarSize={26} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
           </div>
         );
       },
@@ -129,10 +128,12 @@ const BreakReports = () => {
     try {
       const response = await getBreakReport(payload);
       console.log("break report response", response.data);
-      const ScreenShotsData = response.data;
-      const reveseData = ScreenShotsData.reverse();
-
-      setData(reveseData);
+      const ReportData = response.data;
+      const addFullname = ReportData.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      const reverseData = addFullname.reverse();
+      setData(reverseData);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
@@ -240,7 +241,11 @@ const BreakReports = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                DownloadTableAsXLSX(
+                  data,
+                  columns,
+                  `${moment(date).format("DD-MM-YYYY")} Break Report.xlsx`
+                );
               }}
             >
               <DownloadOutlined className="download_icon" />
@@ -262,6 +267,7 @@ const BreakReports = () => {
           checkBox="false"
           bordered="true"
           loading={loading}
+          size="small"
         />
       </div>
     </div>

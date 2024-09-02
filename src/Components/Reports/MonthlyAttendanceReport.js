@@ -6,7 +6,7 @@ import { Row, Col, Button, Tooltip, DatePicker } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX.js";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import moment from "moment";
@@ -172,8 +172,12 @@ const MonthlyAttendanceReport = () => {
       item.logs.forEach((log) => {
         const logDate = moment(log.date).format("DD"); // Format log date
         if (currentMonthDates.includes(logDate)) {
-          const [hour, minute] = log.total_time.split(":");
-          rowData[logDate] = `${hour}h:${minute}m`;
+          if (log.total_time === "00:00") {
+            rowData[logDate] = null;
+          } else {
+            const [hour, minute] = log.total_time.split(":");
+            rowData[logDate] = `${hour}h:${minute}m`;
+          }
         }
       });
 
@@ -261,7 +265,7 @@ const MonthlyAttendanceReport = () => {
             children: (
               <div>
                 <p className="monthlyattendance_monthlyweeklyofftext">
-                  Weekly Off
+                  Weekly off
                 </p>
               </div>
             ),
@@ -301,6 +305,7 @@ const MonthlyAttendanceReport = () => {
           return (
             <div className="breakreport_employeenameContainer">
               <CommonAvatar
+                avatarSize={26}
                 itemName={record.first_name + " " + record.last_name}
               />
               <p className="reports_avatarname">
@@ -451,9 +456,13 @@ const MonthlyAttendanceReport = () => {
           <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"
-              // onClick={() => {
-              //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
-              // }}
+              onClick={() => {
+                DownloadTableAsXLSX(
+                  data,
+                  columns,
+                  `${monthName} Monthly Attendance Report.xlsx`
+                );
+              }}
             >
               <DownloadOutlined className="download_icon" />
             </Button>
@@ -474,6 +483,7 @@ const MonthlyAttendanceReport = () => {
           checkBox="false"
           bordered="true"
           loading={loading}
+          size="small"
         />
       </div>
     </div>

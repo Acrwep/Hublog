@@ -126,9 +126,9 @@ export const SideMenuConfig = {
     icon: <MdSettings size={17} />,
     path: "settings",
   },
-  // 14: {
-  //   title: "Organization",
-  //   icon: <VscOrganization size={17} />,
-  //   path: "organization",
-  // },
+  14: {
+    title: "Organization",
+    icon: <VscOrganization size={17} />,
+    path: "organization",
+  },
 };

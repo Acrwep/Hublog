@@ -5,7 +5,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { Row, Col, Button, Tooltip, DatePicker } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX.js";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import moment from "moment";
@@ -17,6 +17,7 @@ import {
   getUsers,
 } from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
+import * as XLSX from "xlsx";
 
 const MonthlyInandOutReport = () => {
   const navigation = useNavigate();
@@ -30,6 +31,83 @@ const MonthlyInandOutReport = () => {
   const [monthName, setMonthName] = useState("");
   const [year, setYear] = useState();
   const [loading, setLoading] = useState(false);
+
+  const DownloadTable = (data, fileName) => {
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new();
+
+    // Prepare the worksheet data
+    const worksheetData = [];
+
+    // Add the header row
+    worksheetData.push(["Employee", "Date", "In", "Out"]);
+
+    // Prepare an array to store rows
+    const rows = [];
+
+    // Collect rows
+    data.forEach((record) => {
+      const employeeName = `${record.first_name} ${record.last_name}`;
+
+      Object.keys(record).forEach((key) => {
+        if (key !== "first_name" && key !== "last_name") {
+          const date = key;
+          const timeData = record[key];
+
+          let inTime = "";
+          let outTime = "";
+
+          if (timeData) {
+            if (
+              timeData.in &&
+              timeData.in !== "weeklyoff" &&
+              timeData.in !== "0001-01-01T00:00:00"
+            ) {
+              inTime = moment(timeData.in).format("hh:mm A");
+            } else if (timeData.in === "weeklyoff") {
+              inTime = "Weekly Off";
+            }
+
+            if (
+              timeData.out &&
+              timeData.in !== "weeklyoff" &&
+              timeData.out !== "0001-01-01T00:00:00"
+            ) {
+              outTime = moment(timeData.out).format("hh:mm A");
+            } else if (timeData.out === "weeklyoff") {
+              outTime = "Weekly Off";
+            }
+          }
+
+          rows.push([employeeName, date, inTime, outTime]);
+        }
+      });
+    });
+
+    // Sort rows by date
+    rows.sort((a, b) => {
+      const dateA = moment(a[1], "DD").toDate(); // Assuming dates are in "DD" format
+      const dateB = moment(b[1], "DD").toDate(); // Assuming dates are in "DD" format
+      return dateA - dateB;
+    });
+
+    // Add sorted rows to worksheet data
+    worksheetData.push(...rows);
+
+    // Create worksheet from array of arrays
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Append worksheet to workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Ensure the file name is a string
+    if (typeof fileName !== "string" || fileName.trim() === "") {
+      throw new Error("Invalid file name");
+    }
+
+    // Write the workbook to file
+    XLSX.writeFile(workbook, fileName);
+  };
 
   useEffect(() => {
     getTeamData();
@@ -269,7 +347,7 @@ const MonthlyInandOutReport = () => {
                 },
                 children: (
                   <div>
-                    <p className="monthlyweeklyoff_text">Weekly Off</p>
+                    <p className="monthlyinout_weeklyoff_text">Weekly off</p>
                   </div>
                 ),
               };
@@ -362,6 +440,7 @@ const MonthlyInandOutReport = () => {
           return (
             <div className="breakreport_employeenameContainer">
               <CommonAvatar
+                avatarSize={26}
                 itemName={record.first_name + " " + record.last_name}
               />
               <p className="reports_avatarname">
@@ -465,7 +544,7 @@ const MonthlyInandOutReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                DownloadTable(data, `${monthName} Monthly IN-Out Report.xlsx`);
               }}
             >
               <DownloadOutlined className="download_icon" />
@@ -487,6 +566,7 @@ const MonthlyInandOutReport = () => {
           loading={loading}
           bordered="true"
           checkBox="false"
+          size="small"
         />
       </div>
     </div>
