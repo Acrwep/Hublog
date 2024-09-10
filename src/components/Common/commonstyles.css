@@ -234,3 +234,14 @@
 .warningmodal_deletebutton:active {
   transform: scale(0.9);
 }
+/* nodata image */
+.commonnodata_image {
+  width: 170px;
+}
+.commonnodata_text {
+  color: #a4a4a4;
+  font-weight: 600;
+  position: absolute;
+  top: 87%;
+  font-size: 14px;
+}

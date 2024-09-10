@@ -208,7 +208,7 @@ const UserDetail = () => {
     const findSelectedUser = userList.find((f) => f.id === value);
     setFullName(findSelectedUser.first_Name + " " + findSelectedUser.last_Name);
     setEmail(findSelectedUser.email);
-    getuserDetailsData(value);
+    getuserDetailsData(value, selectedDates[0], selectedDates[1]);
   };
 
   const handleDateChange = (dates, dateStrings) => {

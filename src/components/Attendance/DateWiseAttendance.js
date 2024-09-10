@@ -1,9 +1,14 @@
 import React from "react";
-import { Row, Col, Avatar } from "antd";
+import { Row, Col, Avatar, Button, Tooltip } from "antd";
 import { PiArrowDownLeftBold, PiArrowUpRightBold } from "react-icons/pi";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import CommonSelectField from "../Common/CommonSelectField";
+import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import "./styles.css";
 
 const DateWiseAttendance = () => {
+  const teamList = [{ id: 1, name: "Operation" }];
+
   const presentList = [
     { id: 1, name: "Balaji", checkIn: "09:12 AM", checkOut: "06:32 PM" },
     { id: 2, name: "Rohit", checkIn: "09:16 AM", checkOut: "06:34 PM" },
@@ -14,6 +19,30 @@ const DateWiseAttendance = () => {
   ];
   return (
     <div>
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "170px" }}>
+            <CommonSelectField options={teamList} placeholder="All Teams" />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
+            <div>
+              <CommonDoubleDatePicker />
+            </div>
+            <Tooltip placement="top" title="Download">
+              <Button className="dashboard_download_button">
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button className="dashboard_refresh_button">
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="datewise_Container">

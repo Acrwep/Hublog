@@ -22,6 +22,7 @@ import { GrMapLocation } from "react-icons/gr";
 import { VscGraphLine } from "react-icons/vsc";
 import { FiActivity } from "react-icons/fi";
 import { VscOrganization } from "react-icons/vsc";
+import { PiMonitorFill } from "react-icons/pi";
 
 export const SideMenuConfig = {
   1: {
@@ -76,7 +77,7 @@ export const SideMenuConfig = {
       },
       {
         title: "App $ URLs",
-        icon: <FaAppStore size={17} />,
+        icon: <PiMonitorFill size={17} />,
         path: "app$urls",
       },
       {

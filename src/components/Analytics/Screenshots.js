@@ -18,6 +18,7 @@ import CommonAvatar from "../Common/CommonAvatar";
 import moment from "moment";
 import Loader from "../Common/Loader";
 import PrismaZoom from "react-prismazoom";
+import CommonNodatafound from "../Common/CommonNodatafound";
 
 const Screenshots = () => {
   const [date, setDate] = useState(new Date());
@@ -274,9 +275,7 @@ const Screenshots = () => {
                     })}
                 </>
               ) : (
-                <div style={{ padding: "12px" }}>
-                  <p className="screenshots_nodatafound">No data found</p>
-                </div>
+                <CommonNodatafound />
               )}
             </>
           )}

@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { Row, Col, Button, Tooltip } from "antd";
 import CommonBarChart from "../Common/CommonBarChart";
-import "./styles.css";
 import CommonTable from "../Common/CommonTable";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import CommonSelectField from "../Common/CommonSelectField";
+import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
+import "./styles.css";
 
 const AddendanceDetail = () => {
+  const teamList = [{ id: 1, name: "Operation" }];
+
   const attendanceTrendsXasis = [
     "23/06/24",
     "24/06/24",
@@ -80,6 +86,30 @@ const AddendanceDetail = () => {
   ];
   return (
     <div>
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "170px" }}>
+            <CommonSelectField options={teamList} placeholder="All Teams" />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
+            <div>
+              <CommonDoubleDatePicker />
+            </div>
+            <Tooltip placement="top" title="Download">
+              <Button className="dashboard_download_button">
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button className="dashboard_refresh_button">
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
       <div className="devices_chartsContainer">
         <p className="devices_chartheading">Attendance Trends</p>
         <CommonBarChart
