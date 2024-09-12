@@ -15,6 +15,12 @@ import {
   breakSearchValueReducer,
   roleReducer,
   roleSearchValueReducer,
+  datewiseAttendanceReducer,
+  datewiseAttendanceAbsentReducer,
+  datewiseAttendanceUsersReducer,
+  datewiseAttendanceTeamValueReducer,
+  datewiseAttendanceUserValueReducer,
+  datewiseAttendanceDateValueReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -35,5 +41,11 @@ export const store = configureStore({
     userBreak: userBreakReducer,
     settingsBreak: settingsBreakReducer,
     breaksearchvalue: breakSearchValueReducer,
+    datewiseattendance: datewiseAttendanceReducer,
+    datewiseattendanceusers: datewiseAttendanceUsersReducer,
+    datewiseattendanceabsent: datewiseAttendanceAbsentReducer,
+    datewiseattendanceteamvalue: datewiseAttendanceTeamValueReducer,
+    datewiseattendanceuservalue: datewiseAttendanceUserValueReducer,
+    datewiseattendancedatevalue: datewiseAttendanceDateValueReducer,
   },
 });

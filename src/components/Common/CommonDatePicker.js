@@ -20,6 +20,12 @@ export default function CommonDatePicker({
     const formattedDate = dates.toString();
     onChange(formattedDate);
   };
+
+  // Disable future dates
+  const disableFutureDates = (current) => {
+    return current && current > dayJs().endOf("day"); // Disable dates greater than today
+  };
+
   return (
     <div style={style}>
       <div style={{ display: "flex" }}>
@@ -42,6 +48,7 @@ export default function CommonDatePicker({
           status={error ? "error" : ""}
           style={{ width: "100%" }}
           allowClear={false}
+          disabledDate={disableFutureDates}
         />
       </Space>
       <div

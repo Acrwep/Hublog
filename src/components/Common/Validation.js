@@ -76,3 +76,23 @@ export const addressValidator = (address) => {
 
   return error;
 };
+
+export const addAppandUrlTime = (time1, time2) => {
+  // Split the time values into hours and minutes
+  const [hours1, minutes1] = time1.split(":");
+  const [hours2, minutes2] = time2.split(":");
+
+  // Convert the time values to minutes
+  const totalMinutes1 = parseInt(hours1) * 60 + parseInt(minutes1);
+  const totalMinutes2 = parseInt(hours2) * 60 + parseInt(minutes2);
+
+  // Add the total minutes
+  const totalMinutes = totalMinutes1 + totalMinutes2;
+
+  // Convert the total minutes back to hours and minutes
+  const resultHours = Math.floor(totalMinutes / 60);
+  const resultMinutes = totalMinutes % 60;
+
+  // Format the result
+  return `${resultHours}h:${resultMinutes.toString().padStart(2, "0")}m`;
+};

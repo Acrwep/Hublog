@@ -195,6 +195,75 @@ const roleSearchValueSlice = createSlice({
   },
 });
 
+//datewise attendance
+const datewiseAttendanceSlice = createSlice({
+  name: "datewiseattendance",
+  initialState,
+  reducers: {
+    storeDatewiseAttendance(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const datewiseAttendanceAbsentSlice = createSlice({
+  name: "datewiseattendanceabsent",
+  initialState,
+  reducers: {
+    storeDatewiseAttendanceAbsentData(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const datewiseAttendanceUsersSlice = createSlice({
+  name: "datewiseattendanceusers",
+  initialState,
+  reducers: {
+    storeDatewiseAttendanceUsersData(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const datewiseAttendanceTeamValue = null;
+const datewiseAttendanceTeamValueSlice = createSlice({
+  name: "datewiseattendanceteamvalue",
+  initialState: datewiseAttendanceTeamValue,
+  reducers: {
+    storeDatewiseAttendanceTeamValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const datewiseAttendanceUserValue = null;
+const datewiseAttendanceUserValueSlice = createSlice({
+  name: "datewiseattendanceuservalue",
+  initialState: datewiseAttendanceUserValue,
+  reducers: {
+    storeDatewiseAttendanceUserValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const datewiseAttendanceDateValue = null;
+const datewiseAttendanceDateValueSlice = createSlice({
+  name: "datewiseattendancedatevalue",
+  initialState: datewiseAttendanceDateValue,
+  reducers: {
+    storeDatewiseAttendanceDateValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeActiveTeam } = activeTeamSlice.actions;
@@ -212,6 +281,17 @@ export const { storesettingsBreak } = SettingsBreakSlice.actions;
 export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
+export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
+export const { storeDatewiseAttendanceAbsentData } =
+  datewiseAttendanceAbsentSlice.actions;
+export const { storeDatewiseAttendanceUsersData } =
+  datewiseAttendanceUsersSlice.actions;
+export const { storeDatewiseAttendanceTeamValue } =
+  datewiseAttendanceTeamValueSlice.actions;
+export const { storeDatewiseAttendanceUserValue } =
+  datewiseAttendanceUserValueSlice.actions;
+export const { storeDatewiseAttendanceDateValue } =
+  datewiseAttendanceDateValueSlice.actions;
 // export default teamMemberSlice.reducer;
 
 export const teamMemberReducer = teamMemberSlice.reducer;
@@ -230,3 +310,14 @@ export const settingsBreakReducer = SettingsBreakSlice.reducer;
 export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
+export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
+export const datewiseAttendanceAbsentReducer =
+  datewiseAttendanceAbsentSlice.reducer;
+export const datewiseAttendanceUsersReducer =
+  datewiseAttendanceUsersSlice.reducer;
+export const datewiseAttendanceTeamValueReducer =
+  datewiseAttendanceTeamValueSlice.reducer;
+export const datewiseAttendanceUserValueReducer =
+  datewiseAttendanceUserValueSlice.reducer;
+export const datewiseAttendanceDateValueReducer =
+  datewiseAttendanceDateValueSlice.reducer;

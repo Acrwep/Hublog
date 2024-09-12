@@ -108,12 +108,55 @@ export const LoginApi = async (loginCredential) => {
   }
 };
 
+//analytics
 //screenshot
 export const getScreenShots = async (userId, organizationId, date) => {
   try {
     const response = await api.get(
       `/api/Screenshot/GetUserScreenShots?userId=${userId}&organizationId=${organizationId}&date=${date}`
     );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//apps
+export const getAppsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetAppUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getTopAppsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopAppUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//urls
+export const getUrlsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetUrlUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getTopUrlsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopUrlUsage`, {
+      params: payload,
+    });
     return response;
   } catch (error) {
     throw error;

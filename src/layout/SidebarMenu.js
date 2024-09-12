@@ -279,11 +279,7 @@ function SidebarMenu() {
       }
     } else {
       setShowPages(false);
-      if (location.pathname === "/") {
-        navigation("/login");
-      } else {
-        navigation(location.pathname);
-      }
+      navigation("/login");
       return;
     }
 

@@ -136,12 +136,12 @@ const DailyAttendanceReport = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getAttendanceData(userId, teamId, orgId, date);
+        getDailyAttendanceData(userId, teamId, orgId, date);
       }, 500);
     }
   };
 
-  const getAttendanceData = async (user, team, orgId, selectedDate) => {
+  const getDailyAttendanceData = async (user, team, orgId, selectedDate) => {
     setLoading(true);
     const payload = {
       ...(user && { userId: user }),
@@ -199,7 +199,7 @@ const DailyAttendanceReport = () => {
       setUserList(adddFullName);
       const userIdd = null;
       setUserId(userIdd);
-      getAttendanceData(userIdd, value, organizationId, date);
+      getDailyAttendanceData(userIdd, value, organizationId, date);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -208,13 +208,13 @@ const DailyAttendanceReport = () => {
 
   const onDateChange = (value) => {
     setDate(value);
-    getAttendanceData(userId, teamId, organizationId, value);
+    getDailyAttendanceData(userId, teamId, organizationId, value);
   };
 
   const handleUser = (value) => {
     console.log("userIdddd", value);
     setUserId(value);
-    getAttendanceData(value, teamId, organizationId, date);
+    getDailyAttendanceData(value, teamId, organizationId, date);
   };
 
   return (

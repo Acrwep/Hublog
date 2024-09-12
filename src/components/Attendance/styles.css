@@ -58,7 +58,6 @@
   align-items: center;
 }
 .datewise_presentlistnames {
-  margin-left: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
