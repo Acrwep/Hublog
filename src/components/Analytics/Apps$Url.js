@@ -47,6 +47,9 @@ const Apps$Url = () => {
         horizontal: true,
       },
     },
+    grid: {
+      show: false, // Disable grid lines
+    },
     dataLabels: {
       enabled: false, // Disable the value labels on the bars
     },
@@ -177,7 +180,6 @@ const Apps$Url = () => {
   };
 
   const getUsersData = async () => {
-    let userIdd = null;
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
@@ -437,6 +439,30 @@ const Apps$Url = () => {
     );
   };
 
+  const handleRefresh = () => {
+    setTeamId(null);
+    setUserId(null);
+
+    const currentDate = new Date();
+    const previousWeekDate = new Date(currentDate);
+    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
+
+    const formattedCurrentDate = formatDate(currentDate);
+    const formattedPreviousWeekDate = formatDate(previousWeekDate);
+
+    let dates = [];
+    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
+    setSelectedDates(dates);
+
+    getAppsData(
+      null,
+      null,
+      organizationId,
+      formattedPreviousWeekDate,
+      formattedCurrentDate
+    );
+  };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -475,13 +501,12 @@ const Apps$Url = () => {
                 onChange={handleDateChange}
               />
             </div>
-            <Tooltip placement="top" title="Download">
-              <Button className="dashboard_download_button">
-                <DownloadOutlined className="download_icon" />
-              </Button>
-            </Tooltip>
             <Tooltip placement="top" title="Refresh">
-              <Button className="dashboard_refresh_button">
+              <Button
+                className="dashboard_refresh_button"
+                style={{ marginLeft: "12px" }}
+                onClick={handleRefresh}
+              >
                 <RedoOutlined className="refresh_icon" />
               </Button>
             </Tooltip>
@@ -526,7 +551,15 @@ const Apps$Url = () => {
           <div style={{ marginTop: "25px" }}>
             <Row gutter={16}>
               <Col span={24}>
-                <div className="userproductivity_topContainers">
+                <div
+                  className="appsandurlchart_Containers"
+                  style={{
+                    height: appsData.length <= 10 ? "auto" : "50vh",
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    width: "100%",
+                  }}
+                >
                   <p className="devices_chartheading">Application Usage</p>
                   {appsData.length >= 1 ? (
                     <ReactApexChart
@@ -536,9 +569,9 @@ const Apps$Url = () => {
                       height={
                         appsData.length <= 5
                           ? 170
-                          : appsData.length <= 10
-                          ? 320
-                          : "auto"
+                          : appsData.length > 5 && appsData.length <= 10
+                          ? 260
+                          : 440
                       }
                     />
                   ) : (
@@ -552,14 +585,26 @@ const Apps$Url = () => {
           <div style={{ marginTop: "25px" }}>
             <Row>
               <Col xs={24} sm={24} md={12} lg={12}>
-                <div className="userproductivity_topContainers">
+                <div
+                  className="appsandurlchart_Containers"
+                  style={{
+                    height: urlsData.length <= 5 ? "100%" : "50vh",
+                    overflowY: "auto",
+                  }}
+                >
                   <p className="devices_chartheading">URL Usage</p>
                   {urlsData.length >= 1 ? (
                     <ReactApexChart
                       options={barchartoptions}
                       series={urlsbarchartseries}
                       type="bar"
-                      height={urlsData.length <= 10 ? 170 : "auto"}
+                      height={
+                        urlsData.length <= 5
+                          ? 175
+                          : urlsData.length > 5 && urlsData.length <= 10
+                          ? 260
+                          : 420
+                      }
                     />
                   ) : (
                     <CommonNodatafound />

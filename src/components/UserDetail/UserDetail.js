@@ -19,10 +19,20 @@ import {
   getUserAttendance,
   getUserBreak,
   getUsers,
+  getAppsUsage,
+  getUrlsUsage,
+  getTopAppsUsage,
+  getTopUrlsUsage,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
-import { storeuserAttendance, storeuserBreak } from "../Redux/slice";
+import {
+  storeuserAppsUsage,
+  storeuserAttendance,
+  storeuserBreak,
+  storeuserUrlsUsage,
+} from "../Redux/slice";
+import { addAppandUrlTime } from "../Common/Validation";
 import { useDispatch } from "react-redux";
 
 const UserDetail = () => {
@@ -46,13 +56,19 @@ const UserDetail = () => {
   const [roleId, setRoleId] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [topAppName, setTopAppName] = useState("");
+  const [topAppUsageTime, setTopAppUsageTime] = useState("");
+  const [topUrlName, setTopUrlName] = useState("");
+  const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
+  const [internetTime, setInternetTime] = useState("");
   //loadings
   const [attendanceLoading, setAttendanceLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
+  const [appsLoading, setAppsLoading] = useState(true);
   const [attendanceSummary, setAttendanceSummary] = useState("");
 
   const handlePageChange = (id) => {
-    if (id >= 3) {
+    if (id === 3 || id === 4 || id === 5) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -183,8 +199,8 @@ const UserDetail = () => {
       try {
         const response = await getUserBreak(
           userId,
-          startDate != undefined ? startDate : selectedDates[0],
-          endDate != undefined ? endDate : selectedDates[1]
+          startDate === undefined ? formattedPreviousWeekDate : startDate,
+          endDate === undefined ? formattedCurrentDate : endDate
         );
         console.log("user break response", response.data);
         const details = response.data;
@@ -200,6 +216,158 @@ const UserDetail = () => {
           setBreakLoading(false);
         }, 350);
       }
+    }
+    if (activePage === 6) {
+      setAppsLoading(true);
+      const orgId = localStorage.getItem("organizationId");
+
+      const payload = {
+        ...(userId && { userId: userId }),
+        organizationId: orgId,
+        startDate:
+          startDate === undefined ? formattedPreviousWeekDate : startDate,
+        endDate: endDate === undefined ? formattedCurrentDate : endDate,
+      };
+      try {
+        const response = await getAppsUsage(payload);
+        const AppsData = response.data;
+        // setAppsData(AppsandurlsData);
+        dispatch(storeuserAppsUsage(AppsData));
+      } catch (error) {
+        CommonToaster(error.response?.data?.message, "error");
+      } finally {
+        setTimeout(() => {
+          getTopAppUsageData(userId, orgId, startDate, endDate);
+        }, 500);
+      }
+    }
+  };
+
+  const getTopAppUsageData = async (userid, orgId, startdate, enddate) => {
+    const currentDate = new Date();
+    const previousWeekDate = new Date(currentDate);
+    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
+
+    const formattedCurrentDate = formatDate(currentDate);
+    const formattedPreviousWeekDate = formatDate(previousWeekDate);
+    const payload = {
+      ...(userid && { userId: userid }),
+      organizationId: orgId,
+      startDate:
+        startdate === undefined ? formattedPreviousWeekDate : startdate,
+      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+    };
+    let AppMaxTime = "";
+    try {
+      const response = await getTopAppsUsage(payload);
+      const TopAppsUsageData = response.data;
+      if (TopAppsUsageData.applicationName != null) {
+        setTopAppName(
+          TopAppsUsageData.applicationName[0].toUpperCase() +
+            TopAppsUsageData.applicationName.slice(1)
+        );
+
+        const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
+        AppMaxTime = TopAppsUsageData.maxUsage;
+        setTopAppUsageTime(hours + "h:" + minutes + "m");
+        return;
+      } else {
+        setTopAppName("-");
+        setTopAppUsageTime("-");
+        AppMaxTime = "";
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUrlsUsageData(userid, orgId, startdate, enddate, AppMaxTime);
+      }, 500);
+    }
+  };
+
+  const getUrlsUsageData = async (
+    userid,
+    orgId,
+    startdate,
+    enddate,
+    AppMaxTime
+  ) => {
+    const currentDate = new Date();
+
+    // Calculate previous week date (subtract 7 days)
+    const previousWeekDate = new Date(currentDate);
+    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
+
+    // Format dates
+    const formattedCurrentDate = formatDate(currentDate);
+    const formattedPreviousWeekDate = formatDate(previousWeekDate);
+
+    const payload = {
+      ...(userid && { userId: userid }),
+      organizationId: orgId,
+      startDate:
+        startdate === undefined ? formattedPreviousWeekDate : startdate,
+      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+    };
+    try {
+      const response = await getUrlsUsage(payload);
+      const UrlsData = response.data;
+      dispatch(storeuserUrlsUsage(UrlsData));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        getTopUrlUsageData(userid, orgId, startdate, enddate, AppMaxTime);
+      }, 500);
+    }
+  };
+
+  const getTopUrlUsageData = async (
+    userid,
+    orgId,
+    startdate,
+    enddate,
+    AppMaxTime
+  ) => {
+    const currentDate = new Date();
+    const previousWeekDate = new Date(currentDate);
+    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
+
+    const formattedCurrentDate = formatDate(currentDate);
+    const formattedPreviousWeekDate = formatDate(previousWeekDate);
+    const payload = {
+      ...(userid && { userId: userid }),
+      organizationId: orgId,
+      startDate:
+        startdate === undefined ? formattedPreviousWeekDate : startdate,
+      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+    };
+    try {
+      const response = await getTopUrlsUsage(payload);
+      const TopUrlsUsageData = response.data;
+
+      if (TopUrlsUsageData.url) {
+        setTopUrlName(TopUrlsUsageData.url);
+
+        const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
+        setTopUrlUsageTime(hours + "h:" + minutes + "m");
+
+        const totalTime = addAppandUrlTime(
+          AppMaxTime,
+          TopUrlsUsageData.maxUsage
+        );
+        setInternetTime(totalTime);
+      } else {
+        setTopUrlName("-");
+        setTopUrlUsageTime("-");
+        setInternetTime("");
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        setAppsLoading(false);
+      }, 500);
     }
   };
 
@@ -297,7 +465,7 @@ const UserDetail = () => {
               <div
                 key={index}
                 className={
-                  index >= 2
+                  index === 2 || index === 3 || index === 4
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"
@@ -357,7 +525,14 @@ const UserDetail = () => {
           )}
           {activePage === 6 && (
             <div>
-              <UserAppsUrls />
+              <UserAppsUrls
+                loading={appsLoading}
+                topAppName={topAppName}
+                topAppUsageTime={topAppUsageTime}
+                topUrlName={topUrlName}
+                topUrlUsageTime={topUrlUsageTime}
+                internetTime={internetTime}
+              />
             </div>
           )}
         </Col>

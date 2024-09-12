@@ -124,7 +124,7 @@ const teamsSlice = createSlice({
   },
 });
 
-//attendance
+//user detail attendance
 const userAttendanceSlice = createSlice({
   name: "userAttendance",
   initialState,
@@ -136,7 +136,7 @@ const userAttendanceSlice = createSlice({
   },
 });
 
-// break
+//user detail break
 const userBreakSlice = createSlice({
   name: "userBreak",
   initialState,
@@ -148,6 +148,28 @@ const userBreakSlice = createSlice({
   },
 });
 
+//user detail apps ans urls
+const userAppsUsageSlice = createSlice({
+  name: "userappsusage",
+  initialState,
+  reducers: {
+    storeuserAppsUsage(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const userurlsUsageSlice = createSlice({
+  name: "userurlsusage",
+  initialState,
+  reducers: {
+    storeuserUrlsUsage(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //settings break
 const SettingsBreakSlice = createSlice({
   name: "settingsbreak",
@@ -267,8 +289,11 @@ const datewiseAttendanceDateValueSlice = createSlice({
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeActiveTeam } = activeTeamSlice.actions;
+//user detail
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
+export const { storeuserAppsUsage } = userAppsUsageSlice.actions;
+export const { storeuserUrlsUsage } = userurlsUsageSlice.actions;
 export const { storeUsers } = usersSlice.actions;
 export const { storeUsersForTeamsTab } = usersForTeamstabSlice.actions;
 export const { storeUserSearchValue } = userSearchValueSlice.actions;
@@ -298,6 +323,8 @@ export const teamMemberReducer = teamMemberSlice.reducer;
 export const activeTeamReducer = activeTeamSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
+export const userAppUsageReducer = userAppsUsageSlice.reducer;
+export const userUrlUsageReducer = userurlsUsageSlice.reducer;
 export const usersReducer = usersSlice.reducer;
 export const usersforteamstabReducer = usersForTeamstabSlice.reducer;
 export const userSearchValueReducer = userSearchValueSlice.reducer;

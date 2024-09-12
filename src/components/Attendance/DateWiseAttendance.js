@@ -60,7 +60,6 @@ const DateWiseAttendance = ({ tList, uList }) => {
       );
       setTeamId(teamValue);
       setUserId(userValue);
-      console.log("dateValuuu", dateValue);
       setDate(dateValue === null ? date : dateValue);
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -172,7 +171,6 @@ const DateWiseAttendance = ({ tList, uList }) => {
   };
 
   const onDateChange = (value) => {
-    console.log("vallll", value);
     setDate(value);
     dispatch(storeDatewiseAttendanceDateValue(value));
     getDailyAttendanceData(userId, teamId, organizationId, value, userList);
