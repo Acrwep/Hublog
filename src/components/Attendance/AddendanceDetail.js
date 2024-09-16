@@ -1,136 +1,373 @@
-import React, { useState } from "react";
-import { Row, Col, Button, Tooltip } from "antd";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Drawer, Calendar } from "antd";
 import CommonBarChart from "../Common/CommonBarChart";
 import CommonTable from "../Common/CommonTable";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import CommonSelectField from "../Common/CommonSelectField";
-import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
+import CommonAvatar from "../Common/CommonAvatar";
+import { useSelector } from "react-redux";
+import moment from "moment";
 import "./styles.css";
+import Loader from "../Common/Loader";
+import AttendanceTrendsChart from "./AttendanceTrendsChart";
+import { HiOutlineCalendar } from "react-icons/hi2";
+import { dayJs } from "../Utils";
+import { CommonToaster } from "../Common/CommonToaster";
+import { getAttendanceAndBreakSummary } from "../APIservice.js/action";
+import ReactApexChart from "react-apexcharts";
+import CommonNodatafound from "../Common/CommonNodatafound";
 
-const AddendanceDetail = () => {
-  const teamList = [{ id: 1, name: "Operation" }];
+const AddendanceDetail = ({ loading, uList }) => {
+  const employeeAttendanceList = useSelector(
+    (state) => state.attendanceandbreaksummary
+  );
+  const attendanceTrendsData = useSelector((state) => state.attendancetrends);
 
-  const attendanceTrendsXasis = [
-    "23/06/24",
-    "24/06/24",
-    "25/06/24",
-    "26/06/24",
-  ];
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [userAttendanceData, setUserAttendanceData] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [organizationId, setOrganizationId] = useState("");
 
+  const attendanceTrendsXaxis = attendanceTrendsData.map((a) =>
+    moment(a.attendanceDate).format("DD/MM/YYYY")
+  );
   const attendanceTrendsSeries = [
-    { name: "Present", data: [12, 10, 20, 30] },
-    { name: "Absent", data: [5, 6, 10, 12] },
+    {
+      name: "Present",
+      data: attendanceTrendsData.map((item) => {
+        return item?.presentCount || 0;
+      }),
+    },
+    {
+      name: "Absent",
+      data: attendanceTrendsData.map((item) => {
+        return item?.absentCount || 0;
+      }),
+    },
+    // {
+    //   name: "Attendance Percentage",
+    //   type: "line",
+    //   data: attendanceTrendsData.map((item, index) => {
+    //     // Add check for attendancePercentage
+    //     if (
+    //       item?.attendancePercentage !== undefined &&
+    //       item.attendancePercentage !== null
+    //     ) {
+    //       const convertString = item.attendancePercentage.toString();
+    //       const round = convertString.split(".")[0];
+    //       console.log(`Attendance Percentage for index ${index}:`, round);
+    //       return round;
+    //     } else {
+    //       console.warn(`Missing attendancePercentage at index ${index}`);
+    //       return 0; // Fallback to 0 if undefined
+    //     }
+    //   }),
+    // },
+    // {
+    //   name: "Average Working Time",
+    //   type: "line",
+    //   data: attendanceTrendsData.map((item, index) => {
+    //     // Safeguard for averageWorkingTime
+    //     if (item?.averageWorkingTime && item.averageWorkingTime !== "null") {
+    //       const [hours, minutes] = item.averageWorkingTime
+    //         .split(":")
+    //         .map(Number);
+    //       const totalMinutes = hours * 60 + minutes; // Convert to total minutes
+    //       console.log(
+    //         `Average Working Time (minutes) for index ${index}:`,
+    //         totalMinutes
+    //       );
+    //       return totalMinutes;
+    //     } else {
+    //       console.warn(`Invalid averageWorkingTime at index ${index}`);
+    //       return 0; // Fallback to 0 if undefined
+    //     }
+    //   }),
+    // },
   ];
+
+  const options = {
+    chart: {
+      type: "bar",
+      height: 350,
+      stacked: true,
+    },
+    plotOptions: {
+      bar: {
+        labels: true,
+        distributed: false,
+        columnWidth: "40%", // Corrected column width to a percentage
+        horizontal: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ["transparent"],
+    },
+    xaxis: {
+      categories: attendanceTrendsXaxis,
+      labels: {
+        show: true,
+        rotate: -40, // Rotate labels by -40 degrees
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of x-axis labels
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return value;
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
+      title: {
+        text: "Value",
+      },
+    },
+    fill: {
+      opacity: 1,
+    },
+    tooltip: {
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        const data = attendanceTrendsData[dataPointIndex]; // Get the relevant data for the hovered point
+        const category = w.globals.labels[dataPointIndex];
+        const presentCount = data.presentCount || 0;
+        const absentCount = data.absentCount || 0;
+        const attendancePercentage = data.attendancePercentage || 0;
+        const averageWorkingTime = data.averageWorkingTime || "00:00:00";
+
+        return `
+       <div class="apexcharts-tooltip-custom">
+        <div style="display: flex; align-items: center;">
+          <div style="width: 12px; height: 12px; background-color: #25a17d; border-radius: 50%; margin-right: 8px;"></div>
+          <strong style="margin-right:4px">Present Count:</strong> ${presentCount}
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 4px;">
+          <div style="width: 12px; height: 12px; background-color: #ABB3B3; border-radius: 50%; margin-right: 8px;"></div>
+          <strong style="margin-right:4px">Absent Count:</strong> ${absentCount}
+        </div>
+          <div style="display: flex; align-items: center; margin-top: 4px;">
+          <div style="width: 12px; height: 12px; background-color: rgba(0,126,241,0.64); border-radius: 50%; margin-right: 8px;"></div>
+          <strong style="margin-right:4px">Attendance Percentage:</strong>${attendancePercentage.toFixed(
+            2
+          )}%
+        </div>
+        <div style="display: flex; align-items: center; margin-top: 4px;">
+          <div style="width: 12px; height: 12px; background-color: rgba(255,193,7,0.74); border-radius: 50%; margin-right: 8px;"></div>
+          <strong style="margin-right:4px">Average Working Time:</strong>${moment(
+            averageWorkingTime,
+            "HH:mm:ss"
+          ).format("H[h]:mm[m]")}
+        </div>
+        </div>
+        `;
+      },
+    },
+    legend: {
+      show: true, // Fixed legend display logic
+    },
+    colors: ["#25a17d", "#ABB3B3"], // Added colors here instead of passing directly as a prop
+  };
+
   const attendanceTrendsColors = ["#25a17d", "#ABB3B3"];
 
   const columns = [
-    { title: "Employee", dataIndex: "employee", key: "employee", width: 140 },
+    {
+      title: "Employee",
+      dataIndex: "full_Name",
+      key: "full_Name",
+      width: "150px",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarSize={30} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
+    },
     {
       title: "Attendance",
       dataIndex: "attendance",
       key: "attendance",
-      width: 120,
+      width: "150px",
     },
     {
       title: "Working time",
-      dataIndex: "workingtime",
-      key: "workingtime",
-      width: 140,
-    },
-    {
-      title: "Online time",
-      dataIndex: "onlinetime",
-      key: "onlinetime",
-      width: 140,
+      dataIndex: "workingTime",
+      key: "workingTime",
+      width: "150px",
+      render: (text, record) => {
+        if (text === null) return "00h:00m";
+        return <p>{moment(text, "HH:mm:ss").format("H[h]:mm[m]")}</p>;
+      },
     },
     {
       title: "Break time",
-      dataIndex: "breaktime",
-      key: "breaktime",
-      width: 140,
+      dataIndex: "breakTime",
+      key: "breakTime",
+      width: "150px",
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00" || text === null) {
+          return "00h:00m";
+        }
+        return <p>{moment(text, "HH:mm:ss").format("HH[h]:mm[m]")}</p>;
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      width: 100,
+      align: "center",
+      render: (text, record) => {
+        return (
+          <button onClick={() => handleCalendar(record)}>
+            <HiOutlineCalendar size={20} color="gray" />
+          </button>
+        );
+      },
     },
   ];
-  const employeeList = [
-    {
-      key: "1",
-      employee: "John Brown",
-      attendance: "4",
-      workingtime: "07h:16m",
-      onlinetime: "06h:12m",
-      breaktime: "01h:02min",
-    },
-    {
-      key: "w",
-      employee: "Balaji",
-      attendance: "6",
-      workingtime: "07h:20m",
-      onlinetime: "06h:20m",
-      breaktime: "01h:01min",
-    },
-    {
-      key: "3",
-      employee: "Rubi",
-      attendance: "6",
-      workingtime: "07h:50m",
-      onlinetime: "06h:40m",
-      breaktime: "40min",
-    },
-    {
-      key: "4",
-      employee: "Vijay",
-      attendance: "12",
-      workingtime: "07h:16m",
-      onlinetime: "06h:12m",
-      breaktime: "01h:02min",
-    },
-  ];
-  return (
-    <div>
-      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div style={{ width: "170px" }}>
-            <CommonSelectField options={teamList} placeholder="All Teams" />
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="wellness_calendarContainer">
-            <div>
-              <CommonDoubleDatePicker />
-            </div>
-            <Tooltip placement="top" title="Download">
-              <Button className="dashboard_download_button">
-                <DownloadOutlined className="download_icon" />
-              </Button>
-            </Tooltip>
-            <Tooltip placement="top" title="Refresh">
-              <Button className="dashboard_refresh_button">
-                <RedoOutlined className="refresh_icon" />
-              </Button>
-            </Tooltip>
-          </div>
-        </Col>
-      </Row>
-      <div className="devices_chartsContainer">
-        <p className="devices_chartheading">Attendance Trends</p>
-        <CommonBarChart
-          xasis={attendanceTrendsXasis}
-          series={attendanceTrendsSeries}
-          colors={attendanceTrendsColors}
-        />
-      </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <div className="devices_chartsContainer">
-          <p className="devices_chartheading">Employee List</p>
-          <CommonTable
-            columns={columns}
-            dataSource={employeeList}
-            scroll={{ x: 1000 }}
-            dataPerPage={4}
-          />
+  const getUserAttendanceData = async (userid, orgId, startdate, enddate) => {
+    const payload = {
+      ...(userid || userId, { userId: userid ? userid : userId }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getAttendanceAndBreakSummary(payload);
+      console.log("user attendance response", response);
+      const details = response?.data;
+
+      const addFullNameProperty = details.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      const reverseData = addFullNameProperty.reverse();
+      setUserAttendanceData(reverseData);
+    } catch (error) {
+      console.log("attendance error", error);
+      CommonToaster(error.response?.data?.message, "error");
+      setUserAttendanceData([]);
+    }
+  };
+
+  const handleChange = (date) => {
+    const dates = new Date(date.$d);
+    console.log(dates);
+    const convertDate = moment(dates).format("YYYY-MM-DD");
+    console.log(convertDate);
+    getUserAttendanceData(userId, organizationId, convertDate, convertDate);
+  };
+
+  const handleCalendar = (record) => {
+    setIsDrawerOpen(true);
+    console.log(record);
+    const clickedUser = uList.find((f) => f.full_Name === record.full_Name);
+    setUserId(clickedUser.id);
+    setUserName(clickedUser.full_Name);
+    const orgId = localStorage.getItem("organizationId");
+    setOrganizationId(orgId);
+    const currentDate = new Date();
+    const formattedCurrentDate = formatDate(currentDate);
+    getUserAttendanceData(
+      clickedUser.id,
+      orgId,
+      formattedCurrentDate,
+      formattedCurrentDate
+    );
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    // Ensure month and day are two digits
+    if (month < 10) {
+      month = `0${month}`;
+    }
+    if (day < 10) {
+      day = `0${day}`;
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
+  // Disable future dates
+  const disableFutureDates = (current) => {
+    return current && current > dayJs().endOf("day"); // Disable dates greater than today
+  };
+
+  return (
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Attendance Trends</p>
+            {attendanceTrendsData.length >= 1 ? (
+              // <AttendanceTrendsChart
+              //   // xasis={attendanceTrendsXaxis}
+              //   series={attendanceTrendsSeries}
+              //   // colors={attendanceTrendsColors}
+              // />
+
+              <ReactApexChart
+                series={attendanceTrendsSeries}
+                colors={attendanceTrendsColors}
+                options={options}
+                type="bar"
+                height={350}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Employee List</p>
+              <CommonTable
+                columns={columns}
+                dataSource={employeeAttendanceList}
+                scroll={{ x: 1000 }}
+                dataPerPage={10}
+                bordered="false"
+                checkBox="false"
+              />
+            </div>
+          </div>
+
+          {/* calendar drawer */}
+          <Drawer
+            title={userName}
+            onClose={() => setIsDrawerOpen(false)}
+            open={isDrawerOpen}
+            width="25%"
+            styles={{ body: { padding: "0px 12px" } }}
+          >
+            <div className="attendancedetail_employeelistCalender">
+              <Calendar
+                fullscreen={false}
+                mode="month"
+                onChange={handleChange}
+                disabledDate={disableFutureDates}
+              />
+            </div>
+          </Drawer>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

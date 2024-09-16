@@ -154,6 +154,13 @@ select:focus {
   background: #25a17e13 !important;
 }
 
+/* antd calendar */
+.ant-select-outlined:not(.ant-select-disabled):not(
+    .ant-select-customize-input
+  ):not(.ant-pagination-size-changer):hover
+  .ant-select-selector {
+  border-color: #25a17d !important;
+}
 /* tab color change */
 .ant-tabs-ink-bar {
   border-bottom: 2px solid #25a17d;
@@ -249,7 +256,7 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06) !important;
 }
 
-.ant-select-focused:where(
+/* .ant-select-focused:where(
     .css-dev-only-do-not-override-1c0na6j
   ).ant-select-outlined:not(.ant-select-disabled):not(
     .ant-select-customize-input
@@ -262,6 +269,15 @@ select:focus {
   :not(.ant-select-customize- input):not(.ant-pagination-size-changer)
   .ant-select-selector {
   border-color: #25a17d !important;
+} */
+
+/* Focused state */
+.ant-select-focused.ant-select:not(.ant-select-disabled):not(
+    .ant-select-customize-input
+  ):not(.ant-pagination-size-changer)
+  .ant-select-selector {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17 !important;
 }
 
 .ant-table-wrapper .ant-table-pagination.ant-pagination {

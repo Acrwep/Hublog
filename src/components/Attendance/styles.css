@@ -39,6 +39,13 @@
   border-radius: 8px;
   color: rgb(20, 184, 166);
 }
+.attendancedetail_employeelistCalender .ant-radio-group {
+  display: none;
+}
+.apexcharts-tooltip-custom {
+  padding: 12px;
+}
+/* datewise attendance styles */
 .datewise_Container {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   height: 100%;

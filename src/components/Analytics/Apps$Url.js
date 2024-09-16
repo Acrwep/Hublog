@@ -275,6 +275,9 @@ const Apps$Url = () => {
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
+      setTopAppName("-");
+      setTopAppUsageTime("-");
+      AppMaxTime = "";
     } finally {
       setTimeout(() => {
         getUrlsUsageData(userid, teamid, orgId, startdate, enddate, AppMaxTime);
@@ -353,7 +356,7 @@ const Apps$Url = () => {
     try {
       const response = await getTopUrlsUsage(payload);
       const TopUrlsUsageData = response.data;
-
+      console.log("top url usage response", TopUrlsUsageData);
       if (TopUrlsUsageData.url) {
         setTopUrlName(TopUrlsUsageData.url);
 
@@ -372,6 +375,9 @@ const Apps$Url = () => {
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
+      setTopUrlName("-");
+      setTopUrlUsageTime("-");
+      setInternetTime("");
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -571,7 +577,7 @@ const Apps$Url = () => {
                           ? 170
                           : appsData.length > 5 && appsData.length <= 10
                           ? 260
-                          : 440
+                          : "auto"
                       }
                     />
                   ) : (
@@ -603,7 +609,7 @@ const Apps$Url = () => {
                           ? 175
                           : urlsData.length > 5 && urlsData.length <= 10
                           ? 260
-                          : 420
+                          : "auto"
                       }
                     />
                   ) : (

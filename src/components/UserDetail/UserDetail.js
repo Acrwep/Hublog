@@ -95,7 +95,6 @@ const UserDetail = () => {
 
     let dates = [];
     dates.push(formattedPreviousWeekDate, formattedCurrentDate);
-    console.log("datearray", dates);
     setSelectedDates(dates);
   };
 
@@ -278,6 +277,9 @@ const UserDetail = () => {
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
+      setTopAppName("-");
+      setTopAppUsageTime("-");
+      AppMaxTime = "";
     } finally {
       setTimeout(() => {
         getUrlsUsageData(userid, orgId, startdate, enddate, AppMaxTime);
@@ -364,6 +366,9 @@ const UserDetail = () => {
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
+      setTopUrlName("-");
+      setTopUrlUsageTime("-");
+      setInternetTime("");
     } finally {
       setTimeout(() => {
         setAppsLoading(false);

@@ -108,6 +108,33 @@ export const LoginApi = async (loginCredential) => {
   }
 };
 
+//Attendance dashboard
+export const getAttendanceTrends = async (payload) => {
+  try {
+    const response = await api.get(
+      `/api/AttendanceDashboard/AllAttendanceSummary`,
+      {
+        params: payload,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getAttendanceAndBreakSummary = async (payload) => {
+  try {
+    const response = await api.get(
+      `/api/AttendanceDashboard/AttendanaceAndBreakSummary`,
+      {
+        params: payload,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //analytics
 //screenshot
 export const getScreenShots = async (userId, organizationId, date) => {

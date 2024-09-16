@@ -41,6 +41,29 @@ const activeTeamSlice = createSlice({
     },
   },
 });
+
+// attendance dashboard
+const attendanceTrendsSlice = createSlice({
+  name: "attendancetrends",
+  initialState,
+  reducers: {
+    storeAttendanceTrends(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const attendanceandsummarySlice = createSlice({
+  name: "attendanceandbreaksummary",
+  initialState,
+  reducers: {
+    storeAttendanceAndBreakSummary(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //users
 const usersSlice = createSlice({
   name: "users",
@@ -289,6 +312,10 @@ const datewiseAttendanceDateValueSlice = createSlice({
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeActiveTeam } = activeTeamSlice.actions;
+//attendance dashboard
+export const { storeAttendanceAndBreakSummary } =
+  attendanceandsummarySlice.actions;
+export const { storeAttendanceTrends } = attendanceTrendsSlice.actions;
 //user detail
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
@@ -321,6 +348,8 @@ export const { storeDatewiseAttendanceDateValue } =
 
 export const teamMemberReducer = teamMemberSlice.reducer;
 export const activeTeamReducer = activeTeamSlice.reducer;
+export const attendancetrendsReducer = attendanceTrendsSlice.reducer;
+export const attendanceandsummaryReducer = attendanceandsummarySlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
 export const userAppUsageReducer = userAppsUsageSlice.reducer;

@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
   usersReducer,
+  attendancetrendsReducer,
+  attendanceandsummaryReducer,
   usersforteamstabReducer,
   userSearchValueReducer,
   designationReducer,
@@ -36,6 +38,8 @@ export const store = configureStore({
     designationsearchvalue: designationSearchValueReducer,
     teams: teamsReducer,
     teamMembers: teamMemberReducer,
+    attendancetrends: attendancetrendsReducer,
+    attendanceandbreaksummary: attendanceandsummaryReducer,
     activeteams: activeTeamReducer,
     roles: roleReducer,
     rolesearchvalue: roleSearchValueReducer,

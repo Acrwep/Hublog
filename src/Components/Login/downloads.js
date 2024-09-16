@@ -21,7 +21,7 @@ export default function Downloads() {
           <div>
             <Button
               className="exedownload_button"
-              href="https://hublog.org:8085/hublogbetasetup.exe"
+              href="https://hublog.org:8087/Hublogsetup.exe"
               download
             >
               Download Hublog .exe
