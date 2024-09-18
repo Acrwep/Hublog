@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Drawer, Calendar } from "antd";
+import { Row, Col, Drawer, Calendar, Divider, Empty } from "antd";
 import CommonBarChart from "../Common/CommonBarChart";
 import CommonTable from "../Common/CommonTable";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -26,6 +26,8 @@ const AddendanceDetail = ({ loading, uList }) => {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState("");
   const [organizationId, setOrganizationId] = useState("");
+  const [calendarDate, setCalendarDate] = useState(dayJs());
+  const userAttendanceTableHeading = ["In", "Out", "Duration"];
 
   const attendanceTrendsXaxis = attendanceTrendsData.map((a) =>
     moment(a.attendanceDate).format("DD/MM/YYYY")
@@ -251,8 +253,12 @@ const AddendanceDetail = ({ loading, uList }) => {
       const addFullNameProperty = details.map((item) => {
         return { ...item, full_Name: item.first_Name + " " + item.last_Name };
       });
-      const reverseData = addFullNameProperty.reverse();
-      setUserAttendanceData(reverseData);
+
+      if (addFullNameProperty[0].startTime === "0001-01-01T00:00:00") {
+        setUserAttendanceData([]);
+      } else {
+        setUserAttendanceData(addFullNameProperty);
+      }
     } catch (error) {
       console.log("attendance error", error);
       CommonToaster(error.response?.data?.message, "error");
@@ -260,17 +266,16 @@ const AddendanceDetail = ({ loading, uList }) => {
     }
   };
 
-  const handleChange = (date) => {
+  const handleCalendarChange = (date) => {
     const dates = new Date(date.$d);
-    console.log(dates);
+    setCalendarDate(dayJs(dates));
     const convertDate = moment(dates).format("YYYY-MM-DD");
-    console.log(convertDate);
     getUserAttendanceData(userId, organizationId, convertDate, convertDate);
   };
 
   const handleCalendar = (record) => {
     setIsDrawerOpen(true);
-    console.log(record);
+    setCalendarDate(dayJs());
     const clickedUser = uList.find((f) => f.full_Name === record.full_Name);
     setUserId(clickedUser.id);
     setUserName(clickedUser.full_Name);
@@ -360,9 +365,74 @@ const AddendanceDetail = ({ loading, uList }) => {
               <Calendar
                 fullscreen={false}
                 mode="month"
-                onChange={handleChange}
+                value={calendarDate}
+                onChange={handleCalendarChange}
                 disabledDate={disableFutureDates}
               />
+              <Divider className="attendancedetail_userattendanceDivider" />
+              <div className="attendance_employeelistContainer">
+                <Row>
+                  {userAttendanceTableHeading.map((item) => (
+                    <Col
+                      span={8}
+                      className="attendancedetail_userattendancetableColumnContainer"
+                    >
+                      <p className="attendancedetail_userattendancetableheading">
+                        {item}
+                      </p>
+                    </Col>
+                  ))}
+                </Row>
+
+                <Divider
+                  style={{
+                    margin: 0,
+                    background: "#abb3b36e",
+                    marginBottom: "12px",
+                  }}
+                />
+                {userAttendanceData.length >= 1 ? (
+                  <Row
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {userAttendanceData.map((item) => (
+                      <Col span={8}>
+                        <p className="attendancedetail_userattendancetableColumnContainer">
+                          {item.startTime === "0001-01-01T00:00:00"
+                            ? ""
+                            : moment(item.startTime).format("hh:mm A")}
+                        </p>
+                      </Col>
+                    ))}
+                    {userAttendanceData.map((item) => (
+                      <Col span={8}>
+                        <p className="attendancedetail_userattendancetableColumnContainer">
+                          {item.endTime === "0001-01-01T00:00:00"
+                            ? ""
+                            : moment(item.endTime).format("hh:mm A")}
+                        </p>
+                      </Col>
+                    ))}
+                    {userAttendanceData.map((item) => (
+                      <Col span={8}>
+                        <p className="attendancedetail_userattendancetableColumnContainer">
+                          {item.workingTime === null
+                            ? ""
+                            : moment(item.workingTime, "HH:mm:ss").format(
+                                "H[h]:mm[m]"
+                              )}
+                        </p>
+                      </Col>
+                    ))}
+                  </Row>
+                ) : (
+                  <CommonNodatafound />
+                )}
+              </div>
             </div>
           </Drawer>
         </div>

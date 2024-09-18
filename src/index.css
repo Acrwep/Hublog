@@ -291,3 +291,8 @@ select:focus {
 .ant-spin .ant-spin-dot-item {
   background: #25a17d !important;
 }
+/* antd empty image description */
+.ant-empty-description {
+  font-weight: 500 !important;
+  font-family: "Poppins", sans-serif !important;
+}

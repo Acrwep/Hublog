@@ -109,6 +109,19 @@ export const LoginApi = async (loginCredential) => {
 };
 
 //Attendance dashboard
+export const getAttendanceSummary = async (payload) => {
+  try {
+    const response = await api.get(
+      `/api/AttendanceDashboard/dashboard-summary`,
+      {
+        params: payload,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const getAttendanceTrends = async (payload) => {
   try {
     const response = await api.get(

@@ -1,4 +1,5 @@
 import React from "react";
+import { Empty } from "antd";
 import Nodata from "../../assets/images/nodatafound.jpg";
 import "./commonstyles.css";
 export default function CommonNodatafound() {
@@ -11,8 +12,9 @@ export default function CommonNodatafound() {
         position: "relative",
       }}
     >
-      <img src={Nodata} className="commonnodata_image" />
-      <p className="commonnodata_text">No Data Found</p>
+      {/* <img src={Nodata} className="commonnodata_image" />
+      <p className="commonnodata_text">No Data Found</p> */}
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No data found" />
     </div>
   );
 }
