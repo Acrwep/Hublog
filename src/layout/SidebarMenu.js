@@ -278,9 +278,15 @@ function SidebarMenu() {
         navigation(location.pathname);
       }
     } else {
-      setShowPages(false);
-      navigation("/login");
-      return;
+      if (location.pathname === "/downloads") {
+        setShowPages(false);
+        navigation("/downloads");
+        return;
+      } else {
+        setShowPages(false);
+        navigation("/login");
+        return;
+      }
     }
 
     // const getItem = localStorage.getItem("LoginUserInfo");

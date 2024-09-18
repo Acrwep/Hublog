@@ -78,6 +78,7 @@ const Apps$Url = () => {
           fontWeight: "500", // Make the labels bold
           fontSize: "13px",
           fontFamily: "Poppins, sans-serif",
+          userSelect: "text",
         },
         formatter: function (value) {
           return value; // Simply return the value
@@ -577,7 +578,7 @@ const Apps$Url = () => {
                           ? 170
                           : appsData.length > 5 && appsData.length <= 10
                           ? 260
-                          : "auto"
+                          : appsData.length * 32
                       }
                     />
                   ) : (
@@ -594,8 +595,9 @@ const Apps$Url = () => {
                 <div
                   className="appsandurlchart_Containers"
                   style={{
-                    height: urlsData.length <= 5 ? "100%" : "50vh",
+                    height: urlsData.length <= 5 ? "auto" : "50vh",
                     overflowY: "auto",
+                    overflowX: "hidden",
                   }}
                 >
                   <p className="devices_chartheading">URL Usage</p>
@@ -606,10 +608,10 @@ const Apps$Url = () => {
                       type="bar"
                       height={
                         urlsData.length <= 5
-                          ? 175
+                          ? 170
                           : urlsData.length > 5 && urlsData.length <= 10
                           ? 260
-                          : "auto"
+                          : urlsData.length * 32
                       }
                     />
                   ) : (
