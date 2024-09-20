@@ -11,6 +11,7 @@ import { CommonToaster } from "../Common/CommonToaster";
 import Loader from "../Common/Loader";
 import {
   getAttendanceAndBreakSummary,
+  getAttendanceSummary,
   getAttendanceTrends,
   getTeams,
   getUsers,
@@ -18,7 +19,9 @@ import {
 } from "../APIservice.js/action";
 import { useDispatch } from "react-redux";
 import {
+  storeAttendanceSummary,
   storeAttendanceAndBreakSummary,
+  storeSummaryAttendanceTrends,
   storeAttendanceTrends,
   storeDatewiseAttendance,
   storeDatewiseAttendanceAbsentData,
@@ -26,8 +29,10 @@ import {
   storeDatewiseAttendanceTeamValue,
   storeDatewiseAttendanceUsersData,
   storeDatewiseAttendanceUserValue,
+  storeTodayAttendance,
 } from "../Redux/slice";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
+import moment from "moment";
 
 const Attendance = () => {
   const dispatch = useDispatch();
@@ -36,28 +41,40 @@ const Attendance = () => {
   const [activePage, setActivePage] = useState(1);
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [userListNonChanged, setUserListNonChanged] = useState([]);
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [selectUser, setSelectUser] = useState(false);
   const [attendancedetailLoading, setAttendancedetailLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(true);
 
   const handlePageChange = (pageNumber) => {
     // if (pageNumber === 2) {
     //   return;
     // }
+    console.log("selected dates", pageNumber, selectedDates);
     setActivePage(pageNumber);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    getAttendanceDashboardData(
+      userId,
+      teamId,
+      orgId,
+      selectedDates[0],
+      selectedDates[1],
+      pageNumber
+    );
   };
 
   useEffect(() => {
-    // setLoading(true);
     setActivePage(1);
     getTeamData();
   }, []);
 
   useEffect(() => {
-    getAttendanceDashboardData(null, null, organizationId);
-  }, [activePage]);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    getAttendanceDashboardData(null, null, orgId);
+  }, []);
 
   const getTeamData = async () => {
     //empty the datewise attendance tab redux values
@@ -70,17 +87,17 @@ const Attendance = () => {
     dispatch(storeDatewiseAttendanceUsersData(emptyData));
 
     const CurrentandPreviousDate = getCurrentandPreviousweekDate();
-    console.log("current and previous date", CurrentandPreviousDate);
     setSelectedDates(CurrentandPreviousDate);
 
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
-      const response = await getTeams(orgId);
+      const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
       setTeamId(null);
     } catch (error) {
+      console.log("teams error", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
@@ -101,11 +118,43 @@ const Attendance = () => {
         return { ...item, full_Name: item.first_Name + " " + item.last_Name };
       });
       setUserList(updateUserList);
+      setUserListNonChanged(updateUserList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        getTodayAttendanceData();
+      }, 350);
+    }
+  };
+
+  const getTodayAttendanceData = async (teamid) => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+
+    const currentDate = new Date();
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      startDate: moment(currentDate).format("YYYY-MM-DD"),
+      endDate: moment(currentDate).format("YYYY-MM-DD"),
+    };
+
+    try {
+      const response = await getAttendanceSummary(payload);
+      console.log("today attendance response", response);
+      const details = response?.data;
+
+      dispatch(storeTodayAttendance(details));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = null;
+      dispatch(storeTodayAttendance(details));
+    } finally {
+      setTimeout(() => {
+        if (teamid) {
+          return;
+        }
+        getAttendanceDashboardData(null, null, orgId, null, null, activePage);
       }, 500);
     }
   };
@@ -147,13 +196,56 @@ const Attendance = () => {
     teamid,
     orgId,
     startdate,
-    enddate
+    enddate,
+    pageNumber
   ) => {
     const CurrentandPreviousDate = getCurrentandPreviousweekDate();
     console.log("current and previous date", CurrentandPreviousDate);
 
-    if (activePage === 2) {
+    if (pageNumber === 1) {
+      setSummaryLoading(true);
+      const payload = {
+        ...(userid || userId, { userId: userid ? userid : userId }),
+        ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+        organizationId: orgId,
+        startDate:
+          startdate === undefined || startdate === null
+            ? CurrentandPreviousDate[0]
+            : startdate,
+        endDate:
+          enddate === undefined || enddate === null
+            ? CurrentandPreviousDate[1]
+            : enddate,
+      };
+
+      try {
+        const response = await getAttendanceSummary(payload);
+        console.log("attendance summary response", response);
+        const details = response?.data;
+
+        dispatch(storeAttendanceSummary(details));
+      } catch (error) {
+        CommonToaster(error.response?.data?.message, "error");
+        const details = null;
+        dispatch(storeAttendanceSummary(details));
+      } finally {
+        setTimeout(() => {
+          getSummaryAttendanceTrendsData(
+            teamid,
+            orgId,
+            startdate ? startdate : CurrentandPreviousDate[0],
+            enddate ? enddate : CurrentandPreviousDate[1]
+          );
+        }, 350);
+      }
+    }
+    if (pageNumber === 2) {
       setAttendancedetailLoading(true);
+      if (userid || userId) {
+        setSelectUser(true);
+      } else {
+        setSelectUser(false);
+      }
       const payload = {
         ...(userid || userId, { userId: userid ? userid : userId }),
         ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
@@ -178,7 +270,6 @@ const Attendance = () => {
         const reverseData = addFullNameProperty.reverse();
         dispatch(storeAttendanceAndBreakSummary(reverseData));
       } catch (error) {
-        console.log("attendance error", error);
         CommonToaster(error.response?.data?.message, "error");
         const details = [];
         dispatch(storeAttendanceAndBreakSummary(details));
@@ -196,6 +287,43 @@ const Attendance = () => {
     }
   };
 
+  const getSummaryAttendanceTrendsData = async (
+    teamid,
+    orgId,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getAttendanceTrends(payload);
+      console.log("summary attendance trends", response);
+      const details = response?.data;
+
+      const addFullNameProperty = details.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      const reverseData = addFullNameProperty.reverse();
+
+      const removeNullDate = reverseData.filter(
+        (f) => f.attendanceDate != "0001-01-01T00:00:00"
+      );
+      dispatch(storeSummaryAttendanceTrends(removeNullDate));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = [];
+      dispatch(storeSummaryAttendanceTrends(details));
+    } finally {
+      setTimeout(() => {
+        setSummaryLoading(false);
+      }, 350);
+    }
+  };
+
   const getAttendanceTrendsData = async (
     userid,
     teamid,
@@ -203,39 +331,35 @@ const Attendance = () => {
     startdate,
     enddate
   ) => {
-    if (activePage === 2) {
-      setAttendancedetailLoading(true);
-      const payload = {
-        ...(userid || userId, { userId: userid ? userid : userId }),
-        ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
-        organizationId: orgId,
-        startDate: startdate,
-        endDate: enddate,
-      };
-      try {
-        const response = await getAttendanceTrends(payload);
-        console.log("attendance trends", response);
-        const details = response?.data;
+    const payload = {
+      ...(userid || userId, { userId: userid ? userid : userId }),
+      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getAttendanceTrends(payload);
+      console.log("attendance trends", response);
+      const details = response?.data;
 
-        const addFullNameProperty = details.map((item) => {
-          return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-        });
-        const reverseData = addFullNameProperty.reverse();
+      const addFullNameProperty = details.map((item) => {
+        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
+      });
+      const reverseData = addFullNameProperty.reverse();
 
-        const removeNullDate = reverseData.filter(
-          (f) => f.attendanceDate != "0001-01-01T00:00:00"
-        );
-        dispatch(storeAttendanceTrends(removeNullDate));
-      } catch (error) {
-        console.log("attendance error", error);
-        CommonToaster(error.response?.data?.message, "error");
-        const details = [];
-        dispatch(storeAttendanceTrends(details));
-      } finally {
-        setTimeout(() => {
-          setAttendancedetailLoading(false);
-        }, 350);
-      }
+      const removeNullDate = reverseData.filter(
+        (f) => f.attendanceDate != "0001-01-01T00:00:00"
+      );
+      dispatch(storeAttendanceTrends(removeNullDate));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = [];
+      dispatch(storeAttendanceTrends(details));
+    } finally {
+      setTimeout(() => {
+        setAttendancedetailLoading(false);
+      }, 350);
     }
   };
 
@@ -272,8 +396,13 @@ const Attendance = () => {
         value,
         organizationId,
         selectedDates[0],
-        selectedDates[1]
+        selectedDates[1],
+        activePage,
+        "trigger"
       );
+      setTimeout(() => {
+        getTodayAttendanceData(value);
+      }, 300);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -290,7 +419,8 @@ const Attendance = () => {
         teamId,
         organizationId,
         startDate,
-        endDate
+        endDate,
+        activePage
       );
     }
   };
@@ -302,14 +432,14 @@ const Attendance = () => {
       teamId,
       organizationId,
       selectedDates[0],
-      selectedDates[1]
+      selectedDates[1],
+      activePage
     );
   };
 
   const handleRefresh = () => {
     const CurrentandPreviousDate = getCurrentandPreviousweekDate();
 
-    console.log(CurrentandPreviousDate[0], selectedDates[0]);
     const today = new Date();
     const givenDate = new Date(selectedDates[1]);
     let isCurrentDate = false;
@@ -348,7 +478,8 @@ const Attendance = () => {
       null,
       organizationId,
       CurrentandPreviousDate[0],
-      CurrentandPreviousDate[1]
+      CurrentandPreviousDate[1],
+      activePage
     );
   };
   return (
@@ -413,14 +544,18 @@ const Attendance = () => {
                   value={teamId}
                 />
               </div>
-              <div style={{ width: "170px" }}>
-                <CommonSelectField
-                  options={userList}
-                  placeholder="Select User"
-                  onChange={handleUser}
-                  value={userId}
-                />
-              </div>
+              {activePage === 2 ? (
+                <div style={{ width: "170px" }}>
+                  <CommonSelectField
+                    options={userList}
+                    placeholder="Select User"
+                    onChange={handleUser}
+                    value={userId}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12}>
@@ -451,32 +586,38 @@ const Attendance = () => {
         ""
       )}
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
-          {activePage === 1 && (
-            <div>
-              <Summary />
-              {/* Add your content for page 1 here */}
-            </div>
-          )}
-          {activePage === 2 && (
-            <div>
-              <AttendanceDetail
-                tList={teamList}
-                uList={userList}
-                loading={attendancedetailLoading}
-              />
-            </div>
-          )}
-          {activePage === 3 && (
-            <div>
-              <DateWiseAttendance tList={teamList} uList={userList} />
-            </div>
-          )}
-        </div>
-      )}
+      <>
+        {summaryLoading ? (
+          <Loader />
+        ) : (
+          <div>
+            {activePage === 1 && (
+              <div>
+                <Summary loading={summaryLoading} />
+                {/* Add your content for page 1 here */}
+              </div>
+            )}
+            {activePage === 2 && (
+              <div>
+                <AttendanceDetail
+                  tList={teamList}
+                  uList={userList}
+                  selectUser={selectUser}
+                  loading={attendancedetailLoading}
+                />
+              </div>
+            )}
+            {activePage === 3 && (
+              <div>
+                <DateWiseAttendance
+                  tList={teamList}
+                  uList={userListNonChanged}
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </>
     </div>
   );
 };

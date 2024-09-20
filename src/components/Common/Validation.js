@@ -96,3 +96,50 @@ export const addAppandUrlTime = (time1, time2) => {
   // Format the result
   return `${resultHours}h:${resultMinutes.toString().padStart(2, "0")}m`;
 };
+
+export const checkMatchingwithCurrentDate = (date) => {
+  const today = new Date();
+  const givenDate = new Date(date);
+
+  if (
+    givenDate.getFullYear() === today.getFullYear() &&
+    givenDate.getMonth() === today.getMonth() &&
+    givenDate.getDate() === today.getDate()
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+
+  // Ensure month and day are two digits
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  if (day < 10) {
+    day = `0${day}`;
+  }
+
+  return `${year}-${month}-${day}`;
+};
+
+export const getCurrentandPreviousweekDate = () => {
+  const currentDate = new Date();
+
+  // Calculate previous week date (subtract 7 days)
+  const previousWeekDate = new Date(currentDate);
+  previousWeekDate.setDate(previousWeekDate.getDate() - 6);
+
+  // Format dates
+  const formattedCurrentDate = formatDate(currentDate);
+  const formattedPreviousWeekDate = formatDate(previousWeekDate);
+
+  let dates = [];
+  dates.push(formattedPreviousWeekDate, formattedCurrentDate);
+  return dates;
+};

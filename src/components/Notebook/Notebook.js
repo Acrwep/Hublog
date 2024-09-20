@@ -96,6 +96,7 @@ const Notebook = () => {
   };
 
   const handleEdit = (note, index) => {
+    console.log("noteeeee", note);
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
 

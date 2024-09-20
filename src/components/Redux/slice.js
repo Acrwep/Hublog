@@ -43,6 +43,18 @@ const activeTeamSlice = createSlice({
 });
 
 // attendance dashboard
+const attendanceSummary = null;
+const attendanceSummarySlice = createSlice({
+  name: "attendancesummary",
+  initialState: attendanceSummary,
+  reducers: {
+    storeAttendanceSummary(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const attendanceTrendsSlice = createSlice({
   name: "attendancetrends",
   initialState,
@@ -54,11 +66,33 @@ const attendanceTrendsSlice = createSlice({
   },
 });
 
-const attendanceandsummarySlice = createSlice({
+const summaryAttendanceTrendsSlice = createSlice({
+  name: "summaryattendancetrends",
+  initialState,
+  reducers: {
+    storeSummaryAttendanceTrends(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const attendanceandbreakSummarySlice = createSlice({
   name: "attendanceandbreaksummary",
   initialState,
   reducers: {
     storeAttendanceAndBreakSummary(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const todayAttendance = null;
+const todayAttendanceSlice = createSlice({
+  name: "todayattendance",
+  initialState: todayAttendance,
+  reducers: {
+    storeTodayAttendance(state, action) {
       state = action.payload;
       return state;
     },
@@ -314,8 +348,12 @@ export const { addteamMembers, deleteteamMembers, searchteamMembers } =
 export const { storeActiveTeam } = activeTeamSlice.actions;
 //attendance dashboard
 export const { storeAttendanceAndBreakSummary } =
-  attendanceandsummarySlice.actions;
+  attendanceandbreakSummarySlice.actions;
+export const { storeTodayAttendance } = todayAttendanceSlice.actions;
+export const { storeSummaryAttendanceTrends } =
+  summaryAttendanceTrendsSlice.actions;
 export const { storeAttendanceTrends } = attendanceTrendsSlice.actions;
+export const { storeAttendanceSummary } = attendanceSummarySlice.actions;
 //user detail
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
@@ -348,8 +386,13 @@ export const { storeDatewiseAttendanceDateValue } =
 
 export const teamMemberReducer = teamMemberSlice.reducer;
 export const activeTeamReducer = activeTeamSlice.reducer;
+export const attendanceSummaryReducer = attendanceSummarySlice.reducer;
 export const attendancetrendsReducer = attendanceTrendsSlice.reducer;
-export const attendanceandsummaryReducer = attendanceandsummarySlice.reducer;
+export const summaryattendancetrendsReducer =
+  summaryAttendanceTrendsSlice.reducer;
+export const attendanceandbreaksummaryReducer =
+  attendanceandbreakSummarySlice.reducer;
+export const todayattendanceReducer = todayAttendanceSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
 export const userAppUsageReducer = userAppsUsageSlice.reducer;

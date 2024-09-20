@@ -39,6 +39,14 @@
   border-radius: 8px;
   color: rgb(20, 184, 166);
 }
+.attendancesummary_percentage {
+  font-weight: 700;
+  font-size: 24px;
+  margin-top: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* attendance details styles */
 .attendancedetail_employeelistCalender {
   border: 0.5px solid #abb3b36e;
   margin-top: 12px;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DoughnutChart from "../chart/DoughnutChart";
 import { Row, Col, Tooltip, Button, Flex, Progress } from "antd";
 import ReactApexChart from "react-apexcharts";
@@ -14,10 +14,33 @@ import { LineCharts } from "../chart/RangeChart";
 import { MdDashboardCustomize } from "react-icons/md";
 import MyTable, { MyTable2 } from "../table/DemoTable";
 import "./styles.css";
+import {
+  getAttendanceSummary,
+  getLeastProductivityTeams,
+  getTeams,
+  getTopProductivityTeams,
+} from "../APIservice.js/action";
+import Loader from "../Common/Loader";
+import { CommonToaster } from "../Common/CommonToaster";
+import moment from "moment";
+import CommonSelectField from "../Common/CommonSelectField";
+import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
+import { getCurrentandPreviousweekDate } from "../Common/Validation";
+import CommonNodatafound from "../Common/CommonNodatafound";
 // import { Progress } from 'antd';
 // import { DatePicker } from 'antd';
 
 const Dashboard = () => {
+  //usestates
+  const [todatAttendanceData, setTodatAttendanceData] = useState(null);
+  const [todayAttendanceSeries, setTodayAttendanceSeries] = useState([]);
+  const [teamList, setTeamList] = useState([]);
+  const [teamId, setTeamId] = useState(null);
+  const [organizationId, setOrganizationId] = useState();
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [topProductivityTeams, setTopproductivityTeams] = useState([]);
+  const [leastProductivityTeams, setLeastproductivityTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
   // Sample data for charts
 
   const lineData = {
@@ -270,6 +293,142 @@ const Dashboard = () => {
     },
   };
 
+  useEffect(() => {
+    getTeamsData();
+  }, []);
+
+  const getTeamsData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    setOrganizationId(orgId);
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousandCurrentDate);
+
+    try {
+      const response = await getTeams(orgId);
+      setTeamList(response?.data || []);
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        getTodayAttendanceData(null, orgId);
+      }, 300);
+    }
+  };
+  const getTodayAttendanceData = async (teamid, orgId, startdate, enddate) => {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+
+    const currentDate = new Date();
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      startDate: moment(currentDate).format("YYYY-MM-DD"),
+      endDate: moment(currentDate).format("YYYY-MM-DD"),
+    };
+
+    try {
+      const response = await getAttendanceSummary(payload);
+      console.log("today dashboard response", response);
+      const details = response?.data;
+      setTodatAttendanceData(details);
+      let todaySeries = [];
+      todaySeries.push(
+        response?.data.presentCount || 0,
+        response?.data.absentCount || 0
+      );
+      setTodayAttendanceSeries(todaySeries);
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = null;
+      setTodatAttendanceData(details);
+    } finally {
+      setTimeout(() => {
+        getTopProductivityData(
+          teamid ? teamid : null,
+          orgId,
+          startdate != undefined || startdate != null
+            ? startdate
+            : PreviousandCurrentDate[0],
+          enddate != undefined || enddate != null
+            ? enddate
+            : PreviousandCurrentDate[1]
+        );
+      }, 500);
+    }
+  };
+
+  const getTopProductivityData = async (teamid, orgId, startdate, enddate) => {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+
+    const payload = {
+      ...(teamid && { teamId: teamid }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getTopProductivityTeams(payload);
+      console.log("top productivity response", response);
+      setTopproductivityTeams(response?.data);
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setTopproductivityTeams([]);
+    } finally {
+      setTimeout(() => {
+        getLeastProductivityData(
+          teamid ? teamid : null,
+          orgId,
+          startdate != undefined || startdate != null
+            ? startdate
+            : PreviousandCurrentDate[0],
+          enddate != undefined || enddate != null
+            ? enddate
+            : PreviousandCurrentDate[1]
+        );
+      }, 300);
+    }
+  };
+
+  const getLeastProductivityData = async (teamid, orgId, stardate, enddate) => {
+    const payload = {
+      ...(teamid && { teamId: teamid }),
+      organizationId: orgId,
+      startDate: stardate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getLeastProductivityTeams(payload);
+      console.log("least productivity response", response);
+      setLeastproductivityTeams(response?.data);
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setLeastproductivityTeams([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
+    }
+  };
+  //team onchange
+  const handleTeam = (value) => {
+    setTeamId(value);
+    setLoading(true);
+    getTodayAttendanceData(
+      value,
+      organizationId,
+      selectedDates[0],
+      selectedDates[1]
+    );
+  };
+
+  const handleDateChange = (dates, dateStrings) => {
+    setSelectedDates(dateStrings);
+    const startDate = dateStrings[0];
+    const endDate = dateStrings[1];
+    if (dateStrings[0] != "" && dateStrings[1] != "") {
+      getTodayAttendanceData(teamId, organizationId, startDate, endDate);
+    }
+  };
+
   return (
     <div className="max-sm:p-0" style={{ padding: "19px 26px" }}>
       <div className="flex justify-start items-center">
@@ -280,222 +439,291 @@ const Dashboard = () => {
           Dashboard
         </h2>
       </div>
-      <div className="flex justify-between items-center w-full mb-2 max-sm:flex-col max-sm:w-full">
-        <div>
-          <Dropdown />
-        </div>
-        <div className="flex justify-end items-center h-20 w-full max-sm:flex-col">
-          <div>
-            <DateRangePicker />
+
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div style={{ width: "32%" }}>
+            <CommonSelectField
+              options={teamList}
+              placeholder="All Teams"
+              onChange={handleTeam}
+              value={teamId}
+            />
           </div>
-          <Tooltip placement="top" title="Download PDF">
-            <Button className="dashboard_download_button">
-              <DownloadOutlined className="download_icon" />
-            </Button>
-          </Tooltip>
-          <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
-              <RedoOutlined className="refresh_icon" />
-            </Button>
-          </Tooltip>
-        </div>
-      </div>
-
-      <div>
-        <Row gutter={16}>
-          <Col xs={24} sm={24} md={7} lg={7}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Today's Attendance</p>
-
-              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">On time arrivals</p>
-                  <p className="totalactive_time">2</p>
-                  <p className="totalactive_timeheading">100%</p>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">Late arrivals</p>
-                  <p className="totalactive_time">0</p>
-                  <p className="totalactive_timeheading">0%</p>
-                </Col>
-              </Row>
-              <CommonDonutChart
-                labels={["Present", "Absent"]}
-                colors={["#25a17d", "#ABB3B3"]}
-                series={[12, 20]}
-                labelsfontSize="17px"
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
+            <div>
+              <CommonDoubleDatePicker
+                value={selectedDates}
+                onChange={handleDateChange}
               />
             </div>
-          </Col>
-          <Col xs={24} sm={24} md={17} lg={17}>
-            <div className="devices_chartsContainer">
-              <ReactApexChart
-                options={options}
-                series={series}
-                // type="line"
-                height={350}
-              />
-            </div>
-          </Col>
-        </Row>
-      </div>
-
-      <div style={{ marginTop: "25px" }}>
-        <Row gutter={16}>
-          <Col xs={24} sm={24} md={7} lg={7}>
-            <div className="devices_chartsContainer">
-              <p>No data found</p>
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={9} lg={9}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Productivity outliers</p>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
+            <Tooltip placement="top" title="Download">
+              <Button className="dashboard_download_button">
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button
+                className="dashboard_refresh_button"
+                // onClick={handleRefresh}
               >
-                <PiCellSignalHighFill
-                  color="#25a17d"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">
-                  Most productive Team(s)
-                </p>
-              </div>
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div>
+            <Row gutter={16}>
+              <Col xs={24} sm={24} md={7} lg={7}>
+                <div className="devices_chartsContainer">
+                  <p className="devices_chartheading">Today's Attendance</p>
 
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
+                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
+                      <p className="totalactive_timeheading">
+                        On time arrivals
+                      </p>
+                      <p className="totalactive_time">
+                        {todatAttendanceData?.onTimeArrivals || 0}
+                      </p>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
+                      <p className="totalactive_timeheading">Late arrivals</p>
+                      <p className="totalactive_time">
+                        {todatAttendanceData?.lateArrivals || 0}
+                      </p>
                     </Col>
                   </Row>
-                ))}
-              </div>
+                  <CommonDonutChart
+                    labels={["Present", "Absent"]}
+                    colors={["#25a17d", "#ABB3B3"]}
+                    series={todayAttendanceSeries}
+                    labelsfontSize="17px"
+                  />
+                </div>
+              </Col>
+              <Col xs={24} sm={24} md={17} lg={17}>
+                <div className="devices_chartsContainer">
+                  <ReactApexChart
+                    options={options}
+                    series={series}
+                    // type="line"
+                    height={350}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalLowFill
-                  color="#e93b3a"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">
-                  Least productive Team(s)
-                </p>
-              </div>
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={9} lg={8}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Activity outliers</p>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalHighFill
-                  color="#25a17d"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">Most active Team(s)</p>
-              </div>
+          <div style={{ marginTop: "25px" }}>
+            <Row gutter={16}>
+              <Col xs={24} sm={24} md={7} lg={7}>
+                <div className="devices_chartsContainer">
+                  <p className="devices_chartheading">Achieved goals</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}
+                  >
+                    <CommonNodatafound />
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} sm={24} md={9} lg={9}>
+                <div className="devices_chartsContainer">
+                  <p className="devices_chartheading">Productivity outliers</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalHighFill
+                      color="#25a17d"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Most productive Team(s)
+                    </p>
+                  </div>
 
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {topProductivityTeams.length >= 1 ? (
+                      <>
+                        {topProductivityTeams.map((item) => (
+                          <Row>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <p style={{ fontWeight: 500 }}>{item.name}</p>
+                            </Col>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <Flex gap="small" vertical>
+                                <Progress
+                                  percent={item.workingHourPercentage.toFixed(
+                                    2
+                                  )}
+                                />
+                              </Flex>
+                            </Col>
+                          </Row>
+                        ))}
+                      </>
+                    ) : (
+                      <CommonNodatafound />
+                    )}
+                  </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalLowFill
-                  color="#e93b3a"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">Least active Team(s)</p>
-              </div>
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </div>
-      <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
-        <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:w-full max-sm:p-0">
-          <h3 className="mb-3">Activity Trend</h3>
-          <div className=" h-72">
-            <hr />
-            <LineCharts data={lineData1} />
-            {/* <ReactApexChart
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalLowFill
+                      color="#e93b3a"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Least productive Team(s)
+                    </p>
+                  </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {leastProductivityTeams.length >= 1 ? (
+                      <>
+                        {leastProductivityTeams.map((item) => (
+                          <Row>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <p style={{ fontWeight: 500 }}>{item.name}</p>
+                            </Col>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <Flex gap="small" vertical>
+                                <Progress
+                                  percent={item.workingHourPercentage.toFixed(
+                                    2
+                                  )}
+                                />
+                              </Flex>
+                            </Col>
+                          </Row>
+                        ))}
+                      </>
+                    ) : (
+                      <CommonNodatafound />
+                    )}
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} sm={24} md={9} lg={8}>
+                <div className="devices_chartsContainer">
+                  <p className="devices_chartheading">Activity outliers</p>
+                  {/* <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalHighFill
+                      color="#25a17d"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Most active Team(s)
+                    </p>
+                  </div>
+
+                  <div style={{ marginTop: "15px" }}>
+                    {productiveTeamsItems.map((item) => (
+                      <Row>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p style={{ fontWeight: 500 }}>{item.name}</p>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <Flex gap="small" vertical>
+                            <Progress percent={item.percentage} />
+                          </Flex>
+                        </Col>
+                      </Row>
+                    ))}
+                  </div> */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}
+                  >
+                    <CommonNodatafound />
+                  </div>
+
+                  {/* <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalLowFill
+                      color="#e93b3a"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Least active Team(s)
+                    </p>
+                  </div> */}
+                  {/* <div style={{ marginTop: "15px" }}>
+                    {productiveTeamsItems.map((item) => (
+                      <Row>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p style={{ fontWeight: 500 }}>{item.name}</p>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <Flex gap="small" vertical>
+                            <Progress percent={item.percentage} />
+                          </Flex>
+                        </Col>
+                      </Row>
+                    ))}
+                  </div> */}
+                </div>
+              </Col>
+            </Row>
+          </div>
+          <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
+            <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:w-full max-sm:p-0">
+              <h3 className="mb-3">Activity Trend</h3>
+              <div className=" h-72">
+                <hr />
+                <LineCharts data={lineData1} />
+                {/* <ReactApexChart
               options={activityTrend}
               series={series}
               height={350}
             /> */}
+              </div>
+            </div>
+            <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:grid-cols-1 max-sm:p-0">
+              <h3 className="mb-3">Productivity Trend</h3>
+              <div className="">
+                <hr />
+                <LineCharts data={lineData2} />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:grid-cols-1 max-sm:p-0">
-          <h3 className="mb-3">Productivity Trend</h3>
-          <div className="">
-            <hr />
-            <LineCharts data={lineData2} />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

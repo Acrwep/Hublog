@@ -15,7 +15,7 @@ import { getAttendanceAndBreakSummary } from "../APIservice.js/action";
 import ReactApexChart from "react-apexcharts";
 import CommonNodatafound from "../Common/CommonNodatafound";
 
-const AddendanceDetail = ({ loading, uList }) => {
+const AddendanceDetail = ({ loading, uList, selectUser }) => {
   const employeeAttendanceList = useSelector(
     (state) => state.attendanceandbreaksummary
   );
@@ -42,7 +42,11 @@ const AddendanceDetail = ({ loading, uList }) => {
     {
       name: "Absent",
       data: attendanceTrendsData.map((item) => {
-        return item?.absentCount || 0;
+        if (selectUser === true && item.presentCount >= 1) {
+          return 0;
+        } else {
+          return item?.absentCount || 0;
+        }
       }),
     },
     // {
@@ -140,8 +144,20 @@ const AddendanceDetail = ({ loading, uList }) => {
         const data = attendanceTrendsData[dataPointIndex]; // Get the relevant data for the hovered point
         const category = w.globals.labels[dataPointIndex];
         const presentCount = data.presentCount || 0;
-        const absentCount = data.absentCount || 0;
-        const attendancePercentage = data.attendancePercentage || 0;
+        let absentCount = 0;
+        let attendancePercentage = 0;
+        if (selectUser === true && data.presentCount >= 1) {
+          absentCount = 0;
+        } else {
+          absentCount = data?.absentCount || 0;
+        }
+        // const absentCount = data.absentCount || 0;
+        if (selectUser === true && data.presentCount >= 1) {
+          attendancePercentage = 100;
+        } else {
+          attendancePercentage = data?.attendancePercentage || 0;
+        }
+        // const attendancePercentage = data.attendancePercentage || 0;
         const averageWorkingTime = data.averageWorkingTime || "00:00:00";
 
         return `
