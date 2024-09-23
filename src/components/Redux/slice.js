@@ -77,6 +77,17 @@ const summaryAttendanceTrendsSlice = createSlice({
   },
 });
 
+const latearrivalSlice = createSlice({
+  name: "latearrival",
+  initialState,
+  reducers: {
+    storeLateArrival(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const attendanceandbreakSummarySlice = createSlice({
   name: "attendanceandbreaksummary",
   initialState,
@@ -352,6 +363,7 @@ export const { storeAttendanceAndBreakSummary } =
 export const { storeTodayAttendance } = todayAttendanceSlice.actions;
 export const { storeSummaryAttendanceTrends } =
   summaryAttendanceTrendsSlice.actions;
+export const { storeLateArrival } = latearrivalSlice.actions;
 export const { storeAttendanceTrends } = attendanceTrendsSlice.actions;
 export const { storeAttendanceSummary } = attendanceSummarySlice.actions;
 //user detail
@@ -390,6 +402,7 @@ export const attendanceSummaryReducer = attendanceSummarySlice.reducer;
 export const attendancetrendsReducer = attendanceTrendsSlice.reducer;
 export const summaryattendancetrendsReducer =
   summaryAttendanceTrendsSlice.reducer;
+export const latearrivalReducer = latearrivalSlice.reducer;
 export const attendanceandbreaksummaryReducer =
   attendanceandbreakSummarySlice.reducer;
 export const todayattendanceReducer = todayAttendanceSlice.reducer;

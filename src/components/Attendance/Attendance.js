@@ -13,6 +13,7 @@ import {
   getAttendanceAndBreakSummary,
   getAttendanceSummary,
   getAttendanceTrends,
+  getLateArrivals,
   getTeams,
   getUsers,
   getUsersByTeamId,
@@ -22,6 +23,7 @@ import {
   storeAttendanceSummary,
   storeAttendanceAndBreakSummary,
   storeSummaryAttendanceTrends,
+  storeLateArrival,
   storeAttendanceTrends,
   storeDatewiseAttendance,
   storeDatewiseAttendanceAbsentData,
@@ -317,6 +319,29 @@ const Attendance = () => {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
       dispatch(storeSummaryAttendanceTrends(details));
+    } finally {
+      setTimeout(() => {
+        getLateArrivalData(teamid, orgId, startdate, enddate);
+      }, 350);
+    }
+  };
+
+  const getLateArrivalData = async (teamid, orgId, startdate, enddate) => {
+    const payload = {
+      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getLateArrivals(payload);
+      console.log("latearrival response", response);
+      const details = response?.data;
+      dispatch(storeLateArrival(details));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = [];
+      dispatch(storeLateArrival(details));
     } finally {
       setTimeout(() => {
         setSummaryLoading(false);

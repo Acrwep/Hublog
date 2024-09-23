@@ -174,6 +174,16 @@ export const getAttendanceAndBreakSummary = async (payload) => {
     throw error;
   }
 };
+export const getLateArrivals = async (payload) => {
+  try {
+    const response = await api.get(`/api/AttendanceDashboard/LateArrivals`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //analytics
 //screenshot
 export const getScreenShots = async (userId, organizationId, date) => {
@@ -376,16 +386,17 @@ export const updateUser = async (userpayload) => {
   }
 };
 //userdetail attendance
-export const getUserAttendance = async (userId, startDate, endDate) => {
+export const getUserAttendance = async (payload) => {
   try {
-    const response = await api.get(
-      `api/Users/GetUserAttendanceDetails?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
-    );
+    const response = await api.get(`api/Users/GetUserAttendanceDetails`, {
+      params: payload,
+    });
     return response;
   } catch (error) {
     throw error;
   }
 };
+// ?userId=${userId}&startDate=${startDate}&endDate=${endDate}
 //userdetail break
 export const getUserBreak = async (userId, startDate, endDate) => {
   try {

@@ -14,6 +14,7 @@ const CommonBarChart = ({
       type: "bar",
       height: 350,
       stacked: true,
+      width: "100%", // Ensure full width
     },
     colors: colors,
     plotOptions: {
@@ -36,12 +37,13 @@ const CommonBarChart = ({
       categories: xasis,
       labels: {
         show: true,
-        rotate: -40, // Rotate labels by -40 degrees
+        rotate: -45, // Rotate labels by -40 degrees
         color: ["#ffffff"],
         style: {
           fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
         },
       },
+      trim: true,
     },
     yaxis: {
       labels: {

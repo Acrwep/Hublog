@@ -2,6 +2,7 @@
 import { toast } from "react-toastify";
 
 export const CommonToaster = (message, type) => {
+  toast.dismiss(); // This will dismiss all current toasts
   switch (type) {
     case "success":
       toast.success(message);

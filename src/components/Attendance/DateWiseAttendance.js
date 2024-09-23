@@ -257,49 +257,54 @@ const DateWiseAttendance = ({ tList, uList }) => {
           <div className="datewise_Container">
             <p className="datewise_presenttext">Present - {data.length}</p>
 
-            {data.map((item, index) => (
-              <React.Fragment key={index}>
-                <div className="datewise_presentlistContainer" key={item.id}>
-                  <Row>
-                    <Col xs={24} sm={24} md={24} lg={12}>
-                      <div className="presentlist_avatarContainer">
-                        <CommonAvatar itemName={item.full_Name} />
-                        <p className="datewise_presentlistnames">
-                          {item.full_Name}
-                        </p>
-                      </div>
-                    </Col>
-                    <Col
-                      xs={24}
-                      sm={24}
-                      md={24}
-                      lg={12}
-                      className="datewise_presentlist_rightContainer"
-                    >
-                      <div className="datewise_inouttimeContainer">
-                        <PiArrowDownLeftBold size={20} color="#25a17d" />
-                        <p className="datewise_checkintime">
-                          {" "}
-                          {moment(item.inTime).format("hh:mm A")}
-                        </p>
-                      </div>
-                      <div
-                        className="datewise_inouttimeContainer"
-                        style={{ marginLeft: "12px", width: "100px" }}
+            <div className="datewise_presentlistmainContainer">
+              {data.map((item, index) => (
+                <React.Fragment key={index}>
+                  <div className="datewise_presentlistContainer" key={item.id}>
+                    <Row>
+                      <Col xs={24} sm={24} md={24} lg={12}>
+                        <div className="presentlist_avatarContainer">
+                          <CommonAvatar
+                            avatarSize={29}
+                            itemName={item.full_Name}
+                          />
+                          <p className="datewise_presentlistnames">
+                            {item.full_Name}
+                          </p>
+                        </div>
+                      </Col>
+                      <Col
+                        xs={24}
+                        sm={24}
+                        md={24}
+                        lg={12}
+                        className="datewise_presentlist_rightContainer"
                       >
-                        <PiArrowUpRightBold size={20} color="#e93b3a" />
-                        <p className="datewise_checkintime">
-                          {item.out === "0001-01-01T00:00:00"
-                            ? " "
-                            : moment(item.out).format("hh:mm A")}
-                        </p>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-                <hr className="presentname_hrtag" />
-              </React.Fragment>
-            ))}
+                        <div className="datewise_inouttimeContainer">
+                          <PiArrowDownLeftBold size={20} color="#25a17d" />
+                          <p className="datewise_checkintime">
+                            {" "}
+                            {moment(item.inTime).format("hh:mm A")}
+                          </p>
+                        </div>
+                        <div
+                          className="datewise_inouttimeContainer"
+                          style={{ marginLeft: "12px", width: "100px" }}
+                        >
+                          <PiArrowUpRightBold size={20} color="#e93b3a" />
+                          <p className="datewise_checkintime">
+                            {item.out === "0001-01-01T00:00:00"
+                              ? " "
+                              : moment(item.out).format("hh:mm A")}
+                          </p>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                  <hr className="presentname_hrtag" />
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </Col>
 
@@ -313,7 +318,10 @@ const DateWiseAttendance = ({ tList, uList }) => {
                   <Row>
                     <Col xs={24} sm={24} md={24} lg={24}>
                       <div className="presentlist_avatarContainer">
-                        <CommonAvatar itemName={item.full_Name} />
+                        <CommonAvatar
+                          avatarSize={29}
+                          itemName={item.full_Name}
+                        />
                         <p className="datewise_presentlistnames">
                           {item.full_Name}
                         </p>

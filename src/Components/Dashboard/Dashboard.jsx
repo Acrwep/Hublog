@@ -16,6 +16,7 @@ import MyTable, { MyTable2 } from "../table/DemoTable";
 import "./styles.css";
 import {
   getAttendanceSummary,
+  getAttendanceTrends,
   getLeastProductivityTeams,
   getTeams,
   getTopProductivityTeams,
@@ -27,6 +28,7 @@ import CommonSelectField from "../Common/CommonSelectField";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import { getCurrentandPreviousweekDate } from "../Common/Validation";
 import CommonNodatafound from "../Common/CommonNodatafound";
+import DashboardChart from "./DashboardChart";
 // import { Progress } from 'antd';
 // import { DatePicker } from 'antd';
 
@@ -40,6 +42,7 @@ const Dashboard = () => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [topProductivityTeams, setTopproductivityTeams] = useState([]);
   const [leastProductivityTeams, setLeastproductivityTeams] = useState([]);
+  const [dashboardData, setDashboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   // Sample data for charts
 
@@ -404,10 +407,39 @@ const Dashboard = () => {
       setLeastproductivityTeams([]);
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        getSummaryAttendanceTrendsData(null, orgId, stardate, enddate);
       }, 300);
     }
   };
+
+  const getSummaryAttendanceTrendsData = async (
+    teamid,
+    orgId,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getAttendanceTrends(payload);
+      console.log("dashboard response", response);
+      const details = response?.data;
+
+      setDashboardData(details);
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setDashboardData([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 350);
+    }
+  };
+
   //team onchange
   const handleTeam = (value) => {
     setTeamId(value);
@@ -511,12 +543,13 @@ const Dashboard = () => {
               </Col>
               <Col xs={24} sm={24} md={17} lg={17}>
                 <div className="devices_chartsContainer">
-                  <ReactApexChart
+                  {/* <ReactApexChart
                     options={options}
                     series={series}
                     // type="line"
                     height={350}
-                  />
+                  /> */}
+                  <DashboardChart data={dashboardData} />
                 </div>
               </Col>
             </Row>

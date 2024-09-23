@@ -7,6 +7,7 @@ import ReactApexChart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import Loader from "../Common/Loader";
 import moment from "moment";
+import CommonNodatafound from "../Common/CommonNodatafound";
 
 const Summary = ({ loading }) => {
   const [date, setDate] = useState(new Date());
@@ -15,7 +16,7 @@ const Summary = ({ loading }) => {
   const attendanceTrendsData = useSelector(
     (state) => state.summaryattendancetrends
   );
-
+  const lateArrivalData = useSelector((state) => state.latearrival);
   //usestates
   const [attendancePercentage, setAttendancePercentage] = useState("");
   const [lateArrivalPercentage, setLateArrivalPercentage] = useState("");
@@ -24,16 +25,17 @@ const Summary = ({ loading }) => {
   const [todayOntimeArrival, setTodayOntimeArrival] = useState(null);
   const [todayLateArrival, setTodayLateArrival] = useState(null);
 
-  const OverallWellness = [
+  const todayAttendanceSeries = [
     parseInt(todayAttendanceData?.presentCount || 0),
     parseInt(todayAttendanceData?.absentCount || 0),
   ];
-  const TopHealthy = [10, 20, 40];
-  const TopOverburdened = [20, 40, 30];
-  const TopUnderutilized = [80, 20, 40];
 
   const attendanceTrendsXasis = attendanceTrendsData.map((a) =>
     moment(a.attendanceDate).format("DD/MM/YYYY")
+  );
+
+  const lateArrivalXasis = lateArrivalData.map((l) =>
+    moment(l.attendanceDate).format("DD/MM/YYYY")
   );
 
   const attendanceTrendsSeries = [
@@ -53,8 +55,18 @@ const Summary = ({ loading }) => {
   const attendanceTrendsColors = ["#25a17d", "#ABB3B3"];
 
   const lateArrivalSeries = [
-    { name: "On time arrivals", data: [12, 10, 20, 30] },
-    { name: "Late arrivals", data: [5, 6, 10, 12] },
+    {
+      name: "On time arrivals",
+      data: lateArrivalData.map((item) => {
+        return item?.onTimeArrival || 0;
+      }),
+    },
+    {
+      name: "Late arrivals",
+      data: lateArrivalData.map((item) => {
+        return item?.lateArrival || 0;
+      }),
+    },
   ];
 
   const onDateChange = (date, dateString) => {
@@ -213,7 +225,7 @@ const Summary = ({ loading }) => {
                   <CommonDonutChart
                     labels={["Present", "Absent"]}
                     colors={["#25a17d", "#ABB3B3"]}
-                    series={OverallWellness}
+                    series={todayAttendanceSeries}
                     labelsfontSize="17px"
                   />
                 </div>
@@ -249,11 +261,15 @@ const Summary = ({ loading }) => {
             <Col xs={24} sm={24} md={12} lg={12}>
               <div className="devices_chartsContainer">
                 <p className="devices_chartheading">Late Arrival Tendency</p>
-                <CommonBarChart
-                  xasis={attendanceTrendsXasis}
-                  series={lateArrivalSeries}
-                  colors={["#25a17d", "#ABB3B3"]}
-                />
+                {lateArrivalData.length >= 1 ? (
+                  <CommonBarChart
+                    xasis={lateArrivalXasis}
+                    series={lateArrivalSeries}
+                    colors={["#25a17d", "#ABB3B3"]}
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
               </div>
             </Col>
           </Row>

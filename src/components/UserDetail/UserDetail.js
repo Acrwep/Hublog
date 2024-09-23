@@ -50,6 +50,7 @@ const UserDetail = () => {
     { id: 6, name: "Apps & URLs", icon: <IoRocketOutline size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
+  const [organizationId, setOrganizationId] = useState(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [selectedDates, setSelectedDates] = useState([]);
@@ -129,11 +130,12 @@ const UserDetail = () => {
     }
 
     getCurrentandPreviousweekDate();
+    const orgId = localStorage.getItem("organizationId");
     if (user != null) {
-      getuserDetailsData(user);
+      getuserDetailsData(user, orgId);
       return;
     }
-    const orgId = localStorage.getItem("organizationId");
+    setOrganizationId(orgId);
     try {
       const response = await getUsers(orgId);
       const userDetail = response?.data;
@@ -146,13 +148,13 @@ const UserDetail = () => {
       setUser(userDetail[0].id);
       setFullName(userDetail[0].first_Name + " " + userDetail[0].last_Name);
       setEmail(userDetail[0].email);
-      getuserDetailsData(response.data[0].id);
+      getuserDetailsData(response.data[0].id, orgId);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     }
   };
 
-  const getuserDetailsData = async (userId, startDate, endDate) => {
+  const getuserDetailsData = async (userId, orgId, startDate, endDate) => {
     console.log(startDate, endDate, selectedDates);
     const currentDate = new Date();
 
@@ -171,12 +173,15 @@ const UserDetail = () => {
 
     if (activePage === 1) {
       setAttendanceLoading(true);
-      try {
-        const response = await getUserAttendance(
-          userId,
+      const payload = {
+        userId: userId,
+        organizationId: orgId,
+        startDate:
           startDate === undefined ? formattedPreviousWeekDate : startDate,
-          endDate === undefined ? formattedCurrentDate : endDate
-        );
+        endDate: endDate === undefined ? formattedCurrentDate : endDate,
+      };
+      try {
+        const response = await getUserAttendance(payload);
         console.log("user attendance response", response);
         const details = response?.data?.attendanceDetails;
         const reverseData = details.reverse();
@@ -381,7 +386,12 @@ const UserDetail = () => {
     const findSelectedUser = userList.find((f) => f.id === value);
     setFullName(findSelectedUser.first_Name + " " + findSelectedUser.last_Name);
     setEmail(findSelectedUser.email);
-    getuserDetailsData(value, selectedDates[0], selectedDates[1]);
+    getuserDetailsData(
+      value,
+      organizationId,
+      selectedDates[0],
+      selectedDates[1]
+    );
   };
 
   const handleDateChange = (dates, dateStrings) => {
@@ -389,7 +399,7 @@ const UserDetail = () => {
     const startDate = dateStrings[0];
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
-      getuserDetailsData(user, startDate, endDate);
+      getuserDetailsData(user, organizationId, startDate, endDate);
     }
   };
   return (

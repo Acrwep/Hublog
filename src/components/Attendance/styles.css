@@ -85,8 +85,32 @@
   color: #25a17d;
   font-weight: 600;
 }
+.datewise_presentlistmainContainer {
+  height: 60vh;
+  overflow-y: auto;
+}
+.datewise_presentlistmainContainer {
+  scrollbar-width: thin; /* "auto", "thin", or "none" */
+  scrollbar-color: #c1c1c1 #f1f1f1; /* thumb color, track color */
+}
+.datewise_presentlistmainContainer::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.datewise_presentlistmainContainer::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the track */
+}
+
+.datewise_presentlistmainContainer::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scroll thumb */
+  border-radius: 10px; /* Rounded corners for the scroll thumb */
+}
+
+.datewise_presentlistmainContainer::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scroll thumb on hover */
+}
 .datewise_presentlistContainer {
-  padding: 13px 12px;
+  padding: 8px 12px;
 }
 .presentlist_avatarContainer {
   display: flex;
