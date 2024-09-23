@@ -101,6 +101,12 @@
   border-radius: 7px;
   margin-top: 30px;
 }
+.userbreak_totalbreaknodata_container {
+  height: 35vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .userproductivity_topContainers {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   padding: 12px 12px;

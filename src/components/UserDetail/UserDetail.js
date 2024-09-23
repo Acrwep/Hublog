@@ -23,6 +23,7 @@ import {
   getUrlsUsage,
   getTopAppsUsage,
   getTopUrlsUsage,
+  getUserTotalBreak,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -30,6 +31,7 @@ import {
   storeuserAppsUsage,
   storeuserAttendance,
   storeuserBreak,
+  storeUserTotalBreak,
   storeuserUrlsUsage,
 } from "../Redux/slice";
 import { addAppandUrlTime } from "../Common/Validation";
@@ -200,12 +202,16 @@ const UserDetail = () => {
     }
     if (activePage === 2) {
       setBreakLoading(true);
+      const startdate =
+        startDate === undefined || startDate === null
+          ? formattedPreviousWeekDate
+          : startDate;
+      const enddate =
+        endDate === undefined || endDate === null
+          ? formattedCurrentDate
+          : endDate;
       try {
-        const response = await getUserBreak(
-          userId,
-          startDate === undefined ? formattedPreviousWeekDate : startDate,
-          endDate === undefined ? formattedCurrentDate : endDate
-        );
+        const response = await getUserBreak(userId, startdate, enddate);
         console.log("user break response", response.data);
         const details = response.data;
         const reverseData = details.reverse();
@@ -217,7 +223,7 @@ const UserDetail = () => {
         dispatch(storeuserBreak(details));
       } finally {
         setTimeout(() => {
-          setBreakLoading(false);
+          getUserTotalBreakData(userId, orgId, startdate, enddate);
         }, 350);
       }
     }
@@ -244,6 +250,31 @@ const UserDetail = () => {
           getTopAppUsageData(userId, orgId, startDate, endDate);
         }, 500);
       }
+    }
+  };
+
+  const getUserTotalBreakData = async (userId, orgId, startdate, enddate) => {
+    const payload = {
+      organizationId: orgId,
+      userId: userId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getUserTotalBreak(payload);
+      console.log("user total break response", response.data);
+      const details = response.data;
+      const reverseData = details.reverse();
+      const removeNull = reverseData.filter((f) => f.totalBreakHours != null);
+      dispatch(storeUserTotalBreak(removeNull));
+    } catch (error) {
+      CommonToaster(error.response?.data, "error");
+      const details = [];
+      dispatch(storeUserTotalBreak(details));
+    } finally {
+      setTimeout(() => {
+        setBreakLoading(false);
+      }, 350);
     }
   };
 

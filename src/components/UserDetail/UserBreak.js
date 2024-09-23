@@ -5,10 +5,11 @@ import { useSelector } from "react-redux";
 import Loader from "../Common/Loader";
 import moment from "moment";
 import "./styles.css";
+import CommonNodatafound from "../Common/CommonNodatafound";
 
 export default function UserBreak({ loading }) {
   const userBreakDetails = useSelector((state) => state.userBreak);
-
+  const userTotalBreakData = useSelector((state) => state.usertotalbreak);
   const columns = [
     {
       title: "Date",
@@ -63,55 +64,33 @@ export default function UserBreak({ loading }) {
       },
     },
   ];
-  const [dummydatas, setDummyDatas] = useState([
-    {
-      key: "1",
-      date: "2024-06-17",
-      breaktype: "Morning Break",
-      breakstart: "11:00 AM",
-    },
-    {
-      key: "2",
-      date: "2024-06-17",
-      breaktype: "Lunch Break",
-      breakstart: "01:00 PM",
-    },
-    {
-      key: "2",
-      date: "2024-06-17",
-      breaktype: "Evening Break",
-      breakstart: "04:00 PM",
-    },
-  ]);
 
-  const [duplicateDummydatas, setDuplicateDummyDatas] = useState([
-    {
-      key: "1",
-      date: "2024-06-17",
-      breaktype: "Morning Break",
-      breakstart: "11:00 AM",
-    },
-    {
-      key: "2",
-      date: "2024-06-17",
-      breaktype: "Lunch Break",
-      breakstart: "01:00 PM",
-    },
-    {
-      key: "2",
-      date: "2024-06-17",
-      breaktype: "Evening Break",
-      breakstart: "04:00 PM",
-    },
-  ]);
+  // Convert time format to decimal hours
+  const convertTimeToDecimal = (time) => {
+    console.log("tttttttttttttt", time);
+    if (time === null) {
+      return;
+    }
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours + minutes / 60;
+  };
+
+  // Map the response data to x-axis and y-axis data
+  const xaxisCategories = userTotalBreakData.map((item) =>
+    moment(item.breakDate).format("DD-MM-YYYY")
+  ); // Get the date only
+  const yaxisData = userTotalBreakData.map((item) =>
+    convertTimeToDecimal(item.totalBreakHours)
+  );
 
   const datas = {
     series: [
       {
-        name: "Active Time",
-        data: [65, 59, 80, 81, 56, 55],
+        name: "Break Time",
+        data: yaxisData, // Converted break hours in decimal format
       },
     ],
+
     options: {
       chart: {
         type: "line",
@@ -124,16 +103,9 @@ export default function UserBreak({ loading }) {
         curve: "smooth",
       },
       xaxis: {
-        categories: [
-          "2024-02-01",
-          "2024-02-02",
-          "2024-02-03",
-          "2024-02-04",
-          "2024-02-05",
-          "2024-02-06",
-        ],
+        categories: xaxisCategories, // Dates from response
         title: {
-          text: "",
+          text: "Break Date",
         },
         labels: {
           rotate: -45,
@@ -143,14 +115,29 @@ export default function UserBreak({ loading }) {
         title: {
           text: "Time (hours)",
         },
+        labels: {
+          formatter: function (val) {
+            return `${Math.floor(val)}h`; // Display values as whole hours like 0h, 1h
+          },
+        },
         forceNiceScale: true,
       },
-      colors: ["#25a17d", "#F44336"], // Blue for Active Time, Red for Idle Time
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            const hours = Math.floor(val);
+            const minutes = Math.round((val - hours) * 60);
+            return `${hours}h:${minutes}m`; // Format as "0h:1m"
+          },
+        },
+      },
+      colors: ["#25a17d"], // Customize color if needed
       legend: {
         position: "top",
       },
     },
   };
+
   return (
     <>
       {loading === true ? (
@@ -158,12 +145,18 @@ export default function UserBreak({ loading }) {
       ) : (
         <div>
           <div className="userbreak_linechartContainer">
-            <ReactApexChart
-              options={datas.options}
-              series={datas.series}
-              type="line"
-              height={300}
-            />
+            {userTotalBreakData.length >= 1 ? (
+              <ReactApexChart
+                options={datas.options}
+                series={datas.series}
+                type="line"
+                height={300}
+              />
+            ) : (
+              <div className="userbreak_totalbreaknodata_container">
+                <CommonNodatafound />
+              </div>
+            )}
           </div>
 
           <div className="userbreaktable_Container">

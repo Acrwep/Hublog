@@ -216,6 +216,17 @@ const userBreakSlice = createSlice({
   },
 });
 
+const userTotalBreakSlice = createSlice({
+  name: "usertotalbreak",
+  initialState,
+  reducers: {
+    storeUserTotalBreak(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 //user detail apps ans urls
 const userAppsUsageSlice = createSlice({
   name: "userappsusage",
@@ -369,6 +380,7 @@ export const { storeAttendanceSummary } = attendanceSummarySlice.actions;
 //user detail
 export const { storeuserAttendance } = userAttendanceSlice.actions;
 export const { storeuserBreak } = userBreakSlice.actions;
+export const { storeUserTotalBreak } = userTotalBreakSlice.actions;
 export const { storeuserAppsUsage } = userAppsUsageSlice.actions;
 export const { storeuserUrlsUsage } = userurlsUsageSlice.actions;
 export const { storeUsers } = usersSlice.actions;
@@ -408,6 +420,7 @@ export const attendanceandbreaksummaryReducer =
 export const todayattendanceReducer = todayAttendanceSlice.reducer;
 export const userAttendanceReducer = userAttendanceSlice.reducer;
 export const userBreakReducer = userBreakSlice.reducer;
+export const userTotalBreakReducer = userTotalBreakSlice.reducer;
 export const userAppUsageReducer = userAppsUsageSlice.reducer;
 export const userUrlUsageReducer = userurlsUsageSlice.reducer;
 export const usersReducer = usersSlice.reducer;

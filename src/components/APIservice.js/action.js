@@ -408,6 +408,16 @@ export const getUserBreak = async (userId, startDate, endDate) => {
     throw error;
   }
 };
+export const getUserTotalBreak = async (payload) => {
+  try {
+    const response = await api.get(`api/Users/GetTotalBreak`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //settings break
 export const getBreak = async (name) => {
   try {
