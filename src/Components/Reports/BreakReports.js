@@ -103,13 +103,10 @@ const BreakReports = () => {
       const response = await getUsers(orgId);
       const usersList = response?.data;
 
-      //merge user fullname and lastname in full_name property
-      const updateUserList = usersList.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      setUserList(updateUserList);
+      setUserList(usersList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
+      setUserList([]);
     } finally {
       setTimeout(() => {
         getBreakReportData(userId, teamId, orgId, date);
@@ -153,21 +150,8 @@ const BreakReports = () => {
         setUserId(null);
         return;
       }
-      const updatedArr = teamMembersList.map(
-        ({ firstName, lastName, userId, ...rest }) => ({
-          first_Name: firstName,
-          last_Name: lastName,
-          id: userId,
-          ...rest,
-        })
-      );
 
-      //merge user fullname and lastname in full_name property
-      const adddFullName = updatedArr.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-
-      setUserList(adddFullName);
+      setUserList(teamMembersList);
       const userIdd = null;
       setUserId(userIdd);
       getBreakReportData(userIdd, value, organizationId, date);

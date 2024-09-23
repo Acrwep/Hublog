@@ -203,6 +203,7 @@ export default function UserAppsUrls({
               height: urlsData.length <= 5 ? "100%" : "50vh",
               overflowY: "auto",
               marginTop: "30px",
+              overflowX: "hidden",
             }}
           >
             <p className="devices_chartheading">URL Usage</p>

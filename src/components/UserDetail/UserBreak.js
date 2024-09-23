@@ -67,10 +67,6 @@ export default function UserBreak({ loading }) {
 
   // Convert time format to decimal hours
   const convertTimeToDecimal = (time) => {
-    console.log("tttttttttttttt", time);
-    if (time === null) {
-      return;
-    }
     const [hours, minutes] = time.split(":").map(Number);
     return hours + minutes / 60;
   };

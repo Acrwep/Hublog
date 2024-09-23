@@ -125,15 +125,10 @@ const DailyAttendanceReport = () => {
       console.log("users response", response.data);
       const usersList = response?.data;
 
-      //merge user fullname and lastname in full_name property
-      const updateUserList = usersList.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      console.log("update user list", updateUserList);
-
-      setUserList(updateUserList);
+      setUserList(usersList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
+      setUserList([]);
     } finally {
       setTimeout(() => {
         getDailyAttendanceData(userId, teamId, orgId, date);
@@ -149,10 +144,10 @@ const DailyAttendanceReport = () => {
       organizationId: parseInt(orgId),
       date: moment(selectedDate).format("YYYY-MM-DD"),
     };
-    console.log("payloadddd", payload);
+
     try {
       const response = await getDailyAttendanceReport(payload);
-      console.log("break report response", response.data);
+      console.log("daily attendance report response", response.data);
 
       const ReportData = response.data;
       const addFullname = ReportData.map((item) => {
@@ -182,21 +177,8 @@ const DailyAttendanceReport = () => {
         setUserId(null);
         return;
       }
-      const updatedArr = teamMembersList.map(
-        ({ firstName, lastName, userId, ...rest }) => ({
-          first_Name: firstName,
-          last_Name: lastName,
-          id: userId,
-          ...rest,
-        })
-      );
 
-      //merge user fullname and lastname in full_name property
-      const adddFullName = updatedArr.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-
-      setUserList(adddFullName);
+      setUserList(teamMembersList);
       const userIdd = null;
       setUserId(userIdd);
       getDailyAttendanceData(userIdd, value, organizationId, date);

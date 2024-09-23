@@ -192,11 +192,10 @@ const Team = ({ loading }) => {
     }
     setChangeTeamModal(false);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-
     const request = {
       id: addTeamModal ? userDetails.id : userDetails.userId,
-      first_Name: addTeamModal ? userDetails.first_Name : userDetails.firstName,
-      last_Name: addTeamModal ? userDetails.last_Name : userDetails.lastName,
+      first_Name: userDetails.first_Name,
+      last_Name: userDetails.last_Name,
       email: userDetails.email,
       dob: userDetails.dob,
       doj: userDetails.doj,
@@ -207,7 +206,7 @@ const Team = ({ loading }) => {
       organizationId: parseInt(orgId),
       roleName: "",
       roleId: userDetails.roleId,
-      designationName: "",
+      designationName: userDetails.designationName,
       designationId: userDetails.designationId,
       teamId: addTeamModal ? teamId : changeTeamId,
       teamName: "",
@@ -440,15 +439,13 @@ const Team = ({ loading }) => {
                         >
                           <div>
                             <CommonAvatar
-                              itemName={item.firstName}
+                              itemName={item.full_Name}
                               avatarSize={37}
                               avatarfontSize="17px"
                             />
                           </div>
                           <div>
-                            <p className="teammember_name">
-                              {item.firstName + " " + item.lastName}
-                            </p>
+                            <p className="teammember_name">{item.full_Name}</p>
                             <p className="teammember_email">{item.email}</p>
                           </div>
                         </div>
@@ -508,15 +505,13 @@ const Team = ({ loading }) => {
                         >
                           <div>
                             <CommonAvatar
-                              itemName={item.first_Name}
+                              itemName={item.full_Name}
                               avatarSize={37}
                               avatarfontSize="17px"
                             />
                           </div>
                           <div>
-                            <p className="teammember_name">
-                              {item.first_Name + " " + item.last_Name}
-                            </p>
+                            <p className="teammember_name">{item.full_Name}</p>
                             <p className="teammember_email">{item.email}</p>
                           </div>
                         </div>

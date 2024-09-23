@@ -90,13 +90,11 @@ const DateWiseAttendance = ({ tList, uList }) => {
       console.log("daily attendance response", response.data);
 
       const ReportData = response.data;
-      const addFullname = ReportData.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      const reverseData = addFullname.reverse();
+
+      const reverseData = ReportData.reverse();
 
       const absentList = uList.filter(
-        (f) => !reverseData.some((item) => item.first_Name === f.first_Name)
+        (f) => !reverseData.some((item) => item.id === f.id)
       );
       console.log("absent list", absentList);
       dispatch(storeDatewiseAttendanceAbsentData(absentList));
@@ -138,31 +136,18 @@ const DateWiseAttendance = ({ tList, uList }) => {
         setUserId(null);
         return;
       }
-      const updatedArr = teamMembersList.map(
-        ({ firstName, lastName, userId, ...rest }) => ({
-          first_Name: firstName,
-          last_Name: lastName,
-          id: userId,
-          ...rest,
-        })
-      );
 
-      //merge user fullname and lastname in full_name property
-      const adddFullName = updatedArr.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-
-      setUserList(adddFullName);
+      setUserList(teamMembersList);
       const userIdd = null;
       setUserId(userIdd);
       dispatch(storeDatewiseAttendanceUserValue(userIdd));
-      dispatch(storeDatewiseAttendanceUsersData(adddFullName));
+      dispatch(storeDatewiseAttendanceUsersData(teamMembersList));
       getDailyAttendanceData(
         userIdd,
         value,
         organizationId,
         date,
-        adddFullName
+        teamMembersList
       );
     } catch (error) {
       CommonToaster(error.response.data.message, "error");

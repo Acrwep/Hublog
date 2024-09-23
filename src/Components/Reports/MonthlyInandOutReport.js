@@ -138,13 +138,10 @@ const MonthlyInandOutReport = () => {
       const response = await getUsers(orgId);
       const usersList = response?.data;
 
-      //merge user fullname and lastname in full_name property
-      const updateUserList = usersList.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      setUserList(updateUserList);
+      setUserList(usersList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
+      setUserList([]);
     } finally {
       setTimeout(() => {
         const currentMonthName = moment().format("MMMM"); // get current month name

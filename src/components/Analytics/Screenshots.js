@@ -64,18 +64,14 @@ const Screenshots = () => {
       const response = await getUsers(orgId);
       console.log("users response", response.data);
       const usersList = response?.data;
+      console.log("update user list", usersList);
 
-      //merge user fullname and lastname in full_name property
-      const updateUserList = usersList.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      console.log("update user list", updateUserList);
-
-      setUserList(updateUserList);
-      userIdd = updateUserList[0].id;
-      setUserId(updateUserList[0].id);
+      setUserList(usersList);
+      userIdd = usersList[0].id;
+      setUserId(usersList[0].id);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
+      setUserList([]);
     } finally {
       setTimeout(() => {
         getScreenShotsData(userIdd, orgId, date);
@@ -118,23 +114,10 @@ const Screenshots = () => {
         setUserId(null);
         return;
       }
-      const updatedArr = teamMembersList.map(
-        ({ firstName, lastName, userId, ...rest }) => ({
-          first_Name: firstName,
-          last_Name: lastName,
-          id: userId,
-          ...rest,
-        })
-      );
 
-      //merge user fullname and lastname in full_name property
-      const adddFullName = updatedArr.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-
-      setUserList(adddFullName);
-      setUserId(adddFullName[0].id);
-      getScreenShotsData(adddFullName[0].id, organizationId, date);
+      setUserList(teamMembersList);
+      setUserId(teamMembersList[0].id);
+      getScreenShotsData(teamMembersList[0].id, organizationId, date);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
