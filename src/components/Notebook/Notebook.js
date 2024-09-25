@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Input, Modal, Button } from "antd";
 import "quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
@@ -6,13 +6,21 @@ import { CgNotes } from "react-icons/cg";
 import { MdEdit, MdDelete } from "react-icons/md";
 import "./styles.css";
 import { CommonToaster } from "../Common/CommonToaster";
+import {
+  createNotebook,
+  deleteNotebook,
+  getNotebook,
+  updateNotebook,
+} from "../APIservice.js/action";
 
 const Notebook = () => {
   const [text, setText] = useState("");
   const [notes, setNotes] = useState([]);
-  const [deleteIndex, setDeleteIndex] = useState(null);
-  const [editIndex, setEditIndex] = useState(null);
+  const [edit, setEdit] = useState(false);
   const [notesTitle, setNotesTitle] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [noteId, setNoteId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   var modules = {
     toolbar: [
@@ -88,6 +96,35 @@ const Notebook = () => {
     "size",
   ];
 
+  useEffect(() => {
+    getNotebookData();
+  }, []);
+
+  const getNotebookData = async () => {
+    setLoading(true);
+    const loginUserDetails = localStorage.getItem("LoginUserInfo");
+    const convertLoginUserDetailsAsJson = JSON.parse(loginUserDetails);
+    setUserId(convertLoginUserDetailsAsJson.id);
+    const orgId = localStorage.getItem("organizationId");
+
+    const payload = {
+      organizationId: orgId,
+      userId: convertLoginUserDetailsAsJson.id,
+    };
+    try {
+      const response = await getNotebook(payload);
+      console.log("notebook response", response);
+      setNotes(response?.data);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setNotes([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+        handleDiscard();
+      }, 300);
+    }
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -95,57 +132,75 @@ const Notebook = () => {
     setText(content);
   };
 
-  const handleEdit = (note, index) => {
-    console.log("noteeeee", note);
+  const handleEdit = (note) => {
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
 
     setText(note.notes);
-    setNotesTitle(note.title);
-    setEditIndex(index);
+    setNotesTitle(note.noteTitle);
+    setNoteId(note.noteId);
+    setEdit(true);
   };
 
-  const handleDeleteNote = () => {
-    notes.splice(deleteIndex, 1);
-    setText("");
-    setNotesTitle("");
-    CommonToaster("Deleted successfully", "success");
+  const handleDeleteNote = async () => {
+    setLoading(true);
     setIsModalOpen(false);
+    try {
+      const response = await deleteNotebook(noteId);
+      CommonToaster("Note deleted", "success");
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        getNotebookData();
+      }, 1000);
+    }
   };
 
   const handleDiscard = () => {
-    if (editIndex !== null) {
-      setText("");
-      setNotesTitle("");
-      setEditIndex(null);
-    }
+    setEdit(false);
+    setNotesTitle("");
+    setText("");
   };
-  const handleSave = () => {
+  const handleSave = async (event) => {
+    event.preventDefault();
     if (notesTitle === "") {
       CommonToaster("Please add title for the note", "error");
       return;
     }
-    if (editIndex !== null) {
-      const updatedNotes = notes.map((item, index) => {
-        if (editIndex === index) {
-          return { ...item, title: notesTitle, notes: text };
-        }
-        return item;
-      });
-      setNotes(updatedNotes);
-      setEditIndex(null);
+
+    const payload = {
+      noteTitle: notesTitle,
+      notes: text,
+      userId: userId,
+    };
+    console.log("payload", payload);
+
+    if (edit === true) {
+      try {
+        const response = await updateNotebook(noteId, payload);
+        CommonToaster("Note updated", "success");
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+      } finally {
+        getNotebookData();
+      }
     } else {
-      const Notes = {
-        notes: text,
-        title: notesTitle,
-      };
-      setNotes([...notes, Notes]);
+      try {
+        const response = await createNotebook(payload);
+        CommonToaster("Note created", "success");
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+      } finally {
+        getNotebookData();
+      }
     }
-    setNotesTitle("");
-    setText("");
   };
   return (
-    <div className="settings_mainContainer">
+    <div
+      className="settings_mainContainer"
+      style={{ opacity: loading ? "0.5" : "1" }}
+    >
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
           <CgNotes size={20} />
@@ -179,7 +234,7 @@ const Notebook = () => {
             justifyContent: "flex-end",
           }}
         >
-          {editIndex !== null && (
+          {edit === true && (
             <Button className="notebook_discardbutton" onClick={handleDiscard}>
               Discard
             </Button>
@@ -211,15 +266,15 @@ const Notebook = () => {
           ];
           const color = colors[index % colors.length]; // Ensure we cycle through the colors
           return (
-            <>
+            <React.Fragment key={index}>
               <Col
                 xs={24}
                 sm={24}
                 md={12}
                 lg={6}
-                key={index}
                 style={{ marginBottom: "12px" }}
               >
+                <p className="youtnotes_heading">{note.noteTitle}</p>
                 <div
                   className="yournotes_Container"
                   style={{
@@ -228,14 +283,13 @@ const Notebook = () => {
                   }}
                 >
                   <div className="yournotes_ContentContainer">
-                    <p className="youtnotes_heading">{note.title}</p>
                     <div dangerouslySetInnerHTML={{ __html: note.notes }} />
 
                     <div
                       className="notes_deleteContainer"
                       onClick={() => {
                         setIsModalOpen(true);
-                        setDeleteIndex(index);
+                        setNoteId(note.noteId);
                       }}
                     >
                       <MdDelete size={15} color="white" />
@@ -250,7 +304,7 @@ const Notebook = () => {
                   </div>
                 </div>
               </Col>
-            </>
+            </React.Fragment>
           );
         })}
       </Row>

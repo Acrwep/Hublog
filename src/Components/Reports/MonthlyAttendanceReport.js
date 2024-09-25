@@ -120,7 +120,7 @@ const MonthlyAttendanceReport = () => {
     try {
       const response = await getMonthlyAttendanceReport(payload);
       console.log("monthly attendance report response", response.data);
-      const MonthlyAttendanceData = response.data.users;
+      const MonthlyAttendanceData = response?.data?.users;
       const preparedData = prepareTableData(MonthlyAttendanceData, month, year);
 
       console.log("tabledatasss", preparedData);
@@ -153,13 +153,11 @@ const MonthlyAttendanceReport = () => {
   const prepareTableData = (data, monthname, year) => {
     const currentMonthDates = getCurrentMonthDates(monthname, year);
     // const datesToCheck = generateDatesForMonth(monthname, year);
-    return data.map((item) => {
+    return data.map((item, index) => {
       const rowData = {
-        key: item.first_name,
-        first_name: item.first_name,
-        last_name: item.last_name,
+        key: index,
+        full_Name: item.full_Name,
       };
-
       // Initialize each date column with null
       currentMonthDates.forEach((date) => {
         rowData[date] = null;
@@ -294,20 +292,15 @@ const MonthlyAttendanceReport = () => {
     return [
       {
         title: "Employee",
-        dataIndex: "first_name",
-        key: "first_name",
+        dataIndex: "full_Name",
+        key: "full_Name",
         width: 240,
         fixed: "left",
         render: (text, record) => {
           return (
             <div className="breakreport_employeenameContainer">
-              <CommonAvatar
-                avatarSize={26}
-                itemName={record.first_name + " " + record.last_name}
-              />
-              <p className="reports_avatarname">
-                {record.first_name + " " + record.last_name}
-              </p>
+              <CommonAvatar avatarSize={26} itemName={record.full_Name} />
+              <p className="reports_avatarname">{record.full_Name}</p>
             </div>
           );
         },

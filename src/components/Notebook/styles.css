@@ -53,7 +53,6 @@
 }
 .yournotes_Container {
   height: 160px;
-  margin-top: 7px;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
@@ -62,7 +61,8 @@
   height: 100%;
   width: 100%;
   padding: 12px;
-  overflow: auto;
+  overflow-y: auto;
+  word-break: break-all;
   box-sizing: border-box;
 }
 
@@ -83,8 +83,10 @@
   background: #555; /* Color of the scroll thumb on hover */
 }
 .youtnotes_heading {
-  font-weight: 600;
-  font-size: 17px;
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 6px;
+  margin-bottom: 4px;
 }
 .notes_deleteContainer {
   position: absolute;

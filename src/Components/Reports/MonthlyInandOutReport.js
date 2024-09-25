@@ -232,8 +232,7 @@ const MonthlyInandOutReport = () => {
     return data.map((item) => {
       const rowData = {
         key: item.first_name,
-        first_name: item.first_name,
-        last_name: item.last_name,
+        full_Name: item.full_Name,
       };
 
       // Initialize each date column with null
@@ -436,13 +435,8 @@ const MonthlyInandOutReport = () => {
         render: (text, record) => {
           return (
             <div className="breakreport_employeenameContainer">
-              <CommonAvatar
-                avatarSize={26}
-                itemName={record.first_name + " " + record.last_name}
-              />
-              <p className="reports_avatarname">
-                {record.first_name + " " + record.last_name}
-              </p>
+              <CommonAvatar avatarSize={26} itemName={record.full_Name} />
+              <p className="reports_avatarname">{record.full_Name}</p>
             </div>
           );
         },

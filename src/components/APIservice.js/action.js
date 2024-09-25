@@ -499,3 +499,38 @@ export const getMonthlyInandOutReport = async (reportPayload) => {
     throw error;
   }
 };
+//notebook
+export const getNotebook = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/NoteBook/GetbyId`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createNotebook = async (notepayload) => {
+  try {
+    const response = await api.post("/api/NoteBook/CreateNote", notepayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateNotebook = async (noteid, notepayload) => {
+  try {
+    const response = await api.put(`/api/NoteBook/${noteid}`, notepayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteNotebook = async (noteid) => {
+  try {
+    const response = await api.delete(`/api/NoteBook/${noteid}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

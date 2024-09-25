@@ -104,7 +104,6 @@ const DailyAttendanceReport = () => {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
-      console.log("teamsssssss response", response.data);
       const teamList = response.data;
       setTeamList(teamList);
       setTeamId(null);
@@ -122,7 +121,6 @@ const DailyAttendanceReport = () => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
-      console.log("users response", response.data);
       const usersList = response?.data;
 
       setUserList(usersList);
@@ -150,10 +148,7 @@ const DailyAttendanceReport = () => {
       console.log("daily attendance report response", response.data);
 
       const ReportData = response.data;
-      const addFullname = ReportData.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      const reverseData = addFullname.reverse();
+      const reverseData = ReportData.reverse();
       setData(reverseData);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
@@ -165,13 +160,10 @@ const DailyAttendanceReport = () => {
   };
 
   const handleTeam = async (value) => {
-    console.log("clicked team", value);
     setTeamId(value);
     try {
       const response = await getUsersByTeamId(value);
-      console.log("user by teamId response", response?.data);
       const teamMembersList = response?.data?.team?.users;
-      console.log("team members", teamMembersList);
       if (teamMembersList.length <= 0) {
         setUserList([]);
         setUserId(null);
@@ -194,7 +186,6 @@ const DailyAttendanceReport = () => {
   };
 
   const handleUser = (value) => {
-    console.log("userIdddd", value);
     setUserId(value);
     getDailyAttendanceData(value, teamId, organizationId, date);
   };

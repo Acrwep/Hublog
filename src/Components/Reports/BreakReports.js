@@ -126,10 +126,8 @@ const BreakReports = () => {
       const response = await getBreakReport(payload);
       console.log("break report response", response.data);
       const ReportData = response.data;
-      const addFullname = ReportData.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      const reverseData = addFullname.reverse();
+
+      const reverseData = ReportData.reverse();
       setData(reverseData);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
