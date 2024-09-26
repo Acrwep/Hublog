@@ -41,6 +41,9 @@
 .dashboard_refresh_button:hover {
   border-color: #009737 !important;
 }
+.dashboard_refresh_button:active {
+  transform: scale(0.7);
+}
 .refresh_icon {
   color: #25a17d !important;
 }

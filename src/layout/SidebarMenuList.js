@@ -120,6 +120,7 @@ const SidebarMenuList = () => {
             [
               "Dashboard",
               "Attendance",
+              "Devices",
               "Notebook",
               "User Detail",
               "Settings",
@@ -149,9 +150,7 @@ const SidebarMenuList = () => {
                 : "block",
           }}
         >
-          {["Devices", "Manual Time", "Alerts", "Projects"].includes(
-            item.title
-          ) ? (
+          {["Manual Time", "Alerts", "Projects"].includes(item.title) ? (
             <Link style={{ cursor: "default" }}>{item.title}</Link>
           ) : (
             <Link to={`/${item.path}`}>

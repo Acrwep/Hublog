@@ -1,120 +1,244 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PiDevicesBold } from "react-icons/pi";
 import { Col, Row, Tooltip, Button } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonDonutChart from "../Common/CommonDonutChart";
 import "./styles.css";
+import {
+  getDeviceInfo,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonTable from "../Common/CommonTable";
+import { CommonToaster } from "../Common/CommonToaster";
+import CommonAvatar from "../Common/CommonAvatar";
+import Loader from "../Common/Loader";
 
 const Devices = () => {
-  const teamList = [{ id: 1, name: "Operation" }];
-  const userList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Karthick" },
+  //usestates
+  const [organizationId, setOrganizationId] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [teamList, setTeamList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const platformList = [
+    { id: "w", name: "Windows" },
+    { id: "m", name: "Mac" },
   ];
+  const [platformId, setPlatformId] = useState(null);
+  const systemList = [
+    { id: "64", name: "x64" },
+    { id: "86", name: "x86" },
+  ];
+  const [systemId, setSystemId] = useState(null);
+  const [devicesData, setDevicesData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(false);
+
   const onlineDeviceCount = 70;
   const offlineDeviceCount = 30;
   const series = [onlineDeviceCount, offlineDeviceCount];
 
   const platformchartDatas = [80, 20];
 
-  const data = [
-    {
-      key: 1,
-      employee: "Alice",
-      devicename: "ACTE",
-      deviceid: "76c45031-bc0e-4a6a-8513-4ffab1aa8012",
-      platform: "WINDOWS",
-      osname: "Windows 10 Version 2009",
-      osbuild: "10",
-      systemtype: "x86_64",
-      ip: "2405:201:e004:3890:-3d52:12c6:ef21:c20d",
-      apptype: "standard",
-      myzenversion: "2.7.4",
-    },
-    {
-      key: 2,
-      employee: "Alice",
-      devicename: "ACTE",
-      deviceid: "76c45031-bc0e-4a6a-8513-4ffab1aa8012",
-      platform: "WINDOWS",
-      osname: "Windows 10 Version 2009",
-      osbuild: "10",
-      systemtype: "x86_64",
-      ip: "2405:201:e004:3890:-3d52:12c6:ef21:c20d",
-      apptype: "standard",
-      myzenversion: "2.7.4",
-    },
-    // More data...
-  ];
-
   const columns = [
     {
       title: "Employee",
-      dataIndex: "employee",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.employee - b.employee,
+      dataIndex: "full_Name",
+      key: "full_Name",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar
+              avatarSize={31}
+              itemName={text}
+              avatarfontSize="15px"
+            />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
     },
     {
       title: "Device Name",
-      dataIndex: "devicename",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.devicename - b.devicename,
+      dataIndex: "deviceName",
+      key: "deviceName",
     },
     {
       title: "Device ID",
-      dataIndex: "deviceid",
-      defaultSortOrder: "descend",
-      width: 200,
-      sorter: (a, b) => a.deviceid - b.deviceid,
+      dataIndex: "deviceId",
+      key: "deviceId",
+      width: 260,
     },
     {
       title: "Platform",
       dataIndex: "platform",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.platform - b.platform,
+      key: "platform",
+      width: 160,
+      render: (text, record) => {
+        if (text === "WinUI") {
+          return <p>Windows</p>;
+        } else {
+          return <p>Mac</p>;
+        }
+      },
     },
     {
       title: "OS Name",
-      dataIndex: "osname",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.osname - b.osname,
+      dataIndex: "osName",
+      key: "osName",
     },
     {
       title: "OS Build",
-      dataIndex: "osbuild",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.osbuild - b.osbuild,
+      dataIndex: "osBuild",
+      key: "osBuild",
     },
     {
       title: "System Type",
-      dataIndex: "systemtype",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.systemtype - b.systemtype,
-    },
-    {
-      title: "IP",
-      dataIndex: "ip",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.ip - b.ip,
+      dataIndex: "systemType",
+      key: "systemType",
       width: 150,
     },
     {
-      title: "App Type",
-      dataIndex: "apptype",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.apptype - b.apptype,
-    },
-    {
-      title: "MyZen version",
-      dataIndex: "myzenversion",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.myzenversion - b.myzenversion,
+      title: "IP",
+      dataIndex: "ipAddress",
+      key: "ipAddress",
+      width: 160,
+      // defaultSortOrder: "descend",
+      // sorter: (a, b) => a.ip - b.ip,
     },
   ];
+
+  useEffect(() => {
+    getTeamData();
+  }, []);
+
+  const getTeamData = async () => {
+    setLoading(true);
+    try {
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      setOrganizationId(orgId);
+      const response = await getTeams(parseInt(orgId));
+      const teamList = response.data;
+      setTeamList(teamList);
+      setTeamId(null);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData();
+      }, 500);
+    }
+  };
+
+  const getUsersData = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId);
+      const usersList = response?.data;
+
+      setUserList(usersList);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    } finally {
+      setTimeout(() => {
+        getDeviceData(orgId);
+      }, 350);
+    }
+  };
+
+  const getDeviceData = async (orgId, teamid, userid, platform, system) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      ...(platform && { platformSearchQuery: platform }),
+      ...(system && { systemTypeSearchQuery: system }),
+    };
+    try {
+      const response = await getDeviceInfo(payload);
+      const devicedata = response?.data;
+      console.log("devices response", devicedata);
+      setDevicesData(devicedata);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+        setFilterLoading(false);
+      }, 300);
+    }
+  };
+
+  //handle onchange functions
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    setFilterLoading(true);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+
+      setUserList(teamMembersList);
+      const userIdd = null;
+      setUserId(userIdd);
+      setTimeout(() => {
+        getDeviceData(organizationId, value, userId, platformId, systemId);
+      }, 300);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
+  const handleUser = (value) => {
+    setFilterLoading(true);
+    setUserId(value);
+    getDeviceData(organizationId, teamId, value, platformId, systemId);
+  };
+
+  const handlePlatform = (value) => {
+    setFilterLoading(true);
+    setPlatformId(value);
+    getDeviceData(organizationId, teamId, userId, value, systemId);
+  };
+
+  const handleSystemType = (value) => {
+    setFilterLoading(true);
+    setSystemId(value);
+    getDeviceData(organizationId, teamId, userId, platformId, value);
+  };
+
+  const handleRefresh = () => {
+    if (
+      teamId === null &&
+      userId === null &&
+      platformId === null &&
+      systemId === null
+    ) {
+      return;
+    } else {
+      setFilterLoading(true);
+      setTeamId(null);
+      setUserId(null);
+      setPlatformId(null);
+      setSystemId(null);
+      getDeviceData(organizationId, null, null, null, null);
+    }
+  };
+
   return (
-    <div className="settings_mainContainer">
+    <div
+      className="settings_mainContainer"
+      style={{ opacity: filterLoading ? 0.5 : 1 }}
+    >
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
           <PiDevicesBold size={20} />
@@ -129,18 +253,38 @@ const Devices = () => {
             style={{ display: "flex" }}
           >
             <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+              />
             </div>
             <div className="devicereport_selectfieldContainers">
-              <CommonSelectField options={userList} placeholder="Select User" />
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />
             </div>
             <div className="devicereport_selectfieldContainers">
-              <CommonSelectField options={userList} placeholder="Platform" />
+              <CommonSelectField
+                options={platformList}
+                placeholder="Platform"
+                onChange={handlePlatform}
+                value={platformId}
+              />
             </div>
             <div className="devicereport_selectfieldContainers">
-              <CommonSelectField options={userList} placeholder="System Type" />
+              <CommonSelectField
+                options={systemList}
+                placeholder="System Type"
+                onChange={handleSystemType}
+                value={systemId}
+              />
             </div>
-            <div className="devicereport_selectfieldContainers">
+            {/* <div className="devicereport_selectfieldContainers">
               <CommonSelectField options={userList} placeholder="App Type" />
             </div>
             <div className="devicereport_selectfieldContainers">
@@ -148,7 +292,7 @@ const Devices = () => {
                 options={userList}
                 placeholder="Hublog version"
               />
-            </div>
+            </div> */}
           </div>
         </Col>
         <Col
@@ -159,52 +303,67 @@ const Devices = () => {
           className="breakreports_calendarContainer"
         >
           <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
+            <Button
+              className="dashboard_refresh_button"
+              onClick={handleRefresh}
+            >
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>
         </Col>
       </Row>
 
-      <Row gutter={16} style={{ marginTop: "20px" }}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Status of devices: PC</p>
-            <p className="devices_chartsubheading">
-              Distribution between offline and online devices.
-            </p>
-            <CommonDonutChart
-              labels={["Online Devices", "Offline Devices"]}
-              colors={["#25a17d", "#ABB3B3"]}
-              series={series}
-              labelsfontSize="17px"
-            />
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Platform</p>
-            <p className="devices_chartsubheading">
-              Summarized view of the distribution of all the operating systems.
-            </p>
-            <CommonDonutChart
-              labels={["Windows", "Mac"]}
-              colors={["#646dd5", "#3889d7"]}
-              series={platformchartDatas}
-              labelsfontSize="17px"
-            />
-          </div>
-        </Col>
-      </Row>
+      {loading && filterLoading === false ? (
+        <Loader />
+      ) : (
+        <>
+          <Row gutter={16} style={{ marginTop: "20px" }}>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <div className="devices_chartsContainer">
+                <p className="devices_chartheading">Status of devices: PC</p>
+                <p className="devices_chartsubheading">
+                  Distribution between offline and online devices.
+                </p>
+                <CommonDonutChart
+                  labels={["Online Devices", "Offline Devices"]}
+                  colors={["#25a17d", "#ABB3B3"]}
+                  series={series}
+                  labelsfontSize="17px"
+                />
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={12}>
+              <div className="devices_chartsContainer">
+                <p className="devices_chartheading">Platform</p>
+                <p className="devices_chartsubheading">
+                  Summarized view of the distribution of all the operating
+                  systems.
+                </p>
+                <CommonDonutChart
+                  labels={["Windows", "Mac"]}
+                  colors={["#646dd5", "#3889d7"]}
+                  series={platformchartDatas}
+                  labelsfontSize="17px"
+                />
+              </div>
+            </Col>
+          </Row>
 
-      <div style={{ marginTop: "20px" }}>
-        <CommonTable
-          columns={columns}
-          dataSource={data}
-          scroll={{ x: 1600 }}
-          dataPerPage={4}
-        />
-      </div>
+          <div
+            className="breakreport_tableContainer"
+            style={{ marginTop: "20px" }}
+          >
+            <CommonTable
+              columns={columns}
+              dataSource={devicesData}
+              scroll={{ x: 1600 }}
+              dataPerPage={10}
+              checkBox="false"
+              bordered="false"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

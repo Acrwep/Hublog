@@ -534,3 +534,14 @@ export const deleteNotebook = async (noteid) => {
     throw error;
   }
 };
+//devices
+export const getDeviceInfo = async (payload) => {
+  try {
+    const response = await api.get("/api/SystemInfo/GetSystemInfo", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
