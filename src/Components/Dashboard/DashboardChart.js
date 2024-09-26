@@ -10,8 +10,10 @@ const DashboardChart = ({ data }) => {
   };
 
   // Extracting data for the chart
-  const attendanceDates = data.map((item) =>
-    new Date(item.attendanceDate).toLocaleDateString()
+  const attendanceDates = data.map((item) =>(
+    // new Date(item.attendanceDate).toLocaleDateString()
+    item.attendanceDate
+  )
   );
   const presentCount = data.map((item) => item.presentCount);
   const absentCount = data.map((item) => item.absentCount);

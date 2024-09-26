@@ -35,7 +35,7 @@ const Devices = () => {
   const [systemId, setSystemId] = useState(null);
   const [devicesData, setDevicesData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterLoading, setFilterLoading] = useState(false);
+  const [tableLoading, setTableloading] = useState(false);
 
   const onlineDeviceCount = 70;
   const offlineDeviceCount = 30;
@@ -168,7 +168,7 @@ const Devices = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-        setFilterLoading(false);
+        setTableloading(false);
       }, 300);
     }
   };
@@ -176,7 +176,7 @@ const Devices = () => {
   //handle onchange functions
   const handleTeam = async (value) => {
     setTeamId(value);
-    setFilterLoading(true);
+    setTableloading(true);
     try {
       const response = await getUsersByTeamId(value);
       const teamMembersList = response?.data?.team?.users;
@@ -199,19 +199,19 @@ const Devices = () => {
   };
 
   const handleUser = (value) => {
-    setFilterLoading(true);
+    setTableloading(true);
     setUserId(value);
     getDeviceData(organizationId, teamId, value, platformId, systemId);
   };
 
   const handlePlatform = (value) => {
-    setFilterLoading(true);
+    setTableloading(true);
     setPlatformId(value);
     getDeviceData(organizationId, teamId, userId, value, systemId);
   };
 
   const handleSystemType = (value) => {
-    setFilterLoading(true);
+    setTableloading(true);
     setSystemId(value);
     getDeviceData(organizationId, teamId, userId, platformId, value);
   };
@@ -225,7 +225,7 @@ const Devices = () => {
     ) {
       return;
     } else {
-      setFilterLoading(true);
+      setTableloading(true);
       setTeamId(null);
       setUserId(null);
       setPlatformId(null);
@@ -237,7 +237,7 @@ const Devices = () => {
   return (
     <div
       className="settings_mainContainer"
-      style={{ opacity: filterLoading ? 0.5 : 1 }}
+      // style={{ opacity: tableLoading ? 0.5 : 1 }}
     >
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
@@ -313,7 +313,7 @@ const Devices = () => {
         </Col>
       </Row>
 
-      {loading && filterLoading === false ? (
+      {loading && tableLoading === false ? (
         <Loader />
       ) : (
         <>
@@ -358,6 +358,7 @@ const Devices = () => {
               dataSource={devicesData}
               scroll={{ x: 1600 }}
               dataPerPage={10}
+              loading={tableLoading}
               checkBox="false"
               bordered="false"
             />
