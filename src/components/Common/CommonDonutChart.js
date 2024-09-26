@@ -54,11 +54,7 @@ export default function CommonDonutChart({
                   const totalMinutes = Math.round((totalHours % 1) * 60);
                   return `${Math.floor(totalHours)} hrs ${totalMinutes} min`;
                 } else {
-                  let totalSum = 0;
-                  series.map((item) => {
-                    totalSum = totalSum + item;
-                  });
-                  return totalSum;
+                  return val.globals.seriesTotals.reduce((a, b) => a + b, 0);
                 }
               },
             },

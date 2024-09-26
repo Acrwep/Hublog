@@ -545,3 +545,13 @@ export const getDeviceInfo = async (payload) => {
     throw error;
   }
 };
+export const getDeviceInfoCount = async (payload) => {
+  try {
+    const response = await api.get("/api/SystemInfo/GetSystemInfoCount", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

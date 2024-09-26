@@ -6,6 +6,7 @@ import CommonDonutChart from "../Common/CommonDonutChart";
 import "./styles.css";
 import {
   getDeviceInfo,
+  getDeviceInfoCount,
   getTeams,
   getUsers,
   getUsersByTeamId,
@@ -15,6 +16,7 @@ import CommonTable from "../Common/CommonTable";
 import { CommonToaster } from "../Common/CommonToaster";
 import CommonAvatar from "../Common/CommonAvatar";
 import Loader from "../Common/Loader";
+import CommonNodatafound from "../Common/CommonNodatafound";
 
 const Devices = () => {
   //usestates
@@ -34,12 +36,10 @@ const Devices = () => {
   ];
   const [systemId, setSystemId] = useState(null);
   const [devicesData, setDevicesData] = useState([]);
+  const [statusOfDeviceSeries, setStatusOfDeviceSeries] = useState([]);
+  const [platformSeries, setPlatformSeries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableLoading, setTableloading] = useState(false);
-
-  const onlineDeviceCount = 70;
-  const offlineDeviceCount = 30;
-  const series = [onlineDeviceCount, offlineDeviceCount];
 
   const platformchartDatas = [80, 20];
 
@@ -117,6 +117,10 @@ const Devices = () => {
 
   const getTeamData = async () => {
     setLoading(true);
+    setTeamId(null);
+    setUserId(null);
+    setPlatformId(null);
+    setSystemId(null);
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -165,6 +169,61 @@ const Devices = () => {
       setDevicesData(devicedata);
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
+      setDevicesData([]);
+    } finally {
+      setTimeout(() => {
+        getDeviceChartData(orgId, teamid, userid, platform, system);
+      }, 300);
+    }
+  };
+
+  const getDeviceChartData = async (
+    orgId,
+    teamid,
+    userid,
+    platform,
+    system
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      ...(platform && { platformSearchQuery: platform }),
+      ...(system && { systemTypeSearchQuery: system }),
+    };
+    try {
+      const response = await getDeviceInfoCount(payload);
+      const devicechartdata = response?.data;
+      console.log("devices chart response", devicechartdata);
+      if (
+        devicechartdata?.onlineCount === 0 &&
+        devicechartdata?.offlineCount === 0
+      ) {
+        setStatusOfDeviceSeries([]);
+      } else {
+        setStatusOfDeviceSeries([
+          parseInt(devicechartdata?.onlineCount),
+          parseInt(devicechartdata?.offlineCount),
+        ]);
+      }
+      //handle platform chart
+      if (
+        devicechartdata?.winUICount === 0 &&
+        devicechartdata?.macCount === 0 &&
+        devicechartdata?.linuxCount === 0
+      ) {
+        setPlatformSeries([]);
+      } else {
+        setPlatformSeries([
+          devicechartdata?.winUICount,
+          devicechartdata?.macCount,
+          devicechartdata?.linuxCount,
+        ]);
+      }
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setStatusOfDeviceSeries([]);
+      setPlatformSeries([]);
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -190,7 +249,7 @@ const Devices = () => {
       const userIdd = null;
       setUserId(userIdd);
       setTimeout(() => {
-        getDeviceData(organizationId, value, userId, platformId, systemId);
+        getDeviceData(organizationId, value, userIdd, platformId, systemId);
       }, 300);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
@@ -237,7 +296,7 @@ const Devices = () => {
   return (
     <div
       className="settings_mainContainer"
-      // style={{ opacity: tableLoading ? 0.5 : 1 }}
+      style={{ opacity: tableLoading ? 0.5 : 1 }}
     >
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
@@ -324,12 +383,16 @@ const Devices = () => {
                 <p className="devices_chartsubheading">
                   Distribution between offline and online devices.
                 </p>
-                <CommonDonutChart
-                  labels={["Online Devices", "Offline Devices"]}
-                  colors={["#25a17d", "#ABB3B3"]}
-                  series={series}
-                  labelsfontSize="17px"
-                />
+                {statusOfDeviceSeries.length >= 1 ? (
+                  <CommonDonutChart
+                    labels={["Online Devices", "Offline Devices"]}
+                    colors={["#25a17d", "#ABB3B3"]}
+                    series={statusOfDeviceSeries}
+                    labelsfontSize="17px"
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12}>
@@ -339,12 +402,16 @@ const Devices = () => {
                   Summarized view of the distribution of all the operating
                   systems.
                 </p>
-                <CommonDonutChart
-                  labels={["Windows", "Mac"]}
-                  colors={["#646dd5", "#3889d7"]}
-                  series={platformchartDatas}
-                  labelsfontSize="17px"
-                />
+                {platformSeries.length >= 1 ? (
+                  <CommonDonutChart
+                    labels={["Windows", "Mac", "Linux"]}
+                    colors={["#0078d7", "#ABB3B3", "rgba(255,185,0,0.70"]}
+                    series={platformSeries}
+                    labelsfontSize="17px"
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
               </div>
             </Col>
           </Row>
