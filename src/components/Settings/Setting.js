@@ -44,6 +44,7 @@ import {
   storeUsersForTeamsTab,
 } from "../Redux/slice";
 import { CommonToaster } from "../Common/CommonToaster";
+import ProductivityRules from "./ProductivityRules/ProductivityRules";
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const Settings = () => {
   const [breakPageVisited, setBreakPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
-    if (id === 4 || id === 5 || id >= 7) {
+    if (id === 4 || id === 5 || id >= 8) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -243,7 +244,7 @@ const Settings = () => {
               <div
                 key={index}
                 className={
-                  index === 3 || index === 4 || index >= 6
+                  index === 3 || index === 4 || index >= 7
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"
@@ -296,6 +297,11 @@ const Settings = () => {
           {activePage === 6 && (
             <div>
               <Break loading={breakLoading} />
+            </div>
+          )}
+          {activePage === 7 && (
+            <div>
+              <ProductivityRules />
             </div>
           )}
           {activePage === 8 && (

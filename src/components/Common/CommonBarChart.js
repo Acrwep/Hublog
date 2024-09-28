@@ -9,6 +9,18 @@ const CommonBarChart = ({
   distributed,
   legend,
 }) => {
+  // Function to format time as "1hr" for y-axis labels
+  const formatTimeInHours = (value) => {
+    const hours = Math.floor(value); // Only display whole hours
+    return `${hours}hr`;
+  };
+
+  // Function to format time as "1hr 30min" for tooltips
+  const formatTooltipTime = (value) => {
+    const hours = Math.floor(value);
+    const minutes = Math.round((value % 1) * 60); // Convert decimal to minutes
+    return `${hours}h:${minutes}m`;
+  };
   const options = {
     chart: {
       type: "bar",
@@ -49,8 +61,7 @@ const CommonBarChart = ({
       labels: {
         formatter: function (value) {
           if (timebased === "true") {
-            const hours = Math.floor(value);
-            return `${hours} hrs`;
+            return formatTimeInHours(value);
           } else {
             return value;
           }
@@ -68,20 +79,17 @@ const CommonBarChart = ({
     },
     tooltip: {
       y: {
-        formatter: function (val) {
-          if (timebased === "true") {
-            const hours = Math.floor(val);
-            const minutes = Math.round((val % 1) * 60);
-            return `${hours} hrs ${minutes} min`;
-          }
-          return val;
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          const xAxisName = xasis[dataPointIndex]; // Get corresponding x-axis name
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${xAxisName}</span>: ${
+            timebased === "true" ? formatTooltipTime(val) : val
+          }`;
         },
       },
-      // custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      //   const category = w.globals.labels[dataPointIndex];
-      //   const value = series[seriesIndex][dataPointIndex];
-      //   return `<div class="apexcharts-tooltip-custom">${category}: ${value}</div>`;
-      // },
+      x: {
+        show: false,
+      },
     },
     legend: {
       show: legend === "false" ? false : true, // Hide legends

@@ -93,9 +93,9 @@ const Reports = () => {
           </Col>
         </Row>
 
-        {/* <p className="reports_headings">Analytics</p>
+        <p className="reports_headings">Analytics</p>
         <Row gutter={16} className="reports_rowcontainer">
-          <Col xs={24} sm={24} md={12} lg={6}>
+          {/* <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
               onClick={() => navigation("/activityreport")}
@@ -108,7 +108,7 @@ const Reports = () => {
                 Download the Activity report for your organisation
               </p>
             </div>
-          </Col>
+          </Col> */}
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
@@ -124,7 +124,7 @@ const Reports = () => {
               </p>
             </div>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={6}>
+          {/* <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
               onClick={() => navigation("/productivityreport")}
@@ -152,9 +152,10 @@ const Reports = () => {
                 indicators and outliers
               </p>
             </div>
-          </Col>
+          </Col> */}
         </Row>
 
+        {/*
         <Row gutter={16} style={{ marginTop: "20px" }}>
           <Col xs={24} sm={24} md={12} lg={6}>
             <div

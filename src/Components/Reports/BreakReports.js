@@ -97,7 +97,6 @@ const BreakReports = () => {
   };
 
   const getUsersData = async () => {
-    let userIdd = null;
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);

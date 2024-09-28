@@ -499,6 +499,16 @@ export const getMonthlyInandOutReport = async (reportPayload) => {
     throw error;
   }
 };
+export const getAppsandUrlsReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/combined`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //notebook
 export const getNotebook = async (reportPayload) => {
   try {

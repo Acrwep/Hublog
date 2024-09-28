@@ -28,6 +28,7 @@ const Devices = () => {
   const platformList = [
     { id: "w", name: "Windows" },
     { id: "m", name: "Mac" },
+    { id: "l", name: "Linux" },
   ];
   const [platformId, setPlatformId] = useState(null);
   const systemList = [
@@ -129,7 +130,7 @@ const Devices = () => {
       setTeamList(teamList);
       setTeamId(null);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
         getUsersData();
@@ -145,7 +146,7 @@ const Devices = () => {
 
       setUserList(usersList);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data?.message, "error");
       setUserList([]);
     } finally {
       setTimeout(() => {

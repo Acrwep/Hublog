@@ -97,6 +97,11 @@
 .settinglist_columnContainer {
   padding: 16px 16px;
 }
+.users_totoalusersheading {
+  font-weight: 600;
+  font-size: 16px;
+  color: #25a17d;
+}
 .users_adduserbuttonContainer {
   display: flex;
   justify-content: flex-end;
@@ -408,4 +413,34 @@
 }
 .addmodaltitle {
   font-weight: 500;
+}
+/* productivity rules styles */
+.productivityrules_categoryContainer {
+  border-left: 1px solid #00000026;
+  border-right: 1px solid #00000026;
+  border-radius: 12px;
+  padding: 0px 9px;
+}
+.category_nameContainer {
+  display: flex;
+  align-items: center;
+}
+@media (min-width: 320px) and (max-width: 768px) {
+  .category_productivebuttonContainer {
+    margin-top: 6px;
+  }
+}
+.category_productivebutton {
+  padding: 3px 0px;
+  border: 1px solid #00000026;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.5px;
+}
+.category_productivebuttontext {
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
