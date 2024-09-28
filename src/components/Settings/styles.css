@@ -424,6 +424,7 @@
 .category_nameContainer {
   display: flex;
   align-items: center;
+  margin-top: 12px;
 }
 @media (min-width: 320px) and (max-width: 768px) {
   .category_productivebuttonContainer {
@@ -440,7 +441,73 @@
   align-items: center;
   letter-spacing: 0.5px;
 }
+.category_productivebutton:active {
+  transform: scale(0.9);
+}
 .category_productivebuttontext {
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.category_activeproductivebutton {
+  padding: 3px 0px;
+  border: 1px solid #25a17d;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.5px;
+  background-color: #25a17d;
+  color: white;
+  font-weight: 600;
+}
+.category_neutralproductivebutton {
+  padding: 3px 0px;
+  border: 1px solid #959898;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.5px;
+  background-color: #8a8c8c;
+  color: white;
+  font-weight: 600;
+}
+.category_unproductivebutton {
+  padding: 3px 0px;
+  border: 1px solid rgba(244, 67, 54, 0.85);
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.5px;
+  background-color: rgba(244, 67, 54, 0.85);
+  color: white;
+  font-weight: 600;
+}
+/* mapping styles */
+.mapping_headerselectfieldsColumnContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .mapping_headerselectfieldsColumnContainer {
+    justify-content: flex-start;
+  }
+}
+.mapping_headerselectfieldsContainer {
+  display: flex;
+}
+@media (min-width: 320px) and (max-width: 767px) {
+  .mapping_headerselectfieldsContainer {
+    flex-direction: column;
+  }
+}
+.mapping_tableheading {
+  font-weight: 600;
+  margin-bottom: 9px;
+  font-size: 16px;
 }

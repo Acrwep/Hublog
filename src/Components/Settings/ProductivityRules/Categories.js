@@ -12,15 +12,8 @@ export default function Categories() {
       <Divider style={{ margin: "0" }} />
       {categories.map((item) => (
         <React.Fragment>
-          {/* <div className="productivityrules_categoryContainer"> */}
-          <Row style={{ marginTop: "12px" }}>
-            <Col
-              xs={24}
-              sm={24}
-              lg={12}
-              xl={12}
-              className="category_nameContainer"
-            >
+          <Row className="category_nameContainer">
+            <Col xs={24} sm={24} lg={12} xl={12}>
               <p style={{ fontWeight: "600" }}>{item.name}</p>
             </Col>
             <Col
@@ -32,27 +25,50 @@ export default function Categories() {
             >
               <Row gutter={16}>
                 <Col span={8}>
-                  <button className="category_productivebutton">
-                    <p className="category_productivebuttontext">Productive</p>
-                  </button>
+                  {item.type === 1 ? (
+                    <button className="category_activeproductivebutton">
+                      <p className="category_productivebuttontext">
+                        Productive
+                      </p>
+                    </button>
+                  ) : (
+                    <button className="category_productivebutton">
+                      <p className="category_productivebuttontext">
+                        Productive
+                      </p>
+                    </button>
+                  )}
                 </Col>
                 <Col span={8}>
-                  <button className="category_productivebutton">
-                    <p className="category_productivebuttontext">Neutral</p>
-                  </button>
+                  {item.type === 2 ? (
+                    <button className="category_neutralproductivebutton">
+                      <p className="category_productivebuttontext">Neutral</p>
+                    </button>
+                  ) : (
+                    <button className="category_productivebutton">
+                      <p className="category_productivebuttontext">Neutral</p>
+                    </button>
+                  )}
                 </Col>
                 <Col span={8}>
-                  <button className="category_productivebutton">
-                    <p className="category_productivebuttontext">
-                      Unproductive
-                    </p>
-                  </button>
+                  {item.type === 3 ? (
+                    <button className="category_unproductivebutton">
+                      <p className="category_productivebuttontext">
+                        Unproductive
+                      </p>
+                    </button>
+                  ) : (
+                    <button className="category_productivebutton">
+                      <p className="category_productivebuttontext">
+                        Unproductive
+                      </p>
+                    </button>
+                  )}
                 </Col>
               </Row>
             </Col>
           </Row>
           <Divider style={{ margin: "0", marginTop: "12px" }} />
-          {/* </div> */}
         </React.Fragment>
       ))}
     </div>

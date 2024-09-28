@@ -96,6 +96,7 @@ select:focus {
   > .ant-input-group-addon:last-child
   .ant-input-search-button:not(.ant-btn-primary):hover {
   color: #25a17d !important;
+  border-color: #25a17d !important;
 }
 /* .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
   border-color: #25a17d !important;
