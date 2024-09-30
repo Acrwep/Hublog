@@ -34,7 +34,10 @@ import {
   storeUserTotalBreak,
   storeuserUrlsUsage,
 } from "../Redux/slice";
-import { addAppandUrlTime } from "../Common/Validation";
+import {
+  addAppandUrlTime,
+  getCurrentandPreviousweekDate,
+} from "../Common/Validation";
 import { useDispatch } from "react-redux";
 
 const UserDetail = () => {
@@ -65,7 +68,8 @@ const UserDetail = () => {
   const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
   const [internetTime, setInternetTime] = useState("");
   //loadings
-  const [attendanceLoading, setAttendanceLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [attendanceFilterLoading, setAttendanceFilterLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [appsLoading, setAppsLoading] = useState(true);
   const [attendanceSummary, setAttendanceSummary] = useState("");
@@ -78,44 +82,11 @@ const UserDetail = () => {
   };
 
   const [userList, setUserList] = useState([]);
-  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     getUsersData();
   }, [activePage]);
-
-  //get current date and previous week date from current date
-  const getCurrentandPreviousweekDate = () => {
-    const currentDate = new Date();
-
-    // Calculate previous week date (subtract 7 days)
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    // Format dates
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
-    let dates = [];
-    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
-    setSelectedDates(dates);
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-
-    // Ensure month and day are two digits
-    if (month < 10) {
-      month = `0${month}`;
-    }
-    if (day < 10) {
-      day = `0${day}`;
-    }
-
-    return `${year}-${month}-${day}`;
-  };
 
   const getUsersData = async () => {
     const getUserInfofromLocal = localStorage.getItem("LoginUserInfo");
@@ -130,13 +101,12 @@ const UserDetail = () => {
       setLastName("");
       setRoleId(null);
     }
-
-    getCurrentandPreviousweekDate();
-    const orgId = localStorage.getItem("organizationId");
-    if (user != null) {
-      getuserDetailsData(user, orgId);
-      return;
+    let PreviousandCurrentDate = [];
+    if (initialLoading === true) {
+      PreviousandCurrentDate = getCurrentandPreviousweekDate();
+      setSelectedDates(PreviousandCurrentDate);
     }
+    const orgId = localStorage.getItem("organizationId");
     setOrganizationId(orgId);
     try {
       const response = await getUsers(orgId);
@@ -144,40 +114,41 @@ const UserDetail = () => {
       console.log("users response", userDetail);
 
       setUserList(userDetail);
-      setUser(userDetail[0].id);
-      setFullName(userDetail[0].first_Name + " " + userDetail[0].last_Name);
-      setEmail(userDetail[0].email);
-      getuserDetailsData(response.data[0].id, orgId);
+      if (userId) {
+        const findSelectedUser = userList.find((f) => f.id === userId);
+        setUserId(userId);
+        setFullName(findSelectedUser.full_Name);
+        setEmail(findSelectedUser.email);
+      } else {
+        setFullName(userDetail[0].full_Name);
+        setEmail(userDetail[0].email);
+        setUserId(userDetail[0].id);
+      }
+      getuserDetailsData(
+        userId === null ? userDetail[0].id : userId,
+        orgId,
+        PreviousandCurrentDate.length >= 1
+          ? PreviousandCurrentDate[0]
+          : selectedDates[0],
+        PreviousandCurrentDate.length >= 1
+          ? PreviousandCurrentDate[1]
+          : selectedDates[1]
+      );
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     }
   };
 
-  const getuserDetailsData = async (userId, orgId, startDate, endDate) => {
-    console.log(startDate, endDate, selectedDates);
-    const currentDate = new Date();
-
-    // Calculate previous week date (subtract 7 days)
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    // Format dates
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
-    let dates = [];
-    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
-    console.log("datearray", dates);
-    // setSelectedDates(dates);
-
+  const getuserDetailsData = async (userId, orgId, startdate, enddate) => {
     if (activePage === 1) {
-      setAttendanceLoading(true);
+      if (initialLoading === false) {
+        setAttendanceFilterLoading(true);
+      }
       const payload = {
         userId: userId,
         organizationId: orgId,
-        startDate:
-          startDate === undefined ? formattedPreviousWeekDate : startDate,
-        endDate: endDate === undefined ? formattedCurrentDate : endDate,
+        startDate: startdate,
+        endDate: enddate,
       };
       try {
         const response = await getUserAttendance(payload);
@@ -193,20 +164,15 @@ const UserDetail = () => {
         dispatch(storeuserAttendance(details));
       } finally {
         setTimeout(() => {
-          setAttendanceLoading(false);
+          setAttendanceFilterLoading(false);
+          setInitialLoading(false);
         }, 350);
       }
     }
     if (activePage === 2) {
-      setBreakLoading(true);
-      const startdate =
-        startDate === undefined || startDate === null
-          ? formattedPreviousWeekDate
-          : startDate;
-      const enddate =
-        endDate === undefined || endDate === null
-          ? formattedCurrentDate
-          : endDate;
+      if (initialLoading === false) {
+        setBreakLoading(true);
+      }
       try {
         const response = await getUserBreak(userId, startdate, enddate);
         console.log("user break response", response.data);
@@ -225,15 +191,16 @@ const UserDetail = () => {
       }
     }
     if (activePage === 6) {
-      setAppsLoading(true);
+      if (initialLoading === false) {
+        setAppsLoading(true);
+      }
       const orgId = localStorage.getItem("organizationId");
 
       const payload = {
         ...(userId && { userId: userId }),
         organizationId: orgId,
-        startDate:
-          startDate === undefined ? formattedPreviousWeekDate : startDate,
-        endDate: endDate === undefined ? formattedCurrentDate : endDate,
+        startDate: startdate,
+        endDate: enddate,
       };
       try {
         const response = await getAppsUsage(payload);
@@ -244,7 +211,7 @@ const UserDetail = () => {
         CommonToaster(error.response?.data?.message, "error");
       } finally {
         setTimeout(() => {
-          getTopAppUsageData(userId, orgId, startDate, endDate);
+          getTopAppUsageData(userId, orgId, startdate, enddate);
         }, 500);
       }
     }
@@ -276,18 +243,11 @@ const UserDetail = () => {
   };
 
   const getTopAppUsageData = async (userid, orgId, startdate, enddate) => {
-    const currentDate = new Date();
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
     const payload = {
       ...(userid && { userId: userid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     let AppMaxTime = "";
     try {
@@ -327,22 +287,11 @@ const UserDetail = () => {
     enddate,
     AppMaxTime
   ) => {
-    const currentDate = new Date();
-
-    // Calculate previous week date (subtract 7 days)
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    // Format dates
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
     const payload = {
       ...(userid && { userId: userid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     try {
       const response = await getUrlsUsage(payload);
@@ -364,18 +313,11 @@ const UserDetail = () => {
     enddate,
     AppMaxTime
   ) => {
-    const currentDate = new Date();
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
     const payload = {
       ...(userid && { userId: userid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     try {
       const response = await getTopUrlsUsage(payload);
@@ -410,9 +352,9 @@ const UserDetail = () => {
   };
 
   const handleUser = async (value) => {
-    setUser(value);
+    setUserId(value);
     const findSelectedUser = userList.find((f) => f.id === value);
-    setFullName(findSelectedUser.first_Name + " " + findSelectedUser.last_Name);
+    setFullName(findSelectedUser.full_Name);
     setEmail(findSelectedUser.email);
     getuserDetailsData(
       value,
@@ -427,7 +369,7 @@ const UserDetail = () => {
     const startDate = dateStrings[0];
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
-      getuserDetailsData(user, organizationId, startDate, endDate);
+      getuserDetailsData(userId, organizationId, startDate, endDate);
     }
   };
   return (
@@ -462,7 +404,7 @@ const UserDetail = () => {
               <CommonSelectField
                 placeholder="Select Users"
                 disabled={roleId === 3 ? true : false}
-                value={user}
+                value={userId}
                 options={userList}
                 onChange={handleUser}
                 className="userdetail_userselectfield"
@@ -541,14 +483,18 @@ const UserDetail = () => {
           {activePage === 1 && (
             <div>
               <UserAttendance
-                loading={attendanceLoading}
+                loading={initialLoading}
+                filterLoading={attendanceFilterLoading}
                 attendanceSummary={attendanceSummary}
               />
             </div>
           )}
           {activePage === 2 && (
             <div>
-              <UserBreak loading={breakLoading} />
+              <UserBreak
+                loading={initialLoading}
+                filterLoading={breakLoading}
+              />
             </div>
           )}
           {activePage === 3 && (
@@ -569,7 +515,8 @@ const UserDetail = () => {
           {activePage === 6 && (
             <div>
               <UserAppsUrls
-                loading={appsLoading}
+                loading={initialLoading}
+                filterLoading={appsLoading}
                 topAppName={topAppName}
                 topAppUsageTime={topAppUsageTime}
                 topUrlName={topUrlName}

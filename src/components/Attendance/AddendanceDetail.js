@@ -329,131 +329,126 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
   };
 
   return (
-    <>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
-          <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Attendance Trends</p>
-            {attendanceTrendsData.length >= 1 ? (
-              // <AttendanceTrendsChart
-              //   // xasis={attendanceTrendsXaxis}
-              //   series={attendanceTrendsSeries}
-              //   // colors={attendanceTrendsColors}
-              // />
+    <div>
+      <div className="devices_chartsContainer">
+        <p className="devices_chartheading">Attendance Trends</p>
+        {attendanceTrendsData.length >= 1 ? (
+          // <AttendanceTrendsChart
+          //   // xasis={attendanceTrendsXaxis}
+          //   series={attendanceTrendsSeries}
+          //   // colors={attendanceTrendsColors}
+          // />
 
-              <ReactApexChart
-                series={attendanceTrendsSeries}
-                colors={attendanceTrendsColors}
-                options={options}
-                type="bar"
-                height={350}
-              />
+          <ReactApexChart
+            series={attendanceTrendsSeries}
+            colors={attendanceTrendsColors}
+            options={options}
+            type="bar"
+            height={350}
+          />
+        ) : (
+          <CommonNodatafound />
+        )}
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        <div className="devices_chartsContainer">
+          <p className="devices_chartheading">Employee List</p>
+          <CommonTable
+            columns={columns}
+            dataSource={employeeAttendanceList}
+            scroll={{ x: 1000 }}
+            dataPerPage={10}
+            bordered="false"
+            checkBox="false"
+            loading={loading}
+          />
+        </div>
+      </div>
+
+      {/* calendar drawer */}
+      <Drawer
+        title={userName}
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        width="25%"
+        styles={{ body: { padding: "0px 12px" } }}
+      >
+        <div className="attendancedetail_employeelistCalender">
+          <Calendar
+            fullscreen={false}
+            mode="month"
+            value={calendarDate}
+            onChange={handleCalendarChange}
+            disabledDate={disableFutureDates}
+          />
+          <Divider className="attendancedetail_userattendanceDivider" />
+          <div className="attendance_employeelistContainer">
+            <Row>
+              {userAttendanceTableHeading.map((item) => (
+                <Col
+                  span={8}
+                  className="attendancedetail_userattendancetableColumnContainer"
+                >
+                  <p className="attendancedetail_userattendancetableheading">
+                    {item}
+                  </p>
+                </Col>
+              ))}
+            </Row>
+
+            <Divider
+              style={{
+                margin: 0,
+                background: "#abb3b36e",
+                marginBottom: "12px",
+              }}
+            />
+            {userAttendanceData.length >= 1 ? (
+              <Row
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {userAttendanceData.map((item) => (
+                  <Col span={8}>
+                    <p className="attendancedetail_userattendancetableColumnContainer">
+                      {item.startTime === "0001-01-01T00:00:00"
+                        ? ""
+                        : moment(item.startTime).format("hh:mm A")}
+                    </p>
+                  </Col>
+                ))}
+                {userAttendanceData.map((item) => (
+                  <Col span={8}>
+                    <p className="attendancedetail_userattendancetableColumnContainer">
+                      {item.endTime === "0001-01-01T00:00:00"
+                        ? ""
+                        : moment(item.endTime).format("hh:mm A")}
+                    </p>
+                  </Col>
+                ))}
+                {userAttendanceData.map((item) => (
+                  <Col span={8}>
+                    <p className="attendancedetail_userattendancetableColumnContainer">
+                      {item.workingTime === null
+                        ? ""
+                        : moment(item.workingTime, "HH:mm:ss").format(
+                            "H[h]:mm[m]"
+                          )}
+                    </p>
+                  </Col>
+                ))}
+              </Row>
             ) : (
               <CommonNodatafound />
             )}
           </div>
-
-          <div style={{ marginTop: "20px" }}>
-            <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Employee List</p>
-              <CommonTable
-                columns={columns}
-                dataSource={employeeAttendanceList}
-                scroll={{ x: 1000 }}
-                dataPerPage={10}
-                bordered="false"
-                checkBox="false"
-              />
-            </div>
-          </div>
-
-          {/* calendar drawer */}
-          <Drawer
-            title={userName}
-            onClose={() => setIsDrawerOpen(false)}
-            open={isDrawerOpen}
-            width="25%"
-            styles={{ body: { padding: "0px 12px" } }}
-          >
-            <div className="attendancedetail_employeelistCalender">
-              <Calendar
-                fullscreen={false}
-                mode="month"
-                value={calendarDate}
-                onChange={handleCalendarChange}
-                disabledDate={disableFutureDates}
-              />
-              <Divider className="attendancedetail_userattendanceDivider" />
-              <div className="attendance_employeelistContainer">
-                <Row>
-                  {userAttendanceTableHeading.map((item) => (
-                    <Col
-                      span={8}
-                      className="attendancedetail_userattendancetableColumnContainer"
-                    >
-                      <p className="attendancedetail_userattendancetableheading">
-                        {item}
-                      </p>
-                    </Col>
-                  ))}
-                </Row>
-
-                <Divider
-                  style={{
-                    margin: 0,
-                    background: "#abb3b36e",
-                    marginBottom: "12px",
-                  }}
-                />
-                {userAttendanceData.length >= 1 ? (
-                  <Row
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {userAttendanceData.map((item) => (
-                      <Col span={8}>
-                        <p className="attendancedetail_userattendancetableColumnContainer">
-                          {item.startTime === "0001-01-01T00:00:00"
-                            ? ""
-                            : moment(item.startTime).format("hh:mm A")}
-                        </p>
-                      </Col>
-                    ))}
-                    {userAttendanceData.map((item) => (
-                      <Col span={8}>
-                        <p className="attendancedetail_userattendancetableColumnContainer">
-                          {item.endTime === "0001-01-01T00:00:00"
-                            ? ""
-                            : moment(item.endTime).format("hh:mm A")}
-                        </p>
-                      </Col>
-                    ))}
-                    {userAttendanceData.map((item) => (
-                      <Col span={8}>
-                        <p className="attendancedetail_userattendancetableColumnContainer">
-                          {item.workingTime === null
-                            ? ""
-                            : moment(item.workingTime, "HH:mm:ss").format(
-                                "H[h]:mm[m]"
-                              )}
-                        </p>
-                      </Col>
-                    ))}
-                  </Row>
-                ) : (
-                  <CommonNodatafound />
-                )}
-              </div>
-            </div>
-          </Drawer>
         </div>
-      )}
-    </>
+      </Drawer>
+    </div>
   );
 };
 

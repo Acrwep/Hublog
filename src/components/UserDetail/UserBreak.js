@@ -7,7 +7,7 @@ import moment from "moment";
 import "./styles.css";
 import CommonNodatafound from "../Common/CommonNodatafound";
 
-export default function UserBreak({ loading }) {
+export default function UserBreak({ loading, filterLoading }) {
   const userBreakDetails = useSelector((state) => state.userBreak);
   const userTotalBreakData = useSelector((state) => state.usertotalbreak);
   const columns = [
@@ -141,6 +141,14 @@ export default function UserBreak({ loading }) {
       ) : (
         <div>
           <div className="userbreak_linechartContainer">
+            <p
+              style={{
+                fontWeight: 600,
+                fontSize: "17px",
+              }}
+            >
+              Break Trends
+            </p>
             {userTotalBreakData.length >= 1 ? (
               <ReactApexChart
                 options={datas.options}
@@ -173,6 +181,7 @@ export default function UserBreak({ loading }) {
               dataPerPage={10}
               checkBox="false"
               bordered="false"
+              loading={filterLoading}
             />
           </div>
         </div>

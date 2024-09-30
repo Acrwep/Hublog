@@ -8,7 +8,11 @@ import "./styles.css";
 import Loader from "../Common/Loader";
 import moment from "moment";
 
-export default function UserAttendance({ attendanceSummary, loading }) {
+export default function UserAttendance({
+  attendanceSummary,
+  loading,
+  filterLoading,
+}) {
   const userAttendanceDetails = useSelector((state) => state.userAttendance);
   const columns = [
     {
@@ -105,6 +109,7 @@ export default function UserAttendance({ attendanceSummary, loading }) {
               dataPerPage={10}
               checkBox="false"
               bordered="false"
+              loading={filterLoading}
             />
           </div>
         </div>

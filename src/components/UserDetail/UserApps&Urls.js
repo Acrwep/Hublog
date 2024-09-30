@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { Row, Col } from "antd";
 import ReactApexChart from "react-apexcharts";
 import { useSelector } from "react-redux";
-import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import "./styles.css";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import Loader from "../Common/Loader";
+import UserAppsandUrlsLoader from "./UserApps&UrlsLoader";
+import ContentLoader from "react-content-loader";
 
 export default function UserAppsUrls({
   loading,
+  filterLoading,
   topAppName,
   topAppUsageTime,
   topUrlName,
@@ -116,29 +118,60 @@ export default function UserAppsUrls({
           <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="userproductivity_topContainers">
-                <p>Top Application</p>
-                <p className="userproductivity_contents">{topAppName}</p>
-                <p className="userproductivity_hours">{topAppUsageTime}</p>
+                {filterLoading ? (
+                  <UserAppsandUrlsLoader />
+                ) : (
+                  <>
+                    <p>Top Application</p>
+                    <p className="userproductivity_contents">{topAppName}</p>
+                    <p className="userproductivity_hours">{topAppUsageTime}</p>
+                  </>
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={12}>
               <div className="userproductivity_topContainers">
-                <p>Top URL</p>
-                <p className="userproductivity_contents">
-                  {topUrlName === "-" ? topUrlName : "https://" + topUrlName}
-                </p>
-                <p className="userproductivity_hours">{topUrlUsageTime}</p>
+                {filterLoading ? (
+                  <ContentLoader
+                    speed={1}
+                    width="100%"
+                    // height="100%"
+                    viewBox="0 0 300 70"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                  >
+                    <rect x="0" y="5" rx="5" ry="5" width="45" height="9" />
+                    <rect x="0" y="32" rx="5" ry="5" width="150" height="10" />
+                    <rect x="0" y="60" rx="5" ry="5" width="45" height="9" />
+                  </ContentLoader>
+                ) : (
+                  <>
+                    <p>Top URL</p>
+                    <p className="userproductivity_contents">
+                      {topUrlName === "-"
+                        ? topUrlName
+                        : "https://" + topUrlName}
+                    </p>
+                    <p className="userproductivity_hours">{topUrlUsageTime}</p>
+                  </>
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="userproductivity_topContainers">
-                <p>Top Category</p>
-                <p className="userproductivity_contents">
-                  {internetTime ? "Internet" : "-"}
-                </p>
-                <p className="userproductivity_hours">
-                  {internetTime ? internetTime : "-"}
-                </p>
+                {filterLoading ? (
+                  <UserAppsandUrlsLoader />
+                ) : (
+                  <>
+                    <p>Top Category</p>
+                    <p className="userproductivity_contents">
+                      {internetTime ? "Internet" : "-"}
+                    </p>
+                    <p className="userproductivity_hours">
+                      {internetTime ? internetTime : "-"}
+                    </p>
+                  </>
+                )}
               </div>
             </Col>
           </Row>

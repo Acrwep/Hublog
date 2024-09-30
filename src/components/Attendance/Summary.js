@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import Loader from "../Common/Loader";
 import moment from "moment";
 import CommonNodatafound from "../Common/CommonNodatafound";
+import AttendanceSummaryLoader from "./AttendanceSummaryLoader";
 
 const Summary = ({ loading }) => {
   const [date, setDate] = useState(new Date());
@@ -143,137 +144,134 @@ const Summary = ({ loading }) => {
   }, [loading]);
 
   return (
-    <>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
-          <Row gutter={16}>
-            <Col xs={24} sm={24} md={6} lg={6}>
-              <div className="userproductivity_topContainers">
+    <div>
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            {loading ? (
+              <AttendanceSummaryLoader />
+            ) : (
+              <>
                 <p style={{ color: "#25a17d", fontWeight: "500" }}>
                   Attendance %
                 </p>
                 <p className="attendancesummary_percentage">
                   {attendancePercentage}%
                 </p>
-                {/* <p className="userproductivity_hours">
-                  <span style={{ color: "#25a17d", fontWeight: "600" }}>
-                    90%
-                  </span>{" "}
-                  is More than last period
-                </p> */}
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={6} lg={6}>
-              <div className="userproductivity_topContainers">
+              </>
+            )}
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            {loading ? (
+              <AttendanceSummaryLoader />
+            ) : (
+              <>
                 <p style={{ color: "#e93b3a", fontWeight: "500" }}>
                   Late Arrivals
                 </p>
                 <p className="attendancesummary_percentage">
                   {lateArrivalPercentage}%
                 </p>
-                {/* <p className="userproductivity_hours">same as previous day</p> */}
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={6} lg={6}>
-              <div className="userproductivity_topContainers">
+              </>
+            )}
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            {loading ? (
+              <AttendanceSummaryLoader />
+            ) : (
+              <>
                 <p style={{ fontWeight: "500" }}>Break time</p>
                 <p className="attendancesummary_percentage">{totalBreaktime}</p>
-                {/* <p className="userproductivity_hours">
-                  <span style={{ color: "#25a17d", fontWeight: "600" }}>
-                    82h:22m
-                  </span>{" "}
-                  Less than last period
-                </p> */}
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={6} lg={6}>
-              <div className="userproductivity_topContainers">
+              </>
+            )}
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={6} lg={6}>
+          <div className="userproductivity_topContainers">
+            {loading ? (
+              <AttendanceSummaryLoader />
+            ) : (
+              <>
                 <p style={{ fontWeight: "500" }}>Working time</p>
                 <p className="attendancesummary_percentage">
                   {totalWorkingtime}
                 </p>
-                {/* <p className="userproductivity_hours">
-                  <span style={{ color: "#e93b3a", fontWeight: "600" }}>
-                    82h:22m
-                  </span>{" "}
-                  Less than last period
-                </p>{" "} */}
-              </div>
-            </Col>
-          </Row>
-
-          <div style={{ marginTop: "25px" }}>
-            <Row gutter={16}>
-              <Col xs={24} sm={24} md={7} lg={7}>
-                <div className="devices_chartsContainer">
-                  <p className="devices_chartheading">Today's Attendance</p>
-
-                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p className="totalactive_timeheading">
-                        On time arrivals
-                      </p>
-                      <p className="totalactive_time">{todayOntimeArrival}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p className="totalactive_timeheading">Late arrivals</p>
-                      <p className="totalactive_time">{todayLateArrival}</p>
-                    </Col>
-                  </Row>
-                  <CommonDonutChart
-                    labels={["Present", "Absent"]}
-                    colors={["#25a17d", "#ABB3B3"]}
-                    series={todayAttendanceSeries}
-                    labelsfontSize="17px"
-                  />
-                </div>
-              </Col>
-
-              <Col xs={24} sm={24} md={17} lg={17}>
-                <div className="devices_chartsContainer">
-                  <p className="devices_chartheading">
-                    Activity Level Breakdown
-                  </p>
-                  <CommonBarChart
-                    xasis={attendanceTrendsXasis}
-                    series={attendanceTrendsSeries}
-                    colors={attendanceTrendsColors}
-                  />
-                </div>
-              </Col>
-            </Row>
+              </>
+            )}
           </div>
+        </Col>
+      </Row>
 
-          <Row gutter={16} style={{ marginTop: "25px" }}>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <div className="devices_chartsContainer">
-                <p className="devices_chartheading">Break Trends</p>
-                <ReactApexChart
-                  options={datas.options}
-                  series={datas.series}
-                  type="line"
-                  height={300}
-                />
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <div className="devices_chartsContainer">
-                <p className="devices_chartheading">Late Arrival Tendency</p>
-                {lateArrivalData.length >= 1 ? (
-                  <CommonBarChart
-                    xasis={lateArrivalXasis}
-                    series={lateArrivalSeries}
-                    colors={["#25a17d", "#ABB3B3"]}
-                  />
-                ) : (
-                  <CommonNodatafound />
-                )}
-              </div>
-            </Col>
-          </Row>
-          {/* <div style={{ marginTop: "25px" }}>
+      <div style={{ marginTop: "25px" }}>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Today's Attendance</p>
+
+              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalactive_timeheading">On time arrivals</p>
+                  <p className="totalactive_time">{todayOntimeArrival}</p>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <p className="totalactive_timeheading">Late arrivals</p>
+                  <p className="totalactive_time">{todayLateArrival}</p>
+                </Col>
+              </Row>
+              <CommonDonutChart
+                labels={["Present", "Absent"]}
+                colors={["#25a17d", "#ABB3B3"]}
+                series={todayAttendanceSeries}
+                labelsfontSize="17px"
+              />
+            </div>
+          </Col>
+
+          <Col xs={24} sm={24} md={17} lg={17}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Activity Level Breakdown</p>
+              <CommonBarChart
+                xasis={attendanceTrendsXasis}
+                series={attendanceTrendsSeries}
+                colors={attendanceTrendsColors}
+              />
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <Row gutter={16} style={{ marginTop: "25px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Break Trends</p>
+            <ReactApexChart
+              options={datas.options}
+              series={datas.series}
+              type="line"
+              height={300}
+            />
+          </div>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="devices_chartsContainer">
+            <p className="devices_chartheading">Late Arrival Tendency</p>
+            {lateArrivalData.length >= 1 ? (
+              <CommonBarChart
+                xasis={lateArrivalXasis}
+                series={lateArrivalSeries}
+                colors={["#25a17d", "#ABB3B3"]}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </div>
+        </Col>
+      </Row>
+      {/* <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
           <p className="devices_chartheading">Team Wise Utilization</p>
           <CommonBarChart
@@ -284,9 +282,7 @@ const Summary = ({ loading }) => {
           />
         </div>
       </div> */}
-        </div>
-      )}
-    </>
+    </div>
   );
 };
 

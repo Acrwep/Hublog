@@ -49,7 +49,8 @@ const Attendance = () => {
   const [organizationId, setOrganizationId] = useState(null);
   const [selectUser, setSelectUser] = useState(false);
   const [attendancedetailLoading, setAttendancedetailLoading] = useState(true);
-  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const handlePageChange = (pageNumber) => {
     if (
@@ -345,6 +346,7 @@ const Attendance = () => {
       dispatch(storeLateArrival(details));
     } finally {
       setTimeout(() => {
+        setLoading(false);
         setSummaryLoading(false);
       }, 350);
     }
@@ -579,15 +581,11 @@ const Attendance = () => {
                   onChange={handleDateChange}
                 />
               </div>
-              <Tooltip placement="top" title="Download">
-                <Button className="dashboard_download_button">
-                  <DownloadOutlined className="download_icon" />
-                </Button>
-              </Tooltip>
               <Tooltip placement="top" title="Refresh">
                 <Button
                   className="dashboard_refresh_button"
                   onClick={handleRefresh}
+                  style={{ marginLeft: "12px" }}
                 >
                   <RedoOutlined className="refresh_icon" />
                 </Button>
@@ -600,7 +598,7 @@ const Attendance = () => {
       )}
 
       <>
-        {summaryLoading ? (
+        {loading ? (
           <Loader />
         ) : (
           <div>
