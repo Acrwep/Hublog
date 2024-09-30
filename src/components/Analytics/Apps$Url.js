@@ -18,7 +18,12 @@ import "./styles.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
-import { addAppandUrlTime } from "../Common/Validation";
+import {
+  addAppandUrlTime,
+  getCurrentandPreviousweekDate,
+} from "../Common/Validation";
+import AppsandUrlsLoader from "./Apps&UrlsLoader";
+import ContentLoader from "react-content-loader";
 
 const Apps$Url = () => {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -35,6 +40,7 @@ const Apps$Url = () => {
   const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
   const [internetTime, setInternetTime] = useState("");
   const [loading, setLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(false);
 
   const barchartoptions = {
     chart: {
@@ -129,38 +135,6 @@ const Apps$Url = () => {
     getTeamData();
   }, []);
 
-  const getCurrentandPreviousweekDate = () => {
-    const currentDate = new Date();
-
-    // Calculate previous week date (subtract 7 days)
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    // Format dates
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
-    let dates = [];
-    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
-    setSelectedDates(dates);
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-
-    // Ensure month and day are two digits
-    if (month < 10) {
-      month = `0${month}`;
-    }
-    if (day < 10) {
-      day = `0${day}`;
-    }
-
-    return `${year}-${month}-${day}`;
-  };
-
   const getTeamData = async () => {
     setLoading(true);
     try {
@@ -169,7 +143,6 @@ const Apps$Url = () => {
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      getCurrentandPreviousweekDate();
       setTeamId(null);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
@@ -182,6 +155,8 @@ const Apps$Url = () => {
 
   const getUsersData = async () => {
     const orgId = localStorage.getItem("organizationId");
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousandCurrentDate);
     try {
       const response = await getUsers(orgId);
       const usersList = response?.data;
@@ -192,29 +167,25 @@ const Apps$Url = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getAppsData(null, null, orgId);
+        getAppsData(
+          null,
+          null,
+          orgId,
+          PreviousandCurrentDate[0],
+          PreviousandCurrentDate[1]
+        );
       }, 500);
     }
   };
 
   const getAppsData = async (userid, teamid, orgId, startdate, enddate) => {
-    const currentDate = new Date();
-
-    // Calculate previous week date (subtract 7 days)
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    // Format dates
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
+    setFilterLoading(true);
     const payload = {
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     try {
       const response = await getAppsUsage(payload);
@@ -236,19 +207,12 @@ const Apps$Url = () => {
     startdate,
     enddate
   ) => {
-    const currentDate = new Date();
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
     const payload = {
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     let AppMaxTime = "";
     try {
@@ -289,23 +253,12 @@ const Apps$Url = () => {
     enddate,
     AppMaxTime
   ) => {
-    const currentDate = new Date();
-
-    // Calculate previous week date (subtract 7 days)
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    // Format dates
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
     const payload = {
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     try {
       const response = await getUrlsUsage(payload);
@@ -335,19 +288,12 @@ const Apps$Url = () => {
     enddate,
     AppMaxTime
   ) => {
-    const currentDate = new Date();
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
     const payload = {
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
       organizationId: orgId,
-      startDate:
-        startdate === undefined ? formattedPreviousWeekDate : startdate,
-      endDate: enddate === undefined ? formattedCurrentDate : enddate,
+      startDate: startdate,
+      endDate: enddate,
     };
     try {
       const response = await getTopUrlsUsage(payload);
@@ -376,6 +322,7 @@ const Apps$Url = () => {
       setInternetTime("");
     } finally {
       setTimeout(() => {
+        setFilterLoading(false);
         setLoading(false);
       }, 500);
     }
@@ -431,24 +378,14 @@ const Apps$Url = () => {
   const handleRefresh = () => {
     setTeamId(null);
     setUserId(null);
-
-    const currentDate = new Date();
-    const previousWeekDate = new Date(currentDate);
-    previousWeekDate.setDate(previousWeekDate.getDate() - 6);
-
-    const formattedCurrentDate = formatDate(currentDate);
-    const formattedPreviousWeekDate = formatDate(previousWeekDate);
-
-    let dates = [];
-    dates.push(formattedPreviousWeekDate, formattedCurrentDate);
-    setSelectedDates(dates);
-
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousandCurrentDate);
     getAppsData(
       null,
       null,
       organizationId,
-      formattedPreviousWeekDate,
-      formattedCurrentDate
+      PreviousandCurrentDate[0],
+      PreviousandCurrentDate[1]
     );
   };
 
@@ -511,28 +448,65 @@ const Apps$Url = () => {
             <Col xs={24} sm={24} md={7} lg={7}>
               <div className="userproductivity_topContainers">
                 <p>Top Application</p>
-                <p className="userproductivity_contents">{topAppName}</p>
-                <p className="userproductivity_hours">{topAppUsageTime}</p>
+                {filterLoading ? (
+                  <AppsandUrlsLoader />
+                ) : (
+                  <>
+                    <p className="userproductivity_contents">{topAppName}</p>
+                    <p className="userproductivity_hours">{topAppUsageTime}</p>
+                  </>
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={10} lg={10}>
               <div className="userproductivity_topContainers">
                 <p>Top URL</p>
-                <p className="userproductivity_contents">
-                  {topUrlName === "-" ? topUrlName : "https://" + topUrlName}
-                </p>
-                <p className="userproductivity_hours">{topUrlUsageTime}</p>
+                {filterLoading ? (
+                  <ContentLoader
+                    speed={1}
+                    width="100%"
+                    // height="100%"
+                    viewBox="0 0 300 50"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                  >
+                    <rect
+                      x="0"
+                      y="11"
+                      rx="10"
+                      ry="10"
+                      width="150"
+                      height="12"
+                    />
+                    <rect x="0" y="37" rx="10" ry="10" width="56" height="9" />
+                  </ContentLoader>
+                ) : (
+                  <>
+                    <p className="userproductivity_contents">
+                      {topUrlName === "-"
+                        ? topUrlName
+                        : "https://" + topUrlName}
+                    </p>
+                    <p className="userproductivity_hours">{topUrlUsageTime}</p>
+                  </>
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={7} lg={7}>
               <div className="userproductivity_topContainers">
                 <p>Top Category</p>
-                <p className="userproductivity_contents">
-                  {internetTime ? "Internet" : "-"}
-                </p>
-                <p className="userproductivity_hours">
-                  {internetTime ? internetTime : "-"}
-                </p>
+                {filterLoading ? (
+                  <AppsandUrlsLoader />
+                ) : (
+                  <>
+                    <p className="userproductivity_contents">
+                      {internetTime ? "Internet" : "-"}
+                    </p>
+                    <p className="userproductivity_hours">
+                      {internetTime ? internetTime : "-"}
+                    </p>
+                  </>
+                )}
               </div>
             </Col>
           </Row>

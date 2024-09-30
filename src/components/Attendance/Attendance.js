@@ -52,9 +52,13 @@ const Attendance = () => {
   const [summaryLoading, setSummaryLoading] = useState(true);
 
   const handlePageChange = (pageNumber) => {
-    // if (pageNumber === 2) {
-    //   return;
-    // }
+    if (
+      (pageNumber === 1 && activePage === 1) ||
+      (pageNumber === 2 && activePage === 2) ||
+      (pageNumber === 3 && activePage === 3)
+    ) {
+      return;
+    }
     console.log("selected dates", pageNumber, selectedDates);
     setActivePage(pageNumber);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage

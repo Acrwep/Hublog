@@ -200,7 +200,7 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
       title: "Employee",
       dataIndex: "full_Name",
       key: "full_Name",
-      width: "150px",
+      width: "170px",
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">

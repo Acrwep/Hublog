@@ -200,3 +200,60 @@
 .appsandurlchart_Containers::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the scroll thumb on hover */
 }
+/* productivity styles */
+.productivity_tabbuttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .productivity_tabbuttonContainer {
+    margin-top: 20px;
+  }
+}
+.productivity_summarybutton {
+  margin-right: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.productivity_summarybutton:hover {
+  border-color: #25a17d !important;
+  color: #25a17d !important;
+}
+.productivity_detailedbutton {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.productivity_detailedbutton:hover {
+  border-color: #25a17d !important;
+  color: #25a17d !important;
+}
+.productivity_activesummarybutton {
+  background-color: #25a17d !important;
+  border-color: #25a17d;
+  color: white;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px 12px;
+  margin-right: 14px;
+}
+.productivity_activesummarybutton:hover {
+  background-color: #25a17d !important;
+  border-color: #25a17d !important;
+  color: white !important;
+}
+.productivity_activedetailedbutton {
+  background-color: #25a17d !important;
+  border-color: #25a17d;
+  color: white;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px 12px;
+}
+.productivity_activedetailedbutton:hover {
+  background-color: #25a17d !important;
+  border-color: #25a17d !important;
+  color: white !important;
+}
