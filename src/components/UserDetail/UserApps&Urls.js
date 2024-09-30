@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Spin } from "antd";
 import ReactApexChart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import "./styles.css";
@@ -210,23 +210,31 @@ export default function UserAppsUrls({
               marginTop: "20px",
             }}
           >
-            <p className="devices_chartheading">Application Usage</p>
-            {appsData.length >= 1 ? (
-              <ReactApexChart
-                options={barchartoptions}
-                series={barchartseries}
-                type="bar"
-                style={{ marginTop: "-7px" }}
-                height={
-                  appsData.length <= 5
-                    ? 170
-                    : appsData.length > 5 && appsData.length <= 10
-                    ? 260
-                    : 440
-                }
-              />
+            {filterLoading ? (
+              <div className="userdetail_breakSpinContainer">
+                <Spin />
+              </div>
             ) : (
-              <CommonNodatafound />
+              <>
+                <p className="devices_chartheading">Application Usage</p>
+                {appsData.length >= 1 ? (
+                  <ReactApexChart
+                    options={barchartoptions}
+                    series={barchartseries}
+                    type="bar"
+                    style={{ marginTop: "-7px" }}
+                    height={
+                      appsData.length <= 5
+                        ? 170
+                        : appsData.length > 5 && appsData.length <= 10
+                        ? 260
+                        : 440
+                    }
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
+              </>
             )}
           </div>
 
@@ -239,23 +247,31 @@ export default function UserAppsUrls({
               overflowX: "hidden",
             }}
           >
-            <p className="devices_chartheading">URL Usage</p>
-            {urlsData.length >= 1 ? (
-              <ReactApexChart
-                options={barchartoptions}
-                series={urlsbarchartseries}
-                type="bar"
-                style={{ marginTop: "-7px" }}
-                height={
-                  urlsData.length <= 5
-                    ? 175
-                    : urlsData.length > 5 && urlsData.length <= 10
-                    ? 260
-                    : 440
-                }
-              />
+            {filterLoading ? (
+              <div className="userdetail_breakSpinContainer">
+                <Spin />
+              </div>
             ) : (
-              <CommonNodatafound />
+              <>
+                <p className="devices_chartheading">URL Usage</p>
+                {urlsData.length >= 1 ? (
+                  <ReactApexChart
+                    options={barchartoptions}
+                    series={urlsbarchartseries}
+                    type="bar"
+                    style={{ marginTop: "-7px" }}
+                    height={
+                      urlsData.length <= 5
+                        ? 175
+                        : urlsData.length > 5 && urlsData.length <= 10
+                        ? 260
+                        : 440
+                    }
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
+              </>
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip } from "antd";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import { Row, Col, Button, Tooltip, Spin } from "antd";
+import { RedoOutlined } from "@ant-design/icons";
 import { PiMonitorFill } from "react-icons/pi";
 import ReactApexChart from "react-apexcharts";
 import {
@@ -466,138 +466,156 @@ const Apps$Url = () => {
         </Col>
       </Row>
 
-      {/* {loading ? (
+      {loading ? (
         <Loader />
       ) : (
-        <> */}
-      <Row gutter={16}>
-        <Col xs={24} sm={24} md={7} lg={7}>
-          <div className="userproductivity_topContainers">
-            {filterLoading ? (
-              <AppsandUrlsLoader />
-            ) : (
-              <>
-                <p>Top Application</p>
+        <>
+          <Row gutter={16}>
+            <Col xs={24} sm={24} md={7} lg={7}>
+              <div className="userproductivity_topContainers">
+                {filterLoading ? (
+                  <AppsandUrlsLoader />
+                ) : (
+                  <>
+                    <p>Top Application</p>
 
-                <p className="userproductivity_contents">{topAppName}</p>
-                <p className="userproductivity_hours">{topAppUsageTime}</p>
-              </>
-            )}
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={10} lg={10}>
-          <div className="userproductivity_topContainers">
-            {filterLoading ? (
-              <ContentLoader
-                speed={1}
-                width="100%"
-                // height="100%"
-                viewBox="0 0 300 60"
-                backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-              >
-                <rect x="0" y="3" rx="5" ry="5" width="90" height="7" />
-                <rect x="0" y="24" rx="5" ry="5" width="150" height="8" />
-                <rect x="0" y="47" rx="5" ry="5" width="56" height="7" />
-              </ContentLoader>
-            ) : (
-              <>
-                <p>Top URL</p>
-                <p className="userproductivity_contents">
-                  {topUrlName === "-" ? topUrlName : "https://" + topUrlName}
-                </p>
-                <p className="userproductivity_hours">{topUrlUsageTime}</p>
-              </>
-            )}
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={7} lg={7}>
-          <div className="userproductivity_topContainers">
-            {filterLoading ? (
-              <AppsandUrlsLoader />
-            ) : (
-              <>
-                <p>Top Category</p>
-                <p className="userproductivity_contents">
-                  {internetTime ? "Internet" : "-"}
-                </p>
-                <p className="userproductivity_hours">
-                  {internetTime ? internetTime : "-"}
-                </p>
-              </>
-            )}
-          </div>
-        </Col>
-      </Row>
+                    <p className="userproductivity_contents">{topAppName}</p>
+                    <p className="userproductivity_hours">{topAppUsageTime}</p>
+                  </>
+                )}
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={10} lg={10}>
+              <div className="userproductivity_topContainers">
+                {filterLoading ? (
+                  <ContentLoader
+                    speed={1}
+                    width="100%"
+                    // height="100%"
+                    viewBox="0 0 300 60"
+                    backgroundColor="#f3f3f3"
+                    foregroundColor="#ecebeb"
+                  >
+                    <rect x="0" y="3" rx="5" ry="5" width="90" height="7" />
+                    <rect x="0" y="24" rx="5" ry="5" width="150" height="8" />
+                    <rect x="0" y="47" rx="5" ry="5" width="56" height="7" />
+                  </ContentLoader>
+                ) : (
+                  <>
+                    <p>Top URL</p>
+                    <p className="userproductivity_contents">
+                      {topUrlName === "-"
+                        ? topUrlName
+                        : "https://" + topUrlName}
+                    </p>
+                    <p className="userproductivity_hours">{topUrlUsageTime}</p>
+                  </>
+                )}
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={7} lg={7}>
+              <div className="userproductivity_topContainers">
+                {filterLoading ? (
+                  <AppsandUrlsLoader />
+                ) : (
+                  <>
+                    <p>Top Category</p>
+                    <p className="userproductivity_contents">
+                      {internetTime ? "Internet" : "-"}
+                    </p>
+                    <p className="userproductivity_hours">
+                      {internetTime ? internetTime : "-"}
+                    </p>
+                  </>
+                )}
+              </div>
+            </Col>
+          </Row>
 
-      <div style={{ marginTop: "25px" }}>
-        <Row gutter={16}>
-          <Col span={24}>
-            <div
-              className="appsandurlchart_Containers"
-              style={{
-                height: appsData.length <= 10 ? "auto" : "50vh",
-                overflowY: "auto",
-                overflowX: "hidden",
-                width: "100%",
-              }}
-            >
-              <p className="devices_chartheading">Application Usage</p>
-              {appsData.length >= 1 ? (
-                <ReactApexChart
-                  options={barchartoptions}
-                  series={barchartseries}
-                  type="bar"
-                  height={
-                    appsData.length <= 5
-                      ? 170
-                      : appsData.length > 5 && appsData.length <= 10
-                      ? 260
-                      : appsData.length * 32
-                  }
-                />
-              ) : (
-                <CommonNodatafound />
-              )}
-            </div>
-          </Col>
-        </Row>
-      </div>
+          <div style={{ marginTop: "25px" }}>
+            <Row gutter={16}>
+              <Col span={24}>
+                <div
+                  className="appsandurlchart_Containers"
+                  style={{
+                    height: appsData.length <= 10 ? "auto" : "50vh",
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    width: "100%",
+                  }}
+                >
+                  {filterLoading ? (
+                    <div className="userdetail_breakSpinContainer">
+                      <Spin />
+                    </div>
+                  ) : (
+                    <>
+                      <p className="devices_chartheading">Application Usage</p>
+                      {appsData.length >= 1 ? (
+                        <ReactApexChart
+                          options={barchartoptions}
+                          series={barchartseries}
+                          type="bar"
+                          height={
+                            appsData.length <= 5
+                              ? 170
+                              : appsData.length > 5 && appsData.length <= 10
+                              ? 260
+                              : appsData.length * 32
+                          }
+                        />
+                      ) : (
+                        <CommonNodatafound />
+                      )}
+                    </>
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </div>
 
-      <div style={{ marginTop: "25px" }}>
-        <Row>
-          <Col xs={24} sm={24} md={12} lg={12}>
-            <div
-              className="appsandurlchart_Containers"
-              style={{
-                height: urlsData.length <= 5 ? "auto" : "50vh",
-                overflowY: "auto",
-                overflowX: "hidden",
-              }}
-            >
-              <p className="devices_chartheading">URL Usage</p>
-              {urlsData.length >= 1 ? (
-                <ReactApexChart
-                  options={barchartoptions}
-                  series={urlsbarchartseries}
-                  type="bar"
-                  height={
-                    urlsData.length <= 5
-                      ? 170
-                      : urlsData.length > 5 && urlsData.length <= 10
-                      ? 260
-                      : urlsData.length * 32
-                  }
-                />
-              ) : (
-                <CommonNodatafound />
-              )}
-            </div>
-          </Col>
-        </Row>
-      </div>
-      {/* </>
-      )} */}
+          <div style={{ marginTop: "25px" }}>
+            <Row>
+              <Col xs={24} sm={24} md={12} lg={12}>
+                <div
+                  className="appsandurlchart_Containers"
+                  style={{
+                    height: urlsData.length <= 5 ? "auto" : "50vh",
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                  }}
+                >
+                  {filterLoading ? (
+                    <div className="userdetail_breakSpinContainer">
+                      <Spin />
+                    </div>
+                  ) : (
+                    <>
+                      <p className="devices_chartheading">URL Usage</p>
+                      {urlsData.length >= 1 ? (
+                        <ReactApexChart
+                          options={barchartoptions}
+                          series={urlsbarchartseries}
+                          type="bar"
+                          height={
+                            urlsData.length <= 5
+                              ? 170
+                              : urlsData.length > 5 && urlsData.length <= 10
+                              ? 260
+                              : urlsData.length * 32
+                          }
+                        />
+                      ) : (
+                        <CommonNodatafound />
+                      )}
+                    </>
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
     </div>
   );
 };

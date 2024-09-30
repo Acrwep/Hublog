@@ -71,7 +71,9 @@ const UserDetail = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [attendanceFilterLoading, setAttendanceFilterLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
+  const [breakFilterLoading, setBreakFilterLoading] = useState(true);
   const [appsLoading, setAppsLoading] = useState(true);
+  const [appsFilterLoading, setAppsFilterLoading] = useState(true);
   const [attendanceSummary, setAttendanceSummary] = useState("");
 
   const handlePageChange = (id) => {
@@ -140,10 +142,10 @@ const UserDetail = () => {
   };
 
   const getuserDetailsData = async (userId, orgId, startdate, enddate) => {
+    setAttendanceFilterLoading(true);
+    setBreakFilterLoading(true);
+    setAppsFilterLoading(true);
     if (activePage === 1) {
-      if (initialLoading === false) {
-        setAttendanceFilterLoading(true);
-      }
       const payload = {
         userId: userId,
         organizationId: orgId,
@@ -170,9 +172,6 @@ const UserDetail = () => {
       }
     }
     if (activePage === 2) {
-      if (initialLoading === false) {
-        setBreakLoading(true);
-      }
       try {
         const response = await getUserBreak(userId, startdate, enddate);
         console.log("user break response", response.data);
@@ -191,9 +190,6 @@ const UserDetail = () => {
       }
     }
     if (activePage === 6) {
-      if (initialLoading === false) {
-        setAppsLoading(true);
-      }
       const orgId = localStorage.getItem("organizationId");
 
       const payload = {
@@ -238,6 +234,7 @@ const UserDetail = () => {
     } finally {
       setTimeout(() => {
         setBreakLoading(false);
+        setBreakFilterLoading(false);
       }, 350);
     }
   };
@@ -346,6 +343,7 @@ const UserDetail = () => {
       setInternetTime("");
     } finally {
       setTimeout(() => {
+        setAppsFilterLoading(false);
         setAppsLoading(false);
       }, 500);
     }
@@ -492,8 +490,8 @@ const UserDetail = () => {
           {activePage === 2 && (
             <div>
               <UserBreak
-                loading={initialLoading}
-                filterLoading={breakLoading}
+                loading={breakLoading}
+                filterLoading={breakFilterLoading}
               />
             </div>
           )}
@@ -515,8 +513,8 @@ const UserDetail = () => {
           {activePage === 6 && (
             <div>
               <UserAppsUrls
-                loading={initialLoading}
-                filterLoading={appsLoading}
+                loading={appsLoading}
+                filterLoading={appsFilterLoading}
                 topAppName={topAppName}
                 topAppUsageTime={topAppUsageTime}
                 topUrlName={topUrlName}
