@@ -30,6 +30,7 @@ import {
   datewiseAttendanceUserValueReducer,
   datewiseAttendanceDateValueReducer,
   userTotalBreakReducer,
+  categoriesReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -51,6 +52,7 @@ export const store = configureStore({
     attendanceandbreaksummary: attendanceandbreaksummaryReducer,
     activeteams: activeTeamReducer,
     roles: roleReducer,
+    categories: categoriesReducer,
     rolesearchvalue: roleSearchValueReducer,
     userAttendance: userAttendanceReducer,
     userBreak: userBreakReducer,

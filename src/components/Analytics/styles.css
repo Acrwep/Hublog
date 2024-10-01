@@ -121,6 +121,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.screenshots_spinContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 .screenshots_imagesRowContainer {
   margin: 20px 66px !important;

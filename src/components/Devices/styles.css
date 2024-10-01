@@ -4,6 +4,7 @@
   height: 100%;
   padding: 13px 12px;
   border-radius: 7px;
+  position: relative;
 }
 .devices_chartheading {
   font-weight: 600;

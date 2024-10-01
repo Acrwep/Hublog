@@ -565,3 +565,24 @@ export const getDeviceInfoCount = async (payload) => {
     throw error;
   }
 };
+//settings productivity rules
+export const getCategories = async (payload) => {
+  try {
+    const response = await api.get("/api/Productivity/Category", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateProductivity = async (categoryId, productivityId) => {
+  try {
+    const response = await api.put(
+      `/api/Productivity/UpdateProductivityId?categoryId=${categoryId}&productivityId=${productivityId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

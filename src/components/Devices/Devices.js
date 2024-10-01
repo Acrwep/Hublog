@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PiDevicesBold } from "react-icons/pi";
-import { Col, Row, Tooltip, Button } from "antd";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import { Col, Row, Tooltip, Button, Spin } from "antd";
+import { RedoOutlined } from "@ant-design/icons";
 import CommonDonutChart from "../Common/CommonDonutChart";
 import "./styles.css";
 import {
@@ -41,8 +41,6 @@ const Devices = () => {
   const [platformSeries, setPlatformSeries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableLoading, setTableloading] = useState(false);
-
-  const platformchartDatas = [80, 20];
 
   const columns = [
     {
@@ -295,10 +293,7 @@ const Devices = () => {
   };
 
   return (
-    <div
-      className="settings_mainContainer"
-      style={{ opacity: tableLoading ? 0.5 : 1 }}
-    >
+    <div className="settings_mainContainer">
       <div className="settings_headingContainer">
         <div className="settings_iconContainer">
           <PiDevicesBold size={20} />
@@ -379,39 +374,62 @@ const Devices = () => {
         <>
           <Row gutter={16} style={{ marginTop: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
-              <div className="devices_chartsContainer">
-                <p className="devices_chartheading">Status of devices: PC</p>
-                <p className="devices_chartsubheading">
-                  Distribution between offline and online devices.
-                </p>
-                {statusOfDeviceSeries.length >= 1 ? (
-                  <CommonDonutChart
-                    labels={["Online Devices", "Offline Devices"]}
-                    colors={["#25a17d", "#ABB3B3"]}
-                    series={statusOfDeviceSeries}
-                    labelsfontSize="17px"
-                  />
+              <div
+                className="devices_chartsContainer"
+                style={{
+                  height: tableLoading ? "40vh" : "100%",
+                }}
+              >
+                {tableLoading ? (
+                  <div className="screenshots_spinContainer">
+                    <Spin />
+                  </div>
                 ) : (
-                  <CommonNodatafound />
+                  <>
+                    <p className="devices_chartheading">
+                      Status of devices: PC
+                    </p>
+                    <p className="devices_chartsubheading">
+                      Distribution between offline and online devices.
+                    </p>
+                    {statusOfDeviceSeries.length >= 1 ? (
+                      <CommonDonutChart
+                        labels={["Online Devices", "Offline Devices"]}
+                        colors={["#25a17d", "#ABB3B3"]}
+                        series={statusOfDeviceSeries}
+                        labelsfontSize="17px"
+                      />
+                    ) : (
+                      <CommonNodatafound />
+                    )}
+                  </>
                 )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12}>
               <div className="devices_chartsContainer">
-                <p className="devices_chartheading">Platform</p>
-                <p className="devices_chartsubheading">
-                  Summarized view of the distribution of all the operating
-                  systems.
-                </p>
-                {platformSeries.length >= 1 ? (
-                  <CommonDonutChart
-                    labels={["Windows", "Mac", "Linux"]}
-                    colors={["#0078d7", "#ABB3B3", "rgba(255,185,0,0.70"]}
-                    series={platformSeries}
-                    labelsfontSize="17px"
-                  />
+                {tableLoading ? (
+                  <div className="screenshots_spinContainer">
+                    <Spin />
+                  </div>
                 ) : (
-                  <CommonNodatafound />
+                  <>
+                    <p className="devices_chartheading">Platform</p>
+                    <p className="devices_chartsubheading">
+                      Summarized view of the distribution of all the operating
+                      systems.
+                    </p>
+                    {platformSeries.length >= 1 ? (
+                      <CommonDonutChart
+                        labels={["Windows", "Mac", "Linux"]}
+                        colors={["#0078d7", "#ABB3B3", "rgba(255,185,0,0.70"]}
+                        series={platformSeries}
+                        labelsfontSize="17px"
+                      />
+                    ) : (
+                      <CommonNodatafound />
+                    )}
+                  </>
                 )}
               </div>
             </Col>

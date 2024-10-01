@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Break from "./Break/Break";
 import {
   getBreak,
+  getCategories,
   getDesignation,
   getRole,
   getTeams,
@@ -33,6 +34,7 @@ import {
   storeActiveDesignation,
   storeActiveTeam,
   storeBreakSearchValue,
+  storeCategories,
   storeDesignation,
   storeDesignationSearchValue,
   storeRole,
@@ -73,6 +75,10 @@ const Settings = () => {
   const [teamPageVisited, setTeamPageVisited] = useState(false);
   const [rolePageVisited, setRolePageVisited] = useState(false);
   const [breakPageVisited, setBreakPageVisited] = useState(false);
+  const [productivityRulesLoading, setProductivityRulesLoading] =
+    useState(false);
+  const [productivityRulesPageVisited, setProductivityRulesPageVisited] =
+    useState(false);
 
   const handlePageChange = (id) => {
     if (id === 4 || id === 5 || id >= 8) {
@@ -88,6 +94,9 @@ const Settings = () => {
     }
     if (id === 6 && breakPageVisited === false) {
       getBreakData();
+    }
+    if (id === 7 && productivityRulesPageVisited === false) {
+      getCategoryData();
     }
   };
 
@@ -112,6 +121,8 @@ const Settings = () => {
       dispatch(storeUsers(usersList));
       dispatch(storeUsersForTeamsTab(usersList));
     } catch (error) {
+      dispatch(storeUsers([]));
+      dispatch(storeUsersForTeamsTab([]));
       CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
@@ -132,6 +143,7 @@ const Settings = () => {
       );
       dispatch(storeActiveDesignation(filterActivedesignation));
     } catch (error) {
+      dispatch(storeActiveDesignation([]));
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
@@ -151,10 +163,10 @@ const Settings = () => {
       const filterActiveteams = teamList.filter((f) => f.active === true);
       dispatch(storeActiveTeam(filterActiveteams));
     } catch (error) {
+      dispatch(storeActiveTeam([]));
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        // getBreakData();
         setLoading(false);
       }, 350);
     }
@@ -192,6 +204,24 @@ const Settings = () => {
       setTimeout(() => {
         setRoleLoading(false);
         setRolePageVisited(true);
+      }, 350);
+    }
+  };
+
+  //productivity rules
+  const getCategoryData = async () => {
+    setProductivityRulesLoading(true);
+    try {
+      const response = await getCategories();
+      const categoriesList = response?.data;
+      console.log("categories response", categoriesList);
+      dispatch(storeCategories(categoriesList));
+    } catch (error) {
+      dispatch(storeCategories([]));
+    } finally {
+      setTimeout(() => {
+        setProductivityRulesLoading(false);
+        setProductivityRulesPageVisited(true);
       }, 350);
     }
   };
@@ -301,7 +331,7 @@ const Settings = () => {
           )}
           {activePage === 7 && (
             <div>
-              <ProductivityRules />
+              <ProductivityRules loading={productivityRulesLoading} />
             </div>
           )}
           {activePage === 8 && (

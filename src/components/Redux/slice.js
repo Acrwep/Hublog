@@ -295,7 +295,17 @@ const roleSearchValueSlice = createSlice({
     },
   },
 });
-
+//settings productivity rules
+const CategoriesSlice = createSlice({
+  name: "categories",
+  initialState,
+  reducers: {
+    storeCategories(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //datewise attendance
 const datewiseAttendanceSlice = createSlice({
   name: "datewiseattendance",
@@ -394,6 +404,7 @@ export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
 export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
+export const { storeCategories } = CategoriesSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
 export const { storeDatewiseAttendanceAbsentData } =
@@ -434,6 +445,7 @@ export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;
 export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
+export const categoriesReducer = CategoriesSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
 export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
 export const datewiseAttendanceAbsentReducer =
