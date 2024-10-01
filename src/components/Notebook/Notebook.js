@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Input, Modal, Button } from "antd";
-import { Code } from "react-content-loader";
-import MyLoader from "./NotebookLoader";
 import "quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import { CgNotes } from "react-icons/cg";

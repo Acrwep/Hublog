@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
-import { Row, Col, Button, Tooltip } from "antd";
+import { Row, Col, Button, Tooltip, Spin } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import "./styles.css";
@@ -313,18 +313,31 @@ const AppsUrlsReport = () => {
         <Loader />
       ) : (
         <>
-          <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Top Usage Statistics</p>
-            {data.length >= 1 ? (
-              <CommonBarChart
-                xasis={topUsageXaxis}
-                series={topUsageSeries}
-                timebased="true"
-                distributed="true"
-                legend="false"
-              />
+          <div
+            className="devices_chartsContainer"
+            style={{
+              height: tableLoading ? "40vh" : "100%",
+            }}
+          >
+            {tableLoading ? (
+              <div className="screenshots_spinContainer">
+                <Spin />
+              </div>
             ) : (
-              <CommonNodatafound />
+              <>
+                <p className="devices_chartheading">Top Usage Statistics</p>
+                {data.length >= 1 ? (
+                  <CommonBarChart
+                    xasis={topUsageXaxis}
+                    series={topUsageSeries}
+                    timebased="true"
+                    distributed="true"
+                    legend="false"
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
+              </>
             )}
           </div>
 

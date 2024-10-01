@@ -107,7 +107,27 @@ function SidebarMenu() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const routings = [
+    "dashboard",
+    "attendance",
+    "livestream",
+    "field",
+    "timeline",
+    "activity",
+    "productivity",
+    "screenshots",
+    "app$urls",
+    "wellness",
+    "devices",
+    "manualtime",
+    "alerts",
+    "reports",
+    "projects",
+    "notebook",
+    "userdetail",
+    "settings",
+    "organization",
+  ];
   const handleLogout = () => {
     console.log("Logout");
     localStorage.clear();

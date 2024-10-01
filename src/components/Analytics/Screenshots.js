@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip, Avatar, Modal, Spin } from "antd";
+import { Row, Col, Button, Tooltip, Modal, Spin } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import { MdScreenshotMonitor } from "react-icons/md";
-import Screenshot1 from "../../assets/images/Screenshot 2024-07-05 125005.png";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import { CommonToaster } from "../Common/CommonToaster";
@@ -14,7 +13,8 @@ import {
   getUsers,
   getUsersByTeamId,
 } from "../APIservice.js/action";
-import CommonAvatar from "../Common/CommonAvatar";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 import moment from "moment";
 import Loader from "../Common/Loader";
 import PrismaZoom from "react-prismazoom";
@@ -35,6 +35,7 @@ const Screenshots = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filterLoading, setFilterLoading] = useState(false);
+  const [downloadButtonLoader, setDownloadButtonLoader] = useState(false);
 
   useEffect(() => {
     getTeamData();
@@ -139,6 +140,48 @@ const Screenshots = () => {
     setUserName(filterUser.first_Name + " " + filterUser.last_Name);
   };
 
+  const handleDownloadAllScreenshots = async () => {
+    if (screenshotData.length <= 0) {
+      CommonToaster("No data found", "error");
+      return;
+    }
+    setDownloadButtonLoader(true);
+    const getSelectedUser = nonChangeUserList.find((f) => f.id === userId);
+    const UserName = getSelectedUser.full_Name;
+    const zip = new JSZip();
+    const screenshotFolder = zip.folder("Screenshots");
+
+    screenshotData.forEach((item, index) => {
+      // Only take the Base64 content, remove the "data:image/jpeg;base64," prefix
+      const base64String = item.imageData.replace(
+        /^data:image\/(png|jpeg);base64,/,
+        ""
+      );
+
+      // Decode base64 string to binary data
+      const binaryString = atob(base64String);
+
+      // Convert binary string to Uint8Array
+      const buffer = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        buffer[i] = binaryString.charCodeAt(i);
+      }
+
+      const fileName = `Screenshot_${moment(item.screenShotDate).format(
+        "YYYYMMDD_HHmmss"
+      )}.png`;
+      screenshotFolder.file(fileName, buffer, { binary: true });
+    });
+    const content = await zip.generateAsync({ type: "blob" });
+    saveAs(
+      content,
+      `${UserName}-${moment(date).format("DD-MM-YYYY")}-Screenshots.zip`
+    );
+    setTimeout(() => {
+      setDownloadButtonLoader(false);
+    }, 350);
+  };
+
   const handleRefresh = () => {
     const today = new Date();
     const givenDate = new Date(date);
@@ -170,6 +213,7 @@ const Screenshots = () => {
     setDate(today);
     getScreenShotsData(defaultUser.id, organizationId, today);
   };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -210,7 +254,11 @@ const Screenshots = () => {
                   <CommonDatePicker onChange={onDateChange} value={date} />
                 </div>
                 <Tooltip placement="top" title="Download">
-                  <Button className="dashboard_download_button">
+                  <Button
+                    className="dashboard_download_button"
+                    onClick={handleDownloadAllScreenshots}
+                    disabled={downloadButtonLoader ? true : false}
+                  >
                     <DownloadOutlined className="download_icon" />
                   </Button>
                 </Tooltip>
