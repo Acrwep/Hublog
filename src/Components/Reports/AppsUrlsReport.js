@@ -316,7 +316,7 @@ const AppsUrlsReport = () => {
           <div
             className="devices_chartsContainer"
             style={{
-              height: tableLoading ? "40vh" : "100%",
+              height: tableLoading ? "28.7vh" : "100%",
             }}
           >
             {tableLoading ? (

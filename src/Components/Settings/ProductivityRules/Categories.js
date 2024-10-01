@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Row, Col, Divider, Spin } from "antd";
 import "../styles.css";
-import { useSelector } from "react-redux";
 import Loader from "../../Common/Loader";
 import { getCategories, updateProductivity } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { storeCategories } from "../../Redux/slice";
 
 export default function Categories({ loading }) {

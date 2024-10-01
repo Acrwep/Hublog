@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Row, Col, Tooltip, Button } from "antd";
+import { Row, Col, Tooltip, Button, Select } from "antd";
 import CommonSearchField from "../../Common/CommonSearchbar";
 import CommonSelectField from "../../Common/CommonSelectField";
 import { RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../../Common/CommonTable";
+import { useDispatch, useSelector } from "react-redux";
 import "../styles.css";
 
 export default function Mapping() {
+  const dispatch = useDispatch();
+  const categoriesList = useSelector((state) => state.categories);
   const [search, setSearch] = useState("");
   const [showId, setShowId] = useState(null);
   const [mappedStatusId, setMappedStatusId] = useState(null);
@@ -18,10 +21,6 @@ export default function Mapping() {
   const MappedStatus = [
     { id: 1, name: "Mapped" },
     { id: 2, name: "Unmapped" },
-  ];
-  const categories = [
-    { id: 1, name: "Social Media" },
-    { id: 2, name: "Developer" },
   ];
   const [categoryId, setCategoryId] = useState(null);
 
@@ -52,11 +51,21 @@ export default function Mapping() {
       width: 200,
       render: (text, record) => {
         return (
-          <CommonSelectField
-            options={categories}
-            value={text}
+          // <CommonSelectField
+          //   options={categoriesList}
+          //   value={text}
+          //   onChange={(value) => setCategoryId(value)}
+          //   style={{ width: "168px" }}
+          // />
+          <Select
+            placeholder="Selecet category"
+            options={categoriesList.map((item) => ({
+              value: item.categoryId,
+              label: item.categoryName,
+            }))}
+            value={categoryId}
             onChange={(value) => setCategoryId(value)}
-            style={{ width: "168px" }}
+            style={{ width: "170px" }}
           />
         );
       },
