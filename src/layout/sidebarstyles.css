@@ -179,7 +179,8 @@
   /* position: absolute; */
   /* top: 90%; */
   background-color: white;
-  padding: 6px 0px;
+  padding-top: 4px;
+  /* padding: 6px 0px; */
   z-index: 1;
 }
 .headerlogoutmenu_avatercontainer {
@@ -208,7 +209,7 @@
 .headerlogoutmenu_logiconContainer {
   display: flex;
   align-items: center;
-  padding: 9px 12px;
+  padding: 7px 16px;
   cursor: pointer;
   color: gray;
 }

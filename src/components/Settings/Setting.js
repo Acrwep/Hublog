@@ -215,6 +215,7 @@ const Settings = () => {
       const response = await getCategories();
       const categoriesList = response?.data;
       console.log("categories response", categoriesList);
+      categoriesList.pop();
       dispatch(storeCategories(categoriesList));
     } catch (error) {
       dispatch(storeCategories([]));

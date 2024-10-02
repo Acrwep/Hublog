@@ -25,8 +25,8 @@ export default function Mapping() {
   const [categoryId, setCategoryId] = useState(null);
 
   const tableData = [
-    { id: 1, type: "App", details: "Instagram", category: 1 },
-    { id: 1, type: "Url", details: "www.hublog.com", category: 2 },
+    { id: 1, type: "App", details: "Instagram", categoryId: 1 },
+    { id: 1, type: "Url", details: "www.hublog.com", categoryId: 2 },
   ];
   const columns = [
     {
@@ -51,19 +51,13 @@ export default function Mapping() {
       width: 200,
       render: (text, record) => {
         return (
-          // <CommonSelectField
-          //   options={categoriesList}
-          //   value={text}
-          //   onChange={(value) => setCategoryId(value)}
-          //   style={{ width: "168px" }}
-          // />
           <Select
             placeholder="Selecet category"
             options={categoriesList.map((item) => ({
               value: item.categoryId,
               label: item.categoryName,
             }))}
-            value={categoryId}
+            value={record.categoryId}
             onChange={(value) => setCategoryId(value)}
             style={{ width: "170px" }}
           />

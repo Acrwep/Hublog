@@ -267,11 +267,9 @@ function SidebarMenu() {
     //handle login userinformation
     const getItem = localStorage.getItem("LoginUserInfo");
     const convertLoginInfoAsJson = JSON.parse(getItem);
-    console.log("render sidemenu useffect", convertLoginInfoAsJson);
 
     const accessToken = localStorage.getItem("Accesstoken");
     console.log("Access Token:::::", accessToken);
-    console.log("locccccc", location.pathname);
     if (accessToken) {
       setShowPages(true);
       if (location.pathname === "/") {
@@ -394,12 +392,12 @@ function SidebarMenu() {
         className="headerlogoutmenu_logiconContainer"
         onClick={() => navigation("/billing")}
       >
-        <BiSpreadsheet size={25} style={{ marginRight: "27px" }} />
+        <BiSpreadsheet size={22} style={{ marginRight: "27px" }} />
         <p className="header_logoutmenulogout">Billing</p>
       </div>
       <Divider style={{ margin: "0" }} />
       <div className="headerlogoutmenu_logiconContainer" onClick={handleLogout}>
-        <AiOutlineLogout size={25} style={{ marginRight: "27px" }} />
+        <AiOutlineLogout size={22} style={{ marginRight: "27px" }} />
         <p className="header_logoutmenulogout">Logout</p>
       </div>
     </div>
