@@ -77,7 +77,7 @@ const UserDetail = () => {
   const [attendanceSummary, setAttendanceSummary] = useState("");
 
   const handlePageChange = (id) => {
-    if (id === 3 || id === 4 || id === 5) {
+    if (id === 3 || id === 5) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -448,7 +448,7 @@ const UserDetail = () => {
               <div
                 key={index}
                 className={
-                  index === 2 || index === 3 || index === 4
+                  index === 2 || index === 4
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"

@@ -86,7 +86,7 @@ export default function UserProductivity() {
 
       <div className="userproductivity_chartContainer">
         <p className="userproductivity_chartheading">Productivity Breakdown</p>
-        <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+        <Row style={{ marginTop: "10px", marginBottom: "10px" }}>
           <Col xs={24} sm={24} md={24} lg={6}>
             <p className="totalproductive_timeheading">Total productive time</p>
             <p className="totalproductive_time">328h 36m</p>

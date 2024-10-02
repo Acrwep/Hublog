@@ -25,6 +25,7 @@ const Devices = () => {
   const [teamId, setTeamId] = useState(null);
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const platformList = [
     { id: "w", name: "Windows" },
     { id: "m", name: "Mac" },
@@ -140,9 +141,9 @@ const Devices = () => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
-      const usersList = response?.data;
-
-      setUserList(usersList);
+      const allUsers = response?.data;
+      setUserList(allUsers);
+      setNonChangeUserList(allUsers);
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
       setUserList([]);
@@ -283,8 +284,10 @@ const Devices = () => {
     ) {
       return;
     } else {
+      console.log("eeeeeeee", nonChangeUserList);
       setTableloading(true);
       setTeamId(null);
+      setUserList(nonChangeUserList);
       setUserId(null);
       setPlatformId(null);
       setSystemId(null);

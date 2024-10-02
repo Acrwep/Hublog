@@ -243,7 +243,7 @@ export default function UserAppsUrls({
             style={{
               height: urlsData.length <= 5 ? "100%" : "50vh",
               overflowY: "auto",
-              marginTop: "30px",
+              marginTop: "20px",
               overflowX: "hidden",
             }}
           >

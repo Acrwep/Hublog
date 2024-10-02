@@ -532,7 +532,7 @@ const Apps$Url = () => {
             </Col>
           </Row>
 
-          <div style={{ marginTop: "25px" }}>
+          <div style={{ marginTop: "20px" }}>
             <Row gutter={16}>
               <Col span={24}>
                 <div
@@ -574,7 +574,7 @@ const Apps$Url = () => {
             </Row>
           </div>
 
-          <div style={{ marginTop: "25px" }}>
+          <div style={{ marginTop: "20px" }}>
             <Row>
               <Col xs={24} sm={24} md={12} lg={12}>
                 <div

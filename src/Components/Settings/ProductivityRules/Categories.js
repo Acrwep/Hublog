@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Row, Col, Divider, Spin } from "antd";
 import "../styles.css";
 import Loader from "../../Common/Loader";

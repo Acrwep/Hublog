@@ -43,7 +43,7 @@ const Attendance = () => {
   const [activePage, setActivePage] = useState(1);
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [userListNonChanged, setUserListNonChanged] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
@@ -121,7 +121,7 @@ const Attendance = () => {
       const usersList = response?.data;
 
       setUserList(usersList);
-      setUserListNonChanged(usersList);
+      setNonChangeUserList(usersList);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -209,8 +209,8 @@ const Attendance = () => {
     if (pageNumber === 1) {
       setSummaryLoading(true);
       const payload = {
-        ...(userid || userId, { userId: userid ? userid : userId }),
-        ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+        ...(userid && { userId: userid }),
+        ...(teamid && { teamId: teamid }),
         organizationId: orgId,
         startDate:
           startdate === undefined || startdate === null
@@ -245,14 +245,15 @@ const Attendance = () => {
     }
     if (pageNumber === 2) {
       setAttendancedetailLoading(true);
-      if (userid || userId) {
+      dispatch(storeAttendanceTrends([]));
+      if (userid) {
         setSelectUser(true);
       } else {
         setSelectUser(false);
       }
       const payload = {
-        ...(userid || userId, { userId: userid ? userid : userId }),
-        ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+        ...(userid && { userId: userid }),
+        ...(teamid && { teamId: teamid }),
         organizationId: orgId,
         startDate:
           startdate === undefined || startdate === null
@@ -360,8 +361,8 @@ const Attendance = () => {
     enddate
   ) => {
     const payload = {
-      ...(userid || userId, { userId: userid ? userid : userId }),
-      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      ...(userid && { userId: userid }),
+      ...(teamid && { teamId: teamid }),
       organizationId: orgId,
       startDate: startdate,
       endDate: enddate,
@@ -371,15 +372,10 @@ const Attendance = () => {
       console.log("attendance trends", response);
       const details = response?.data;
 
-      const addFullNameProperty = details.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      const reverseData = addFullNameProperty.reverse();
+      const reverseData = details.reverse();
 
-      const removeNullDate = reverseData.filter(
-        (f) => f.attendanceDate != "0001-01-01T00:00:00"
-      );
-      dispatch(storeAttendanceTrends(removeNullDate));
+      console.log("attendanceeeeeeeee", reverseData);
+      dispatch(storeAttendanceTrends(reverseData));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
@@ -484,18 +480,22 @@ const Attendance = () => {
     ) {
       return;
     }
-
+    setUserList(nonChangeUserList);
+    setSelectUser(false);
     setUserId(null);
     setTeamId(null);
     setSelectedDates(CurrentandPreviousDate);
-    getAttendanceDashboardData(
-      null,
-      null,
-      organizationId,
-      CurrentandPreviousDate[0],
-      CurrentandPreviousDate[1],
-      activePage
-    );
+    // getAttendanceDashboardData(
+    //   null,
+    //   null,
+    //   organizationId,
+    //   CurrentandPreviousDate[0],
+    //   CurrentandPreviousDate[1],
+    //   activePage
+    // );
+    setTimeout(() => {
+      getTodayAttendanceData(null);
+    }, 300);
   };
   return (
     <div className="settings_mainContainer">
@@ -622,7 +622,7 @@ const Attendance = () => {
               <div>
                 <DateWiseAttendance
                   tList={teamList}
-                  uList={userListNonChanged}
+                  uList={nonChangeUserList}
                 />
               </div>
             )}

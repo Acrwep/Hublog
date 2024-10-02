@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Drawer, Calendar, Divider, Empty } from "antd";
+import { Row, Col, Drawer, Calendar, Divider, Empty, Spin } from "antd";
 import CommonBarChart from "../Common/CommonBarChart";
 import CommonTable from "../Common/CommonTable";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -330,24 +330,37 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
 
   return (
     <div>
-      <div className="devices_chartsContainer">
-        <p className="devices_chartheading">Attendance Trends</p>
-        {attendanceTrendsData.length >= 1 ? (
-          // <AttendanceTrendsChart
-          //   // xasis={attendanceTrendsXaxis}
-          //   series={attendanceTrendsSeries}
-          //   // colors={attendanceTrendsColors}
-          // />
-
-          <ReactApexChart
-            series={attendanceTrendsSeries}
-            colors={attendanceTrendsColors}
-            options={options}
-            type="bar"
-            height={350}
-          />
+      <div
+        className="devices_chartsContainer"
+        style={{
+          height: loading ? "30vh" : "100%",
+        }}
+      >
+        {loading ? (
+          <div className="screenshots_spinContainer">
+            <Spin />
+          </div>
         ) : (
-          <CommonNodatafound />
+          <>
+            <p className="devices_chartheading">Attendance Trends</p>
+            {attendanceTrendsData.length >= 1 ? (
+              // <AttendanceTrendsChart
+              //   // xasis={attendanceTrendsXaxis}
+              //   series={attendanceTrendsSeries}
+              //   // colors={attendanceTrendsColors}
+              // />
+
+              <ReactApexChart
+                series={attendanceTrendsSeries}
+                colors={attendanceTrendsColors}
+                options={options}
+                type="bar"
+                height={350}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </>
         )}
       </div>
 
