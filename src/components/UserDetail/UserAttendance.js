@@ -97,7 +97,6 @@ export default function UserAttendance({
               style={{
                 fontWeight: 600,
                 fontSize: "17px",
-                marginBottom: "10px",
               }}
             >
               Detail

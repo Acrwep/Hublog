@@ -5,8 +5,8 @@ import { IoRocketOutline } from "react-icons/io5";
 import { FiActivity } from "react-icons/fi";
 import { MdCalendarMonth } from "react-icons/md";
 import { FaUserLarge } from "react-icons/fa6";
-import { Row, Col, Avatar, Tooltip } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Row, Col, Avatar, Tooltip, Button } from "antd";
+import { UserOutlined, RedoOutlined } from "@ant-design/icons";
 import UserAttendance from "./UserAttendance";
 import "./styles.css";
 import UserBreak from "./UserBreak";
@@ -370,6 +370,52 @@ const UserDetail = () => {
       getuserDetailsData(userId, organizationId, startDate, endDate);
     }
   };
+
+  const handleRefresh = () => {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+
+    const today = new Date();
+    const givenDate = new Date(selectedDates[1]);
+    let isCurrentDate = false;
+    let isPreviousChange = false;
+
+    if (
+      givenDate.getFullYear() === today.getFullYear() &&
+      givenDate.getMonth() === today.getMonth() &&
+      givenDate.getDate() === today.getDate()
+    ) {
+      isCurrentDate = true;
+    } else {
+      isCurrentDate = false;
+    }
+
+    if (PreviousandCurrentDate[0] === selectedDates[0]) {
+      isPreviousChange = false;
+    } else {
+      isPreviousChange = true;
+    }
+    const defaultUser = userList.find((f, index) => index === 0);
+    console.log("defaultuser", defaultUser);
+
+    if (
+      userId === defaultUser.id &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+
+    setUserId(defaultUser.id);
+    setFullName(defaultUser.full_Name);
+    setEmail(defaultUser.email);
+    setSelectedDates(PreviousandCurrentDate);
+    getuserDetailsData(
+      defaultUser.id,
+      organizationId,
+      PreviousandCurrentDate[0],
+      PreviousandCurrentDate[1]
+    );
+  };
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -416,10 +462,23 @@ const UserDetail = () => {
             lg={12}
             className="usersdetail_calendarContainer"
           >
-            <CommonDoubleDatePicker
-              value={selectedDates}
-              onChange={handleDateChange}
-            />
+            <div className="wellness_calendarContainer">
+              <div>
+                <CommonDoubleDatePicker
+                  value={selectedDates}
+                  onChange={handleDateChange}
+                />
+              </div>
+              <Tooltip placement="top" title="Refresh">
+                <Button
+                  className="dashboard_refresh_button"
+                  onClick={handleRefresh}
+                  style={{ marginLeft: "12px" }}
+                >
+                  <RedoOutlined className="refresh_icon" />
+                </Button>
+              </Tooltip>
+            </div>
           </Col>
         </Row>
       </div>

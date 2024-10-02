@@ -56,7 +56,7 @@ export default function UserProductivity() {
     },
   ]);
 
-  const series = [2.72, 3.0];
+  const series = [2.72, 3.0, 1.1];
 
   return (
     <div>
@@ -101,8 +101,8 @@ export default function UserProductivity() {
           </Col>
         </Row>
         <CommonDonutChart
-          labels={["Productive time", "Unproductive time"]}
-          colors={["#25a17d", "#ABB3B3"]}
+          labels={["Productive time", "Neutral", "Unproductive time"]}
+          colors={["#25a17d", "#ABB3B3", "rgba(244, 67, 54, 0.77)"]}
           series={series}
           timebased="true"
           labelsfontSize="14px"
@@ -110,15 +110,14 @@ export default function UserProductivity() {
       </div>
 
       <div className="userattendancetable_Container">
-        <p style={{ fontWeight: 600, fontSize: "17px", marginBottom: "10px" }}>
-          Detail
-        </p>
+        <p style={{ fontWeight: 600, fontSize: "17px" }}>Detail</p>
 
         <CommonTable
           columns={columns}
           dataSource={dummydatas}
           scroll={{ x: 600 }}
-          dataPerPage={4}
+          dataPerPage={10}
+          checkBox="false"
         />
       </div>
     </div>

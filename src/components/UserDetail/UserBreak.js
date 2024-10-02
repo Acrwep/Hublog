@@ -177,7 +177,6 @@ export default function UserBreak({ loading, filterLoading }) {
               style={{
                 fontWeight: 600,
                 fontSize: "17px",
-                marginBottom: "10px",
               }}
             >
               Detail

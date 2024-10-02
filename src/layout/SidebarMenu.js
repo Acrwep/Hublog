@@ -1,6 +1,12 @@
 import "../App.css";
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import {
   Button,
   Layout,
@@ -107,27 +113,7 @@ function SidebarMenu() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const routings = [
-    "dashboard",
-    "attendance",
-    "livestream",
-    "field",
-    "timeline",
-    "activity",
-    "productivity",
-    "screenshots",
-    "app$urls",
-    "wellness",
-    "devices",
-    "manualtime",
-    "alerts",
-    "reports",
-    "projects",
-    "notebook",
-    "userdetail",
-    "settings",
-    "organization",
-  ];
+
   const handleLogout = () => {
     console.log("Logout");
     localStorage.clear();
@@ -616,6 +602,9 @@ function SidebarMenu() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/billing" element={<Billing />} />
                 <Route path="/organization" element={<Organization />} />
+
+                {/* Catch-all route for unmatched paths */}
+                <Route path="*" element={<Navigate to="/dashboard" />} />
               </Routes>
             </Content>
           </Layout>

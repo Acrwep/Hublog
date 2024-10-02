@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Row, Tooltip } from "antd";
 import { TbCirclesFilled } from "react-icons/tb";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import { RedoOutlined } from "@ant-design/icons";
 import Summary from "./Summary";
 import AttendanceDetail from "./AddendanceDetail";
 import DateWiseAttendance from "./DateWiseAttendance";
@@ -93,8 +93,8 @@ const Attendance = () => {
     dispatch(storeDatewiseAttendanceAbsentData(emptyData));
     dispatch(storeDatewiseAttendanceUsersData(emptyData));
 
-    const CurrentandPreviousDate = getCurrentandPreviousweekDate();
-    setSelectedDates(CurrentandPreviousDate);
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousandCurrentDate);
 
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
@@ -203,8 +203,8 @@ const Attendance = () => {
     enddate,
     pageNumber
   ) => {
-    const CurrentandPreviousDate = getCurrentandPreviousweekDate();
-    console.log("current and previous date", CurrentandPreviousDate);
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    console.log("current and previous date", PreviousandCurrentDate);
 
     if (pageNumber === 1) {
       setSummaryLoading(true);
@@ -214,11 +214,11 @@ const Attendance = () => {
         organizationId: orgId,
         startDate:
           startdate === undefined || startdate === null
-            ? CurrentandPreviousDate[0]
+            ? PreviousandCurrentDate[0]
             : startdate,
         endDate:
           enddate === undefined || enddate === null
-            ? CurrentandPreviousDate[1]
+            ? PreviousandCurrentDate[1]
             : enddate,
       };
 
@@ -237,8 +237,8 @@ const Attendance = () => {
           getSummaryAttendanceTrendsData(
             teamid,
             orgId,
-            startdate ? startdate : CurrentandPreviousDate[0],
-            enddate ? enddate : CurrentandPreviousDate[1]
+            startdate ? startdate : PreviousandCurrentDate[0],
+            enddate ? enddate : PreviousandCurrentDate[1]
           );
         }, 350);
       }
@@ -257,11 +257,11 @@ const Attendance = () => {
         organizationId: orgId,
         startDate:
           startdate === undefined || startdate === null
-            ? CurrentandPreviousDate[0]
+            ? PreviousandCurrentDate[0]
             : startdate,
         endDate:
           enddate === undefined || enddate === null
-            ? CurrentandPreviousDate[1]
+            ? PreviousandCurrentDate[1]
             : enddate,
       };
       try {
@@ -284,8 +284,8 @@ const Attendance = () => {
             userid,
             teamid,
             orgId,
-            startdate ? startdate : CurrentandPreviousDate[0],
-            enddate ? enddate : CurrentandPreviousDate[1]
+            startdate ? startdate : PreviousandCurrentDate[0],
+            enddate ? enddate : PreviousandCurrentDate[1]
           );
         }, 350);
       }
@@ -449,7 +449,7 @@ const Attendance = () => {
   };
 
   const handleRefresh = () => {
-    const CurrentandPreviousDate = getCurrentandPreviousweekDate();
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
     const givenDate = new Date(selectedDates[1]);
@@ -466,7 +466,7 @@ const Attendance = () => {
       isCurrentDate = false;
     }
 
-    if (CurrentandPreviousDate[0] === selectedDates[0]) {
+    if (PreviousandCurrentDate[0] === selectedDates[0]) {
       isPreviousChange = false;
     } else {
       isPreviousChange = true;
@@ -480,19 +480,12 @@ const Attendance = () => {
     ) {
       return;
     }
+    setAttendancedetailLoading(true);
     setUserList(nonChangeUserList);
     setSelectUser(false);
     setUserId(null);
     setTeamId(null);
-    setSelectedDates(CurrentandPreviousDate);
-    // getAttendanceDashboardData(
-    //   null,
-    //   null,
-    //   organizationId,
-    //   CurrentandPreviousDate[0],
-    //   CurrentandPreviousDate[1],
-    //   activePage
-    // );
+    setSelectedDates(PreviousandCurrentDate);
     setTimeout(() => {
       getTodayAttendanceData(null);
     }, 300);
