@@ -342,7 +342,7 @@ const Team = ({ loading }) => {
         <Loader />
       ) : (
         <div>
-          <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+          <Row style={{ marginTop: "10px", marginBottom: "12px" }}>
             <Col
               xs={24}
               sm={24}
