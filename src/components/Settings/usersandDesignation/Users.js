@@ -484,7 +484,7 @@ const Users = ({ loading }) => {
       ) : (
         <div>
           <p className="users_totoalusersheading">
-            Total users - {usersList.length}
+            Total users - ({usersList.length})
           </p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>

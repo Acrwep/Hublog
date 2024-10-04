@@ -274,6 +274,7 @@
 .totalcreatedteam_text {
   font-weight: 600;
   font-size: 17px;
+  color: #25a17d;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .totalcreatedteam_text {
