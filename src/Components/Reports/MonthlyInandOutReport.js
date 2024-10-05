@@ -211,35 +211,18 @@ const MonthlyInandOutReport = () => {
     }
   };
 
-  const generateDatesForMonth = (monthName, year) => {
-    const monthIndex = moment().month(monthName).month(); // Zero-based index
-    const startOfMonth = moment([year, monthIndex, 1]);
-    const endOfMonth = startOfMonth.clone().endOf("month");
-    const dates = [];
-
-    let current = startOfMonth;
-    while (current.isSameOrBefore(endOfMonth)) {
-      dates.push(current.format("YYYY-MM-DD"));
-      current = current.add(1, "days");
-    }
-
-    return dates;
-  };
-
   const prepareTableData = (data, monthname, year) => {
     const currentMonthDates = getCurrentMonthDates(monthname, year);
     // const datesToCheck = generateDatesForMonth(monthname, year);
-    return data.map((item) => {
+    return data.map((item, index) => {
       const rowData = {
-        key: item.first_name,
+        key: index,
         full_Name: item.full_Name,
       };
-
       // Initialize each date column with null
       currentMonthDates.forEach((date) => {
         rowData[date] = null;
       });
-
       // Fill in the total_time if the log date matches
       item.logs.forEach((log) => {
         const logDate = moment(log.date).format("DD"); // Format log date

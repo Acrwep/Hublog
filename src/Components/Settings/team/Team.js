@@ -351,7 +351,7 @@ const Team = ({ loading }) => {
               style={{ display: "flex", alignItems: "center" }}
             >
               <p className="totalcreatedteam_text">
-                Total Created Teams - ({teamList.length})
+                Total Created Teams ({teamList.length})
               </p>
             </Col>
             <Col

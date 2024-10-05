@@ -187,8 +187,7 @@ export default function Organization() {
       </div>
 
       <div className="org_totalorgheading_container">
-        <p className="org_totalheading">Total Organization - </p>
-        <p className="org_totalcount">14</p>
+        <p className="org_totalheading">Total Organization (14)</p>
       </div>
 
       <Row style={{ marginTop: "12px" }}>
