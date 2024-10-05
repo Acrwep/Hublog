@@ -102,7 +102,7 @@ export default function UserProductivity() {
         </Row>
         <CommonDonutChart
           labels={["Productive time", "Neutral", "Unproductive time"]}
-          colors={["#25a17d", "#ABB3B3", "rgba(244, 67, 54, 0.77)"]}
+          colors={["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"]}
           series={series}
           timebased="true"
           labelsfontSize="14px"

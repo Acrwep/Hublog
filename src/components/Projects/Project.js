@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Modal } from "antd";
 import { TbReport } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
@@ -71,6 +71,21 @@ const Projects = () => {
     { name: "SEO", description: "", createdat: "2023-11-02", action: "Active" },
     { name: "BOE", description: "", createdat: "2023-11-02", action: "Active" },
   ]);
+
+  useEffect(() => {
+    handlePractice();
+  }, []);
+
+  const handlePractice = () => {
+    const date = new Date();
+
+    const [dates, month, year] = [
+      date.getDate(),
+      date.getMonth(),
+      date.getFullYear(),
+    ];
+    console.log(dates, month, year);
+  };
 
   const handleOk = () => {
     const nameValidate = nameValidator(name);

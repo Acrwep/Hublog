@@ -47,11 +47,11 @@ const ProductivityDetailed = () => {
 
   const [chartSeries, setChartSeries] = useState([
     {
-      name: "Series 1",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+      name: "Online time",
+      data: [10, 41, 35, 51, 49, 62, 69, 91, 147],
     },
     {
-      name: "Series 2",
+      name: "Break time",
       data: [23, 42, 35, 27, 43, 22, 31, 34, 52],
     },
   ]);
@@ -91,7 +91,7 @@ const ProductivityDetailed = () => {
     colors: ["#FF0000", "#000000"], // Red and Black colors for the spline area chart
   });
 
-  const [lineChartOptions, setLineChartOptions] = useState({
+  const lineChartOptions = {
     chart: {
       type: "line",
       height: 350,
@@ -117,20 +117,20 @@ const ProductivityDetailed = () => {
         text: "Values",
       },
     },
-    colors: ["#25a17d", "#ABB3B3", "rgba(244, 67, 54, 0.77)"], // Different colors for the three series
-  });
+    colors: ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"], // Different colors for the three series
+  };
 
   const [lineChartSeries, setLineChartSeries] = useState([
     {
-      name: "Series 1",
+      name: "Productive",
       data: [30, 40, 45, 50, 49, 60, 70, 91, 125],
     },
     {
-      name: "Series 2",
+      name: "Neutral",
       data: [20, 30, 35, 40, 39, 50, 60, 81, 95],
     },
     {
-      name: "Series 3",
+      name: "Unproductive",
       data: [10, 20, 25, 30, 29, 40, 50, 61, 75],
     },
   ]);
