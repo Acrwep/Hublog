@@ -299,7 +299,7 @@ const Attendance = () => {
     enddate
   ) => {
     const payload = {
-      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      ...(teamid && { teamId: teamid }),
       organizationId: orgId,
       startDate: startdate,
       endDate: enddate,
@@ -331,7 +331,7 @@ const Attendance = () => {
 
   const getLateArrivalData = async (teamid, orgId, startdate, enddate) => {
     const payload = {
-      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      ...(teamid && { teamId: teamid }),
       organizationId: orgId,
       startDate: startdate,
       endDate: enddate,
@@ -340,6 +340,7 @@ const Attendance = () => {
       const response = await getLateArrivals(payload);
       console.log("latearrival response", response);
       const details = response?.data;
+      details.reverse();
       dispatch(storeLateArrival(details));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");

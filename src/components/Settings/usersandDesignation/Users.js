@@ -291,6 +291,7 @@ const Users = ({ loading }) => {
   };
 
   const handleDateOfBirth = (date) => {
+    console.log("date of birth", date);
     if (date) {
       setDateOfBirth(date.toDate());
       if (validationTrigger) {
@@ -369,7 +370,12 @@ const Users = ({ loading }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setValidationTrigger(true);
-
+    console.log(
+      "Date of birth",
+      dateofBirth,
+      "date of joinging",
+      dateofJoining
+    );
     const firstnameValidate = nameValidator(firstName);
     const lastnameValidate = lastNameValidator(lastName);
     const emailValidate = emailValidator(email);
@@ -428,8 +434,8 @@ const Users = ({ loading }) => {
       first_Name: firstName,
       last_Name: lastName,
       email: email,
-      dob: dateofBirth,
-      doj: dateofJoining,
+      dob: moment(dateofBirth).format("YYYY-MM-DD"),
+      doj: moment(dateofJoining).format("YYYY-MM-DD"),
       phone: phone,
       usersName: firstName + lastName,
       password: password,
