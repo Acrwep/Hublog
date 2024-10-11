@@ -109,6 +109,7 @@ function SidebarMenu() {
   const [search, setSearch] = useState("");
   const [searchbarHover, setSearchbarHover] = useState(false);
   const [loginUserInfo, setLoginUserInfo] = useState("");
+  const [fullName, setFullName] = useState("");
   const [showPages, setShowPages] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -140,6 +141,11 @@ function SidebarMenu() {
       const convertLoginInfoAsJson = JSON.parse(getItem);
       console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
       setLoginUserInfo(convertLoginInfoAsJson);
+      setFullName(
+        convertLoginInfoAsJson.first_Name +
+          " " +
+          convertLoginInfoAsJson.last_Name
+      );
 
       //handle navigation by accesstoken
       const accessToken = localStorage.getItem("Accesstoken");
@@ -371,17 +377,11 @@ function SidebarMenu() {
             textTransform: "uppercase",
           }}
         >
-          {loginUserInfo.first_Name ? loginUserInfo.first_Name[0] : ""}
+          {fullName[0]}
         </Avatar>
 
         <div>
-          <p className="header_logoutmenuname">
-            {loginUserInfo.first_Name
-              ? loginUserInfo.first_Name
-              : "" + " " + loginUserInfo.last_Name
-              ? loginUserInfo.last_Name
-              : ""}
-          </p>
+          <p className="header_logoutmenuname">{fullName}</p>
           <p className="header_logoutmenuemail">
             {loginUserInfo.email ? loginUserInfo.email : ""}
           </p>
@@ -531,9 +531,7 @@ function SidebarMenu() {
                       >
                         <div>
                           <Avatar size={35} className="header_avatar">
-                            {loginUserInfo.first_Name
-                              ? loginUserInfo.first_Name[0]
-                              : ""}
+                            {fullName[0]}
                           </Avatar>
                         </div>
                       </Dropdown>

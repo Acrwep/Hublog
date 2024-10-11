@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
-import DoughnutChart from "../chart/DoughnutChart";
-import { Row, Col, Tooltip, Button, Flex, Progress } from "antd";
-import ReactApexChart from "react-apexcharts";
-// import BarChart from '../Components/chart/BarChart';
-import LineChart from "../chart/LineChart";
-import Dropdown from "../dropdown/Dropdown";
-import { MdRefresh } from "react-icons/md";
+import { Row, Col, Tooltip, Button, Flex, Progress, Spin } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../Common/CommonDonutChart";
-import DateRangePicker from "../dateRangePicker/DatePicker";
 import { LineCharts } from "../chart/RangeChart";
 import { MdDashboardCustomize } from "react-icons/md";
-import MyTable, { MyTable2 } from "../table/DemoTable";
 import "./styles.css";
 import {
   getAttendanceSummary,
@@ -44,6 +36,7 @@ const Dashboard = () => {
   const [leastProductivityTeams, setLeastproductivityTeams] = useState([]);
   const [dashboardData, setDashboardData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false);
   // Sample data for charts
 
   const lineData = {
@@ -407,7 +400,7 @@ const Dashboard = () => {
       setLeastproductivityTeams([]);
     } finally {
       setTimeout(() => {
-        getSummaryAttendanceTrendsData(null, orgId, stardate, enddate);
+        getSummaryAttendanceTrendsData(teamid, orgId, stardate, enddate);
       }, 300);
     }
   };
@@ -419,7 +412,7 @@ const Dashboard = () => {
     enddate
   ) => {
     const payload = {
-      ...(teamid || teamId, { teamId: teamid ? teamid : teamId }),
+      ...(teamid && { teamId: teamid }),
       organizationId: orgId,
       startDate: startdate,
       endDate: enddate,
@@ -436,6 +429,7 @@ const Dashboard = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
+        setFilterLoading(false);
       }, 350);
     }
   };
@@ -443,7 +437,7 @@ const Dashboard = () => {
   //team onchange
   const handleTeam = (value) => {
     setTeamId(value);
-    setLoading(true);
+    setFilterLoading(true);
     getTodayAttendanceData(
       value,
       organizationId,
@@ -459,6 +453,50 @@ const Dashboard = () => {
     if (dateStrings[0] != "" && dateStrings[1] != "") {
       getTodayAttendanceData(teamId, organizationId, startDate, endDate);
     }
+  };
+
+  const handleRefresh = () => {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+
+    const today = new Date();
+    const givenDate = new Date(selectedDates[1]);
+    let isCurrentDate = false;
+    let isPreviousChange = false;
+
+    if (
+      givenDate.getFullYear() === today.getFullYear() &&
+      givenDate.getMonth() === today.getMonth() &&
+      givenDate.getDate() === today.getDate()
+    ) {
+      isCurrentDate = true;
+    } else {
+      isCurrentDate = false;
+    }
+
+    if (PreviousandCurrentDate[0] === selectedDates[0]) {
+      isPreviousChange = false;
+    } else {
+      isPreviousChange = true;
+    }
+
+    if (
+      teamId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+    setFilterLoading(true);
+    setTeamId(null);
+    setSelectedDates(PreviousandCurrentDate);
+    setTimeout(() => {
+      getTodayAttendanceData(
+        null,
+        organizationId,
+        PreviousandCurrentDate[0],
+        PreviousandCurrentDate[1]
+      );
+    }, 300);
   };
 
   return (
@@ -499,7 +537,7 @@ const Dashboard = () => {
             <Tooltip placement="top" title="Refresh">
               <Button
                 className="dashboard_refresh_button"
-                // onClick={handleRefresh}
+                onClick={handleRefresh}
               >
                 <RedoOutlined className="refresh_icon" />
               </Button>
@@ -515,30 +553,40 @@ const Dashboard = () => {
             <Row gutter={16}>
               <Col xs={24} sm={24} md={7} lg={7}>
                 <div className="devices_chartsContainer">
-                  <p className="devices_chartheading">Today's Attendance</p>
+                  {filterLoading ? (
+                    <div className="screenshots_spinContainer">
+                      <Spin />
+                    </div>
+                  ) : (
+                    <>
+                      <p className="devices_chartheading">Today's Attendance</p>
 
-                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p className="totalactive_timeheading">
-                        On time arrivals
-                      </p>
-                      <p className="totalactive_time">
-                        {todatAttendanceData?.onTimeArrivals || 0}
-                      </p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p className="totalactive_timeheading">Late arrivals</p>
-                      <p className="totalactive_time">
-                        {todatAttendanceData?.lateArrivals || 0}
-                      </p>
-                    </Col>
-                  </Row>
-                  <CommonDonutChart
-                    labels={["Present", "Absent"]}
-                    colors={["#25a17d", "#ABB3B3"]}
-                    series={todayAttendanceSeries}
-                    labelsfontSize="17px"
-                  />
+                      <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p className="totalactive_timeheading">
+                            On time arrivals
+                          </p>
+                          <p className="totalactive_time">
+                            {todatAttendanceData?.onTimeArrivals || 0}
+                          </p>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p className="totalactive_timeheading">
+                            Late arrivals
+                          </p>
+                          <p className="totalactive_time">
+                            {todatAttendanceData?.lateArrivals || 0}
+                          </p>
+                        </Col>
+                      </Row>
+                      <CommonDonutChart
+                        labels={["Present", "Absent"]}
+                        colors={["#25a17d", "#ABB3B3"]}
+                        series={todayAttendanceSeries}
+                        labelsfontSize="17px"
+                      />
+                    </>
+                  )}
                 </div>
               </Col>
               <Col xs={24} sm={24} md={17} lg={17}>
@@ -549,7 +597,15 @@ const Dashboard = () => {
                     // type="line"
                     height={350}
                   /> */}
-                  <DashboardChart data={dashboardData} />
+                  {filterLoading ? (
+                    <div style={{ height: "50vh" }}>
+                      <div className="screenshots_spinContainer">
+                        <Spin />
+                      </div>
+                    </div>
+                  ) : (
+                    <DashboardChart data={dashboardData} />
+                  )}
                 </div>
               </Col>
             </Row>

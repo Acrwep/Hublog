@@ -167,17 +167,81 @@
   margin-bottom: 12px;
   font-weight: 600;
   font-size: 16px;
+  -webkit-tap-highlight-color: none;
+  outline: none !important;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 .screenshot_modalImage {
   width: 100%;
 }
+.prismazoom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .prismazoom {
-  max-width: 100%;
+  max-width: 97%;
   max-height: 80vh; /* Adjust as needed to fit within your modal */
   overflow: hidden;
   position: relative;
+  -webkit-tap-highlight-color: none;
+  outline: none !important;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
-
+.screenshot_nextslidebutton {
+  position: absolute;
+  top: 50%;
+  left: 99.2%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 50px;
+  cursor: pointer;
+  padding: 9px;
+  background: white;
+  outline: none;
+  /* border: 1px solid gray; */
+}
+.screenshot_previousslidebutton {
+  position: absolute;
+  top: 50%;
+  right: 99.2%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 50px;
+  cursor: pointer;
+  padding: 9px;
+  background: white;
+  outline: none !important;
+  -webkit-tap-highlight-color: none;
+}
+.screenshot_previousslidebutton:hover,
+.screenshot_nextslidebutton:hover {
+  color: #25a17d;
+}
+.screenshot_previousslidebutton:active,
+.screenshot_nextslidebutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
+.screenshot_previousslidebutton:focus {
+  outline: none !important;
+}
 /* apps and url styles */
 .appsandurlchart_Containers {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;

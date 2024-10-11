@@ -15,6 +15,7 @@ import {
   getMonthlyInandOutReport,
   getTeams,
   getUsers,
+  getUsersByTeamId,
 } from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
 import * as XLSX from "xlsx";
@@ -432,6 +433,32 @@ const MonthlyInandOutReport = () => {
     return generateColumns(monthName, year);
   }, [monthName, year]);
 
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+
+      setUserList(teamMembersList);
+      const userIdd = null;
+      setUserId(userIdd);
+      getMonthlyInandOutData(userIdd, value, organizationId, monthName, year);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
+  const handleUser = (value) => {
+    setUserId(value);
+    getMonthlyInandOutData(value, teamId, organizationId, monthName, year);
+  };
+
   const onDateChange = (date, dateString) => {
     // Log the date and formatted date string
     setDate(date);
@@ -490,10 +517,20 @@ const MonthlyInandOutReport = () => {
             style={{ display: "flex" }}
           >
             <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
+              <CommonSelectField
+                placeholder="All Teams"
+                options={teamList}
+                onChange={handleTeam}
+                value={teamId}
+              />
             </div>
             <div style={{ width: "170px" }}>
-              <CommonSelectField options={userList} placeholder="Select User" />
+              <CommonSelectField
+                placeholder="Select User"
+                options={userList}
+                onChange={handleUser}
+                value={userId}
+              />
             </div>
           </div>
         </Col>

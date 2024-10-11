@@ -27,7 +27,7 @@ import {
 } from "../../Redux/slice";
 import CommonSelectField from "../../Common/CommonSelectField";
 
-export default function Designation({ loading }) {
+export default function Designation({ loading, designationCount }) {
   const dispatch = useDispatch();
   const designationList = useSelector((state) => state.designation);
   const designationSearchValue = useSelector(
@@ -328,6 +328,9 @@ export default function Designation({ loading }) {
         <Loader />
       ) : (
         <div>
+          <p className="users_totoalusersheading">
+            Total designation ({designationCount})
+          </p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={24} lg={12}>
               <CommonSearchField

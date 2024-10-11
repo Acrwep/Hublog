@@ -51,9 +51,10 @@ import ProductivityRules from "./ProductivityRules/ProductivityRules";
 const Settings = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [teamLoading, setTeamLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
+  const [userCount, setUserCount] = useState(0);
+  const [designationCount, setDesignationCount] = useState(0);
   const settingsList = [
     {
       id: 1,
@@ -72,7 +73,6 @@ const Settings = () => {
     { id: 11, name: "Compliance", icon: <VscShield size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
-  const [teamPageVisited, setTeamPageVisited] = useState(false);
   const [rolePageVisited, setRolePageVisited] = useState(false);
   const [breakPageVisited, setBreakPageVisited] = useState(false);
   const [productivityRulesLoading, setProductivityRulesLoading] =
@@ -118,6 +118,7 @@ const Settings = () => {
     try {
       const response = await getUsers(orgId);
       const usersList = response.data;
+      setUserCount(usersList.length);
       dispatch(storeUsers(usersList));
       dispatch(storeUsersForTeamsTab(usersList));
     } catch (error) {
@@ -136,6 +137,7 @@ const Settings = () => {
     try {
       const response = await getDesignation(orgId);
       const designationList = response.data;
+      setDesignationCount(designationList.length);
       dispatch(storeDesignation(designationList));
       //filter active designation
       const filterActivedesignation = designationList.filter(
@@ -153,7 +155,6 @@ const Settings = () => {
   };
 
   const getTeamData = async () => {
-    setTeamLoading(true);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(orgId);
@@ -307,7 +308,11 @@ const Settings = () => {
         >
           {activePage === 1 && (
             <div>
-              <UserandDesignation loading={loading} />
+              <UserandDesignation
+                loading={loading}
+                userCount={userCount}
+                designationCount={designationCount}
+              />
             </div>
           )}
           {activePage === 2 && (

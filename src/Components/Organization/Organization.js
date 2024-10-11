@@ -134,7 +134,7 @@ export default function Organization() {
     { id: 5, name: "500-1000" },
     { id: 6, name: "1000-10000" },
   ];
-  const [employeeRange, setEmployeeRange] = useState();
+  const [employeeRange, setEmployeeRange] = useState(null);
   const [employeeRangeError, setEmployeeRangeError] = useState("");
   const [domain, setDomain] = useState("");
   const [domainError, setDomainError] = useState("");
@@ -142,10 +142,20 @@ export default function Organization() {
   const [websiteError, setWebsiteError] = useState("");
   const [linkdin, setLinkdin] = useState("");
   const [linkdinError, setLinkdinError] = useState("");
+  const [license, setLicense] = useState(null);
+  const [licenseError, setLicenseError] = useState("");
+  const [planId, setPlanId] = useState(null);
+  const [planError, setPlanError] = useState("");
+  const planOptions = [
+    { id: 1, name: "Free" },
+    { id: 2, name: "Starter" },
+    { id: 3, name: "Elite" },
+  ];
+  const [validationTrigger, setValidationTrigger] = useState(false);
 
   const handleCreate = (event) => {
     event.preventDefault();
-    console.log("rangeee", employeeRange, employeeRangeError);
+    setValidationTrigger(true);
     const nameValidate = nameValidator(name);
     const emailValidate = emailValidator(email);
     const mobileValidate = mobileValidator(mobile);
@@ -154,6 +164,8 @@ export default function Organization() {
     const domainValidate = addressValidator(domain);
     const websiteValidate = addressValidator(website);
     const linkdinValidate = addressValidator(linkdin);
+    const licenseValidate = selectValidator(license);
+    const planValidate = selectValidator(planId);
 
     setNameError(nameValidate);
     setEmailError(emailValidate);
@@ -163,6 +175,8 @@ export default function Organization() {
     setDomainError(domainValidate);
     setWebsiteError(websiteValidate);
     setLinkdinError(linkdinValidate);
+    setLicenseError(licenseValidate);
+    setPlanError(planValidate);
 
     if (
       nameValidate ||
@@ -172,9 +186,36 @@ export default function Organization() {
       employeerangeValidate ||
       domainValidate ||
       websiteValidate ||
-      linkdinValidate
+      linkdinValidate ||
+      licenseValidate ||
+      planValidate
     )
       return;
+  };
+
+  const handleReset = () => {
+    setIsDrawerOpen(false);
+    setValidationTrigger(false);
+    setName("");
+    setNameError("");
+    setEmail("");
+    setEmailError("");
+    setMobile("");
+    setMobileError("");
+    setAddress("");
+    setAddressError("");
+    setEmployeeRange(null);
+    setEmployeeRangeError("");
+    setDomain("");
+    setDomainError("");
+    setWebsite("");
+    setWebsiteError("");
+    setLinkdin("");
+    setLinkdinError("");
+    setLicense(null);
+    setLicenseError("");
+    setPlanId(null);
+    setPlanError("");
   };
 
   return (
@@ -218,7 +259,7 @@ export default function Organization() {
       {/* create organization drawer */}
       <Drawer
         title="Create organization"
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={handleReset}
         open={isDrawerOpen}
         width="42%"
         styles={{ body: { padding: "0px 12px" } }}
@@ -230,7 +271,9 @@ export default function Organization() {
                 label="Name"
                 onChange={(event) => {
                   setName(event.target.value);
-                  setNameError(nameValidator(event.target.value));
+                  if (validationTrigger) {
+                    setNameError(nameValidator(event.target.value));
+                  }
                 }}
                 value={name}
                 error={nameError}
@@ -242,7 +285,9 @@ export default function Organization() {
                 label="Email"
                 onChange={(event) => {
                   setEmail(event.target.value);
-                  setEmailError(emailValidator(event.target.value));
+                  if (validationTrigger) {
+                    setEmailError(emailValidator(event.target.value));
+                  }
                 }}
                 value={email}
                 error={emailError}
@@ -258,7 +303,9 @@ export default function Organization() {
                 maxLength={10}
                 onChange={(event) => {
                   setMobile(event.target.value);
-                  setMobileError(mobileValidator(event.target.value));
+                  if (validationTrigger) {
+                    setMobileError(mobileValidator(event.target.value));
+                  }
                 }}
                 value={mobile}
                 error={mobileError}
@@ -270,7 +317,9 @@ export default function Organization() {
                 label="Address"
                 onChange={(event) => {
                   setAddress(event.target.value);
-                  setAddressError(addressValidator(event.target.value));
+                  if (validationTrigger) {
+                    setAddressError(addressValidator(event.target.value));
+                  }
                 }}
                 value={address}
                 error={addressError}
@@ -285,7 +334,9 @@ export default function Organization() {
                 options={employeeRangeOptions}
                 onChange={(value) => {
                   setEmployeeRange(value);
-                  setEmployeeRangeError(selectValidator(value));
+                  if (validationTrigger) {
+                    setEmployeeRangeError(selectValidator(value));
+                  }
                 }}
                 value={employeeRange}
                 error={employeeRangeError}
@@ -297,7 +348,9 @@ export default function Organization() {
                 label="Domain"
                 onChange={(event) => {
                   setDomain(event.target.value);
-                  setDomainError(addressValidator(event.target.value));
+                  if (validationTrigger) {
+                    setDomainError(addressValidator(event.target.value));
+                  }
                 }}
                 value={domain}
                 error={domainError}
@@ -311,7 +364,9 @@ export default function Organization() {
                 label="Website Url"
                 onChange={(event) => {
                   setWebsite(event.target.value);
-                  setWebsiteError(addressValidator(event.target.value));
+                  if (validationTrigger) {
+                    setWebsiteError(addressValidator(event.target.value));
+                  }
                 }}
                 value={website}
                 error={websiteError}
@@ -323,10 +378,49 @@ export default function Organization() {
                 label="Linkdin Url"
                 onChange={(event) => {
                   setLinkdin(event.target.value);
-                  setLinkdinError(addressValidator(event.target.value));
+                  if (validationTrigger) {
+                    setLinkdinError(addressValidator(event.target.value));
+                  }
                 }}
                 value={linkdin}
                 error={linkdinError}
+                mandatory={true}
+              />
+            </Col>
+          </Row>
+
+          <Row gutter={16} style={{ marginTop: "22px" }}>
+            <Col span={12}>
+              <CommonInputField
+                label="License"
+                onChange={(event) => {
+                  if (event.target.value < 0) {
+                    setLicense(0);
+                    return;
+                  }
+                  setLicense(event.target.value);
+                  if (validationTrigger) {
+                    setLicenseError(selectValidator(event.target.value));
+                  }
+                }}
+                type="number"
+                value={license}
+                error={licenseError}
+                mandatory={true}
+              />
+            </Col>
+            <Col span={12}>
+              <CommonSelectField
+                label="Plan"
+                options={planOptions}
+                onChange={(value) => {
+                  setPlanId(value);
+                  if (validationTrigger) {
+                    setPlanError(selectValidator(value));
+                  }
+                }}
+                value={planId}
+                error={planError}
                 mandatory={true}
               />
             </Col>

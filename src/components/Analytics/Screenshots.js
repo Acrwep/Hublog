@@ -18,6 +18,7 @@ import { saveAs } from "file-saver";
 import moment from "moment";
 import Loader from "../Common/Loader";
 import PrismaZoom from "react-prismazoom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import CommonNodatafound from "../Common/CommonNodatafound";
 
 const Screenshots = () => {
@@ -36,6 +37,9 @@ const Screenshots = () => {
   const [loading, setLoading] = useState(true);
   const [filterLoading, setFilterLoading] = useState(false);
   const [downloadButtonLoader, setDownloadButtonLoader] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0); // New state for the current image index
+  const [hidePreviousbutton, setHidePreviousbutton] = useState(false);
+  const [hideNextbutton, setHideNextbutton] = useState(false);
 
   useEffect(() => {
     getTeamData();
@@ -131,13 +135,59 @@ const Screenshots = () => {
     getScreenShotsData(value, organizationId, date);
   };
 
-  const handleScreenshot = (item) => {
+  const handleScreenshot = (item, index) => {
     setIsModalOpen(true);
-    const base64String = `data:image/jpeg;base64,${item.imageData}`;
+    setCurrentIndex(index); // Set the current index when the modal opens
+    if (index === 0) {
+      setHidePreviousbutton(true);
+    } else {
+      setHidePreviousbutton(false);
+    }
+    const lastIndex = screenshotData.length - 1;
+    if (index === lastIndex) {
+      setHideNextbutton(true);
+    } else {
+      setHideNextbutton(false);
+    }
+    updateModalContent(index); // Update modal content
+  };
+
+  const updateModalContent = (index) => {
+    const selectedItem = screenshotData[index];
+    const base64String = `data:image/jpeg;base64,${selectedItem.imageData}`;
     setImage(base64String);
-    setScrnShotDate(item.screenShotDate);
-    const filterUser = userList.find((f) => f.id === item.userId);
+    setScrnShotDate(selectedItem.screenShotDate);
+    const filterUser = userList.find((f) => f.id === selectedItem.userId);
     setUserName(filterUser.first_Name + " " + filterUser.last_Name);
+  };
+
+  const handleNextSlide = () => {
+    setHidePreviousbutton(false);
+    const lastIndex = screenshotData.length - 1;
+    if (currentIndex + 1 === lastIndex) {
+      setHideNextbutton(true);
+    } else {
+      setHideNextbutton(false);
+    }
+    if (currentIndex < screenshotData.length - 1) {
+      const newIndex = currentIndex + 1;
+      setCurrentIndex(newIndex);
+      updateModalContent(newIndex);
+    }
+  };
+
+  const handlePreviousSlide = () => {
+    setHideNextbutton(false);
+    if (currentIndex === 1) {
+      setHidePreviousbutton(true);
+    } else {
+      setHidePreviousbutton(false);
+    }
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      updateModalContent(newIndex);
+    }
   };
 
   const handleDownloadAllScreenshots = async () => {
@@ -309,7 +359,9 @@ const Screenshots = () => {
                                     className="screenshot_images"
                                     alt="Base64 Image"
                                     style={{ cursor: "pointer" }}
-                                    onClick={() => handleScreenshot(item)}
+                                    onClick={() =>
+                                      handleScreenshot(item, index)
+                                    }
                                   />
                                   <div className="screenshot_imageTimeContainer">
                                     <p>
@@ -348,16 +400,45 @@ const Screenshots = () => {
         width={750}
         centered={true}
       >
-        <p className="screenshotModal_date">
-          {userName + " | " + moment(scrnShotDate).format("DD-MM-YYYY hh:mm A")}
-        </p>
-        <div
-          className="prismazoom-container"
-          style={{ overflow: "hidden", maxHeight: "80vh" }}
-        >
-          <PrismaZoom className="prismazoom">
-            <img src={image} className="screenshot_modalImage" />
-          </PrismaZoom>
+        <div style={{ position: "relative" }}>
+          <p className="screenshotModal_date">
+            {userName +
+              " | " +
+              moment(scrnShotDate).format("DD-MM-YYYY hh:mm A")}
+          </p>
+          <div
+            className="prismazoom-container"
+            style={{ overflow: "hidden", maxHeight: "80vh" }}
+          >
+            <PrismaZoom className="prismazoom">
+              <img
+                src={image}
+                className="screenshot_modalImage"
+                alt="Screenshot"
+                tabindex="-1"
+              />
+            </PrismaZoom>
+          </div>
+          {hidePreviousbutton === false ? (
+            <button
+              className="screenshot_previousslidebutton"
+              onClick={handlePreviousSlide}
+            >
+              <FaChevronLeft size={30} />
+            </button>
+          ) : (
+            ""
+          )}
+          {hideNextbutton === false ? (
+            <button
+              className="screenshot_nextslidebutton"
+              onClick={handleNextSlide}
+            >
+              <FaChevronRight size={17} />
+            </button>
+          ) : (
+            ""
+          )}
         </div>
       </Modal>
     </div>

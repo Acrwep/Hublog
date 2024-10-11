@@ -28,7 +28,7 @@ import {
   storeUsersForTeamsTab,
 } from "../../Redux/slice";
 
-const Users = ({ loading }) => {
+const Users = ({ loading, userCount }) => {
   const dispatch = useDispatch();
   const usersList = useSelector((state) => state.users);
   const userSearchValue = useSelector((state) => state.usersearchvalue);
@@ -489,9 +489,7 @@ const Users = ({ loading }) => {
         <Loader />
       ) : (
         <div>
-          <p className="users_totoalusersheading">
-            Total users ({usersList.length})
-          </p>
+          <p className="users_totoalusersheading">Total users ({userCount})</p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField
