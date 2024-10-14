@@ -10,6 +10,7 @@ export default function CommonNodatafound() {
         justifyContent: "center",
         alignItems: "center",
         position: "relative",
+        height: "100%",
       }}
     >
       {/* <img src={Nodata} className="commonnodata_image" />

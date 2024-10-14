@@ -109,8 +109,10 @@ const Apps$Url = () => {
   };
 
   const convertToTimeFormat = (timeString) => {
-    const [hours, minutes] = timeString.split(":");
-    return parseFloat(hours) + parseFloat(minutes) / 60;
+    if (timeString) {
+      const [hours, minutes] = timeString.split(":");
+      return parseFloat(hours) + parseFloat(minutes) / 60;
+    }
   };
 
   const barchartseries = [

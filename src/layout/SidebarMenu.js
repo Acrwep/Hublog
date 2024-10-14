@@ -110,6 +110,7 @@ function SidebarMenu() {
   const [searchbarHover, setSearchbarHover] = useState(false);
   const [loginUserInfo, setLoginUserInfo] = useState("");
   const [fullName, setFullName] = useState("");
+  const [userRole, setUserRole] = useState(false);
   const [showPages, setShowPages] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -141,11 +142,15 @@ function SidebarMenu() {
       const convertLoginInfoAsJson = JSON.parse(getItem);
       console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
       setLoginUserInfo(convertLoginInfoAsJson);
-      setFullName(
-        convertLoginInfoAsJson.first_Name +
-          " " +
-          convertLoginInfoAsJson.last_Name
-      );
+      if (convertLoginInfoAsJson) {
+        setFullName(
+          convertLoginInfoAsJson.first_Name +
+            " " +
+            convertLoginInfoAsJson.last_Name
+        );
+      } else {
+        setFullName("");
+      }
 
       //handle navigation by accesstoken
       const accessToken = localStorage.getItem("Accesstoken");
@@ -154,14 +159,18 @@ function SidebarMenu() {
         if (location.pathname === "/") {
           if (convertLoginInfoAsJson.roleId === 3) {
             navigation("/userdetail");
+            setUserRole(true);
           } else {
             navigation("/dashboard");
+            setUserRole(false);
           }
         } else {
           if (convertLoginInfoAsJson.roleId === 3) {
             navigation("/userdetail");
+            setUserRole(true);
           } else {
             navigation("/dashboard");
+            setUserRole(false);
           }
         }
       } else {
@@ -281,8 +290,10 @@ function SidebarMenu() {
       if (location.pathname === "/") {
         if (convertLoginInfoAsJson.roleId === 3) {
           navigation("/userdetail");
+          setUserRole(true);
         } else {
           navigation("/dashboard");
+          setUserRole(false);
         }
       } else {
         navigation(location.pathname);
@@ -387,14 +398,20 @@ function SidebarMenu() {
           </p>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div
-        className="headerlogoutmenu_logiconContainer"
-        onClick={() => navigation("/billing")}
-      >
-        <BiSpreadsheet size={22} style={{ marginRight: "27px" }} />
-        <p className="header_logoutmenulogout">Billing</p>
-      </div>
+      {userRole === false ? (
+        <>
+          <Divider style={{ margin: "0" }} />
+          <div
+            className="headerlogoutmenu_logiconContainer"
+            onClick={() => navigation("/billing")}
+          >
+            <BiSpreadsheet size={22} style={{ marginRight: "27px" }} />
+            <p className="header_logoutmenulogout">Billing</p>
+          </div>
+        </>
+      ) : (
+        ""
+      )}
       <Divider style={{ margin: "0" }} />
       <div className="headerlogoutmenu_logiconContainer" onClick={handleLogout}>
         <AiOutlineLogout size={22} style={{ marginRight: "27px" }} />

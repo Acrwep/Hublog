@@ -77,7 +77,7 @@ const UserDetail = () => {
   const [attendanceSummary, setAttendanceSummary] = useState("");
 
   const handlePageChange = (id) => {
-    if (id === 3 || id === 5) {
+    if (id === 3 || id === 4 || id === 5) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -504,28 +504,29 @@ const UserDetail = () => {
           </Row>
           <div className="settings_sidebarContainer">
             {usermenuList.map((item, index) => (
-              <div
-                key={index}
-                className={
-                  index === 2 || index === 4
-                    ? "settings_disabledlistContainer"
-                    : item.id === activePage
-                    ? "settings_activelistContainer"
-                    : item.id != activePage
-                    ? "settings_inactivelistContainer"
-                    : ""
-                }
-                onClick={() => handlePageChange(item.id)}
-              >
-                {item.icon}
-                <p
+              <React.Fragment key={index}>
+                <div
                   className={
-                    item.id === activePage ? "" : "settings_inactivelisttext"
+                    index === 2 || index === 3 || index === 4
+                      ? "settings_disabledlistContainer"
+                      : item.id === activePage
+                      ? "settings_activelistContainer"
+                      : item.id != activePage
+                      ? "settings_inactivelistContainer"
+                      : ""
                   }
+                  onClick={() => handlePageChange(item.id)}
                 >
-                  {item.name}
-                </p>
-              </div>
+                  {item.icon}
+                  <p
+                    className={
+                      item.id === activePage ? "" : "settings_inactivelisttext"
+                    }
+                  >
+                    {item.name}
+                  </p>
+                </div>
+              </React.Fragment>
             ))}
           </div>
         </Col>

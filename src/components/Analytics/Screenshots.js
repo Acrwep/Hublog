@@ -92,10 +92,11 @@ const Screenshots = () => {
         moment(selectedDate).format("YYYY-MM-DD")
       );
       const ScreenShotsData = response.data;
+      console.log("screenshot response", response);
       const reveseData = ScreenShotsData.reverse();
-
       setScreenshotData(reveseData);
     } catch (error) {
+      console.log("screenshot errorr", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
@@ -344,7 +345,7 @@ const Screenshots = () => {
                         screenshotData.map((item, index) => {
                           const base64String = `data:image/jpeg;base64,${item.imageData}`;
                           return (
-                            <>
+                            <React.Fragment key={index}>
                               <Col
                                 xs={24}
                                 sm={24}
@@ -380,7 +381,7 @@ const Screenshots = () => {
                                   </div>
                                 </div>
                               </Col>
-                            </>
+                            </React.Fragment>
                           );
                         })}
                     </>

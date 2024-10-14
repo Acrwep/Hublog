@@ -5,6 +5,7 @@ import {
   MdSettings,
   MdRocketLaunch,
   MdScreenshotMonitor,
+  MdOutlineTimeline,
 } from "react-icons/md";
 import {
   TbActivityHeartbeat,
@@ -19,7 +20,6 @@ import { RiSuitcaseFill, RiUser3Fill } from "react-icons/ri";
 import { GiNotebook, GiLotus } from "react-icons/gi";
 import { CiStreamOn } from "react-icons/ci";
 import { GrMapLocation } from "react-icons/gr";
-import { VscGraphLine } from "react-icons/vsc";
 import { FiActivity } from "react-icons/fi";
 import { VscOrganization } from "react-icons/vsc";
 import { PiMonitorFill } from "react-icons/pi";
@@ -57,7 +57,7 @@ export const SideMenuConfig = {
     submenu: [
       {
         title: "Timeline",
-        icon: <VscGraphLine size={17} />,
+        icon: <MdOutlineTimeline size={17} />,
         path: "timeline",
       },
       {

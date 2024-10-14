@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Modal, Drawer } from "antd";
+import { Row, Col, Button, Modal, Drawer, Space, Dropdown } from "antd";
 import { VscOrganization } from "react-icons/vsc";
 import "./styles.css";
 import CommonInputField from "../Common/CommonInputField";
@@ -7,6 +7,9 @@ import CommonSelectField from "../Common/CommonSelectField";
 import CommonTable from "../Common/CommonTable";
 import CommonSearchField from "../Common/CommonSearchbar";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { AiOutlineEdit } from "react-icons/ai";
+import { RiDeleteBin7Line } from "react-icons/ri";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   addressValidator,
   emailValidator,
@@ -21,7 +24,7 @@ export default function Organization() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 240,
+      width: 290,
     },
     {
       title: "Email",
@@ -99,13 +102,68 @@ export default function Organization() {
         );
       },
     },
+    {
+      title: "Action",
+      dataIndex: "active",
+      key: "active",
+      align: "center",
+      width: 100,
+      fixed: "right",
+      render: (text, record) => {
+        const items = [
+          {
+            key: "1",
+            label: (
+              <div style={{ display: "flex" }}>
+                <button
+                  onClick={() => handleEdit(record)}
+                  style={{ display: "flex" }}
+                >
+                  <AiOutlineEdit size={19} className="users_tableeditbutton" />{" "}
+                  Edit
+                </button>
+              </div>
+            ),
+          },
+          {
+            key: "2",
+            label: (
+              <div style={{ display: "flex" }}>
+                <RiDeleteBin7Line
+                  size={19}
+                  className="users_tabledeletebutton"
+                />
+                <button onClick={() => console.log(record)}>Delete</button>
+              </div>
+            ),
+          },
+        ];
+        return (
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <button className="usertable_actionbutton">
+                  <BsThreeDotsVertical />
+                </button>
+              </Dropdown>
+            </Space>
+          </Space>
+        );
+      },
+    },
   ];
 
   const data = [
     {
       name: "Markerz Global Solution",
       key: "1",
-      email: "markerz@gmail.com",
+      email: "markerz@actetechnologies.com",
       mobile: "9787878772",
       address: "11/12 velachery chennai 600014",
       range: "50-100",
@@ -193,6 +251,20 @@ export default function Organization() {
       return;
   };
 
+  const handleEdit = (record) => {
+    setIsDrawerOpen(true);
+    setName(record.name);
+    setEmail(record.email);
+    setMobile(record.mobile);
+    setAddress(record.address);
+    setEmployeeRange(2);
+    setDomain(record.domain);
+    setWebsite(record.website);
+    setLinkdin(record.linkdin);
+    setLicense(20);
+    setPlanId(2);
+  };
+
   const handleReset = () => {
     setIsDrawerOpen(false);
     setValidationTrigger(false);
@@ -249,7 +321,7 @@ export default function Organization() {
         <CommonTable
           columns={columns}
           dataSource={data}
-          scroll={{ x: 2200 }}
+          scroll={{ x: 2400 }}
           dataPerPage={10}
           checkBox="false"
           bordered="true"

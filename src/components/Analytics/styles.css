@@ -327,3 +327,23 @@
   border-color: #25a17d !important;
   color: white !important;
 }
+/* timeline styles */
+.timeline_bars {
+  height: 30px;
+  line-height: 32px;
+  width: 100%;
+}
+.no-gap-table .ant-table-cell {
+  padding: 12px 0px !important; /* Remove cell padding */
+  text-align: center; /* Optional: Center-align text */
+}
+
+.no-gap-table .ant-table-thead > tr > th,
+.no-gap-table .ant-table-tbody > tr > td {
+  border-left: none; /* Remove left border to prevent gaps */
+  border-right: none; /* Remove right border to prevent gaps */
+}
+
+.no-gap-table .ant-table {
+  border-collapse: collapse; /* Optional: Collapse borders for a cleaner look */
+}

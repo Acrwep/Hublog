@@ -228,7 +228,7 @@ export default function UserAppsUrls({
                         ? 170
                         : appsData.length > 5 && appsData.length <= 10
                         ? 260
-                        : 440
+                        : appsData.length * 32
                     }
                   />
                 ) : (
@@ -265,7 +265,7 @@ export default function UserAppsUrls({
                         ? 175
                         : urlsData.length > 5 && urlsData.length <= 10
                         ? 260
-                        : 440
+                        : urlsData.length * 32
                     }
                   />
                 ) : (

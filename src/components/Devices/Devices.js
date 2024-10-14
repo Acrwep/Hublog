@@ -48,6 +48,7 @@ const Devices = () => {
       title: "Employee",
       dataIndex: "full_Name",
       key: "full_Name",
+      fixed: "left",
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">

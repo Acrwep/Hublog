@@ -266,7 +266,9 @@ const Summary = ({ loading }) => {
                 colors={["#25a17d", "#ABB3B3"]}
               />
             ) : (
-              <CommonNodatafound />
+              <div style={{ height: "100%" }}>
+                <CommonNodatafound />
+              </div>
             )}
           </div>
         </Col>

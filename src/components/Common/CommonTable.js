@@ -12,6 +12,7 @@ const CommonTable = ({
   loading,
   paginationStatus,
   size,
+  className,
 }) => {
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -68,6 +69,7 @@ const CommonTable = ({
       bordered={bordered === "true"}
       loading={loading}
       size={size}
+      className={className}
     />
   );
 };

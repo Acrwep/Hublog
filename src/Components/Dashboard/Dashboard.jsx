@@ -296,6 +296,7 @@ const Dashboard = () => {
   const getTeamsData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     setOrganizationId(orgId);
+    setTeamId(null);
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousandCurrentDate);
 
@@ -364,7 +365,15 @@ const Dashboard = () => {
     try {
       const response = await getTopProductivityTeams(payload);
       console.log("top productivity response", response);
-      setTopproductivityTeams(response?.data);
+      const topData = response?.data;
+      if (
+        topData?.Title ===
+        "Conversion failed when converting date and/or time from character string."
+      ) {
+        setTopproductivityTeams([]);
+      } else {
+        setTopproductivityTeams(topData);
+      }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopproductivityTeams([]);
@@ -394,7 +403,15 @@ const Dashboard = () => {
     try {
       const response = await getLeastProductivityTeams(payload);
       console.log("least productivity response", response);
-      setLeastproductivityTeams(response?.data);
+      const leastData = response?.data;
+      if (
+        leastData?.Title ===
+        "Conversion failed when converting date and/or time from character string."
+      ) {
+        setLeastproductivityTeams([]);
+      } else {
+        setLeastproductivityTeams(leastData);
+      }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setLeastproductivityTeams([]);
@@ -421,8 +438,14 @@ const Dashboard = () => {
       const response = await getAttendanceTrends(payload);
       console.log("dashboard response", response);
       const details = response?.data;
-
-      setDashboardData(details);
+      if (
+        details?.Title ===
+        "Conversion failed when converting date and/or time from character string."
+      ) {
+        setDashboardData([]);
+      } else {
+        setDashboardData(details);
+      }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setDashboardData([]);

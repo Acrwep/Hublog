@@ -397,7 +397,6 @@ const Attendance = () => {
       if (teamMembersList.length <= 0) {
         setUserList([]);
         setUserId(null);
-        return;
       }
 
       setUserList(teamMembersList);
