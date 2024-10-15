@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Row, Col, Spin } from "antd";
+import { Row, Col, Skeleton } from "antd";
 import ReactApexChart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import "./styles.css";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import Loader from "../Common/Loader";
-import UserAppsandUrlsLoader from "./UserApps&UrlsLoader";
-import ContentLoader from "react-content-loader";
 
 export default function UserAppsUrls({
   loading,
@@ -119,7 +117,14 @@ export default function UserAppsUrls({
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="userproductivity_topContainers">
                 {filterLoading ? (
-                  <UserAppsandUrlsLoader />
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
                 ) : (
                   <>
                     <p>Top Application</p>
@@ -132,18 +137,14 @@ export default function UserAppsUrls({
             <Col xs={24} sm={24} md={24} lg={12}>
               <div className="userproductivity_topContainers">
                 {filterLoading ? (
-                  <ContentLoader
-                    speed={1}
-                    width="100%"
-                    // height="100%"
-                    viewBox="0 0 300 70"
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
-                  >
-                    <rect x="0" y="5" rx="5" ry="5" width="45" height="9" />
-                    <rect x="0" y="32" rx="5" ry="5" width="150" height="10" />
-                    <rect x="0" y="60" rx="5" ry="5" width="45" height="9" />
-                  </ContentLoader>
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
                 ) : (
                   <>
                     <p>Top URL</p>
@@ -160,7 +161,14 @@ export default function UserAppsUrls({
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="userproductivity_topContainers">
                 {filterLoading ? (
-                  <UserAppsandUrlsLoader />
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
                 ) : (
                   <>
                     <p>Top Category</p>
@@ -211,12 +219,22 @@ export default function UserAppsUrls({
             }}
           >
             {filterLoading ? (
-              <div className="userdetail_breakSpinContainer">
-                <Spin />
+              <div style={{ height: "35vh" }}>
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
               </div>
             ) : (
+              <p className="devices_chartheading">Application Usage</p>
+            )}
+            {filterLoading ? (
+              ""
+            ) : (
               <>
-                <p className="devices_chartheading">Application Usage</p>
                 {appsData.length >= 1 ? (
                   <ReactApexChart
                     options={barchartoptions}
@@ -248,12 +266,22 @@ export default function UserAppsUrls({
             }}
           >
             {filterLoading ? (
-              <div className="userdetail_breakSpinContainer">
-                <Spin />
+              <div style={{ height: "35vh" }}>
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
               </div>
             ) : (
+              <p className="devices_chartheading">URL Usage</p>
+            )}
+            {filterLoading ? (
+              ""
+            ) : (
               <>
-                <p className="devices_chartheading">URL Usage</p>
                 {urlsData.length >= 1 ? (
                   <ReactApexChart
                     options={barchartoptions}

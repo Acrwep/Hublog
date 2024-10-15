@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Tooltip, Button, Flex, Progress, Spin } from "antd";
+import {
+  Row,
+  Col,
+  Tooltip,
+  Button,
+  Flex,
+  Progress,
+  Spin,
+  Skeleton,
+} from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../Common/CommonDonutChart";
@@ -577,9 +586,13 @@ const Dashboard = () => {
               <Col xs={24} sm={24} md={7} lg={7}>
                 <div className="devices_chartsContainer">
                   {filterLoading ? (
-                    <div className="screenshots_spinContainer">
-                      <Spin />
-                    </div>
+                    <Skeleton
+                      active
+                      title={{ width: 140 }}
+                      paragraph={{
+                        rows: 0,
+                      }}
+                    />
                   ) : (
                     <>
                       <p className="devices_chartheading">Today's Attendance</p>

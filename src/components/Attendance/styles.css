@@ -46,6 +46,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.attendancesummary_cardskeleton .ant-skeleton-title {
+  height: 14px !important;
+  line-height: 14px !important;
+  border-radius: 12px !important;
+}
+.attendancesummary_cardskeleton .ant-skeleton-paragraph > li {
+  height: 14px !important;
+  line-height: 14px !important;
+  border-radius: 12px !important;
+}
+
 /* attendance details styles */
 .attendancedetail_employeelistCalender {
   border: 0.5px solid #abb3b36e;

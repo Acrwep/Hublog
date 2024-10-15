@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Skeleton } from "antd";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import CommonBarChart from "../../Components/Common/CommonBarChart";
 import "./styles.css";
 import ReactApexChart from "react-apexcharts";
 import { useSelector } from "react-redux";
-import Loader from "../Common/Loader";
 import moment from "moment";
 import CommonNodatafound from "../Common/CommonNodatafound";
-import AttendanceSummaryLoader from "./AttendanceSummaryLoader";
 
 const Summary = ({ loading }) => {
   const [date, setDate] = useState(new Date());
@@ -149,7 +147,15 @@ const Summary = ({ loading }) => {
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
             {loading ? (
-              <AttendanceSummaryLoader />
+              <div style={{ padding: "6px 0px" }}>
+                <Skeleton
+                  active
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  className="attendancesummary_cardskeleton"
+                />
+              </div>
             ) : (
               <>
                 <p style={{ color: "#25a17d", fontWeight: "500" }}>
@@ -165,7 +171,15 @@ const Summary = ({ loading }) => {
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
             {loading ? (
-              <AttendanceSummaryLoader />
+              <div style={{ padding: "6px 0px" }}>
+                <Skeleton
+                  active
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  className="attendancesummary_cardskeleton"
+                />
+              </div>
             ) : (
               <>
                 <p style={{ color: "#e93b3a", fontWeight: "500" }}>
@@ -181,7 +195,15 @@ const Summary = ({ loading }) => {
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
             {loading ? (
-              <AttendanceSummaryLoader />
+              <div style={{ padding: "6px 0px" }}>
+                <Skeleton
+                  active
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  className="attendancesummary_cardskeleton"
+                />
+              </div>
             ) : (
               <>
                 <p style={{ fontWeight: "500" }}>Break time</p>
@@ -193,7 +215,15 @@ const Summary = ({ loading }) => {
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
             {loading ? (
-              <AttendanceSummaryLoader />
+              <div style={{ padding: "6px 0px" }}>
+                <Skeleton
+                  active
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  className="attendancesummary_cardskeleton"
+                />
+              </div>
             ) : (
               <>
                 <p style={{ fontWeight: "500" }}>Working time</p>
@@ -210,35 +240,65 @@ const Summary = ({ loading }) => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Today's Attendance</p>
+              {loading ? (
+                <div style={{ height: "50vh" }}>
+                  <Skeleton
+                    active
+                    title={{ width: 170 }}
+                    paragraph={{
+                      rows: 0,
+                    }}
+                  />
+                </div>
+              ) : (
+                <>
+                  <p className="devices_chartheading">Today's Attendance</p>
 
-              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">On time arrivals</p>
-                  <p className="totalactive_time">{todayOntimeArrival}</p>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">Late arrivals</p>
-                  <p className="totalactive_time">{todayLateArrival}</p>
-                </Col>
-              </Row>
-              <CommonDonutChart
-                labels={["Present", "Absent"]}
-                colors={["#25a17d", "#ABB3B3"]}
-                series={todayAttendanceSeries}
-                labelsfontSize="17px"
-              />
+                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p className="totalactive_timeheading">
+                        On time arrivals
+                      </p>
+                      <p className="totalactive_time">{todayOntimeArrival}</p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p className="totalactive_timeheading">Late arrivals</p>
+                      <p className="totalactive_time">{todayLateArrival}</p>
+                    </Col>
+                  </Row>
+                  <CommonDonutChart
+                    labels={["Present", "Absent"]}
+                    colors={["#25a17d", "#ABB3B3"]}
+                    series={todayAttendanceSeries}
+                    labelsfontSize="17px"
+                  />
+                </>
+              )}
             </div>
           </Col>
 
           <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Activity Level Breakdown</p>
-              <CommonBarChart
-                xasis={attendanceTrendsXasis}
-                series={attendanceTrendsSeries}
-                colors={attendanceTrendsColors}
-              />
+              {loading ? (
+                <Skeleton
+                  active
+                  title={{ width: 190 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">
+                    Activity Level Breakdown
+                  </p>
+                  <CommonBarChart
+                    xasis={attendanceTrendsXasis}
+                    series={attendanceTrendsSeries}
+                    colors={attendanceTrendsColors}
+                  />
+                </>
+              )}
             </div>
           </Col>
         </Row>
@@ -247,28 +307,54 @@ const Summary = ({ loading }) => {
       <Row gutter={16} style={{ marginTop: "25px" }}>
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Break Trends</p>
-            <ReactApexChart
-              options={datas.options}
-              series={datas.series}
-              type="line"
-              height={300}
-            />
+            {loading ? (
+              <div style={{ height: "40vh" }}>
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              </div>
+            ) : (
+              <>
+                <p className="devices_chartheading">Break Trends</p>
+                <ReactApexChart
+                  options={datas.options}
+                  series={datas.series}
+                  type="line"
+                  height={300}
+                />
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="devices_chartsContainer">
-            <p className="devices_chartheading">Late Arrival Tendency</p>
-            {lateArrivalData.length >= 1 ? (
-              <CommonBarChart
-                xasis={lateArrivalXasis}
-                series={lateArrivalSeries}
-                colors={["#25a17d", "#ABB3B3"]}
+            {loading ? (
+              <Skeleton
+                active
+                title={{ width: 190 }}
+                paragraph={{
+                  rows: 0,
+                }}
               />
             ) : (
-              <div style={{ height: "100%" }}>
-                <CommonNodatafound />
-              </div>
+              <>
+                <p className="devices_chartheading">Late Arrival Tendency</p>
+                {lateArrivalData.length >= 1 ? (
+                  <CommonBarChart
+                    xasis={lateArrivalXasis}
+                    series={lateArrivalSeries}
+                    colors={["#25a17d", "#ABB3B3"]}
+                  />
+                ) : (
+                  <div style={{ height: "100%" }}>
+                    <CommonNodatafound />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </Col>

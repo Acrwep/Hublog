@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PiDevicesBold } from "react-icons/pi";
-import { Col, Row, Tooltip, Button, Spin } from "antd";
+import { Col, Row, Tooltip, Button, Skeleton } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 import CommonDonutChart from "../Common/CommonDonutChart";
 import "./styles.css";
@@ -385,9 +385,13 @@ const Devices = () => {
                 }}
               >
                 {tableLoading ? (
-                  <div className="screenshots_spinContainer">
-                    <Spin />
-                  </div>
+                  <Skeleton
+                    active
+                    title={{ width: 140 }}
+                    paragraph={{
+                      rows: 0,
+                    }}
+                  />
                 ) : (
                   <>
                     <p className="devices_chartheading">
@@ -413,9 +417,13 @@ const Devices = () => {
             <Col xs={24} sm={24} md={12} lg={12}>
               <div className="devices_chartsContainer">
                 {tableLoading ? (
-                  <div className="screenshots_spinContainer">
-                    <Spin />
-                  </div>
+                  <Skeleton
+                    active
+                    title={{ width: 140 }}
+                    paragraph={{
+                      rows: 0,
+                    }}
+                  />
                 ) : (
                   <>
                     <p className="devices_chartheading">Platform</p>

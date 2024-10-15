@@ -297,3 +297,10 @@ select:focus {
   font-weight: 500 !important;
   font-family: "Poppins", sans-serif !important;
 }
+/* antd skeleton styles */
+.ant-skeleton-title {
+  border-radius: 12px !important;
+}
+.ant-skeleton-paragraph > li {
+  border-radius: 9px !important;
+}

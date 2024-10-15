@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Drawer, Calendar, Divider, Empty, Spin } from "antd";
-import CommonBarChart from "../Common/CommonBarChart";
+import { Row, Col, Drawer, Calendar, Divider, Spin, Skeleton } from "antd";
 import CommonTable from "../Common/CommonTable";
 import CommonAvatar from "../Common/CommonAvatar";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import "./styles.css";
-import Loader from "../Common/Loader";
-import AttendanceTrendsChart from "./AttendanceTrendsChart";
 import { HiOutlineCalendar } from "react-icons/hi2";
 import { dayJs } from "../Utils";
 import { CommonToaster } from "../Common/CommonToaster";
@@ -333,13 +330,17 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
       <div
         className="devices_chartsContainer"
         style={{
-          height: loading ? "30vh" : "100%",
+          height: loading ? "40vh" : "100%",
         }}
       >
         {loading ? (
-          <div className="screenshots_spinContainer">
-            <Spin />
-          </div>
+          <Skeleton
+            active
+            title={{ width: 140 }}
+            paragraph={{
+              rows: 0,
+            }}
+          />
         ) : (
           <>
             <p className="devices_chartheading">Attendance Trends</p>

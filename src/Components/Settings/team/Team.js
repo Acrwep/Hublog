@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Tabs, Modal, Button, Space, Dropdown } from "antd";
+import { Row, Col, Modal, Button, Space, Dropdown, Skeleton } from "antd";
 import CommonInputField from "../../Common/CommonInputField";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
 import { storeActiveTeam, storeTeams } from "../../Redux/slice";
@@ -337,306 +337,348 @@ const Team = ({ loading }) => {
   };
 
   return (
-    <>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
-          <Row style={{ marginTop: "10px", marginBottom: "12px" }}>
-            <Col
-              xs={24}
-              sm={24}
-              md={12}
-              lg={12}
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <p className="totalcreatedteam_text">
-                Total Created Teams ({teamList.length})
-              </p>
-            </Col>
-            <Col
-              xs={24}
-              sm={24}
-              md={12}
-              lg={12}
-              className="users_adduserbuttonContainer"
-            >
-              <CommonAddButton
-                name="Add Team"
-                onClick={() => setIsModalOpen(true)}
-              />
-            </Col>
-          </Row>
+    // <>
+    //   {loading ? (
+    //     <Loader />
+    //   ) : (
+    <div>
+      <Row style={{ marginTop: "10px", marginBottom: "12px" }}>
+        <Col
+          xs={24}
+          sm={24}
+          md={12}
+          lg={12}
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <p className="totalcreatedteam_text">
+            Total Created Teams ({teamList.length})
+          </p>
+        </Col>
+        <Col
+          xs={24}
+          sm={24}
+          md={12}
+          lg={12}
+          className="users_adduserbuttonContainer"
+        >
+          <CommonAddButton
+            name="Add Team"
+            onClick={() => setIsModalOpen(true)}
+          />
+        </Col>
+      </Row>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <CommonSelectField
-                label="Select team"
-                options={teamList}
-                value={teamId}
-                style={{ width: "170px" }}
-                onChange={handleTeam}
-              />
-            </Col>
-            <Col
-              span={12}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-              }}
-            >
-              {/* <Button type="primary" onClick={handleEdit}>
+      <Row gutter={16}>
+        <Col span={12}>
+          <CommonSelectField
+            label="Select team"
+            options={teamList}
+            value={teamId}
+            style={{ width: "170px" }}
+            onChange={handleTeam}
+          />
+        </Col>
+        <Col
+          span={12}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          {/* <Button type="primary" onClick={handleEdit}>
                 <AiOutlineEdit size={17} style={{ marginRight: "6px" }} />
                 {"  "} Edit
               </Button> */}
-              <Space direction="vertical">
-                <Space wrap>
-                  <Dropdown
-                    menu={{
-                      items,
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <button className="teams_actionbutton">
+                  <BsThreeDotsVertical />
+                </button>
+              </Dropdown>
+            </Space>
+          </Space>
+        </Col>
+      </Row>
+
+      {/* {teamMemberLoading ? (
+        <Loader />
+      ) : (
+        <> */}
+      <p className="teammembers_count">
+        <span style={{ fontSize: "15px" }}>({teamMembersList.length})</span>{" "}
+        Members
+      </p>
+      <Row gutter={16} style={{ marginTop: "12px" }}>
+        {teamMembersList.length >= 1 &&
+          teamMembersList.map((item, index) => (
+            <Col
+              xs={24}
+              sm={24}
+              md={8}
+              lg={8}
+              key={index}
+              style={{ marginBottom: "20px" }}
+            >
+              <div className="teammember_card">
+                {teamMemberLoading ? (
+                  <Skeleton
+                    avatar
+                    active
+                    paragraph={{
+                      rows: 0,
                     }}
-                    placement="bottomLeft"
-                    arrow
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "42px",
+                    }}
                   >
-                    <button className="teams_actionbutton">
-                      <BsThreeDotsVertical />
-                    </button>
-                  </Dropdown>
-                </Space>
-              </Space>
+                    <div>
+                      <CommonAvatar
+                        itemName={item.full_Name}
+                        avatarSize={37}
+                        avatarfontSize="17px"
+                      />
+                    </div>
+                    <div>
+                      <p className="teammember_name">{item.full_Name}</p>
+                      <p className="teammember_email">{item.email}</p>
+                    </div>
+                  </div>
+                )}
+
+                {teamMemberLoading ? (
+                  <div className="teammember_skeletondiv">
+                    <Skeleton
+                      active
+                      title={{ width: 140 }}
+                      paragraph={{
+                        rows: 0,
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Row gutter={16} className="teammember_changeteamrow">
+                    <Col span={12}>
+                      <Button className="teammembercard_buttons">
+                        Make Manager
+                      </Button>
+                    </Col>
+                    <Col
+                      span={12}
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Button
+                        className="teammembercard_buttons"
+                        onClick={() => {
+                          setChangeTeamModal(true);
+                          setuserDetails(item);
+                        }}
+                      >
+                        Change team
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+              </div>
             </Col>
-          </Row>
-
-          {teamMemberLoading ? (
-            <Loader />
-          ) : (
-            <>
-              <p className="teammembers_count">
-                <span style={{ fontSize: "15px" }}>
-                  ({teamMembersList.length})
-                </span>{" "}
-                Members
-              </p>
-              <Row gutter={16} style={{ marginTop: "12px" }}>
-                {teamMembersList.length >= 1 &&
-                  teamMembersList.map((item, index) => (
-                    <Col
-                      xs={24}
-                      sm={24}
-                      md={8}
-                      lg={8}
-                      key={index}
-                      style={{ marginBottom: "20px" }}
-                    >
-                      <div className="teammember_card">
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "42px",
-                          }}
-                        >
-                          <div>
-                            <CommonAvatar
-                              itemName={item.full_Name}
-                              avatarSize={37}
-                              avatarfontSize="17px"
-                            />
-                          </div>
-                          <div>
-                            <p className="teammember_name">{item.full_Name}</p>
-                            <p className="teammember_email">{item.email}</p>
-                          </div>
-                        </div>
-
-                        <Row gutter={16} className="teammember_changeteamrow">
-                          <Col span={12}>
-                            <Button className="teammembercard_buttons">
-                              Make Manager
-                            </Button>
-                          </Col>
-                          <Col
-                            span={12}
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                            }}
-                          >
-                            <Button
-                              className="teammembercard_buttons"
-                              onClick={() => {
-                                setChangeTeamModal(true);
-                                setuserDetails(item);
-                              }}
-                            >
-                              Change team
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    </Col>
-                  ))}
-              </Row>
-              {teamMembersList.length <= 0 && (
-                <p className="teammember_nodata">No data found</p>
-              )}
-
-              <p className="teammembers_out">Others</p>
-              <Row gutter={16} style={{ marginTop: "12px" }}>
-                {otherUsers &&
-                  otherUsers.length >= 1 &&
-                  otherUsers.map((item, index) => (
-                    <Col
-                      xs={24}
-                      sm={24}
-                      md={8}
-                      lg={8}
-                      key={index}
-                      style={{ marginBottom: "20px" }}
-                    >
-                      <div className="teammember_card">
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "42px",
-                          }}
-                        >
-                          <div>
-                            <CommonAvatar
-                              itemName={item.full_Name}
-                              avatarSize={37}
-                              avatarfontSize="17px"
-                            />
-                          </div>
-                          <div>
-                            <p className="teammember_name">{item.full_Name}</p>
-                            <p className="teammember_email">{item.email}</p>
-                          </div>
-                        </div>
-
-                        <Row gutter={16} className="teammember_changeteamrow">
-                          <Col
-                            span={24}
-                            style={{
-                              display: "flex",
-                            }}
-                          >
-                            <Button
-                              className="teammembercard_buttons"
-                              onClick={() => handleAddteam(item)}
-                            >
-                              Add team
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    </Col>
-                  ))}
-              </Row>
-
-              {otherUsers.length <= 0 && (
-                <p className="teammember_nodata">No data found</p>
-              )}
-            </>
-          )}
-          {/* addteam modal */}
-          <Modal
-            title={edit ? "Update Team" : "Add Team"}
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            footer={[
-              <button className="designation_submitbutton" onClick={handleOk}>
-                Submit
-              </button>,
-            ]}
-          >
-            <CommonInputField
-              label="Team Name"
-              onChange={(e) => {
-                setName(e.target.value);
-                setNameError(descriptionValidator(e.target.value));
-              }}
-              value={name}
-              error={nameError}
-              style={{ marginTop: "22px" }}
-              mandatory
-            />
-            <CommonInputField
-              label="Description"
-              onChange={(e) => {
-                setDescription(e.target.value);
-                setDescriptionError(descriptionValidator(e.target.value));
-              }}
-              value={description}
-              error={descriptionError}
-              mandatory
-              style={{ marginTop: "22px", marginBottom: "22px" }}
-            />
-            <CommonSelectField
-              label="Status"
-              options={statusList}
-              onChange={(value) => {
-                setStatus(value);
-              }}
-              value={status}
-            />
-          </Modal>
-
-          {/* changeteam modal */}
-          <Modal
-            title="Change Team"
-            open={changeTeamModal}
-            onCancel={formReset}
-            footer={[
-              <button
-                className="designation_submitbutton"
-                onClick={handleChangeTeamSubmit}
-              >
-                Submit
-              </button>,
-            ]}
-          >
-            <CommonSelectField
-              label="Select team"
-              options={teamList}
-              onChange={(selectedItem) => {
-                setChangeTeamId(selectedItem);
-                setChangeTeamError(selectValidator(selectedItem));
-              }}
-              value={changeTeamId}
-              error={changeTeamError}
-              mandatory
-            />
-          </Modal>
-
-          {/* addteam modal */}
-          <Modal
-            open={addTeamModal}
-            onCancel={formReset}
-            footer={[
-              <button
-                className="designation_submitbutton"
-                onClick={handleChangeTeamSubmit}
-              >
-                Yes
-              </button>,
-            ]}
-          >
-            <p className="addmodaltitle">
-              {"Are you sure to add "}
-              <span style={{ fontSize: "16px", fontWeight: 600 }}>
-                {userDetails?.first_Name || userDetails?.firstName || ""}{" "}
-                {userDetails?.last_Name || userDetails?.lastName || ""}
-              </span>
-              {" in this team"}
-            </p>
-          </Modal>
-        </div>
+          ))}
+      </Row>
+      {teamMembersList.length <= 0 && (
+        <p className="teammember_nodata">No data found</p>
       )}
-    </>
+
+      <p className="teammembers_out">Others</p>
+      <Row gutter={16} style={{ marginTop: "12px" }}>
+        {otherUsers &&
+          otherUsers.length >= 1 &&
+          otherUsers.map((item, index) => (
+            <Col
+              xs={24}
+              sm={24}
+              md={8}
+              lg={8}
+              key={index}
+              style={{ marginBottom: "20px" }}
+            >
+              <div className="teammember_card">
+                {teamMemberLoading ? (
+                  <Skeleton
+                    avatar
+                    active
+                    paragraph={{
+                      rows: 0,
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "42px",
+                    }}
+                  >
+                    <div>
+                      <CommonAvatar
+                        itemName={item.full_Name}
+                        avatarSize={37}
+                        avatarfontSize="17px"
+                      />
+                    </div>
+                    <div>
+                      <p className="teammember_name">{item.full_Name}</p>
+                      <p className="teammember_email">{item.email}</p>
+                    </div>
+                  </div>
+                )}
+
+                {teamMemberLoading ? (
+                  <div className="teammember_skeletondiv">
+                    <Skeleton
+                      active
+                      title={{ width: 140 }}
+                      paragraph={{
+                        rows: 0,
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Row gutter={16} className="teammember_changeteamrow">
+                    <Col
+                      span={24}
+                      style={{
+                        display: "flex",
+                      }}
+                    >
+                      <Button
+                        className="teammembercard_buttons"
+                        onClick={() => handleAddteam(item)}
+                      >
+                        Add team
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+              </div>
+            </Col>
+          ))}
+      </Row>
+
+      {otherUsers.length <= 0 && (
+        <p className="teammember_nodata">No data found</p>
+      )}
+      {/* </>
+      )} */}
+      {/* addteam modal */}
+      <Modal
+        title={edit ? "Update Team" : "Add Team"}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <button className="designation_submitbutton" onClick={handleOk}>
+            Submit
+          </button>,
+        ]}
+      >
+        <CommonInputField
+          label="Team Name"
+          onChange={(e) => {
+            setName(e.target.value);
+            setNameError(descriptionValidator(e.target.value));
+          }}
+          value={name}
+          error={nameError}
+          style={{ marginTop: "22px" }}
+          mandatory
+        />
+        <CommonInputField
+          label="Description"
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setDescriptionError(descriptionValidator(e.target.value));
+          }}
+          value={description}
+          error={descriptionError}
+          mandatory
+          style={{ marginTop: "22px", marginBottom: "22px" }}
+        />
+        <CommonSelectField
+          label="Status"
+          options={statusList}
+          onChange={(value) => {
+            setStatus(value);
+          }}
+          value={status}
+        />
+      </Modal>
+
+      {/* changeteam modal */}
+      <Modal
+        title="Change Team"
+        open={changeTeamModal}
+        onCancel={formReset}
+        footer={[
+          <button
+            className="designation_submitbutton"
+            onClick={handleChangeTeamSubmit}
+          >
+            Submit
+          </button>,
+        ]}
+      >
+        <CommonSelectField
+          label="Select team"
+          options={teamList}
+          onChange={(selectedItem) => {
+            setChangeTeamId(selectedItem);
+            setChangeTeamError(selectValidator(selectedItem));
+          }}
+          value={changeTeamId}
+          error={changeTeamError}
+          mandatory
+        />
+      </Modal>
+
+      {/* addteam modal */}
+      <Modal
+        open={addTeamModal}
+        onCancel={formReset}
+        footer={[
+          <button
+            className="designation_submitbutton"
+            onClick={handleChangeTeamSubmit}
+          >
+            Yes
+          </button>,
+        ]}
+      >
+        <p className="addmodaltitle">
+          {"Are you sure to add "}
+          <span style={{ fontSize: "16px", fontWeight: 600 }}>
+            {userDetails?.first_Name || userDetails?.firstName || ""}{" "}
+            {userDetails?.last_Name || userDetails?.lastName || ""}
+          </span>
+          {" in this team"}
+        </p>
+      </Modal>
+    </div>
+    //   )}
+    // </>
   );
 };
 

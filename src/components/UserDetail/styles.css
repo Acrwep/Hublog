@@ -65,7 +65,7 @@
 .userdetail_calendarContainer {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   height: 100%;
-  padding: 19px 12px;
+  padding: 12px;
   border-radius: 7px;
 }
 @media (min-width: 320px) and (max-width: 800px) {
@@ -81,7 +81,7 @@
 .userdetail_calendarsContainer {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   height: 100%;
-  padding: 13px 12px;
+  padding: 12px;
   border-radius: 7px;
 }
 .userattendancetable_Container {
@@ -140,4 +140,15 @@
 .userproductivity_chartheading {
   font-weight: 600;
   font-size: 16px;
+}
+/* apps and url styles */
+.appsandurlcard_skeleton .ant-skeleton-title {
+  height: 13px !important;
+  line-height: 13px !important;
+  border-radius: 12px !important;
+}
+.appsandurlcard_skeleton .ant-skeleton-paragraph > li {
+  height: 13px !important;
+  line-height: 13px !important;
+  border-radius: 12px !important;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip, Spin } from "antd";
+import { Row, Col, Button, Tooltip, Skeleton } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 import { PiMonitorFill } from "react-icons/pi";
 import ReactApexChart from "react-apexcharts";
@@ -22,8 +22,6 @@ import {
   addAppandUrlTime,
   getCurrentandPreviousweekDate,
 } from "../Common/Validation";
-import AppsandUrlsLoader from "./Apps&UrlsLoader";
-import ContentLoader from "react-content-loader";
 
 const Apps$Url = () => {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -409,7 +407,7 @@ const Apps$Url = () => {
     ) {
       return;
     }
-
+    setFilterLoading(true);
     setTeamId(null);
     setUserId(null);
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
@@ -476,7 +474,14 @@ const Apps$Url = () => {
             <Col xs={24} sm={24} md={7} lg={7}>
               <div className="userproductivity_topContainers">
                 {filterLoading ? (
-                  <AppsandUrlsLoader />
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
                 ) : (
                   <>
                     <p>Top Application</p>
@@ -490,18 +495,14 @@ const Apps$Url = () => {
             <Col xs={24} sm={24} md={10} lg={10}>
               <div className="userproductivity_topContainers">
                 {filterLoading ? (
-                  <ContentLoader
-                    speed={1}
-                    width="100%"
-                    // height="100%"
-                    viewBox="0 0 300 60"
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
-                  >
-                    <rect x="0" y="3" rx="5" ry="5" width="90" height="7" />
-                    <rect x="0" y="24" rx="5" ry="5" width="150" height="8" />
-                    <rect x="0" y="47" rx="5" ry="5" width="56" height="7" />
-                  </ContentLoader>
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
                 ) : (
                   <>
                     <p>Top URL</p>
@@ -518,7 +519,14 @@ const Apps$Url = () => {
             <Col xs={24} sm={24} md={7} lg={7}>
               <div className="userproductivity_topContainers">
                 {filterLoading ? (
-                  <AppsandUrlsLoader />
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
                 ) : (
                   <>
                     <p>Top Category</p>
@@ -547,8 +555,14 @@ const Apps$Url = () => {
                   }}
                 >
                   {filterLoading ? (
-                    <div className="userdetail_breakSpinContainer">
-                      <Spin />
+                    <div style={{ height: "40vh" }}>
+                      <Skeleton
+                        active
+                        title={{ width: 140 }}
+                        paragraph={{
+                          rows: 0,
+                        }}
+                      />
                     </div>
                   ) : (
                     <>
@@ -588,8 +602,14 @@ const Apps$Url = () => {
                   }}
                 >
                   {filterLoading ? (
-                    <div className="userdetail_breakSpinContainer">
-                      <Spin />
+                    <div style={{ height: "40vh" }}>
+                      <Skeleton
+                        active
+                        title={{ width: 140 }}
+                        paragraph={{
+                          rows: 0,
+                        }}
+                      />
                     </div>
                   ) : (
                     <>

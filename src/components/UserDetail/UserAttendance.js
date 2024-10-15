@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import { useSelector } from "react-redux";
 import CommonTable from "../../Components/Common/CommonTable";
 import CommonMonthlyCalendar from "../../Components/Common/CommonMonthlyCalendar";
@@ -72,22 +72,46 @@ export default function UserAttendance({
           <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={9}>
               <div className="userdetail_calendarContainer">
-                <p className="userattendance_heading">Attendance</p>
-                <CommonDonutChart
-                  labels={["Present", "Absent"]}
-                  colors={["#25a17d", "#ABB3B3"]}
-                  series={[
-                    attendanceSummary.daysPresent,
-                    attendanceSummary.daysLeave,
-                  ]}
-                  labelsfontSize="19px"
-                />
+                {filterLoading ? (
+                  <Skeleton
+                    active
+                    paragraph={{
+                      rows: 0,
+                    }}
+                  />
+                ) : (
+                  <p className="userattendance_heading">Attendance</p>
+                )}
+                {filterLoading ? (
+                  ""
+                ) : (
+                  <CommonDonutChart
+                    labels={["Present", "Absent"]}
+                    colors={["#25a17d", "#ABB3B3"]}
+                    series={[
+                      attendanceSummary.daysPresent,
+                      attendanceSummary.daysLeave,
+                    ]}
+                    labelsfontSize="19px"
+                  />
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={15}>
               <div className="userdetail_calendarsContainer">
-                <p className="userattendance_heading">Monthly Attendance</p>
-                <CommonMonthlyCalendar />
+                {filterLoading ? (
+                  <div style={{ height: "45vh" }}>
+                    <Skeleton
+                      active
+                      paragraph={{
+                        rows: 0,
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <p className="userattendance_heading">Monthly Attendance</p>
+                )}
+                {filterLoading ? "" : <CommonMonthlyCalendar />}
               </div>
             </Col>
           </Row>

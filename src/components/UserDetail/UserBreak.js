@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import { Spin } from "antd";
+import { Spin, Skeleton } from "antd";
 import CommonTable from "../../Components/Common/CommonTable";
 import { useSelector } from "react-redux";
 import Loader from "../Common/Loader";
@@ -143,19 +143,29 @@ export default function UserBreak({ loading, filterLoading }) {
         <div>
           <div className="userbreak_linechartContainer">
             {filterLoading ? (
-              <div className="userdetail_breakSpinContainer">
-                <Spin />
+              <div style={{ height: "40vh" }}>
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
               </div>
             ) : (
+              <p
+                style={{
+                  fontWeight: 600,
+                  fontSize: "17px",
+                }}
+              >
+                Break Trends
+              </p>
+            )}
+            {filterLoading ? (
+              ""
+            ) : (
               <>
-                <p
-                  style={{
-                    fontWeight: 600,
-                    fontSize: "17px",
-                  }}
-                >
-                  Break Trends
-                </p>
                 {userTotalBreakData.length >= 1 ? (
                   <ReactApexChart
                     options={datas.options}

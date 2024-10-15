@@ -309,6 +309,10 @@
   position: absolute;
   bottom: 12px;
 }
+.teammember_skeletondiv {
+  position: absolute;
+  bottom: 0px;
+}
 .teammembercard_buttons {
   width: 104px !important;
   font-size: 12px !important;
