@@ -25,6 +25,7 @@ const MonthlyInandOutReport = () => {
   const [date, setDate] = useState(dayJs().subtract(0, "month"));
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
@@ -137,9 +138,11 @@ const MonthlyInandOutReport = () => {
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
-      const usersList = response?.data;
+      const users = response?.data;
 
-      setUserList(usersList);
+      setUserId(null);
+      setNonChangeUserList(users);
+      setUserList(users);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -204,7 +207,6 @@ const MonthlyInandOutReport = () => {
       setData(preparedData);
     } catch (error) {
       setData([]);
-      CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -494,6 +496,37 @@ const MonthlyInandOutReport = () => {
     return current && current > dayJs().endOf("month");
   };
 
+  const handleRefresh = () => {
+    const currentMonthName = moment().format("MMMM");
+    const currentYear = moment().year();
+    let isMonthChange = false;
+
+    if (currentMonthName === monthName && currentYear === year) {
+      isMonthChange = false;
+    } else {
+      isMonthChange = true;
+    }
+    console.log(isMonthChange);
+
+    if (isMonthChange === false && teamId === null && userId === null) {
+      return;
+    } else {
+      setTeamId(null);
+      setUserId(null);
+      setDate(dayJs());
+      setUserList(nonChangeUserList);
+      setMonthName(currentMonthName);
+      setYear(currentYear);
+      getMonthlyInandOutData(
+        null,
+        null,
+        organizationId,
+        currentMonthName,
+        currentYear
+      );
+    }
+  };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -562,7 +595,10 @@ const MonthlyInandOutReport = () => {
             </Button>
           </Tooltip>
           <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
+            <Button
+              className="dashboard_refresh_button"
+              onClick={handleRefresh}
+            >
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>

@@ -196,7 +196,8 @@ const Settings = () => {
     try {
       const response = await getRole();
       const roleList = response.data;
-      dispatch(storeRole(roleList));
+      const removeSuperAdmin = roleList.filter((f) => f.id != 1);
+      dispatch(storeRole(removeSuperAdmin));
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
       const roleList = [];

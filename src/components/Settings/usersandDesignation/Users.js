@@ -54,15 +54,15 @@ const Users = ({ loading, userCount }) => {
   const [phoneError, setPhoneError] = useState("");
   const [gender, setGender] = useState("");
   const [genderError, setGenderError] = useState("");
-  const [genderOptions, setGenderOptions] = useState([
+  const genderOptions = [
     { id: 1, name: "Male" },
     { id: 2, name: "Female" },
-  ]);
+  ];
   const [role, setRole] = useState("");
-  const [roleOptions, setRoleOptions] = useState([
-    { id: 2, name: "Admin" },
+  const roleOptions = [
+    { id: 2, name: "Administrator" },
     { id: 3, name: "User" },
-  ]);
+  ];
   const [roleError, setRoleError] = useState("");
   const [designation, setDesignation] = useState("");
   const [team, setTeam] = useState("");
@@ -489,7 +489,7 @@ const Users = ({ loading, userCount }) => {
         <Loader />
       ) : (
         <div>
-          <p className="users_totoalusersheading">Total users ({userCount})</p>
+          <p className="users_totoalusersheading">Total Users ({userCount})</p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField

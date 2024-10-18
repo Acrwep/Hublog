@@ -18,7 +18,6 @@ import {
   deleteTeam,
 } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
-import Loader from "../../Common/Loader";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -50,7 +49,7 @@ const Team = ({ loading }) => {
   const [changeTeamError, setChangeTeamError] = useState("");
   const [edit, setEdit] = useState(false);
   const [userDetails, setuserDetails] = useState("");
-  const [teamMemberLoading, setTeamMemberLoading] = useState(false);
+  const [teamMemberLoading, setTeamMemberLoading] = useState(true);
 
   useEffect(() => {
     if (loading === false) {
@@ -63,7 +62,6 @@ const Team = ({ loading }) => {
 
   //get team members by team id api function
   const getUsersDataByTeamId = async (teamid) => {
-    setTeamMemberLoading(true);
     try {
       const response = await getUsersByTeamId(teamid);
       const teamMembersList = response?.data?.team?.users;
@@ -342,7 +340,7 @@ const Team = ({ loading }) => {
     //     <Loader />
     //   ) : (
     <div>
-      <Row style={{ marginTop: "10px", marginBottom: "12px" }}>
+      <Row style={{ marginBottom: "12px" }}>
         <Col
           xs={24}
           sm={24}
@@ -351,7 +349,7 @@ const Team = ({ loading }) => {
           style={{ display: "flex", alignItems: "center" }}
         >
           <p className="totalcreatedteam_text">
-            Total Created Teams ({teamList.length})
+            Total Teams ({teamList.length})
           </p>
         </Col>
         <Col
@@ -416,86 +414,91 @@ const Team = ({ loading }) => {
         <span style={{ fontSize: "15px" }}>({teamMembersList.length})</span>{" "}
         Members
       </p>
-      <Row gutter={16} style={{ marginTop: "12px" }}>
+      <Row
+        gutter={16}
+        className="teammembers_container"
+        style={{ height: teamMembersList.length > 6 ? "52vh" : "auto" }}
+      >
         {teamMembersList.length >= 1 &&
           teamMembersList.map((item, index) => (
-            <Col
-              xs={24}
-              sm={24}
-              md={8}
-              lg={8}
-              key={index}
-              style={{ marginBottom: "20px" }}
-            >
-              <div className="teammember_card">
-                {teamMemberLoading ? (
-                  <Skeleton
-                    avatar
-                    active
-                    paragraph={{
-                      rows: 0,
-                    }}
-                  />
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginBottom: "42px",
-                    }}
-                  >
-                    <div>
-                      <CommonAvatar
-                        itemName={item.full_Name}
-                        avatarSize={37}
-                        avatarfontSize="17px"
-                      />
-                    </div>
-                    <div>
-                      <p className="teammember_name">{item.full_Name}</p>
-                      <p className="teammember_email">{item.email}</p>
-                    </div>
-                  </div>
-                )}
-
-                {teamMemberLoading ? (
-                  <div className="teammember_skeletondiv">
+            <React.Fragment key={index}>
+              <Col
+                xs={24}
+                sm={24}
+                md={8}
+                lg={8}
+                style={{ marginBottom: "20px" }}
+              >
+                <div className="teammember_card">
+                  {teamMemberLoading ? (
                     <Skeleton
+                      avatar
                       active
-                      title={{ width: 140 }}
                       paragraph={{
                         rows: 0,
                       }}
                     />
-                  </div>
-                ) : (
-                  <Row gutter={16} className="teammember_changeteamrow">
-                    <Col span={12}>
-                      <Button className="teammembercard_buttons">
-                        Make Manager
-                      </Button>
-                    </Col>
-                    <Col
-                      span={12}
+                  ) : (
+                    <div
                       style={{
                         display: "flex",
-                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        marginBottom: "42px",
                       }}
                     >
-                      <Button
-                        className="teammembercard_buttons"
-                        onClick={() => {
-                          setChangeTeamModal(true);
-                          setuserDetails(item);
+                      <div>
+                        <CommonAvatar
+                          itemName={item.full_Name}
+                          avatarSize={37}
+                          avatarfontSize="17px"
+                        />
+                      </div>
+                      <div>
+                        <p className="teammember_name">{item.full_Name}</p>
+                        <p className="teammember_email">{item.email}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {teamMemberLoading ? (
+                    <div className="teammember_skeletondiv">
+                      <Skeleton
+                        active
+                        title={{ width: 140 }}
+                        paragraph={{
+                          rows: 0,
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <Row gutter={16} className="teammember_changeteamrow">
+                      <Col span={12}>
+                        <Button className="teammembercard_buttons">
+                          Make Manager
+                        </Button>
+                      </Col>
+                      <Col
+                        span={12}
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
                         }}
                       >
-                        Change team
-                      </Button>
-                    </Col>
-                  </Row>
-                )}
-              </div>
-            </Col>
+                        <Button
+                          className="teammembercard_buttons"
+                          onClick={() => {
+                            setChangeTeamModal(true);
+                            setuserDetails(item);
+                          }}
+                        >
+                          Change team
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                </div>
+              </Col>
+            </React.Fragment>
           ))}
       </Row>
       {teamMembersList.length <= 0 && (
@@ -503,78 +506,83 @@ const Team = ({ loading }) => {
       )}
 
       <p className="teammembers_out">Others</p>
-      <Row gutter={16} style={{ marginTop: "12px" }}>
+      <Row
+        gutter={16}
+        className="teammembers_container"
+        style={{ height: otherUsers.length > 6 ? "52vh" : "auto" }}
+      >
         {otherUsers &&
           otherUsers.length >= 1 &&
           otherUsers.map((item, index) => (
-            <Col
-              xs={24}
-              sm={24}
-              md={8}
-              lg={8}
-              key={index}
-              style={{ marginBottom: "20px" }}
-            >
-              <div className="teammember_card">
-                {teamMemberLoading ? (
-                  <Skeleton
-                    avatar
-                    active
-                    paragraph={{
-                      rows: 0,
-                    }}
-                  />
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginBottom: "42px",
-                    }}
-                  >
-                    <div>
-                      <CommonAvatar
-                        itemName={item.full_Name}
-                        avatarSize={37}
-                        avatarfontSize="17px"
-                      />
-                    </div>
-                    <div>
-                      <p className="teammember_name">{item.full_Name}</p>
-                      <p className="teammember_email">{item.email}</p>
-                    </div>
-                  </div>
-                )}
-
-                {teamMemberLoading ? (
-                  <div className="teammember_skeletondiv">
+            <React.Fragment key={index}>
+              <Col
+                xs={24}
+                sm={24}
+                md={8}
+                lg={8}
+                style={{ marginBottom: "20px" }}
+              >
+                <div className="teammember_card">
+                  {teamMemberLoading ? (
                     <Skeleton
+                      avatar
                       active
-                      title={{ width: 140 }}
                       paragraph={{
                         rows: 0,
                       }}
                     />
-                  </div>
-                ) : (
-                  <Row gutter={16} className="teammember_changeteamrow">
-                    <Col
-                      span={24}
+                  ) : (
+                    <div
                       style={{
                         display: "flex",
+                        alignItems: "center",
+                        marginBottom: "42px",
                       }}
                     >
-                      <Button
-                        className="teammembercard_buttons"
-                        onClick={() => handleAddteam(item)}
+                      <div>
+                        <CommonAvatar
+                          itemName={item.full_Name}
+                          avatarSize={37}
+                          avatarfontSize="17px"
+                        />
+                      </div>
+                      <div>
+                        <p className="teammember_name">{item.full_Name}</p>
+                        <p className="teammember_email">{item.email}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {teamMemberLoading ? (
+                    <div className="teammember_skeletondiv">
+                      <Skeleton
+                        active
+                        title={{ width: 140 }}
+                        paragraph={{
+                          rows: 0,
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <Row gutter={16} className="teammember_changeteamrow">
+                      <Col
+                        span={24}
+                        style={{
+                          display: "flex",
+                        }}
                       >
-                        Add team
-                      </Button>
-                    </Col>
-                  </Row>
-                )}
-              </div>
-            </Col>
+                        <Button
+                          className="teammembercard_buttons"
+                          onClick={() => handleAddteam(item)}
+                        >
+                          Add team
+                        </Button>
+                      </Col>
+                    </Row>
+                  )}
+                </div>
+              </Col>
+            </React.Fragment>
           ))}
       </Row>
 

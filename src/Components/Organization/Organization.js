@@ -6,6 +6,7 @@ import CommonInputField from "../Common/CommonInputField";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonTable from "../Common/CommonTable";
 import CommonSearchField from "../Common/CommonSearchbar";
+import CommonCalendar from "../Common/CommonCalendar";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBin7Line } from "react-icons/ri";
@@ -204,12 +205,38 @@ export default function Organization() {
   const [licenseError, setLicenseError] = useState("");
   const [planId, setPlanId] = useState(null);
   const [planError, setPlanError] = useState("");
+  const [planStartDate, setPlanStartDate] = useState(null);
+  const [planStartDateError, setPlanStartDateError] = useState("");
+  const [planExpireDate, setPlanExpireDate] = useState(null);
+  const [planExpireDateError, setPlanExpireDateError] = useState("");
   const planOptions = [
     { id: 1, name: "Free" },
     { id: 2, name: "Starter" },
     { id: 3, name: "Elite" },
   ];
   const [validationTrigger, setValidationTrigger] = useState(false);
+
+  const handlePlanStartDate = (date) => {
+    if (date) {
+      setPlanStartDate(date.toDate());
+      if (validationTrigger) {
+        setPlanExpireDateError(selectValidator(date.toDate()));
+      }
+    } else {
+      setPlanStartDate(null);
+    }
+  };
+
+  const handlePlanExpireDate = (date) => {
+    if (date) {
+      setPlanExpireDate(date.toDate());
+      if (validationTrigger) {
+        setPlanStartDateError(selectValidator(date.toDate()));
+      }
+    } else {
+      setPlanExpireDate(null);
+    }
+  };
 
   const handleCreate = (event) => {
     event.preventDefault();
@@ -224,6 +251,8 @@ export default function Organization() {
     const linkdinValidate = addressValidator(linkdin);
     const licenseValidate = selectValidator(license);
     const planValidate = selectValidator(planId);
+    const planStartdateValidate = selectValidator(planStartDate);
+    const planExpiredateValidate = selectValidator(planExpireDate);
 
     setNameError(nameValidate);
     setEmailError(emailValidate);
@@ -235,6 +264,8 @@ export default function Organization() {
     setLinkdinError(linkdinValidate);
     setLicenseError(licenseValidate);
     setPlanError(planValidate);
+    setPlanStartDateError(planStartdateValidate);
+    setPlanExpireDateError(planExpiredateValidate);
 
     if (
       nameValidate ||
@@ -246,7 +277,9 @@ export default function Organization() {
       websiteValidate ||
       linkdinValidate ||
       licenseValidate ||
-      planValidate
+      planValidate ||
+      planStartdateValidate ||
+      planExpiredateValidate
     )
       return;
   };
@@ -288,6 +321,10 @@ export default function Organization() {
     setLicenseError("");
     setPlanId(null);
     setPlanError("");
+    setPlanStartDate(null);
+    setPlanStartDateError("");
+    setPlanExpireDate(null);
+    setPlanExpireDateError("");
   };
 
   return (
@@ -498,6 +535,27 @@ export default function Organization() {
             </Col>
           </Row>
 
+          <Row gutter={16} style={{ marginTop: "22px" }}>
+            <Col span={12}>
+              <CommonCalendar
+                label="Plan Start Date"
+                onChange={handlePlanStartDate}
+                value={planStartDate}
+                error={planStartDateError}
+                mandatory
+              />
+            </Col>
+            <Col span={12}>
+              <CommonCalendar
+                label="Plan Expire Date"
+                onChange={handlePlanExpireDate}
+                value={planExpireDate}
+                error={planExpireDateError}
+                mandatory
+              />
+            </Col>
+          </Row>
+
           <div style={{ display: "flex", justifyContent: "center" }}>
             <button
               className="org_createbutton"
@@ -530,7 +588,17 @@ export default function Organization() {
 
         <div style={{ marginTop: "12px" }}>
           <p className="billing_modalplan_heading">Paid amount</p>
-          <p className="billing_modalplan_values">40000</p>
+          <p className="billing_modalplan_values">₹40000</p>
+        </div>
+
+        <div style={{ marginTop: "12px" }}>
+          <p className="billing_modalplan_heading">Paid Start Date</p>
+          <p className="billing_modalplan_values">12/10/2024</p>
+        </div>
+
+        <div style={{ marginTop: "12px" }}>
+          <p className="billing_modalplan_heading">Paid Expire Date</p>
+          <p className="billing_modalplan_values">12/11/2024</p>
         </div>
       </Modal>
     </div>

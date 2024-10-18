@@ -117,8 +117,8 @@ function SidebarMenu() {
   } = theme.useToken();
 
   const handleLogout = () => {
-    console.log("Logout");
     localStorage.clear();
+    sessionStorage.clear();
     navigation("/login");
   };
 

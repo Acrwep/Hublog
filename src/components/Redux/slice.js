@@ -278,8 +278,7 @@ const roleSlice = createSlice({
   reducers: {
     storeRole(state, action) {
       state = action.payload;
-      const removeSuperAdmin = state.filter((f) => f.id != 1);
-      return removeSuperAdmin;
+      return state;
     },
   },
 });

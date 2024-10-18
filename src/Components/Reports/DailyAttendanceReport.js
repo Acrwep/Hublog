@@ -26,6 +26,7 @@ const DailyAttendanceReport = () => {
   const [date, setDate] = useState(new Date());
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
@@ -117,13 +118,14 @@ const DailyAttendanceReport = () => {
   };
 
   const getUsersData = async () => {
-    let userIdd = null;
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
-      const usersList = response?.data;
+      const users = response?.data;
 
-      setUserList(usersList);
+      setUserId(null);
+      setNonChangeUserList(users);
+      setUserList(users);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -188,6 +190,32 @@ const DailyAttendanceReport = () => {
   const handleUser = (value) => {
     setUserId(value);
     getDailyAttendanceData(value, teamId, organizationId, date);
+  };
+
+  const handleRefresh = () => {
+    const today = new Date();
+
+    const givenDate = new Date(date);
+    let isDateChange = false;
+    if (
+      today.getFullYear() === givenDate.getFullYear() &&
+      today.getMonth() === givenDate.getMonth() &&
+      today.getDate() === givenDate.getDate()
+    ) {
+      isDateChange = false;
+    } else {
+      isDateChange = true;
+    }
+
+    if (isDateChange === false && teamId === null && userId === null) {
+      return;
+    } else {
+      setTeamId(null);
+      setUserId(null);
+      setDate(today);
+      setUserList(nonChangeUserList);
+      getDailyAttendanceData(null, null, organizationId, today);
+    }
   };
 
   return (
@@ -257,7 +285,10 @@ const DailyAttendanceReport = () => {
             </Button>
           </Tooltip>
           <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
+            <Button
+              className="dashboard_refresh_button"
+              onClick={handleRefresh}
+            >
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>

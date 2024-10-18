@@ -100,7 +100,7 @@
 .users_totoalusersheading {
   font-weight: 600;
   font-size: 16px;
-  color: #25a17d;
+  text-transform: capitalize;
 }
 .users_adduserbuttonContainer {
   display: flex;
@@ -274,7 +274,6 @@
 .totalcreatedteam_text {
   font-weight: 600;
   font-size: 17px;
-  color: #25a17d;
 }
 @media (min-width: 300px) and (max-width: 767px) {
   .totalcreatedteam_text {
@@ -341,6 +340,30 @@
 }
 .teams_actionbutton:hover {
   border: 1px solid rgb(226 223 239/ 1) !important;
+}
+.teammembers_container {
+  margin-top: 12px;
+  overflow-y: auto;
+}
+.teammembers_container {
+  scrollbar-width: thin; /* "auto", "thin", or "none" */
+  scrollbar-color: #c1c1c1 #f1f1f1; /* thumb color, track color */
+}
+.teammembers_container::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.teammembers_container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the track */
+}
+
+.teammembers_container::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scroll thumb */
+  border-radius: 10px; /* Rounded corners for the scroll thumb */
+}
+
+.appsandurlchart_Containers::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scroll thumb on hover */
 }
 /* break styles */
 .breakstatus_container {

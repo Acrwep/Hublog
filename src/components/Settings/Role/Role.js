@@ -27,18 +27,24 @@ export default function Role({ loading }) {
   const [loadings, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => {
+        if (text === "ADMIN") {
+          return "Administrator";
+        } else {
+          return "User";
+        }
+      },
+    },
     { title: "Description", dataIndex: "description", key: "description" },
     {
       title: "Administrative privileges",
       dataIndex: "administrativeprivileges",
       key: "administrativeprivileges",
-      width: 220,
-    },
-    {
-      title: "Denied Modules",
-      dataIndex: "deniedmodules",
-      key: "deniedmodules",
+      width: 230,
     },
   ];
   const [data, setData] = useState([]);
@@ -172,6 +178,9 @@ export default function Role({ loading }) {
         <Loader />
       ) : (
         <div>
+          <p className="users_totoalusersheading">
+            Total Roles ({roleList.length})
+          </p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField
