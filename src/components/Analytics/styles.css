@@ -327,6 +327,9 @@
   border-color: #25a17d !important;
   color: white !important;
 }
+.productivity_outliersDivider {
+  border-block-start: 1px solid rgb(5 5 5 / 13%) !important;
+}
 /* timeline styles */
 .timeline_bars {
   height: 30px;

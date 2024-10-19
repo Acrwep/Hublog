@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip } from "antd";
-import CommonDatePicker from "../../Components/Common/CommonDatePicker";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import CommonDonutChart from "../../Components/Common/CommonDonutChart";
-import CommonBarChart from "../../Components/Common/CommonBarChart";
-import { GiLotus } from "react-icons/gi";
-import "./styles.css";
-import CommonSelectField from "../../Components/Common/CommonSelectField";
+import { Row, Col } from "antd";
+import CommonDonutChart from "../../../Components/Common/CommonDonutChart";
+import CommonBarChart from "../../../Components/Common/CommonBarChart";
+import "../styles.css";
 
-const Wellness = () => {
-  const [date, setDate] = useState(new Date());
-
-  const teamList = [{ id: 1, name: "Operation" }];
-
+const WellnessSummary = () => {
   const OverallWellness = [15, 6];
   const TopHealthy = [10, 20, 40];
   const TopOverburdened = [20, 40, 30];
@@ -43,49 +35,10 @@ const Wellness = () => {
     },
   ];
 
-  const barchartColors = ["#25a17d", "#ABB3B3", "#4FA2C7"];
-
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
-  };
+  const barchartColors = ["#25a17d", "#ABB3B3", "rgba(37,143,161,0.90)"];
 
   return (
-    <div className="settings_mainContainer">
-      <div className="settings_headingContainer">
-        <div className="settings_iconContainer">
-          <GiLotus size={20} />
-        </div>
-        <h2 className="allpage_mainheadings">Wellness</h2>
-      </div>
-
-      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div style={{ width: "170px" }}>
-            <CommonSelectField options={teamList} placeholder="All Teams" />
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="wellness_calendarContainer">
-            <div>
-              <CommonDatePicker onChange={onDateChange} value={date} />
-            </div>
-            <Tooltip placement="top" title="Download">
-              <Button
-                className="dashboard_download_button"
-              >
-                <DownloadOutlined className="download_icon" />
-              </Button>
-            </Tooltip>
-            <Tooltip placement="top" title="Refresh">
-              <Button className="dashboard_refresh_button">
-                <RedoOutlined className="refresh_icon" />
-              </Button>
-            </Tooltip>
-          </div>
-        </Col>
-      </Row>
-
+    <div>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
@@ -200,4 +153,4 @@ const Wellness = () => {
   );
 };
 
-export default Wellness;
+export default WellnessSummary;

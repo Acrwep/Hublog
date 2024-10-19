@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Progress, Flex } from "antd";
+import { Row, Col, Progress, Flex, Tooltip, Divider } from "antd";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../../Common/CommonDonutChart";
 import CommonBarChart from "../../Common/CommonBarChart";
@@ -76,9 +76,11 @@ const ProductivitySummary = () => {
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
             <p>Top URL</p>
-            <p className="userproductivity_contents">
-              https://web.whatsapppppp
-            </p>
+            <Tooltip placement="top" title="https://web.whatsapppppp">
+              <p className="userproductivity_contents">
+                https://web.whatsapppppp
+              </p>
+            </Tooltip>
             <p className="userproductivity_hours">174h:42m</p>
           </div>
         </Col>
@@ -162,7 +164,7 @@ const ProductivitySummary = () => {
                   </Row>
                 ))}
               </div>
-
+              <Divider className="productivity_outliersDivider" />
               <div
                 style={{
                   display: "flex",

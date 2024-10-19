@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip } from "antd";
+import { Row, Col, Button, Tooltip, DatePicker } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
-import { MdRocketLaunch } from "react-icons/md";
+import { GiLotus } from "react-icons/gi";
 import "../styles.css";
-import ProductivitySummary from "./ProductivitySummary";
 import CommonSelectField from "../../Common/CommonSelectField";
-import CommonDoubleDatePicker from "../../Common/CommonDoubleDatePicker";
-import { getCurrentandPreviousweekDate } from "../../Common/Validation";
+import CommonDatePicker from "../../Common/CommonDatePicker";
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getTeams,
   getUsers,
   getUsersByTeamId,
 } from "../../APIservice.js/action";
-import ProductivityDetailed from "./ProductivityDetailed";
+import { dayJs } from "../../Utils";
+import WellnessSummary from "./WellnessSummary";
+import WellnessDetailed from "./WellnessDetailed";
+import moment from "moment";
 
-const Productivity = () => {
+const Wellness = () => {
   const [activePage, setActivePage] = useState(1);
-  const [selectedDates, setSelectedDates] = useState([]);
+  const [date, setDate] = useState(new Date());
+  const [month, setMonth] = useState(dayJs().subtract(0, "month"));
+  const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [monthName, setMonthName] = useState("");
+  const [year, setYear] = useState();
   const [teamId, setTeamId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [teamList, setTeamList] = useState([]);
-  const [userList, setUserList] = useState([]);
-  const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [organizationId, setOrganizationId] = useState(null);
 
   const handlePageChange = (pageNumber) => {
@@ -40,9 +44,7 @@ const Productivity = () => {
   }, []);
 
   const getTeamData = async () => {
-    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
-    setSelectedDates(PreviousAndCurrentDate);
-
+    setDate(new Date());
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -72,6 +74,11 @@ const Productivity = () => {
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
+    } finally {
+      const currentMonthName = moment().format("MMMM"); // get current month name
+      const currentYear = moment().year(); // get current year
+      setMonthName(currentMonthName);
+      setYear(currentYear);
     }
   };
 
@@ -98,50 +105,74 @@ const Productivity = () => {
     setUserId(value);
   };
 
-  const handleDateChange = (dates, dateStrings) => {
-    setSelectedDates(dateStrings);
-    const startDate = dateStrings[0];
-    const endDate = dateStrings[1];
-    if (dateStrings[0] != "" && dateStrings[1] != "") {
-      console.log("call function");
+  const onDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setDate(date); // Update the state when the date changes
+  };
+
+  const handleMonthChange = (date, dateString) => {
+    // Log the date and formatted date string
+    setMonth(date);
+    // If a date is selected, format it to get the month name and log it
+    if (date) {
+      const selectedMonthName = date.format("MMMM");
+      const selectedYear = date.format("YYYY");
+      console.log("Selected Month:", selectedMonthName, selectedYear);
+      setMonthName(selectedMonthName);
+      setYear(selectedYear);
     }
   };
 
+  const getMonthName = (date) => {
+    if (date) {
+      return date.format("MMMM");
+    }
+    return "";
+  };
+
+  const disabledDate = (current) => {
+    // Disable all future dates
+    return current && current > dayJs().endOf("month");
+  };
+
   const handleRefresh = () => {
-    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
-
     const today = new Date();
-    const givenDate = new Date(selectedDates[1]);
-    let isCurrentDate = false;
-    let isPreviousChange = false;
+    const givenDate = new Date(date);
+    const currentMonthName = moment().format("MMMM");
+    const currentYear = moment().year();
+    let isDateChange = false;
+    let isMonthChange = false;
 
     if (
-      givenDate.getFullYear() === today.getFullYear() &&
-      givenDate.getMonth() === today.getMonth() &&
-      givenDate.getDate() === today.getDate()
+      today.getFullYear() === givenDate.getFullYear() &&
+      today.getMonth() === givenDate.getMonth() &&
+      today.getDate() === givenDate.getDate()
     ) {
-      isCurrentDate = true;
+      isDateChange = false;
     } else {
-      isCurrentDate = false;
+      isDateChange = true;
+    }
+    if (currentMonthName === monthName && currentYear === year) {
+      isMonthChange = false;
+    } else {
+      isMonthChange = true;
     }
 
-    if (PreviousandCurrentDate[0] === selectedDates[0]) {
-      isPreviousChange = false;
-    } else {
-      isPreviousChange = true;
-    }
     if (
+      isDateChange === false &&
+      isMonthChange === false &&
       teamId === null &&
-      userId === null &&
-      isCurrentDate === true &&
-      isPreviousChange === false
+      userId === null
     ) {
       return;
     } else {
       setTeamId(null);
       setUserId(null);
+      setDate(new Date());
+      setMonth(dayJs());
+      setMonthName(currentMonthName);
+      setYear(currentYear);
       setUserList(nonChangeUserList);
-      setSelectedDates(PreviousandCurrentDate);
     }
   };
   return (
@@ -150,9 +181,9 @@ const Productivity = () => {
         <Col xs={24} sm={24} md={24} lg={15}>
           <div className="settings_headingContainer">
             <div className="settings_iconContainer">
-              <MdRocketLaunch size={20} />
+              <GiLotus size={20} />
             </div>
-            <h2 className="allpage_mainheadings">Productivity</h2>
+            <h2 className="allpage_mainheadings">Wellness</h2>
           </div>
         </Col>
         <Col xs={24} sm={24} md={24} lg={9}>
@@ -212,10 +243,18 @@ const Productivity = () => {
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="wellness_calendarContainer">
             <div>
-              <CommonDoubleDatePicker
-                value={selectedDates}
-                onChange={handleDateChange}
-              />
+              {activePage === 1 ? (
+                <CommonDatePicker onChange={onDateChange} value={date} />
+              ) : (
+                <DatePicker
+                  picker="month"
+                  onChange={handleMonthChange}
+                  value={month}
+                  format={getMonthName}
+                  disabledDate={disabledDate}
+                  allowClear={false}
+                />
+              )}
             </div>
             <Tooltip placement="top" title="Refresh">
               <Button
@@ -232,15 +271,15 @@ const Productivity = () => {
 
       {activePage === 1 ? (
         <div>
-          <ProductivitySummary />
+          <WellnessSummary />
         </div>
       ) : (
         <div>
-          <ProductivityDetailed />
+          <WellnessDetailed />
         </div>
       )}
     </div>
   );
 };
 
-export default Productivity;
+export default Wellness;

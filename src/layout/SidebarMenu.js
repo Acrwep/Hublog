@@ -59,7 +59,7 @@ import Activity from "../Components/Analytics/Activity";
 import Productivity from "../Components/Analytics/Productivity/Productivity.js";
 import Screenshots from "../Components/Analytics/Screenshots";
 import Apps$Url from "../Components/Analytics/Apps$Url";
-import Wellness from "../Components/Analytics/Wellness";
+import Wellness from "../Components/Analytics/Wellness/Wellness.js";
 //devices
 import Devices from "../Components/Devices/Devices";
 //aler
