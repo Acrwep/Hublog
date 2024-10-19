@@ -80,11 +80,12 @@ const Users = ({ loading, userCount }) => {
       dataIndex: "name",
       key: "name",
       width: 190,
+      fixed: "left",
       render: (text, record) => {
         return <p>{record.first_Name + " " + record.last_Name} </p>;
       },
     },
-    { title: "Email", dataIndex: "email", key: "email", width: 320 },
+    { title: "Email", dataIndex: "email", key: "email", width: 340 },
     {
       title: "Designation",
       dataIndex: "designationId",
@@ -522,7 +523,7 @@ const Users = ({ loading, userCount }) => {
           <CommonTable
             columns={columns}
             dataSource={usersList}
-            scroll={{ x: 1800 }}
+            scroll={{ x: 1820 }}
             dataPerPage={10}
             loading={tableLoading}
             checkBox="false"
@@ -710,7 +711,6 @@ const Users = ({ loading, userCount }) => {
           <Col span={12}>
             <CommonSelectField
               label="Team"
-              l
               onChange={(value) => {
                 setTeam(value);
                 if (validationTrigger) {

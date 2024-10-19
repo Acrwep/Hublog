@@ -5,7 +5,7 @@ import CommonAvatar from "../../Common/CommonAvatar";
 import CommonTable from "../../Common/CommonTable";
 import moment from "moment";
 
-const ProductivityDetailed = () => {
+const ActivityDetailed = () => {
   const [chartOptions, setChartOptions] = useState({
     chart: {
       type: "area",
@@ -118,21 +118,17 @@ const ProductivityDetailed = () => {
         text: "Values",
       },
     },
-    colors: ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"], // Different colors for the three series
+    colors: ["#25a17d", "#8a8c8c"], // Different colors for the three series
   };
 
   const [lineChartSeries, setLineChartSeries] = useState([
     {
-      name: "Productive",
+      name: "Active time",
       data: [30, 40, 45, 50, 49, 60, 70, 91, 125],
     },
     {
-      name: "Neutral",
+      name: "Idle time",
       data: [20, 30, 35, 40, 39, 50, 60, 81, 95],
-    },
-    {
-      name: "Unproductive",
-      data: [10, 20, 25, 30, 29, 40, 50, 61, 75],
     },
   ]);
 
@@ -171,22 +167,16 @@ const ProductivityDetailed = () => {
       // },
     },
     {
-      title: "Productivity time",
-      dataIndex: "productivity_time",
-      key: "productivity_time",
+      title: "Active time",
+      dataIndex: "active_time",
+      key: "active_time",
       width: "170px",
     },
     {
-      title: "Unproductivity time",
-      dataIndex: "unproductivty_time",
-      key: "unproductivty_time",
+      title: "Idle time",
+      dataIndex: "idle_time",
+      key: "idle_time",
       width: "180px",
-    },
-    {
-      title: "Neutral time",
-      dataIndex: "neutral_time",
-      key: "neutral_time",
-      width: "170px",
     },
     {
       title: "Break time",
@@ -195,9 +185,9 @@ const ProductivityDetailed = () => {
       width: "170px",
     },
     {
-      title: "Productivity",
-      dataIndex: "productivity_percentage",
-      key: "productivity_percentage",
+      title: "Activity",
+      dataIndex: "activity_percentage",
+      key: "activity_percentage",
       width: "170px",
       fixed: "right",
       render: (text) => {
@@ -216,11 +206,10 @@ const ProductivityDetailed = () => {
       full_Name: "Balaji R",
       attendance: 2,
       online_time: "17h:16m",
-      productivity_time: "00h:00m",
-      unproductivty_time: "00h:00m",
-      neutral_time: "15h:56m",
+      active_time: "00h:00m",
+      idle_time: "00h:00m",
       break_time: "02h:18m:05s",
-      productivity_percentage: 20,
+      activity_percentage: 20,
     },
   ];
   return (
@@ -249,7 +238,7 @@ const ProductivityDetailed = () => {
         <CommonTable
           columns={columns}
           dataSource={data}
-          scroll={{ x: 1400 }}
+          scroll={{ x: 1200 }}
           dataPerPage={10}
           bordered="false"
           checkBox="false"
@@ -258,4 +247,4 @@ const ProductivityDetailed = () => {
     </div>
   );
 };
-export default ProductivityDetailed;
+export default ActivityDetailed;

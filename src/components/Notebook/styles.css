@@ -62,7 +62,7 @@
   width: 100%;
   padding: 12px;
   overflow-y: auto;
-  word-break: break-all;
+  word-break: break-word;
   box-sizing: border-box;
 }
 
@@ -75,12 +75,12 @@
 }
 
 .yournotes_ContentContainer::-webkit-scrollbar-thumb {
-  background: rgb(110, 110, 110); /* Color of the scroll thumb */
+  background: #c1c1c1; /* Color of the scroll thumb */
   border-radius: 12px; /* Rounded corners for the scroll thumb */
 }
 
 .yournotes_ContentContainer::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color of the scroll thumb on hover */
+  background: #c1c1c1; /* Color of the scroll thumb on hover */
 }
 .youtnotes_heading {
   font-weight: 700;

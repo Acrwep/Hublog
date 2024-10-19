@@ -55,7 +55,7 @@ import Field from "../Components/Real Time/Field";
 import LiveStream from "../Components/Real Time/LiveStream";
 //analytics
 import Timeline from "../Components/Analytics/Timeline";
-import Activity from "../Components/Analytics/Activity";
+import Activity from "../Components/Analytics/Activity/Activity.js";
 import Productivity from "../Components/Analytics/Productivity/Productivity.js";
 import Screenshots from "../Components/Analytics/Screenshots";
 import Apps$Url from "../Components/Analytics/Apps$Url";

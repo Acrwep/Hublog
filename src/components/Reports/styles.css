@@ -193,7 +193,8 @@
   }
 }
 .reports_avatarname {
-  word-break: break-all;
+  white-space: normal; /* Allow text to wrap */
+  word-break: break-word;
 }
 /* monthlyattendance report */
 .monthlyattendance_monthlyweeklyofftext {

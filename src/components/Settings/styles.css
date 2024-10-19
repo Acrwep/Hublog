@@ -292,7 +292,7 @@
 .teammember_name {
   font-weight: 600;
   overflow: hidden;
-  word-break: break-all;
+  word-break: break-word;
 }
 .teammember_email {
   color: gray;
