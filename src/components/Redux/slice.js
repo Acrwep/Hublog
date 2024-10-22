@@ -363,6 +363,18 @@ const datewiseAttendanceUserValueSlice = createSlice({
   },
 });
 
+const datewiseAttendancePresentCount = null;
+const datewiseAttendancePresentCountSlice = createSlice({
+  name: "datewiseAttendancepresentcount",
+  initialState: datewiseAttendancePresentCount,
+  reducers: {
+    storeDatewiseAttendancePresentCount(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const datewiseAttendanceDateValue = null;
 const datewiseAttendanceDateValueSlice = createSlice({
   name: "datewiseattendancedatevalue",
@@ -374,6 +386,7 @@ const datewiseAttendanceDateValueSlice = createSlice({
     },
   },
 });
+
 export const { addteamMembers, deleteteamMembers, searchteamMembers } =
   teamMemberSlice.actions;
 export const { storeActiveTeam } = activeTeamSlice.actions;
@@ -414,6 +427,8 @@ export const { storeDatewiseAttendanceTeamValue } =
   datewiseAttendanceTeamValueSlice.actions;
 export const { storeDatewiseAttendanceUserValue } =
   datewiseAttendanceUserValueSlice.actions;
+export const { storeDatewiseAttendancePresentCount } =
+  datewiseAttendancePresentCountSlice.actions;
 export const { storeDatewiseAttendanceDateValue } =
   datewiseAttendanceDateValueSlice.actions;
 // export default teamMemberSlice.reducer;
@@ -455,5 +470,7 @@ export const datewiseAttendanceTeamValueReducer =
   datewiseAttendanceTeamValueSlice.reducer;
 export const datewiseAttendanceUserValueReducer =
   datewiseAttendanceUserValueSlice.reducer;
+export const datewiseAttendancePresentCountReducer =
+  datewiseAttendancePresentCountSlice.reducer;
 export const datewiseAttendanceDateValueReducer =
   datewiseAttendanceDateValueSlice.reducer;

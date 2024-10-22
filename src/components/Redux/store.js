@@ -31,6 +31,7 @@ import {
   datewiseAttendanceDateValueReducer,
   userTotalBreakReducer,
   categoriesReducer,
+  datewiseAttendancePresentCountReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -66,6 +67,7 @@ export const store = configureStore({
     datewiseattendanceabsent: datewiseAttendanceAbsentReducer,
     datewiseattendanceteamvalue: datewiseAttendanceTeamValueReducer,
     datewiseattendanceuservalue: datewiseAttendanceUserValueReducer,
+    datewiseAttendancepresentcount: datewiseAttendancePresentCountReducer,
     datewiseattendancedatevalue: datewiseAttendanceDateValueReducer,
   },
 });

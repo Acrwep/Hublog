@@ -16,6 +16,7 @@ import {
   storeDatewiseAttendance,
   storeDatewiseAttendanceAbsentData,
   storeDatewiseAttendanceDateValue,
+  storeDatewiseAttendancePresentCount,
   storeDatewiseAttendanceTeamValue,
   storeDatewiseAttendanceUsersData,
   storeDatewiseAttendanceUserValue,
@@ -28,6 +29,9 @@ const DateWiseAttendance = ({ tList, uList }) => {
   const teamValue = useSelector((state) => state.datewiseattendanceteamvalue);
   const userValue = useSelector((state) => state.datewiseattendanceuservalue);
   const dateValue = useSelector((state) => state.datewiseattendancedatevalue);
+  const PresentValue = useSelector(
+    (state) => state.datewiseAttendancepresentcount
+  );
   const datewiseAttendanceData = useSelector(
     (state) => state.datewiseattendance
   );
@@ -43,6 +47,7 @@ const DateWiseAttendance = ({ tList, uList }) => {
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [data, setData] = useState([]);
+  const [presentCount, setPresentCount] = useState(null);
   const [absentList, setAbsentList] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -61,6 +66,7 @@ const DateWiseAttendance = ({ tList, uList }) => {
       );
       setTeamId(teamValue);
       setUserId(userValue);
+      setPresentCount(PresentValue);
       setDate(dateValue === null ? date : dateValue);
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -94,7 +100,16 @@ const DateWiseAttendance = ({ tList, uList }) => {
       const ReportData = response.data;
 
       const reverseData = ReportData.reverse();
+      let presentList = [];
 
+      reverseData.map((item) => {
+        if (!presentList.some((s) => s.id === item.id)) {
+          presentList.push(item);
+        }
+      });
+      console.log("presentList", presentList);
+      setPresentCount(presentList.length);
+      dispatch(storeDatewiseAttendancePresentCount(presentList.length));
       const absentList = uList.filter(
         (f) => !reverseData.some((item) => item.id === f.id)
       );
@@ -246,7 +261,9 @@ const DateWiseAttendance = ({ tList, uList }) => {
       <Row gutter={16}>
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="datewise_Container">
-            <p className="datewise_presenttext">Present - {data.length}</p>
+            <p className="datewise_presenttext">
+              Present - {presentCount ? presentCount : 0}
+            </p>
 
             <div className="datewise_presentlistmainContainer">
               {loading ? (

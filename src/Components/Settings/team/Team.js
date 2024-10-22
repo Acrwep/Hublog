@@ -666,6 +666,7 @@ const Team = ({ loading }) => {
       <Modal
         open={addTeamModal}
         onCancel={formReset}
+        style={{ top: "25%" }}
         footer={[
           <button
             className="designation_submitbutton"
