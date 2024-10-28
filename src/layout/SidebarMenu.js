@@ -136,6 +136,7 @@ function SidebarMenu() {
   }, []);
 
   useEffect(() => {
+    //the useEffect call only when login
     const handleStorageUpdate = () => {
       //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
@@ -181,6 +182,7 @@ function SidebarMenu() {
         }
       }
 
+      //handle header menulist
       if (
         convertLoginInfoAsJson != null &&
         convertLoginInfoAsJson.roleId === 3
@@ -238,7 +240,7 @@ function SidebarMenu() {
           {
             title: "App $ URLs",
             icon: <FaAppStore size={17} />,
-            path: "app$urls",
+            path: "apps&urls",
           },
           {
             title: "Wellness",
@@ -263,7 +265,9 @@ function SidebarMenu() {
     };
   }, []);
 
+  //the useEffect call only the token will expire
   useEffect(() => {
+    //handle navigate to login page when token expire
     const handleTokenExpire = () => {
       navigation("/login");
     };
@@ -575,7 +579,7 @@ function SidebarMenu() {
                 <Route path="/productivity" element={<Productivity />} />
                 <Route path="/screenshots" element={<Screenshots />} />
                 <Route path="/wellness" element={<Wellness />} />
-                <Route path="/app$urls" element={<Apps$Url />} />
+                <Route path="/apps&urls" element={<Apps$Url />} />
 
                 <Route path="/devices" element={<Devices />} />
                 <Route path="/manualtime" element={<ManualTime />} />

@@ -24,13 +24,15 @@ import { createUser, getUsers, updateUser } from "../../APIservice.js/action";
 import { useDispatch, useSelector } from "react-redux";
 import {
   storeUsers,
+  storeUsersCount,
   storeUserSearchValue,
   storeUsersForTeamsTab,
 } from "../../Redux/slice";
 
-const Users = ({ loading, userCount }) => {
+const Users = ({ loading }) => {
   const dispatch = useDispatch();
   const usersList = useSelector((state) => state.users);
+  const usersCount = useSelector((state) => state.userscount);
   const userSearchValue = useSelector((state) => state.usersearchvalue);
   const designationList = useSelector((state) => state.designation);
   const activeDesignationList = useSelector((state) => state.activedesignation);
@@ -242,6 +244,7 @@ const Users = ({ loading, userCount }) => {
       const response = await getUsers(orgId);
       console.log("users response", response?.data);
       const allUsers = response?.data;
+      dispatch(storeUsersCount(allUsers.length));
       dispatch(storeUsers(allUsers));
       dispatch(storeUsersForTeamsTab(allUsers));
       //null the search value
@@ -490,7 +493,7 @@ const Users = ({ loading, userCount }) => {
         <Loader />
       ) : (
         <div>
-          <p className="users_totoalusersheading">Total Users ({userCount})</p>
+          <p className="users_totoalusersheading">Total Users ({usersCount})</p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField

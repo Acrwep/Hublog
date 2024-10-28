@@ -23,13 +23,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   storeActiveDesignation,
   storeDesignation,
+  storeDesignationCount,
   storeDesignationSearchValue,
 } from "../../Redux/slice";
 import CommonSelectField from "../../Common/CommonSelectField";
 
-export default function Designation({ loading, designationCount }) {
+export default function Designation({ loading }) {
   const dispatch = useDispatch();
   const designationList = useSelector((state) => state.designation);
+  const designationCount = useSelector((state) => state.designationcount);
   const designationSearchValue = useSelector(
     (state) => state.designationsearchvalue
   );
@@ -174,6 +176,7 @@ export default function Designation({ loading, designationCount }) {
       console.log("Designation response", response.data);
       const allDesignation = response.data;
       dispatch(storeDesignation(allDesignation));
+      dispatch(storeDesignationCount(allDesignation.length));
       //filter active designation
       const filterActivedesignation = allDesignation.filter(
         (f) => f.active === true

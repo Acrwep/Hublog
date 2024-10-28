@@ -76,9 +76,9 @@ export const SideMenuConfig = {
         path: "screenshots",
       },
       {
-        title: "App $ URLs",
+        title: "Apps & URLs",
         icon: <PiMonitorFill size={17} />,
-        path: "app$urls",
+        path: "apps&urls",
       },
       {
         title: "Wellness",

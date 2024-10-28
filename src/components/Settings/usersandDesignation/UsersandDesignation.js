@@ -5,21 +5,19 @@ import "../styles.css";
 import Users from "./Users";
 import Designation from "./Designation";
 
-const UserandDesignation = ({ loading, userCount, designationCount }) => {
+const UserandDesignation = ({ loading, designationCount }) => {
   const location = useLocation();
 
   const items = [
     {
       key: "1",
       label: "Users",
-      children: <Users loading={loading} userCount={userCount} />,
+      children: <Users loading={loading} />,
     },
     {
       key: "2",
       label: "Designation",
-      children: (
-        <Designation loading={loading} designationCount={designationCount} />
-      ),
+      children: <Designation loading={loading} />,
     },
   ];
   return (

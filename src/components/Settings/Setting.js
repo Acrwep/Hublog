@@ -36,12 +36,14 @@ import {
   storeBreakSearchValue,
   storeCategories,
   storeDesignation,
+  storeDesignationCount,
   storeDesignationSearchValue,
   storeRole,
   storeRoleSearchValue,
   storesettingsBreak,
   storeTeams,
   storeUsers,
+  storeUsersCount,
   storeUserSearchValue,
   storeUsersForTeamsTab,
 } from "../Redux/slice";
@@ -53,8 +55,6 @@ const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
-  const [userCount, setUserCount] = useState(0);
-  const [designationCount, setDesignationCount] = useState(0);
   const settingsList = [
     {
       id: 1,
@@ -118,7 +118,7 @@ const Settings = () => {
     try {
       const response = await getUsers(orgId);
       const usersList = response.data;
-      setUserCount(usersList.length);
+      dispatch(storeUsersCount(usersList.length));
       dispatch(storeUsers(usersList));
       dispatch(storeUsersForTeamsTab(usersList));
     } catch (error) {
@@ -137,7 +137,7 @@ const Settings = () => {
     try {
       const response = await getDesignation(orgId);
       const designationList = response.data;
-      setDesignationCount(designationList.length);
+      dispatch(storeDesignationCount(designationList.length));
       dispatch(storeDesignation(designationList));
       //filter active designation
       const filterActivedesignation = designationList.filter(
@@ -309,11 +309,7 @@ const Settings = () => {
         >
           {activePage === 1 && (
             <div>
-              <UserandDesignation
-                loading={loading}
-                userCount={userCount}
-                designationCount={designationCount}
-              />
+              <UserandDesignation loading={loading} />
             </div>
           )}
           {activePage === 2 && (

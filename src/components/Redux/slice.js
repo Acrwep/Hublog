@@ -121,6 +121,18 @@ const usersSlice = createSlice({
   },
 });
 
+const usersCount = 0;
+const usersCountSlice = createSlice({
+  name: "userscount",
+  initialState: usersCount,
+  reducers: {
+    storeUsersCount(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const usersForTeamstabSlice = createSlice({
   name: "usersforteamstab",
   initialState,
@@ -150,6 +162,18 @@ const designationSlice = createSlice({
   initialState,
   reducers: {
     storeDesignation(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const designationCount = 0;
+const designationCountSlice = createSlice({
+  name: "designationcount",
+  initialState: designationCount,
+  reducers: {
+    storeDesignationCount(state, action) {
       state = action.payload;
       return state;
     },
@@ -406,10 +430,12 @@ export const { storeUserTotalBreak } = userTotalBreakSlice.actions;
 export const { storeuserAppsUsage } = userAppsUsageSlice.actions;
 export const { storeuserUrlsUsage } = userurlsUsageSlice.actions;
 export const { storeUsers } = usersSlice.actions;
+export const { storeUsersCount } = usersCountSlice.actions;
 export const { storeUsersForTeamsTab } = usersForTeamstabSlice.actions;
 export const { storeUserSearchValue } = userSearchValueSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
 export const { storeActiveDesignation } = activeDesignationSlice.actions;
+export const { storeDesignationCount } = designationCountSlice.actions;
 export const { storeDesignationSearchValue } =
   designationSearchValueSlice.actions;
 export const { storeTeams } = teamsSlice.actions;
@@ -449,9 +475,11 @@ export const userTotalBreakReducer = userTotalBreakSlice.reducer;
 export const userAppUsageReducer = userAppsUsageSlice.reducer;
 export const userUrlUsageReducer = userurlsUsageSlice.reducer;
 export const usersReducer = usersSlice.reducer;
+export const usersCountReducer = usersCountSlice.reducer;
 export const usersforteamstabReducer = usersForTeamstabSlice.reducer;
 export const userSearchValueReducer = userSearchValueSlice.reducer;
 export const designationReducer = designationSlice.reducer;
+export const designationCountReducer = designationCountSlice.reducer;
 export const activeDesignationReducer = activeDesignationSlice.reducer;
 export const designationSearchValueReducer =
   designationSearchValueSlice.reducer;

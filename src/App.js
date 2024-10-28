@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "./Components/Redux/store";
 
 function App() {
+  //hide console and errors in the production
   if (process.env.NODE_ENV === "production") {
     console.log = () => {};
     console.debug = () => {};
@@ -22,6 +23,7 @@ function App() {
   }, []);
 
   return (
+    // declare redux store
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
