@@ -138,6 +138,12 @@ function SidebarMenu() {
   useEffect(() => {
     //the useEffect call only when login
     const handleStorageUpdate = () => {
+      const accessToken = localStorage.getItem("Accesstoken");
+      if (accessToken === null) {
+        navigation("/login");
+        setShowPages(false);
+        return;
+      }
       //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
       const convertLoginInfoAsJson = JSON.parse(getItem);
@@ -154,7 +160,6 @@ function SidebarMenu() {
       }
 
       //handle navigation by accesstoken
-      const accessToken = localStorage.getItem("Accesstoken");
       if (accessToken) {
         setShowPages(true);
         if (location.pathname === "/") {
@@ -173,12 +178,6 @@ function SidebarMenu() {
             navigation("/dashboard");
             setUserRole(false);
           }
-        }
-      } else {
-        if (location.pathname === "/") {
-          navigation("/login");
-        } else {
-          navigation(location.pathname);
         }
       }
 
@@ -275,7 +274,7 @@ function SidebarMenu() {
     window.addEventListener("tokenExpireUpdated", handleTokenExpire);
 
     // Initial load
-    handleTokenExpire();
+    // handleTokenExpire();
 
     return () => {
       window.removeEventListener("tokenExpireUpdated", handleTokenExpire);
@@ -374,7 +373,6 @@ function SidebarMenu() {
   };
 
   const handleSearchLists = (item) => {
-    console.log("searchitemmmmmmm", item);
     // const removespace = title.split(" ").join("");
     // console.log("spaceeeee", removespace);
     navigation(`/${item.path}`);

@@ -70,6 +70,7 @@ const CommonTable = ({
       loading={loading}
       size={size}
       className={className}
+      rowKey={(record) => record.id}
     />
   );
 };

@@ -22,6 +22,8 @@ const Login = () => {
 
   useEffect(() => {
     localStorage.removeItem("Accesstoken");
+    localStorage.clear();
+    sessionStorage.clear();
   }, []);
 
   const handleLogin = async (e) => {
