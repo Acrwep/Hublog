@@ -492,10 +492,10 @@ const UserDetail = () => {
           className="settinglist_columnOneContainer"
         >
           <Row className="userdetail_profileContainer">
-            <Col span={8}>
+            <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={4}>
               <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
             </Col>
-            <Col span={16}>
+            <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={20}>
               <p className="userdetail_username">{fullName}</p>
               <Tooltip placement="top" title={email}>
                 <p className="userdetail_usermail">{email}</p>

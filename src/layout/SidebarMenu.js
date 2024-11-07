@@ -109,6 +109,8 @@ function SidebarMenu() {
   const [search, setSearch] = useState("");
   const [searchbarHover, setSearchbarHover] = useState(false);
   const [loginUserInfo, setLoginUserInfo] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [fullName, setFullName] = useState("");
   const [userRole, setUserRole] = useState(false);
   const [showPages, setShowPages] = useState(false);
@@ -150,6 +152,8 @@ function SidebarMenu() {
       console.log("logininfo in sidebarmenu", convertLoginInfoAsJson);
       setLoginUserInfo(convertLoginInfoAsJson);
       if (convertLoginInfoAsJson) {
+        setFirstName(convertLoginInfoAsJson.first_Name);
+        setLastName(convertLoginInfoAsJson.last_Name);
         setFullName(
           convertLoginInfoAsJson.first_Name +
             " " +
@@ -388,9 +392,10 @@ function SidebarMenu() {
             fontWeight: "600",
             marginRight: "12px",
             textTransform: "uppercase",
+            letterSpacing: "1px",
           }}
         >
-          {fullName[0]}
+          {firstName[0] + lastName[0]}
         </Avatar>
 
         <div>
@@ -549,8 +554,8 @@ function SidebarMenu() {
                         arrow
                       >
                         <div>
-                          <Avatar size={35} className="header_avatar">
-                            {fullName[0]}
+                          <Avatar size={37} className="header_avatar">
+                            {firstName[0] + lastName[0]}
                           </Avatar>
                         </div>
                       </Dropdown>

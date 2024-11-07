@@ -172,6 +172,8 @@
   font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 17px !important;
 }
 .header_logoutmenuContainer {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;

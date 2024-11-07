@@ -90,6 +90,11 @@ select:focus {
 .ant-input-suffix {
   color: #808080a6;
 }
+/* antd select field, dropdown selected option */
+.ant-select-dropdown
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #25a17e2a !important;
+}
 /* antd search styles */
 .ant-input-search
   > .ant-input-group

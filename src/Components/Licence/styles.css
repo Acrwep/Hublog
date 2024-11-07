@@ -6,6 +6,17 @@
   justify-content: flex-end;
   align-items: center;
 }
+.billing_cardContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+@media (min-width: 300px) and (max-width: 768px) {
+  .billing_cardContainer {
+    margin-top: 20px;
+  }
+}
 .billing_card {
   display: flex;
   justify-content: flex-start;
@@ -24,6 +35,8 @@
 }
 .billingcard_subheadings {
   font-weight: 500;
+  word-spacing: normal;
+  word-break: break-word;
 }
 .billing_companyname {
   font-weight: 600;

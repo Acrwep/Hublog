@@ -84,13 +84,7 @@ export default function Billing() {
         <h2 className="allpage_mainheadings">Billing</h2>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className="billing_cardContainer">
         <div className="billing_card">
           <Row className="billing_card_rowdiv">
             <Col span={8}>
@@ -118,7 +112,7 @@ export default function Billing() {
               <p className="billing_companyname">46/50</p>
             </Col>
           </Row>
-          <Row className="billing_card_rowdiv">
+          <Row gutter={16} className="billing_card_rowdiv">
             <Col span={8}>
               <p className="billingcard_subheadings">Subscription Status:</p>
             </Col>
@@ -162,7 +156,7 @@ export default function Billing() {
         onClose={onClose}
         open={open}
         styles={{ body: { padding: 0 } }}
-        width="calc(-200px + 100vw)"
+        width={window.innerWidth <= 768 ? "100vw" : "calc(-200px + 100vw)"}
       >
         <div className="billing_planmainContainer">
           <div className="billing_planinnerContainer">
