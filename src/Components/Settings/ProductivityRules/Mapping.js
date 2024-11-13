@@ -52,6 +52,7 @@ export default function Mapping() {
       render: (text, record) => {
         return (
           <Select
+            className="maplisttable_selectfield"
             placeholder="Selecet category"
             options={categoriesList.map((item) => ({
               value: item.categoryId,

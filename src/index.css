@@ -279,3 +279,22 @@ select:focus {
 .ant-skeleton-paragraph > li {
   border-radius: 9px !important;
 }
+/*antd timeline styles */
+.ant-timeline.ant-timeline-label .ant-timeline-item-label {
+  width: calc(23% - 12px) !important;
+}
+.ant-timeline.ant-timeline-label .ant-timeline-item-head-custom {
+  inset-inline-start: 24% !important;
+}
+.ant-timeline.ant-timeline-label .ant-timeline-item-tail {
+  inset-inline-start: 24% !important;
+  border-inline-start: 2px solid rgb(5 5 5 / 12%) !important;
+}
+.ant-timeline.ant-timeline-label
+  .ant-timeline-item-left
+  .ant-timeline-item-content {
+  inset-inline-start: calc(24% - 4px) !important;
+}
+.ant-timeline .ant-timeline-item {
+  padding-bottom: 40px !important;
+}

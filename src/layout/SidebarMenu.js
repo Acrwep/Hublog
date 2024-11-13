@@ -54,7 +54,7 @@ import Attendance from "../Components/Attendance/Attendance";
 import Field from "../Components/Real Time/Field";
 import LiveStream from "../Components/Real Time/LiveStream";
 //analytics
-import Timeline from "../Components/Analytics/Timeline";
+import Timelines from "../Components/Analytics/Timeline";
 import Activity from "../Components/Analytics/Activity/Activity.js";
 import Productivity from "../Components/Analytics/Productivity/Productivity.js";
 import Screenshots from "../Components/Analytics/Screenshots";
@@ -577,7 +577,7 @@ function SidebarMenu() {
                 <Route path="/attendance" element={<Attendance />} />
                 <Route path="/livestream" element={<LiveStream />} />
                 <Route path="/field" element={<Field />} />
-                <Route path="/timeline" element={<Timeline />} />
+                <Route path="/timeline" element={<Timelines />} />
                 <Route path="/activity" element={<Activity />} />
                 <Route path="/productivity" element={<Productivity />} />
                 <Route path="/screenshots" element={<Screenshots />} />
