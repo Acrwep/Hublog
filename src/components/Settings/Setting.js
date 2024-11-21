@@ -23,6 +23,7 @@ import {
   getBreak,
   getCategories,
   getDesignation,
+  getImbuildAppsandUrls,
   getRole,
   getTeams,
   getUsers,
@@ -38,6 +39,7 @@ import {
   storeDesignation,
   storeDesignationCount,
   storeDesignationSearchValue,
+  storeImbuildAppsandUrls,
   storeRole,
   storeRoleSearchValue,
   storesettingsBreak,
@@ -221,6 +223,20 @@ const Settings = () => {
       dispatch(storeCategories(categoriesList));
     } catch (error) {
       dispatch(storeCategories([]));
+    } finally {
+      setTimeout(() => {
+        getImbuildAppsandUrlsData();
+      }, 350);
+    }
+  };
+
+  const getImbuildAppsandUrlsData = async () => {
+    try {
+      const response = await getImbuildAppsandUrls();
+      console.log(response);
+      dispatch(storeImbuildAppsandUrls(response?.data));
+    } catch (error) {
+      dispatch(storeImbuildAppsandUrls([]));
     } finally {
       setTimeout(() => {
         setProductivityRulesLoading(false);

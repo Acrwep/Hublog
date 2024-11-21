@@ -2,6 +2,12 @@
   font-weight: 600;
   font-size: 17px;
 }
+@media (min-width: 300px) and (max-width: 425px) {
+  .userdetail_username {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+}
 .userdetail_iconContainer {
   padding: 7px;
   border-radius: 8px;

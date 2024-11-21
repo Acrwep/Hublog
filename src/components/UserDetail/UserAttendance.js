@@ -51,10 +51,15 @@ export default function UserAttendance({
       key: "total_Time",
       width: 120,
       render: (text, record) => {
-        if (text === "0001-01-01T00:00:00") {
+        if (text === "0001-01-01T00:00:00" || text === null) {
           return null;
+        } else {
+          const [hours, minutes, seconds] = text.split(":");
+          const formattedDuration = `${parseInt(hours)}h:${parseInt(
+            minutes
+          )}m:${parseInt(seconds)}s`;
+          return <p>{formattedDuration} </p>;
         }
-        return <p>{moment(text).format("H[h]:mm[m]")} </p>;
       },
     },
   ];

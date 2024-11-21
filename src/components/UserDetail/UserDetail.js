@@ -491,7 +491,7 @@ const UserDetail = () => {
           lg={6}
           className="settinglist_columnOneContainer"
         >
-          <Row className="userdetail_profileContainer">
+          <Row className="userdetail_profileContainer" gutter={16}>
             <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={4}>
               <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
             </Col>

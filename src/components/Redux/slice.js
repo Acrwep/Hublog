@@ -329,6 +329,16 @@ const CategoriesSlice = createSlice({
     },
   },
 });
+const ImbuildAppsandUrlsSlice = createSlice({
+  name: "imbuildappsandurls",
+  initialState,
+  reducers: {
+    storeImbuildAppsandUrls(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //datewise attendance
 const datewiseAttendanceSlice = createSlice({
   name: "datewiseattendance",
@@ -443,6 +453,7 @@ export const { storesettingsBreak } = SettingsBreakSlice.actions;
 export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeCategories } = CategoriesSlice.actions;
+export const { storeImbuildAppsandUrls } = ImbuildAppsandUrlsSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
 export const { storeDatewiseAttendanceAbsentData } =
@@ -488,6 +499,7 @@ export const settingsBreakReducer = SettingsBreakSlice.reducer;
 export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const categoriesReducer = CategoriesSlice.reducer;
+export const imbuildAppsandUrlsReducer = ImbuildAppsandUrlsSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
 export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
 export const datewiseAttendanceAbsentReducer =

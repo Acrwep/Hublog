@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Tooltip, Button, Select } from "antd";
 import CommonSearchField from "../../Common/CommonSearchbar";
 import CommonSelectField from "../../Common/CommonSelectField";
 import { RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../../Common/CommonTable";
 import { useDispatch, useSelector } from "react-redux";
+import { IoGlobeOutline } from "react-icons/io5";
+import { FaDesktop } from "react-icons/fa";
 import "../styles.css";
+import {
+  getImbuildAppsandUrls,
+  updateImbuildAppsandUrls,
+} from "../../APIservice.js/action";
+import { CommonToaster } from "../../Common/CommonToaster";
+import { storeImbuildAppsandUrls } from "../../Redux/slice";
 
 export default function Mapping() {
   const dispatch = useDispatch();
   const categoriesList = useSelector((state) => state.categories);
+  const ImbuildAppsandUrls = useSelector((state) => state.imbuildappsandurls);
   const [search, setSearch] = useState("");
   const [showId, setShowId] = useState(null);
   const [mappedStatusId, setMappedStatusId] = useState(null);
@@ -22,12 +31,8 @@ export default function Mapping() {
     { id: 1, name: "Mapped" },
     { id: 2, name: "Unmapped" },
   ];
-  const [categoryId, setCategoryId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const tableData = [
-    { id: 1, type: "App", details: "Instagram", categoryId: 1 },
-    { id: 1, type: "Url", details: "www.hublog.com", categoryId: 2 },
-  ];
   const columns = [
     {
       title: "Type",
@@ -35,12 +40,27 @@ export default function Mapping() {
       key: "type",
       width: 120,
       render: (text) => {
-        return <p style={{ fontWeight: "600" }}>{text}</p>;
+        const Name = text.charAt(0).toUpperCase() + text.slice(1);
+        if (text === "url") {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <IoGlobeOutline size={19} />
+              <p style={{ fontWeight: "600", marginLeft: "12px" }}>{Name}</p>
+            </div>
+          );
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaDesktop size={19} />
+              <p style={{ fontWeight: "600", marginLeft: "12px" }}>{Name}</p>
+            </div>
+          );
+        }
       },
     },
     {
-      title: "Details",
-      dataIndex: "details",
+      title: "Name",
+      dataIndex: "name",
       key: "details",
       width: 220,
     },
@@ -59,13 +79,44 @@ export default function Mapping() {
               label: item.categoryName,
             }))}
             value={record.categoryId}
-            onChange={(value) => setCategoryId(value)}
+            onChange={(value) => handleCategory(value, record.id)}
             style={{ width: "170px" }}
           />
         );
       },
     },
   ];
+
+  const handleCategory = async (value, id) => {
+    console.log(value);
+    setLoading(true);
+    const payload = {
+      categoryId: value,
+    };
+    console.log("payload", payload);
+    try {
+      const response = await updateImbuildAppsandUrls(id, payload);
+      CommonToaster("Category assigned", "success");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        getImbuildAppsandUrlsData();
+      }, 350);
+    }
+  };
+
+  const getImbuildAppsandUrlsData = async () => {
+    try {
+      const response = await getImbuildAppsandUrls();
+      console.log(response);
+      dispatch(storeImbuildAppsandUrls(response?.data));
+    } catch (error) {
+      dispatch(storeImbuildAppsandUrls([]));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = (event) => {
     const value = event.target.value;
@@ -122,11 +173,12 @@ export default function Mapping() {
       <p className="mapping_tableheading">Mapping list</p>
       <CommonTable
         columns={columns}
-        dataSource={tableData}
+        dataSource={ImbuildAppsandUrls}
         scroll={{ x: 600 }}
-        dataPerPage={10}
+        dataPerPage={20}
         checkBox="false"
         size="small"
+        loading={loading}
       />
     </div>
   );
