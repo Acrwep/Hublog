@@ -546,10 +546,10 @@ const UserDetail = () => {
           className="settinglist_columnOneContainer"
         >
           <Row className="userdetail_profileContainer" gutter={16}>
-            <Col xs={24} sm={24} md={8} lg={8} xl={8} xxl={4}>
+            <Col xs={24} sm={24} md={8} lg={6}>
               <Avatar className="userdetail_avatar" icon={<UserOutlined />} />
             </Col>
-            <Col xs={24} sm={24} md={16} lg={16} xl={16} xxl={20}>
+            <Col xs={24} sm={24} md={16} lg={18}>
               <p className="userdetail_username">{fullName}</p>
               <Tooltip placement="top" title={email}>
                 <p className="userdetail_usermail">{email}</p>
