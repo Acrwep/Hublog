@@ -605,3 +605,27 @@ export const updateImbuildAppsandUrls = async (id, payload) => {
     throw error;
   }
 };
+export const getProductivityBreakdown = async (payload) => {
+  try {
+    const response = await api.get(
+      "/api/Productivity/GetProductivityBreakDown",
+      {
+        params: payload,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//alerts
+export const getAlerts = async (payload) => {
+  try {
+    const response = await api.get("/api/Alert/GetAlert", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { Row, Col, Progress, Flex, Tooltip, Divider } from "antd";
+import { Row, Col, Progress, Flex, Tooltip, Divider, Skeleton } from "antd";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../../Common/CommonDonutChart";
 import CommonBarChart from "../../Common/CommonBarChart";
+import { useSelector } from "react-redux";
 import "../styles.css";
+import CommonNodatafound from "../../Common/CommonNodatafound";
 
-const ProductivitySummary = () => {
-  const [date, setDate] = useState(new Date());
-  const teamList = [{ id: 1, name: "Operation" }];
-  const OverallWellness = [12.0, 6.2, 2.0];
-  const TopHealthy = [10, 20, 40];
-  const TopOverburdened = [20, 40, 30];
-  const TopUnderutilized = [80, 20, 40];
+const ProductivitySummary = ({
+  breakdownTotalDuration,
+  breakdownAverageTime,
+  isBreakdownEmpty,
+  loading,
+}) => {
+  const breakdownData = useSelector((state) => state.productivitybreakdown);
 
   const xasis = [
     "SEO",
@@ -39,11 +41,6 @@ const ProductivitySummary = () => {
   ];
 
   const barchartColors = ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"];
-
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
-  };
 
   const productiveTeamsItems = [
     { id: 1, name: "INTERNAL HR", percentage: 90 },
@@ -97,38 +94,68 @@ const ProductivitySummary = () => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={10} lg={10}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Productivity Breakdown</p>
+              {loading ? (
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  {isBreakdownEmpty === false ? (
+                    <>
+                      <p className="devices_chartheading">
+                        Productivity Breakdown
+                      </p>
 
-              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalproductive_timeheading">
-                    Total productive time
-                  </p>
-                  <p className="totalproductive_time">328h 36m</p>
-                  <p className="totalproductive_timeheading">
-                    For the last 7 days
-                  </p>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalproductive_timeheading">
-                    Average productive time
-                  </p>
-                  <p className="totalproductive_time">2h 8m</p>
-                  <p className="totalproductive_timeheading">Average per day</p>
-                </Col>
-              </Row>
-              <CommonDonutChart
-                labels={[
-                  "Productive time",
-                  "Neutral time",
-                  "Unproductive time",
-                ]}
-                colors={["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"]}
-                series={OverallWellness}
-                timebased="true"
-                labelsfontSize="16px"
-                height={325}
-              />
+                      <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p className="totalproductive_timeheading">
+                            Total productive time
+                          </p>
+                          <p className="totalproductive_time">
+                            {breakdownTotalDuration}
+                          </p>
+                          <p className="totalproductive_timeheading">
+                            For the selected days
+                          </p>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p className="totalproductive_timeheading">
+                            Average productive time
+                          </p>
+                          <p className="totalproductive_time">
+                            {breakdownAverageTime}
+                          </p>
+                          <p className="totalproductive_timeheading">
+                            Average per day
+                          </p>
+                        </Col>
+                      </Row>
+                      <CommonDonutChart
+                        labels={[
+                          "Productive time",
+                          "Neutral time",
+                          "Unproductive time",
+                        ]}
+                        colors={[
+                          "#25a17d",
+                          "#8a8c8c",
+                          "rgba(244, 67, 54, 0.82)",
+                        ]}
+                        series={breakdownData}
+                        timebased="true"
+                        labelsfontSize="16px"
+                        height={325}
+                      />
+                    </>
+                  ) : (
+                    <CommonNodatafound />
+                  )}
+                </>
+              )}
             </div>
           </Col>
           <Col xs={24} sm={24} md={14} lg={14}>

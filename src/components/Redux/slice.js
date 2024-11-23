@@ -339,6 +339,17 @@ const ImbuildAppsandUrlsSlice = createSlice({
     },
   },
 });
+//productivity
+const productivityBreakdownSlice = createSlice({
+  name: "productivitybreakdown",
+  initialState,
+  reducers: {
+    storeProductivityBreakdown(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //datewise attendance
 const datewiseAttendanceSlice = createSlice({
   name: "datewiseattendance",
@@ -454,6 +465,8 @@ export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeCategories } = CategoriesSlice.actions;
 export const { storeImbuildAppsandUrls } = ImbuildAppsandUrlsSlice.actions;
+export const { storeProductivityBreakdown } =
+  productivityBreakdownSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
 export const { storeDatewiseAttendanceAbsentData } =
@@ -500,6 +513,7 @@ export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const categoriesReducer = CategoriesSlice.reducer;
 export const imbuildAppsandUrlsReducer = ImbuildAppsandUrlsSlice.reducer;
+export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
 export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
 export const datewiseAttendanceAbsentReducer =

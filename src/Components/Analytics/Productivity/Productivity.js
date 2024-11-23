@@ -9,20 +9,28 @@ import CommonDoubleDatePicker from "../../Common/CommonDoubleDatePicker";
 import { getCurrentandPreviousweekDate } from "../../Common/Validation";
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
+  getProductivityBreakdown,
   getTeams,
   getUsers,
   getUsersByTeamId,
 } from "../../APIservice.js/action";
 import ProductivityDetailed from "./ProductivityDetailed";
+import { useDispatch } from "react-redux";
+import { storeProductivityBreakdown } from "../../Redux/slice";
 
 const Productivity = () => {
+  const dispatch = useDispatch();
   const [activePage, setActivePage] = useState(1);
   const [selectedDates, setSelectedDates] = useState([]);
   const [teamId, setTeamId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [breakdownTotalDuration, setBreakdownTotalDuration] = useState("");
+  const [breakdownAverageTime, setBreakdownAverageTime] = useState("");
+  const [isBreakdownEmpty, setIsBreakdownEmpty] = useState(false);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const [organizationId, setOrganizationId] = useState(null);
 
   const handlePageChange = (pageNumber) => {
@@ -32,6 +40,13 @@ const Productivity = () => {
     ) {
       return;
     }
+    getBreakdownData(
+      organizationId,
+      teamId,
+      selectedDates[0],
+      selectedDates[1],
+      pageNumber
+    );
     setActivePage(pageNumber);
   };
 
@@ -42,10 +57,10 @@ const Productivity = () => {
   const getTeamData = async () => {
     const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousAndCurrentDate);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    setOrganizationId(orgId);
 
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-      setOrganizationId(orgId);
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
@@ -55,23 +70,72 @@ const Productivity = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        getBreakdownData(
+          orgId,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1],
+          activePage
+        );
       }, 500);
     }
   };
 
-  const getUsersData = async () => {
-    const orgId = localStorage.getItem("organizationId");
-    try {
-      const response = await getUsers(orgId);
-      const users = response?.data;
+  const parseTimeToDecimal = (timeString) => {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    return hours + minutes / 60 + seconds / 3600;
+  };
 
-      setUserId(null);
-      setUserList(users);
-      setNonChangeUserList(users);
-    } catch (error) {
-      CommonToaster(error.response.data.message, "error");
-      setUserList([]);
+  const getBreakdownData = async (
+    orgId,
+    teamid,
+    startDate,
+    endDate,
+    pageNumber
+  ) => {
+    if (pageNumber === 1) {
+      setSummaryLoading(true);
+      const payload = {
+        organizationId: orgId,
+        ...(teamid && { teamId: teamid }),
+        fromDate: startDate,
+        toDate: endDate,
+      };
+      try {
+        const response = await getProductivityBreakdown(payload);
+        const breakdowndata = response?.data;
+        console.log("breakdown response", breakdowndata);
+        const [hours, minutes] =
+          breakdowndata.totalProductiveDuration.split(":");
+        setBreakdownTotalDuration(`${hours}h ${minutes}m`);
+        const [avgHours, avgMinutes] =
+          breakdowndata.averageDuratiopn.split(":");
+        setBreakdownAverageTime(`${avgHours}h ${avgMinutes}m`);
+        dispatch(
+          storeProductivityBreakdown([
+            parseTimeToDecimal(breakdowndata.totalProductiveDuration),
+            parseTimeToDecimal(breakdowndata.totalNeutralDuration),
+            parseTimeToDecimal(breakdowndata.totalUnproductiveDuration),
+          ])
+        );
+        if (
+          breakdowndata.totalProductiveDuration === "00:00:00" &&
+          breakdowndata.totalNeutralDuration === "00:00:00" &&
+          breakdowndata.totalUnproductiveDuration === "00:00:00"
+        ) {
+          setIsBreakdownEmpty(true);
+        } else {
+          setIsBreakdownEmpty(false);
+        }
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+        dispatch(storeProductivityBreakdown([]));
+        setIsBreakdownEmpty(true);
+      } finally {
+        setTimeout(() => {
+          setSummaryLoading(false);
+        }, 300);
+      }
     }
   };
 
@@ -88,6 +152,13 @@ const Productivity = () => {
 
       setUserList(teamMembersList);
       setUserId(null);
+      getBreakdownData(
+        organizationId,
+        value,
+        selectedDates[0],
+        selectedDates[1],
+        activePage
+      );
     } catch (error) {
       setUserList([]);
       CommonToaster(error.response.data.message, "error");
@@ -103,7 +174,13 @@ const Productivity = () => {
     const startDate = dateStrings[0];
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
-      console.log("call function");
+      getBreakdownData(
+        organizationId,
+        teamId,
+        dateStrings[0],
+        dateStrings[1],
+        activePage
+      );
     }
   };
 
@@ -142,6 +219,13 @@ const Productivity = () => {
       setUserId(null);
       setUserList(nonChangeUserList);
       setSelectedDates(PreviousandCurrentDate);
+      getBreakdownData(
+        organizationId,
+        null,
+        PreviousandCurrentDate[0],
+        PreviousandCurrentDate[1],
+        activePage
+      );
     }
   };
   return (
@@ -232,7 +316,12 @@ const Productivity = () => {
 
       {activePage === 1 ? (
         <div>
-          <ProductivitySummary />
+          <ProductivitySummary
+            breakdownTotalDuration={breakdownTotalDuration}
+            breakdownAverageTime={breakdownAverageTime}
+            isBreakdownEmpty={isBreakdownEmpty}
+            loading={summaryLoading}
+          />
         </div>
       ) : (
         <div>
