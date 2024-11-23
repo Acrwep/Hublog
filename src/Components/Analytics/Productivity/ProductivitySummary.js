@@ -14,31 +14,47 @@ const ProductivitySummary = ({
   loading,
 }) => {
   const breakdownData = useSelector((state) => state.productivitybreakdown);
+  const teamwiseData = useSelector((state) => state.teamwiseproductivity);
 
-  const xasis = [
-    "SEO",
-    "External HR",
-    "Internal HR",
-    "Branch Operation",
-    "Quality",
-    "Operation",
-    "Sales",
-  ];
-
+  const xasis = teamwiseData.map((item) => item.teamName);
+  const parseTimeToDecimal = (timeString) => {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    return hours + minutes / 60 + seconds / 3600;
+  };
   const series = [
     {
-      name: "Productive time",
-      data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+      name: "Productivity time",
+      data: teamwiseData.map((item) => {
+        return parseTimeToDecimal(item.totalProductiveDuration);
+      }),
     },
     {
-      name: "Neutral",
-      data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
+      name: "Neutral time",
+      data: teamwiseData.map((item) => {
+        return parseTimeToDecimal(item.totalNeutralDuration);
+      }),
     },
     {
       name: "Unproductive time",
-      data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+      data: teamwiseData.map((item) => {
+        return parseTimeToDecimal(item.totalUnproductiveDuration);
+      }),
     },
   ];
+  // const series = [
+  //   {
+  //     name: "Productive time",
+  //     data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+  //   },
+  //   {
+  //     name: "Neutral",
+  //     data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
+  //   },
+  //   {
+  //     name: "Unproductive time",
+  //     data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
+  //   },
+  // ];
 
   const barchartColors = ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"];
 

@@ -36,6 +36,7 @@ import {
   datewiseAttendancePresentCountReducer,
   imbuildAppsandUrlsReducer,
   productivityBreakdownReducer,
+  teamwiseProductivityReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -62,6 +63,7 @@ export const store = configureStore({
     categories: categoriesReducer,
     imbuildappsandurls: imbuildAppsandUrlsReducer,
     productivitybreakdown: productivityBreakdownReducer,
+    teamwiseproductivity: teamwiseProductivityReducer,
     rolesearchvalue: roleSearchValueReducer,
     userAttendance: userAttendanceReducer,
     userBreak: userBreakReducer,

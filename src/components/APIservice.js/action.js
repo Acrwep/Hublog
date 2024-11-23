@@ -618,6 +618,16 @@ export const getProductivityBreakdown = async (payload) => {
     throw error;
   }
 };
+export const getTeamwiseProductivity = async (payload) => {
+  try {
+    const response = await api.get("/api/Productivity/Teamwise_Productivity", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //alerts
 export const getAlerts = async (payload) => {
   try {

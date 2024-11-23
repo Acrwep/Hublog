@@ -11,12 +11,16 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getProductivityBreakdown,
   getTeams,
+  getTeamwiseProductivity,
   getUsers,
   getUsersByTeamId,
 } from "../../APIservice.js/action";
 import ProductivityDetailed from "./ProductivityDetailed";
 import { useDispatch } from "react-redux";
-import { storeProductivityBreakdown } from "../../Redux/slice";
+import {
+  storeProductivityBreakdown,
+  storeTeamwiseProductivity,
+} from "../../Redux/slice";
 
 const Productivity = () => {
   const dispatch = useDispatch();
@@ -133,9 +137,36 @@ const Productivity = () => {
         setIsBreakdownEmpty(true);
       } finally {
         setTimeout(() => {
-          setSummaryLoading(false);
+          getTeamwiseProductivityData(orgId, teamid, startDate, endDate);
         }, 300);
       }
+    }
+  };
+
+  const getTeamwiseProductivityData = async (
+    orgId,
+    teamid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+    try {
+      const response = await getTeamwiseProductivity(payload);
+      const teamwisedata = response?.data;
+      console.log("teamwisedata response", teamwisedata);
+      dispatch(storeTeamwiseProductivity(teamwisedata));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeTeamwiseProductivity([]));
+    } finally {
+      setTimeout(() => {
+        setSummaryLoading(false);
+      }, 300);
     }
   };
 
