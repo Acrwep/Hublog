@@ -171,15 +171,17 @@ export default function Mapping() {
       </Row>
 
       <p className="mapping_tableheading">Mapping list</p>
-      <CommonTable
-        columns={columns}
-        dataSource={ImbuildAppsandUrls}
-        scroll={{ x: 600 }}
-        dataPerPage={20}
-        checkBox="false"
-        size="small"
-        loading={loading}
-      />
+      <div className="productivityrules_inbuildtableContainer">
+        <CommonTable
+          columns={columns}
+          dataSource={ImbuildAppsandUrls}
+          scroll={{ x: 600 }}
+          dataPerPage={20}
+          checkBox="false"
+          size="small"
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }
