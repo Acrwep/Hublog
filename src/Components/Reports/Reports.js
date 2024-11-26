@@ -124,8 +124,8 @@ const Reports = () => {
               </p>
             </div>
           </Col>
-          {/* <Col xs={24} sm={24} md={12} lg={6}>
-            <div
+          <Col xs={24} sm={24} md={12} lg={6}>
+            {/* <div
               className="reports_card"
               onClick={() => navigation("/productivityreport")}
             >
@@ -136,9 +136,21 @@ const Reports = () => {
               <p className="reports_cardcontent">
                 Download the Productivity report for your organisation
               </p>
+            </div> */}
+            <div
+              className="reports_card"
+              onClick={() => navigation("/devicereport")}
+            >
+              <div className="reports_producticonContainer">
+                <TbDeviceDesktopMinus size={26} />
+              </div>
+              <p className="reports_cardheading">Device Report</p>
+              <p className="reports_cardcontent">
+                Download the comprehensive devices report of your organisation
+              </p>
             </div>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={6}>
+          {/* <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
               onClick={() => navigation("/teamsinsightreport")}

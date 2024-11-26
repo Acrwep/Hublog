@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -10,112 +10,229 @@ import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
+import {
+  getDeviceInfo,
+  getDeviceInfoCount,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
+import Loader from "../Common/Loader";
+import { CommonToaster } from "../Common/CommonToaster";
 
 const DeviceReport = () => {
   const navigation = useNavigate();
-  const [date, setDate] = useState(new Date());
-  const teamList = [{ id: 1, name: "Operation" }];
-  const userList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Karthick" },
+  //usestates
+  const [organizationId, setOrganizationId] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [teamList, setTeamList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const platformList = [
+    { id: "w", name: "Windows" },
+    { id: "m", name: "Mac" },
+    { id: "l", name: "Linux" },
   ];
-  const data = [
-    {
-      key: 1,
-      employee: "Alice",
-      devicename: "ACTE",
-      deviceid: "76c45031-bc0e-4a6a-8513-4ffab1aa8012",
-      platform: "WINDOWS",
-      osname: "Windows 10 Version 2009",
-      osbuild: "10",
-      systemtype: "x86_64",
-      ip: "2405:201:e004:3890:-3d52:12c6:ef21:c20d",
-      apptype: "standard",
-      myzenversion: "2.7.4",
-    },
-    {
-      key: 2,
-      employee: "Alice",
-      devicename: "ACTE",
-      deviceid: "76c45031-bc0e-4a6a-8513-4ffab1aa8012",
-      platform: "WINDOWS",
-      osname: "Windows 10 Version 2009",
-      osbuild: "10",
-      systemtype: "x86_64",
-      ip: "2405:201:e004:3890:-3d52:12c6:ef21:c20d",
-      apptype: "standard",
-      myzenversion: "2.7.4",
-    },
-    // More data...
+  const [platformId, setPlatformId] = useState(null);
+  const systemList = [
+    { id: "64", name: "x64" },
+    { id: "86", name: "x86" },
   ];
+  const [systemId, setSystemId] = useState(null);
+  const [devicesData, setDevicesData] = useState([]);
+  const [tableLoading, setTableloading] = useState(true);
 
   const columns = [
     {
       title: "Employee",
-      dataIndex: "employee",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.employee - b.employee,
+      dataIndex: "full_Name",
+      key: "full_Name",
+      fixed: "left",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarSize={28} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
     },
     {
       title: "Device Name",
-      dataIndex: "devicename",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.devicename - b.devicename,
+      dataIndex: "deviceName",
+      key: "deviceName",
     },
     {
       title: "Device ID",
-      dataIndex: "deviceid",
-      defaultSortOrder: "descend",
-      width: 200,
-      sorter: (a, b) => a.deviceid - b.deviceid,
+      dataIndex: "deviceId",
+      key: "deviceId",
+      width: 260,
     },
     {
       title: "Platform",
       dataIndex: "platform",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.platform - b.platform,
+      key: "platform",
+      width: 160,
+      render: (text, record) => {
+        if (text === "WinUI") {
+          return <p>Windows</p>;
+        } else {
+          return <p>Mac</p>;
+        }
+      },
     },
     {
       title: "OS Name",
-      dataIndex: "osname",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.osname - b.osname,
+      dataIndex: "osName",
+      key: "osName",
     },
     {
       title: "OS Build",
-      dataIndex: "osbuild",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.osbuild - b.osbuild,
+      dataIndex: "osBuild",
+      key: "osBuild",
     },
     {
       title: "System Type",
-      dataIndex: "systemtype",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.systemtype - b.systemtype,
-    },
-    {
-      title: "IP",
-      dataIndex: "ip",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.ip - b.ip,
+      dataIndex: "systemType",
+      key: "systemType",
       width: 150,
     },
     {
-      title: "App Type",
-      dataIndex: "apptype",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.apptype - b.apptype,
-    },
-    {
-      title: "MyZen version",
-      dataIndex: "myzenversion",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.myzenversion - b.myzenversion,
+      title: "IP",
+      dataIndex: "ipAddress",
+      key: "ipAddress",
+      width: 160,
+      // defaultSortOrder: "descend",
+      // sorter: (a, b) => a.ip - b.ip,
     },
   ];
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
+
+  useEffect(() => {
+    getTeamData();
+  }, []);
+
+  const getTeamData = async () => {
+    setTeamId(null);
+    setUserId(null);
+    setPlatformId(null);
+    setSystemId(null);
+    try {
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      setOrganizationId(orgId);
+      const response = await getTeams(parseInt(orgId));
+      const teamList = response.data;
+      setTeamList(teamList);
+      setTeamId(null);
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData();
+      }, 500);
+    }
+  };
+
+  const getUsersData = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId);
+      const allUsers = response?.data;
+      setUserList(allUsers);
+      setNonChangeUserList(allUsers);
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message, "error");
+      setUserList([]);
+    } finally {
+      setTimeout(() => {
+        getDeviceData(orgId);
+      }, 350);
+    }
+  };
+
+  const getDeviceData = async (orgId, teamid, userid, platform, system) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      ...(platform && { platformSearchQuery: platform }),
+      ...(system && { systemTypeSearchQuery: system }),
+    };
+    try {
+      const response = await getDeviceInfo(payload);
+      const devicedata = response?.data;
+      console.log("devices response", devicedata);
+      setDevicesData(devicedata);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setDevicesData([]);
+    } finally {
+      setTimeout(() => {
+        setTableloading(false);
+      }, 300);
+    }
+  };
+
+  //handle onchange functions
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    setTableloading(true);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+
+      setUserList(teamMembersList);
+      const userIdd = null;
+      setUserId(userIdd);
+      setTimeout(() => {
+        getDeviceData(organizationId, value, userIdd, platformId, systemId);
+      }, 300);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
+  const handleUser = (value) => {
+    setTableloading(true);
+    setUserId(value);
+    getDeviceData(organizationId, teamId, value, platformId, systemId);
+  };
+
+  const handlePlatform = (value) => {
+    setTableloading(true);
+    setPlatformId(value);
+    getDeviceData(organizationId, teamId, userId, value, systemId);
+  };
+
+  const handleSystemType = (value) => {
+    setTableloading(true);
+    setSystemId(value);
+    getDeviceData(organizationId, teamId, userId, platformId, value);
+  };
+
+  const handleRefresh = () => {
+    if (
+      teamId === null &&
+      userId === null &&
+      platformId === null &&
+      systemId === null
+    ) {
+      return;
+    } else {
+      setTableloading(true);
+      setTeamId(null);
+      setUserList(nonChangeUserList);
+      setUserId(null);
+      setPlatformId(null);
+      setSystemId(null);
+      getDeviceData(organizationId, null, null, null, null);
+    }
   };
 
   return (
@@ -141,18 +258,38 @@ const DeviceReport = () => {
             style={{ display: "flex" }}
           >
             <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+              />
             </div>
             <div className="devicereport_selectfieldContainers">
-              <CommonSelectField options={userList} placeholder="Select User" />
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />
             </div>
             <div className="devicereport_selectfieldContainers">
-              <CommonSelectField options={userList} placeholder="Platform" />
+              <CommonSelectField
+                options={platformList}
+                placeholder="Platform"
+                onChange={handlePlatform}
+                value={platformId}
+              />
             </div>
             <div className="devicereport_selectfieldContainers">
-              <CommonSelectField options={userList} placeholder="System Type" />
+              <CommonSelectField
+                options={systemList}
+                placeholder="System Type"
+                onChange={handleSystemType}
+                value={systemId}
+              />
             </div>
-            <div className="devicereport_selectfieldContainers">
+            {/* <div className="devicereport_selectfieldContainers">
               <CommonSelectField options={userList} placeholder="App Type" />
             </div>
             <div className="devicereport_selectfieldContainers">
@@ -160,7 +297,7 @@ const DeviceReport = () => {
                 options={userList}
                 placeholder="Hublog version"
               />
-            </div>
+            </div> */}
           </div>
         </Col>
         <Col
@@ -174,27 +311,33 @@ const DeviceReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
+                DownloadTableAsXLSX(devicesData, columns, `Device Report.xlsx`);
               }}
             >
               <DownloadOutlined className="download_icon" />
             </Button>
           </Tooltip>
           <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
+            <Button
+              className="dashboard_refresh_button"
+              onClick={handleRefresh}
+            >
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>
         </Col>
       </Row>
-      <div className="breakreport_tableContainer">
+
+      <div className="breakreport_tableContainer" style={{ marginTop: "20px" }}>
         <CommonTable
           columns={columns}
-          dataSource={data}
+          dataSource={devicesData}
           scroll={{ x: 1600 }}
-          dataPerPage={4}
+          dataPerPage={10}
+          loading={tableLoading}
+          size="small"
           checkBox="false"
-          bordered="true"
+          bordered="false"
         />
       </div>
     </div>

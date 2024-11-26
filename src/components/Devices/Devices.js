@@ -285,7 +285,6 @@ const Devices = () => {
     ) {
       return;
     } else {
-      console.log("eeeeeeee", nonChangeUserList);
       setTableloading(true);
       setTeamId(null);
       setUserList(nonChangeUserList);
