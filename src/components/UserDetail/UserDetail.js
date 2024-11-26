@@ -25,6 +25,7 @@ import {
   getTopUrlsUsage,
   getUserTotalBreak,
   getProductivityBreakdown,
+  getTopCategoryUsage,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -68,6 +69,8 @@ const UserDetail = () => {
   const [topAppUsageTime, setTopAppUsageTime] = useState("");
   const [topUrlName, setTopUrlName] = useState("");
   const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
+  const [topCategoryName, setTopCategoryName] = useState("");
+  const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [internetTime, setInternetTime] = useState("");
   const [breakdownTotalDuration, setBreakdownTotalDuration] = useState("");
   //loadings
@@ -238,8 +241,7 @@ const UserDetail = () => {
         setIsBreakdownEmpty(true);
       } finally {
         setTimeout(() => {
-          setProductivityLoading(false);
-          setProductivityFilterLoading(false);
+          getTopAppUsageData(userId, orgId, startdate, enddate);
         }, 300);
       }
     }
@@ -300,7 +302,6 @@ const UserDetail = () => {
       startDate: startdate,
       endDate: enddate,
     };
-    let AppMaxTime = "";
     try {
       const response = await getTopAppsUsage(payload);
       const TopAppsUsageData = response.data;
@@ -311,33 +312,28 @@ const UserDetail = () => {
         );
 
         const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
-        AppMaxTime = TopAppsUsageData.maxUsage;
         setTopAppUsageTime(hours + "h:" + minutes + "m");
         return;
       } else {
         setTopAppName("-");
         setTopAppUsageTime("-");
-        AppMaxTime = "";
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopAppName("-");
       setTopAppUsageTime("-");
-      AppMaxTime = "";
     } finally {
       setTimeout(() => {
-        getUrlsUsageData(userid, orgId, startdate, enddate, AppMaxTime);
+        getUrlsUsageData(userid, orgId, startdate, enddate);
       }, 500);
     }
   };
 
-  const getUrlsUsageData = async (
-    userid,
-    orgId,
-    startdate,
-    enddate,
-    AppMaxTime
-  ) => {
+  const getUrlsUsageData = async (userid, orgId, startdate, enddate) => {
+    if (activePage === 4) {
+      getTopUrlUsageData(userid, orgId, startdate, enddate);
+      return;
+    }
     const payload = {
       ...(userid && { userId: userid }),
       organizationId: orgId,
@@ -352,18 +348,12 @@ const UserDetail = () => {
       CommonToaster(error.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
-        getTopUrlUsageData(userid, orgId, startdate, enddate, AppMaxTime);
+        getTopUrlUsageData(userid, orgId, startdate, enddate);
       }, 500);
     }
   };
 
-  const getTopUrlUsageData = async (
-    userid,
-    orgId,
-    startdate,
-    enddate,
-    AppMaxTime
-  ) => {
+  const getTopUrlUsageData = async (userid, orgId, startdate, enddate) => {
     const payload = {
       ...(userid && { userId: userid }),
       organizationId: orgId,
@@ -379,30 +369,57 @@ const UserDetail = () => {
 
         const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
         setTopUrlUsageTime(hours + "h:" + minutes + "m");
-
-        const totalTime = addAppandUrlTime(
-          AppMaxTime,
-          TopUrlsUsageData.maxUsage
-        );
-        setInternetTime(totalTime);
       } else {
         setTopUrlName("-");
         setTopUrlUsageTime("-");
-        setInternetTime("");
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopUrlName("-");
       setTopUrlUsageTime("-");
-      setInternetTime("");
     } finally {
       setTimeout(() => {
-        setAppsFilterLoading(false);
-        setAppsLoading(false);
+        getTopCategoryUsageData(userid, orgId, startdate, enddate);
       }, 500);
     }
   };
 
+  const getTopCategoryUsageData = async (userid, orgId, startdate, enddate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(userid && { userId: userid }),
+      fromDate: startdate,
+      toDate: enddate,
+    };
+    try {
+      const response = await getTopCategoryUsage(payload);
+      const TopCategoryUsageData = response.data;
+      console.log("topcategory response", TopCategoryUsageData);
+
+      if (TopCategoryUsageData.applicationName) {
+        setTopCategoryName(TopCategoryUsageData.applicationName);
+
+        const [hours, minutes] = TopCategoryUsageData.maxUsage.split(":");
+        setTopCategoryUsageTime(hours + "h:" + minutes + "m");
+      } else {
+        setTopCategoryName("-");
+        setTopCategoryUsageTime("-");
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setTopCategoryName("-");
+      setTopCategoryUsageTime("-");
+    } finally {
+      setTimeout(() => {
+        setAppsFilterLoading(false);
+        setAppsLoading(false);
+        setProductivityLoading(false);
+        setProductivityFilterLoading(false);
+      }, 500);
+    }
+  };
+
+  //onchange functions
   const handleUser = async (value) => {
     setUserId(value);
     const findSelectedUser = userList.find((f) => f.id === value);
@@ -619,6 +636,12 @@ const UserDetail = () => {
               <UserProductivity
                 breakdownTotalDuration={breakdownTotalDuration}
                 isBreakdownEmpty={isBreakdownEmpty}
+                topAppName={topAppName}
+                topAppUsageTime={topAppUsageTime}
+                topUrlName={topUrlName}
+                topUrlUsageTime={topUrlUsageTime}
+                topCategoryName={topCategoryName}
+                topCategoryUsageTime={topCategoryUsageTime}
                 loading={productivityLoading}
                 filterLoading={productivityFilterLoading}
               />
@@ -638,7 +661,8 @@ const UserDetail = () => {
                 topAppUsageTime={topAppUsageTime}
                 topUrlName={topUrlName}
                 topUrlUsageTime={topUrlUsageTime}
-                internetTime={internetTime}
+                topCategoryName={topCategoryName}
+                topCategoryUsageTime={topCategoryUsageTime}
               />
             </div>
           )}

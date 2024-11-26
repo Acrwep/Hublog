@@ -110,9 +110,10 @@ const Alerts = () => {
     };
     try {
       const response = await getAlerts(payload);
-      const devicedata = response?.data;
-      console.log("alerts response", devicedata);
-      setAlertData(devicedata);
+      const alertdata = response?.data;
+      console.log("alerts response", alertdata);
+      const reverseData = alertData.reverse();
+      setAlertData(reverseData);
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
       setAlertData([]);

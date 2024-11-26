@@ -29,6 +29,15 @@ export default function CommonDonutChart({
   const totalHours = series.reduce((acc, val) => acc + val, 0);
   const totalMinutes = Math.round((totalHours % 1) * 60);
 
+  const formatTime = (value) => {
+    if (isNaN(value) || value === null || value === undefined)
+      return "0hr 0m 0s";
+    const hours = Math.floor(value);
+    const minutes = Math.floor((value % 1) * 60);
+    const seconds = Math.floor(((value % 1) * 3600) % 60);
+    return `${hours}hr ${minutes}m ${seconds} s`;
+  };
+
   const options = {
     chart: {
       type: "donut",
@@ -50,9 +59,11 @@ export default function CommonDonutChart({
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               formatter: function (val) {
                 if (timebased === "true") {
-                  const totalHours = series.reduce((acc, val) => acc + val, 0);
-                  const totalMinutes = Math.round((totalHours % 1) * 60);
-                  return `${Math.floor(totalHours)} hrs ${totalMinutes} min`;
+                  const totalHours = series.reduce(
+                    (acc, val) => acc + (val || 0),
+                    0
+                  );
+                  return formatTime(totalHours);
                 } else {
                   return val.globals.seriesTotals.reduce((a, b) => a + b, 0);
                 }
@@ -69,9 +80,7 @@ export default function CommonDonutChart({
               fontWeight: 700, // Increase font weight
               formatter: function (val) {
                 if (timebased === "true") {
-                  const hours = Math.floor(val);
-                  const minutes = Math.round((val % 1) * 60);
-                  return `${hours} hrs ${minutes} min`;
+                  return formatTime(val);
                 }
                 return val; // Display value in the tooltip
               },
@@ -85,9 +94,7 @@ export default function CommonDonutChart({
       y: {
         formatter: function (val) {
           if (timebased === "true") {
-            const hours = Math.floor(val);
-            const minutes = Math.round((val % 1) * 60);
-            return `${hours} hrs ${minutes} min`;
+            return formatTime(val);
           }
           return val; // Display value in the tooltip
         },
@@ -103,9 +110,7 @@ export default function CommonDonutChart({
       formatter: function (seriesName, opts) {
         const value = opts.w.globals.series[opts.seriesIndex];
         if (timebased === "true") {
-          const hours = Math.floor(value);
-          const minutes = Math.round((value % 1) * 60);
-          return `${seriesName}: ${hours} hrs ${minutes} min`;
+          return `${seriesName}: ${formatTime(value)}`;
         }
         return `${seriesName}: ${value}`;
       },

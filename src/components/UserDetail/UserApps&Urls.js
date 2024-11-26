@@ -13,7 +13,8 @@ export default function UserAppsUrls({
   topAppUsageTime,
   topUrlName,
   topUrlUsageTime,
-  internetTime,
+  topCategoryName,
+  topCategoryUsageTime,
 }) {
   const appsData = useSelector((state) => state.userappsusage);
   const urlsData = useSelector((state) => state.userurlsusage);
@@ -151,7 +152,9 @@ export default function UserAppsUrls({
                     <p className="userproductivity_contents">
                       {topUrlName === "-"
                         ? topUrlName
-                        : "https://" + topUrlName}
+                        : `${
+                            topUrlName === "localhost" ? "http://" : "https://"
+                          }${topUrlName}`}
                     </p>
                     <p className="userproductivity_hours">{topUrlUsageTime}</p>
                   </>
@@ -173,10 +176,10 @@ export default function UserAppsUrls({
                   <>
                     <p>Top Category</p>
                     <p className="userproductivity_contents">
-                      {internetTime ? "Internet" : "-"}
+                      {topCategoryName}
                     </p>
                     <p className="userproductivity_hours">
-                      {internetTime ? internetTime : "-"}
+                      {topCategoryUsageTime}
                     </p>
                   </>
                 )}

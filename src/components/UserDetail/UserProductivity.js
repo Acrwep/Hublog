@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Skeleton } from "antd";
+import { Row, Col, Skeleton, Tooltip } from "antd";
 import CommonTable from "../../Components/Common/CommonTable";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import Loader from "../Common/Loader";
@@ -12,6 +12,12 @@ export default function UserProductivity({
   isBreakdownEmpty,
   loading,
   filterLoading,
+  topAppName,
+  topAppUsageTime,
+  topUrlName,
+  topUrlUsageTime,
+  topCategoryName,
+  topCategoryUsageTime,
 }) {
   const breakdownData = useSelector((state) => state.productivitybreakdown);
   const columns = [
@@ -75,25 +81,76 @@ export default function UserProductivity({
           <Row gutter={16}>
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="userproductivity_topContainers">
-                <p>Top Application</p>
-                <p className="userproductivity_contents">Chrome</p>
-                <p className="userproductivity_hours">14h:47m</p>
+                {filterLoading ? (
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
+                ) : (
+                  <>
+                    <p>Top Application</p>
+                    <p className="userproductivity_contents">{topAppName}</p>
+                    <p className="userproductivity_hours">{topAppUsageTime}</p>
+                  </>
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={12}>
               <div className="userproductivity_topContainers">
-                <p>Top Urls</p>
-                <p className="userproductivity_contents">
-                  https://ads.google.com/
-                </p>
-                <p className="userproductivity_hours">14h:47m</p>
+                {filterLoading ? (
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
+                ) : (
+                  <>
+                    <p>Top Urls</p>
+                    <Tooltip placement="top" title={`https://${topUrlName}`}>
+                      <p className="userproductivity_contents">
+                        {topUrlName === "-"
+                          ? topUrlName
+                          : `${
+                              topUrlName === "localhost"
+                                ? "http://"
+                                : "https://"
+                            }${topUrlName}`}
+                      </p>
+                    </Tooltip>
+                    <p className="userproductivity_hours">{topUrlUsageTime}</p>
+                  </>
+                )}
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={6}>
               <div className="userproductivity_topContainers">
-                <p>Top Category</p>
-                <p className="userproductivity_contents">Internet</p>
-                <p className="userproductivity_hours">14h:47m</p>
+                {filterLoading ? (
+                  <Skeleton
+                    active
+                    title={{ height: "13px", borderRadius: "12px" }}
+                    paragraph={{
+                      rows: 2,
+                    }}
+                    className="appsandurlcard_skeleton"
+                  />
+                ) : (
+                  <>
+                    <p>Top Category</p>
+                    <p className="userproductivity_contents">
+                      {topCategoryName}
+                    </p>
+                    <p className="userproductivity_hours">
+                      {topCategoryUsageTime}
+                    </p>
+                  </>
+                )}
               </div>
             </Col>
           </Row>
@@ -111,11 +168,11 @@ export default function UserProductivity({
               </div>
             ) : (
               <>
+                <p className="userproductivity_chartheading">
+                  Productivity Breakdown
+                </p>
                 {isBreakdownEmpty === false ? (
                   <>
-                    <p className="userproductivity_chartheading">
-                      Productivity Breakdown
-                    </p>
                     <Row style={{ marginTop: "10px", marginBottom: "10px" }}>
                       <Col xs={24} sm={24} md={24} lg={6}>
                         <p className="totalproductive_timeheading">

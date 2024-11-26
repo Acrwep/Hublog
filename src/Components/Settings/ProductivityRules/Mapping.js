@@ -176,7 +176,7 @@ export default function Mapping() {
           columns={columns}
           dataSource={ImbuildAppsandUrls}
           scroll={{ x: 600 }}
-          dataPerPage={20}
+          dataPerPage={100}
           checkBox="false"
           size="small"
           loading={loading}

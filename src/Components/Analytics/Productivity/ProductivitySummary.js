@@ -10,6 +10,12 @@ import CommonNodatafound from "../../Common/CommonNodatafound";
 const ProductivitySummary = ({
   breakdownTotalDuration,
   breakdownAverageTime,
+  topAppName,
+  topAppUsageTime,
+  topUrlName,
+  topUrlUsageTime,
+  topCategoryName,
+  topCategoryUsageTime,
   isBreakdownEmpty,
   loading,
 }) => {
@@ -17,6 +23,7 @@ const ProductivitySummary = ({
   const teamwiseData = useSelector((state) => state.teamwiseproductivity);
 
   const xasis = teamwiseData.map((item) => item.teamName);
+
   const parseTimeToDecimal = (timeString) => {
     const [hours, minutes, seconds] = timeString.split(":").map(Number);
     return hours + minutes / 60 + seconds / 3600;
@@ -41,20 +48,6 @@ const ProductivitySummary = ({
       }),
     },
   ];
-  // const series = [
-  //   {
-  //     name: "Productive time",
-  //     data: [2.72, 4.42, 5.5, 6.58, 7.5, 5.0, 3.5], // Representing hours and minutes in decimal format
-  //   },
-  //   {
-  //     name: "Neutral",
-  //     data: [2.17, 1.83, 1.83, 2.75, 2.67, 1.67, 2.08],
-  //   },
-  //   {
-  //     name: "Unproductive time",
-  //     data: [3.0, 3.5, 2.5, 3.75, 3.0, 2.5, 4.25],
-  //   },
-  // ];
 
   const barchartColors = ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"];
 
@@ -81,27 +74,70 @@ const ProductivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top Application</p>
-            <p className="userproductivity_contents">Chrome</p>
-            <p className="userproductivity_hours">346h:32m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Top Application</p>
+                <p className="userproductivity_contents">{topAppName}</p>
+                <p className="userproductivity_hours">{topAppUsageTime}</p>
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top URL</p>
-            <Tooltip placement="top" title="https://web.whatsapppppp">
-              <p className="userproductivity_contents">
-                https://web.whatsapppppp
-              </p>
-            </Tooltip>
-            <p className="userproductivity_hours">174h:42m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Top URL</p>
+                <Tooltip placement="top" title={`https://${topUrlName}`}>
+                  <p className="userproductivity_contents">
+                    {topUrlName === "-"
+                      ? topUrlName
+                      : `${
+                          topUrlName === "localhost" ? "http://" : "https://"
+                        }${topUrlName}`}
+                  </p>
+                </Tooltip>
+                <p className="userproductivity_hours">{topUrlUsageTime}</p>
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top Category</p>
-            <p className="userproductivity_contents">Internet</p>
-            <p className="userproductivity_hours">661h:44m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Top Category</p>
+                <p className="userproductivity_contents">{topCategoryName}</p>
+                <p className="userproductivity_hours">{topCategoryUsageTime}</p>
+              </>
+            )}
           </div>
         </Col>
       </Row>
@@ -120,12 +156,9 @@ const ProductivitySummary = ({
                 />
               ) : (
                 <>
+                  <p className="devices_chartheading">Productivity Breakdown</p>
                   {isBreakdownEmpty === false ? (
                     <>
-                      <p className="devices_chartheading">
-                        Productivity Breakdown
-                      </p>
-
                       <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
                         <Col xs={24} sm={24} md={12} lg={12}>
                           <p className="totalproductive_timeheading">
@@ -244,13 +277,27 @@ const ProductivitySummary = ({
 
       <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
-          <p className="devices_chartheading">Team Wise Utilization</p>
-          <CommonBarChart
-            xasis={xasis}
-            series={series}
-            colors={barchartColors}
-            timebased="true"
-          />
+          {loading ? (
+            <div style={{ height: "45vh" }}>
+              <Skeleton
+                active
+                title={{ width: 140 }}
+                paragraph={{
+                  rows: 0,
+                }}
+              />
+            </div>
+          ) : (
+            <>
+              <p className="devices_chartheading">Team Wise Utilization</p>
+              <CommonBarChart
+                xasis={xasis}
+                series={series}
+                colors={barchartColors}
+                timebased="true"
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

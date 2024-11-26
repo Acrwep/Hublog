@@ -11,6 +11,7 @@ import {
   getUsersByTeamId,
   getUrlsUsage,
   getTopUrlsUsage,
+  getTopCategoryUsage,
 } from "../APIservice.js/action";
 import Loader from "../Common/Loader";
 import CommonNodatafound from "../Common/CommonNodatafound";
@@ -36,7 +37,8 @@ const Apps$Url = () => {
   const [topAppUsageTime, setTopAppUsageTime] = useState("");
   const [topUrlName, setTopUrlName] = useState("");
   const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
-  const [internetTime, setInternetTime] = useState("");
+  const [topCategoryName, setTopCategoryName] = useState("");
+  const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
 
@@ -214,7 +216,6 @@ const Apps$Url = () => {
       startDate: startdate,
       endDate: enddate,
     };
-    let AppMaxTime = "";
     try {
       const response = await getTopAppsUsage(payload);
       const TopAppsUsageData = response.data;
@@ -223,24 +224,20 @@ const Apps$Url = () => {
           TopAppsUsageData.applicationName[0].toUpperCase() +
             TopAppsUsageData.applicationName.slice(1)
         );
-
         const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
-        AppMaxTime = TopAppsUsageData.maxUsage;
         setTopAppUsageTime(hours + "h:" + minutes + "m");
         return;
       } else {
         setTopAppName("-");
         setTopAppUsageTime("-");
-        AppMaxTime = "";
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopAppName("-");
       setTopAppUsageTime("-");
-      AppMaxTime = "";
     } finally {
       setTimeout(() => {
-        getUrlsUsageData(userid, teamid, orgId, startdate, enddate, AppMaxTime);
+        getUrlsUsageData(userid, teamid, orgId, startdate, enddate);
       }, 500);
     }
   };
@@ -250,8 +247,7 @@ const Apps$Url = () => {
     teamid,
     orgId,
     startdate,
-    enddate,
-    AppMaxTime
+    enddate
   ) => {
     const payload = {
       ...(userid && { userId: userid }),
@@ -268,14 +264,7 @@ const Apps$Url = () => {
       CommonToaster(error.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
-        getTopUrlUsageData(
-          userid,
-          teamid,
-          orgId,
-          startdate,
-          enddate,
-          AppMaxTime
-        );
+        getTopUrlUsageData(userid, teamid, orgId, startdate, enddate);
       }, 500);
     }
   };
@@ -285,8 +274,7 @@ const Apps$Url = () => {
     teamid,
     orgId,
     startdate,
-    enddate,
-    AppMaxTime
+    enddate
   ) => {
     const payload = {
       ...(userid && { userId: userid }),
@@ -304,22 +292,53 @@ const Apps$Url = () => {
 
         const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
         setTopUrlUsageTime(hours + "h:" + minutes + "m");
-
-        const totalTime = addAppandUrlTime(
-          AppMaxTime,
-          TopUrlsUsageData.maxUsage
-        );
-        setInternetTime(totalTime);
       } else {
         setTopUrlName("-");
         setTopUrlUsageTime("-");
-        setInternetTime("");
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopUrlName("-");
       setTopUrlUsageTime("-");
-      setInternetTime("");
+    } finally {
+      setTimeout(() => {
+        getTopCategoryUsageData(userid, teamid, orgId, startdate, enddate);
+      }, 500);
+    }
+  };
+
+  const getTopCategoryUsageData = async (
+    userid,
+    teamid,
+    orgId,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      ...(userid && { userId: userid }),
+      ...(teamid && { teamId: teamid }),
+      organizationId: orgId,
+      fromDate: startdate,
+      toDate: enddate,
+    };
+    try {
+      const response = await getTopCategoryUsage(payload);
+      const TopCategoryUsageData = response.data;
+      console.log("topcategory response", TopCategoryUsageData);
+
+      if (TopCategoryUsageData.applicationName) {
+        setTopCategoryName(TopCategoryUsageData.applicationName);
+
+        const [hours, minutes] = TopCategoryUsageData.maxUsage.split(":");
+        setTopCategoryUsageTime(hours + "h:" + minutes + "m");
+      } else {
+        setTopCategoryName("-");
+        setTopCategoryUsageTime("-");
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setTopCategoryName("-");
+      setTopCategoryUsageTime("-");
     } finally {
       setTimeout(() => {
         setFilterLoading(false);
@@ -531,10 +550,10 @@ const Apps$Url = () => {
                   <>
                     <p>Top Category</p>
                     <p className="userproductivity_contents">
-                      {internetTime ? "Internet" : "-"}
+                      {topCategoryName}
                     </p>
                     <p className="userproductivity_hours">
-                      {internetTime ? internetTime : "-"}
+                      {topCategoryUsageTime}
                     </p>
                   </>
                 )}

@@ -238,6 +238,16 @@ export const getTopUrlsUsage = async (payload) => {
     throw error;
   }
 };
+export const getTopCategoryUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopCategory`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 // designation
 export const getDesignation = async (organizationId, name) => {
   try {
