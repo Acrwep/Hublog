@@ -112,7 +112,7 @@ const Alerts = () => {
       const response = await getAlerts(payload);
       const alertdata = response?.data;
       console.log("alerts response", alertdata);
-      const reverseData = alertData.reverse();
+      const reverseData = alertdata.reverse();
       setAlertData(reverseData);
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
@@ -184,20 +184,11 @@ const Alerts = () => {
           <div style={{ width: "35%" }}>
             <CommonDatePicker onChange={onDateChange} value={date} />
           </div>
-          <Tooltip placement="top" title="Download">
-            <Button
-              className="dashboard_download_button"
-              onClick={() => {
-                DownloadTableAsXLSX(alertData, columns, "alerts.xlsx");
-              }}
-            >
-              <DownloadOutlined className="download_icon" />
-            </Button>
-          </Tooltip>
           <Tooltip placement="top" title="Refresh">
             <Button
               className="dashboard_refresh_button"
               onClick={handleRefresh}
+              style={{ marginLeft: "12px" }}
             >
               <RedoOutlined className="refresh_icon" />
             </Button>
