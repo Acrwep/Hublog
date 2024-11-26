@@ -22,6 +22,7 @@ import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import {
   addAppandUrlTime,
   getCurrentandPreviousweekDate,
+  parseTimeToDecimal,
 } from "../Common/Validation";
 
 const Apps$Url = () => {
@@ -41,6 +42,15 @@ const Apps$Url = () => {
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
+
+  const formatTooltipTime = (value) => {
+    if (isNaN(value) || value === null || value === undefined)
+      return "0hr 0m 0s";
+    const hours = Math.floor(value);
+    const minutes = Math.floor((value % 1) * 60);
+    const seconds = Math.floor(((value % 1) * 3600) % 60);
+    return `${hours}hr ${minutes}m ${seconds}s`;
+  };
 
   const barchartoptions = {
     chart: {
@@ -73,7 +83,7 @@ const Apps$Url = () => {
         return `
           <div style="padding: 5px 9px;">
             <span style="display:inline-block; width: 10px; height: 10px; background-color: ${color}; border-radius: 50%; margin-right: 5px;"></span>
-            <strong>${xValue}</strong>: ${hours}h:${minutes}m
+            <strong>${xValue}</strong>: ${formatTooltipTime(yValue)}
           </div>
         `;
       },
@@ -108,18 +118,11 @@ const Apps$Url = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const convertToTimeFormat = (timeString) => {
-    if (timeString) {
-      const [hours, minutes] = timeString.split(":");
-      return parseFloat(hours) + parseFloat(minutes) / 60;
-    }
-  };
-
   const barchartseries = [
     {
       data: appsData.map((item) => ({
         x: capitalizeFirstLetter(item.applicationName),
-        y: convertToTimeFormat(item.totalUsage),
+        y: parseTimeToDecimal(item.totalUsage),
       })),
     },
   ];
@@ -128,7 +131,7 @@ const Apps$Url = () => {
     {
       data: urlsData.map((item) => ({
         x: item.url,
-        y: convertToTimeFormat(item.totalUsage),
+        y: parseTimeToDecimal(item.totalUsage),
       })),
     },
   ];

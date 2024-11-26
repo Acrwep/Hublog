@@ -143,3 +143,8 @@ export const getCurrentandPreviousweekDate = () => {
   dates.push(formattedPreviousWeekDate, formattedCurrentDate);
   return dates;
 };
+
+export const parseTimeToDecimal = (timeString) => {
+  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+  return hours + minutes / 60 + seconds / 3600;
+};

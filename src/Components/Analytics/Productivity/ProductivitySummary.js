@@ -234,7 +234,10 @@ const ProductivitySummary = ({
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
                       <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
+                        <Progress
+                          strokeColor="#25a17d"
+                          percent={item.percentage}
+                        />
                       </Flex>
                     </Col>
                   </Row>
@@ -264,7 +267,10 @@ const ProductivitySummary = ({
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
                       <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
+                        <Progress
+                          strokeColor="rgba(244, 67, 54, 0.62)"
+                          percent={item.percentage}
+                        />
                       </Flex>
                     </Col>
                   </Row>

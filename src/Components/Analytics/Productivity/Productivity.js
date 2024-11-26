@@ -6,7 +6,10 @@ import "../styles.css";
 import ProductivitySummary from "./ProductivitySummary";
 import CommonSelectField from "../../Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Common/CommonDoubleDatePicker";
-import { getCurrentandPreviousweekDate } from "../../Common/Validation";
+import {
+  getCurrentandPreviousweekDate,
+  parseTimeToDecimal,
+} from "../../Common/Validation";
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getProductivityBreakdown,
@@ -111,11 +114,6 @@ const Productivity = () => {
         );
       }, 300);
     }
-  };
-
-  const parseTimeToDecimal = (timeString) => {
-    const [hours, minutes, seconds] = timeString.split(":").map(Number);
-    return hours + minutes / 60 + seconds / 3600;
   };
 
   const getBreakdownData = async (
