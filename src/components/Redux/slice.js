@@ -360,6 +360,26 @@ const teamwiseProductivitySlice = createSlice({
     },
   },
 });
+const mostProductivityTeamsSlice = createSlice({
+  name: "mostproductivityteams",
+  initialState,
+  reducers: {
+    storeMostProductivityTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const leastProductivityTeamsSlice = createSlice({
+  name: "leastproductivityteams",
+  initialState,
+  reducers: {
+    storeLeastProductivityTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //datewise attendance
 const datewiseAttendanceSlice = createSlice({
   name: "datewiseattendance",
@@ -478,6 +498,10 @@ export const { storeImbuildAppsandUrls } = ImbuildAppsandUrlsSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
 export const { storeTeamwiseProductivity } = teamwiseProductivitySlice.actions;
+export const { storeMostProductivityTeams } =
+  mostProductivityTeamsSlice.actions;
+export const { storeLeastProductivityTeams } =
+  leastProductivityTeamsSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
 export const { storeDatewiseAttendanceAbsentData } =
@@ -526,6 +550,9 @@ export const categoriesReducer = CategoriesSlice.reducer;
 export const imbuildAppsandUrlsReducer = ImbuildAppsandUrlsSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
+export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;
+export const leastProductivityTeamsReducer =
+  leastProductivityTeamsSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
 export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
 export const datewiseAttendanceAbsentReducer =

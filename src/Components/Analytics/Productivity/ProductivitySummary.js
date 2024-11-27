@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Progress, Flex, Tooltip, Divider, Skeleton } from "antd";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../../Common/CommonDonutChart";
@@ -8,8 +8,10 @@ import "../styles.css";
 import CommonNodatafound from "../../Common/CommonNodatafound";
 
 const ProductivitySummary = ({
+  totalProductivityTime,
   breakdownTotalDuration,
   breakdownAverageTime,
+  totalProductivity,
   topAppName,
   topAppUsageTime,
   topUrlName,
@@ -21,6 +23,12 @@ const ProductivitySummary = ({
 }) => {
   const breakdownData = useSelector((state) => state.productivitybreakdown);
   const teamwiseData = useSelector((state) => state.teamwiseproductivity);
+  const mostProductivityTeams = useSelector(
+    (state) => state.mostproductivityteams
+  );
+  const leastProductivityTeams = useSelector(
+    (state) => state.leastproductivityteams
+  );
 
   const xasis = teamwiseData.map((item) => item.teamName);
 
@@ -51,25 +59,31 @@ const ProductivitySummary = ({
 
   const barchartColors = ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"];
 
-  const productiveTeamsItems = [
-    { id: 1, name: "INTERNAL HR", percentage: 90 },
-    { id: 2, name: "EXTERNAL HR", percentage: 85 },
-    { id: 3, name: "SEO", percentage: 75 },
-  ];
-  const nonProductiveteamsItems = [
-    { id: 1, name: "OPERATION", percentage: 30 },
-    { id: 2, name: "QUALITY", percentage: 20 },
-    { id: 3, name: "Sales", percentage: 10 },
-  ];
-
   return (
     <div>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Productivity</p>
-            <p className="userproductivity_contents">41.69%</p>
-            <p className="userproductivity_hours">388h:49m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Productivity</p>
+                <p className="userproductivity_contents">{totalProductivity}</p>
+                <p className="userproductivity_hours">
+                  {totalProductivityTime === "00h:00m"
+                    ? "-"
+                    : totalProductivityTime}
+                </p>
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
@@ -150,6 +164,7 @@ const ProductivitySummary = ({
                 <Skeleton
                   active
                   title={{ width: 140 }}
+                  style={{ height: "45vh" }}
                   paragraph={{
                     rows: 0,
                   }}
@@ -209,73 +224,106 @@ const ProductivitySummary = ({
           </Col>
           <Col xs={24} sm={24} md={14} lg={14}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Productivity outliers</p>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalHighFill
-                  color="#25a17d"
-                  size={22}
-                  style={{ marginRight: "12px" }}
+              {loading ? (
+                <Skeleton
+                  active
+                  style={{ height: "45vh" }}
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
                 />
-                <p className="mostproductive_heading">
-                  Most productive Team(s)
-                </p>
-              </div>
+              ) : (
+                <>
+                  <p className="devices_chartheading">Productivity outliers</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalHighFill
+                      color="#25a17d"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Most productive Team(s)
+                    </p>
+                  </div>
 
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress
-                          strokeColor="#25a17d"
-                          percent={item.percentage}
-                        />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
-              <Divider className="productivity_outliersDivider" />
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalLowFill
-                  color="#e93b3a"
-                  size={23}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">
-                  Least productive Team(s)
-                </p>
-              </div>
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress
-                          strokeColor="rgba(244, 67, 54, 0.62)"
-                          percent={item.percentage}
-                        />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {mostProductivityTeams.length >= 1 ? (
+                      <>
+                        {mostProductivityTeams.map((item, index) => (
+                          <Row>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <p style={{ fontWeight: 500 }}>
+                                {index + 1 + ")" + " " + item.team_name}
+                              </p>
+                            </Col>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <Flex gap="small" vertical>
+                                <Progress
+                                  strokeColor="#25a17d"
+                                  percent={Math.floor(item.productive_percent)}
+                                />
+                              </Flex>
+                            </Col>
+                          </Row>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
+                  <Divider className="productivity_outliersDivider" />
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalLowFill
+                      color="#e93b3a"
+                      size={23}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Least productive Team(s)
+                    </p>
+                  </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {leastProductivityTeams.length >= 1 ? (
+                      <>
+                        {leastProductivityTeams.map((item, index) => (
+                          <Row>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <p style={{ fontWeight: 500 }}>
+                                {index + 1 + ")" + " " + item.team_name}
+                              </p>
+                            </Col>
+                            <Col xs={24} sm={24} md={12} lg={12}>
+                              <Flex gap="small" vertical>
+                                <Progress
+                                  strokeColor="rgba(244, 67, 54, 0.62)"
+                                  percent={Math.floor(item.productive_percent)}
+                                />
+                              </Flex>
+                            </Col>
+                          </Row>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </Col>
         </Row>

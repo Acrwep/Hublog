@@ -13,6 +13,7 @@ import {
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getProductivityBreakdown,
+  getProductivityOutliers,
   getTeams,
   getTeamwiseProductivity,
   getTopAppsUsage,
@@ -24,6 +25,8 @@ import {
 import ProductivityDetailed from "./ProductivityDetailed";
 import { useDispatch } from "react-redux";
 import {
+  storeLeastProductivityTeams,
+  storeMostProductivityTeams,
   storeProductivityBreakdown,
   storeTeamwiseProductivity,
 } from "../../Redux/slice";
@@ -41,6 +44,8 @@ const Productivity = () => {
   const [breakdownAverageTime, setBreakdownAverageTime] = useState("");
   const [isBreakdownEmpty, setIsBreakdownEmpty] = useState(false);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [totalProductivity, setTotalProductivity] = useState(null);
+  const [totalProductivityTime, setTotalProductivityTime] = useState("");
   const [topAppName, setTopAppName] = useState("");
   const [topAppUsageTime, setTopAppUsageTime] = useState("");
   const [topUrlName, setTopUrlName] = useState("");
@@ -138,6 +143,7 @@ const Productivity = () => {
         const [hours, minutes] =
           breakdowndata.totalProductiveDuration.split(":");
         setBreakdownTotalDuration(`${hours}h ${minutes}m`);
+        setTotalProductivityTime(`${hours}h:${minutes}m`);
         const [avgHours, avgMinutes] =
           breakdowndata.averageDuratiopn.split(":");
         setBreakdownAverageTime(`${avgHours}h ${avgMinutes}m`);
@@ -191,6 +197,46 @@ const Productivity = () => {
       dispatch(storeTeamwiseProductivity([]));
     } finally {
       setTimeout(() => {
+        getProductivityOutliersData(orgId, teamid, startDate, endDate);
+      }, 300);
+    }
+  };
+
+  const getProductivityOutliersData = async (
+    orgId,
+    teamid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+    try {
+      const response = await getProductivityOutliers(payload);
+      const productivityOutliers = response?.data?.data;
+      console.log("outliers response", productivityOutliers);
+      const topTeams = productivityOutliers?.top;
+      dispatch(storeMostProductivityTeams(topTeams));
+      dispatch(storeLeastProductivityTeams(productivityOutliers?.bottom));
+      let totalProductivePercent = 0;
+      if (topTeams.length >= 1) {
+        productivityOutliers.top.map((item) => {
+          totalProductivePercent =
+            totalProductivePercent + item.productive_percent;
+        });
+        setTotalProductivity(totalProductivePercent.toFixed(2) + "%");
+      } else {
+        setTotalProductivity("-");
+      }
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeMostProductivityTeams([]));
+      dispatch(storeLeastProductivityTeams([]));
+    } finally {
+      setTimeout(() => {
         getTopAppUsageData(orgId, teamid, startDate, endDate);
       }, 300);
     }
@@ -203,7 +249,6 @@ const Productivity = () => {
       startDate: startdate,
       endDate: enddate,
     };
-    let AppMaxTime = "";
     try {
       const response = await getTopAppsUsage(payload);
       const TopAppsUsageData = response.data;
@@ -214,19 +259,16 @@ const Productivity = () => {
         );
 
         const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
-        AppMaxTime = TopAppsUsageData.maxUsage;
         setTopAppUsageTime(hours + "h:" + minutes + "m");
         return;
       } else {
         setTopAppName("-");
         setTopAppUsageTime("-");
-        AppMaxTime = "";
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopAppName("-");
       setTopAppUsageTime("-");
-      AppMaxTime = "";
     } finally {
       setTimeout(() => {
         getTopUrlUsageData(orgId, teamid, startdate, enddate);
@@ -480,8 +522,10 @@ const Productivity = () => {
           {activePage === 1 ? (
             <div>
               <ProductivitySummary
+                totalProductivityTime={totalProductivityTime}
                 breakdownTotalDuration={breakdownTotalDuration}
                 breakdownAverageTime={breakdownAverageTime}
+                totalProductivity={totalProductivity}
                 topAppName={topAppName}
                 topAppUsageTime={topAppUsageTime}
                 topUrlName={topUrlName}

@@ -638,6 +638,19 @@ export const getTeamwiseProductivity = async (payload) => {
     throw error;
   }
 };
+export const getProductivityOutliers = async (payload) => {
+  try {
+    const response = await api.get(
+      "/api/Productivity/Most&Least_Teamwise_Productivity",
+      {
+        params: payload,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //alerts
 export const getAlerts = async (payload) => {
   try {

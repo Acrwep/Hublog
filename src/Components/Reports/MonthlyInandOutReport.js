@@ -35,66 +35,64 @@ const MonthlyInandOutReport = () => {
   const [loading, setLoading] = useState(false);
 
   const DownloadTable = (data, fileName) => {
+    const currentMonthName = moment().format("MMMM"); // get current month name
+    const currentYear = moment().year(); // get current year
+
+    const currentMonthDates = getCurrentMonthDates(
+      monthName ? monthName : currentMonthName,
+      year ? year : currentYear
+    );
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
 
     // Prepare the worksheet data
     const worksheetData = [];
 
-    // Add the header row
-    worksheetData.push(["Employee", "Date", "In", "Out"]);
+    // Generate the header row
+    const header = ["Employee"];
+    for (let i = 1; i <= currentMonthDates.length; i++) {
+      header.push(`In (${i})`, `Out (${i})`);
+    }
+    worksheetData.push(header);
 
-    // Prepare an array to store rows
-    const rows = [];
-
-    // Collect rows
+    // Iterate through the data and collect rows
     data.forEach((record) => {
-      const employeeName = `${record.first_name} ${record.last_name}`;
+      const row = [record.full_Name]; // Start the row with the employee name
 
-      Object.keys(record).forEach((key) => {
-        if (key !== "first_name" && key !== "last_name") {
-          const date = key;
-          const timeData = record[key];
+      for (let i = 1; i <= 30; i++) {
+        const dayKey = i.toString().padStart(2, "0"); // Format day as "01", "02", ..., "30"
+        const timeData = record[dayKey];
 
-          let inTime = "";
-          let outTime = "";
+        let inTime = "";
+        let outTime = "";
 
-          if (timeData) {
-            if (
-              timeData.in &&
-              timeData.in !== "weeklyoff" &&
-              timeData.in !== "0001-01-01T00:00:00"
-            ) {
-              inTime = moment(timeData.in).format("hh:mm A");
-            } else if (timeData.in === "weeklyoff") {
-              inTime = "Weekly Off";
-            }
-
-            if (
-              timeData.out &&
-              timeData.in !== "weeklyoff" &&
-              timeData.out !== "0001-01-01T00:00:00"
-            ) {
-              outTime = moment(timeData.out).format("hh:mm A");
-            } else if (timeData.out === "weeklyoff") {
-              outTime = "Weekly Off";
-            }
+        if (timeData) {
+          if (
+            timeData.in &&
+            timeData.in !== "weeklyoff" &&
+            timeData.in !== "0001-01-01T00:00:00"
+          ) {
+            inTime = moment(timeData.in).format("YYYY-MM-DD hh:mm A");
+          } else if (timeData.in === "weeklyoff") {
+            inTime = "Weekly Off";
           }
 
-          rows.push([employeeName, date, inTime, outTime]);
+          if (
+            timeData.out &&
+            timeData.out !== "weeklyoff" &&
+            timeData.out !== "0001-01-01T00:00:00"
+          ) {
+            outTime = moment(timeData.out).format("YYYY-MM-DD hh:mm A");
+          } else if (timeData.out === "weeklyoff") {
+            outTime = "Weekly Off";
+          }
         }
-      });
-    });
 
-    // Sort rows by date
-    rows.sort((a, b) => {
-      const dateA = moment(a[1], "DD").toDate(); // Assuming dates are in "DD" format
-      const dateB = moment(b[1], "DD").toDate(); // Assuming dates are in "DD" format
-      return dateA - dateB;
-    });
+        row.push(inTime, outTime); // Add in and out times for the day
+      }
 
-    // Add sorted rows to worksheet data
-    worksheetData.push(...rows);
+      worksheetData.push(row);
+    });
 
     // Create worksheet from array of arrays
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
@@ -414,8 +412,8 @@ const MonthlyInandOutReport = () => {
     return [
       {
         title: "Employee",
-        dataIndex: "first_name",
-        key: "employee",
+        dataIndex: "full_Name",
+        key: "full_Name",
         width: 240,
         fixed: "left",
         render: (text, record) => {
