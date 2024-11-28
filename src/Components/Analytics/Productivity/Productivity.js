@@ -14,6 +14,7 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getProductivityBreakdown,
   getProductivityOutliers,
+  getProductivityTrend,
   getProductivityWorktimeTrends,
   getTeams,
   getTeamwiseProductivity,
@@ -29,6 +30,7 @@ import {
   storeLeastProductivityTeams,
   storeMostProductivityTeams,
   storeProductivityBreakdown,
+  storeProductivityTrend,
   storeProductivityWorktimeTrends,
   storeTeamwiseProductivity,
 } from "../../Redux/slice";
@@ -199,7 +201,7 @@ const Productivity = () => {
         dispatch(storeProductivityWorktimeTrends([]));
       } finally {
         setTimeout(() => {
-          setDetailedLoading(false);
+          getProductiveTrendData(orgId, teamid, userid, startDate, endDate);
         }, 300);
       }
     }
@@ -370,6 +372,35 @@ const Productivity = () => {
     }
   };
 
+  const getProductiveTrendData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getProductivityTrend(payload);
+      const productivityTrenddata = response?.data;
+      console.log("trends response", productivityTrenddata);
+      dispatch(storeProductivityTrend(productivityTrenddata));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeProductivityTrend([]));
+    } finally {
+      setTimeout(() => {
+        setDetailedLoading(false);
+      }, 300);
+    }
+  };
   //onchange functions
   const handleTeam = async (value) => {
     setTeamId(value);
@@ -499,6 +530,7 @@ const Productivity = () => {
                   ? "productivity_activedetailedbutton "
                   : "productivity_detailedbutton"
               }
+              disabled={loading ? true : false}
               onClick={() => handlePageChange(2)}
             >
               Detailed

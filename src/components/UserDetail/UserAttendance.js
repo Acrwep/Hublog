@@ -25,7 +25,7 @@ export default function UserAttendance({
       },
     },
     {
-      title: "Check In",
+      title: "Punch In",
       dataIndex: "start_Time",
       key: "start_Time",
       width: 120,
@@ -34,7 +34,7 @@ export default function UserAttendance({
       },
     },
     {
-      title: "Check Out",
+      title: "Punch Out",
       dataIndex: "end_Time",
       key: "end_Time",
       width: 120,

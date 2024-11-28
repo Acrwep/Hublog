@@ -661,6 +661,16 @@ export const getProductivityWorktimeTrends = async (payload) => {
     throw error;
   }
 };
+export const getProductivityTrend = async (payload) => {
+  try {
+    const response = await api.get("/api/Productivity/GetProductivity_Trend", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //alerts
 export const getAlerts = async (payload) => {
   try {

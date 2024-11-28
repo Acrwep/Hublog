@@ -52,11 +52,7 @@ const Devices = () => {
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar
-              avatarSize={31}
-              itemName={text}
-              avatarfontSize="15px"
-            />
+            <CommonAvatar avatarSize={28} itemName={text} />
             <p className="reports_avatarname">{text}</p>
           </div>
         );
@@ -456,6 +452,7 @@ const Devices = () => {
               scroll={{ x: 1600 }}
               dataPerPage={10}
               loading={tableLoading}
+              size="small"
               checkBox="false"
               bordered="false"
             />

@@ -85,10 +85,9 @@ const CommonBarChart = ({
       y: {
         formatter: function (val, { seriesIndex, dataPointIndex }) {
           // Show corresponding x-axis name and y value
-          const xAxisName = xasis[dataPointIndex]; // Get corresponding x-axis name
-          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${xAxisName}</span>: ${
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${
             timebased === "true" ? formatTooltipTime(val) : val
-          }`;
+          }</span>`;
         },
       },
       x: {

@@ -12,6 +12,7 @@ const ProductivityDetailed = ({ loading }) => {
   const worktimeTrendsData = useSelector(
     (state) => state.productivityworktimetrends
   );
+  const productivityTrendData = useSelector((state) => state.productivitytrend);
 
   const formatTimeInHours = (value) => {
     const hours = Math.floor(value); // Only display whole hours
@@ -30,6 +31,9 @@ const ProductivityDetailed = ({ loading }) => {
   const worktimeTrendsXasis = worktimeTrendsData.map((item) =>
     moment(item.start_timing).format("DD/MM/YYYY")
   );
+  const productivityTrendXasis = productivityTrendData.map((item) =>
+    moment(item.date).format("DD/MM/YYYY")
+  );
 
   const worktimeTrendsSeries = [
     {
@@ -42,6 +46,27 @@ const ProductivityDetailed = ({ loading }) => {
       name: "Break time",
       data: worktimeTrendsData.map((item) => {
         return parseTimeToDecimal(item.break_duration);
+      }),
+    },
+  ];
+
+  const productivityTrendSeries = [
+    {
+      name: "Productive",
+      data: productivityTrendData.map((item) => {
+        return parseTimeToDecimal(item.productive_Duration);
+      }),
+    },
+    {
+      name: "Neutral",
+      data: productivityTrendData.map((item) => {
+        return parseTimeToDecimal(item.neutral_Duration);
+      }),
+    },
+    {
+      name: "Unproductive",
+      data: productivityTrendData.map((item) => {
+        return parseTimeToDecimal(item.unproductive_Duration);
       }),
     },
   ];
@@ -95,7 +120,7 @@ const ProductivityDetailed = ({ loading }) => {
           // Show corresponding x-axis name and y value
           return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
             val
-          )}</span>: `;
+          )}</span>`;
         },
       },
     },
@@ -110,43 +135,45 @@ const ProductivityDetailed = ({ loading }) => {
       height: 350,
     },
     stroke: {
-      curve: "straight", // Keeps the line straight for the line chart
+      curve: "smooth", // Keeps the line straight for the line chart
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
+      categories: productivityTrendXasis,
+      labels: {
+        show: true,
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
     },
     yaxis: {
+      labels: {
+        formatter: function (value) {
+          return formatTimeInHours(value);
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
       title: {
-        text: "Values",
+        text: "Value",
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
+            val
+          )}</span>`;
+        },
       },
     },
     colors: ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"], // Different colors for the three series
   };
-
-  const [lineChartSeries, setLineChartSeries] = useState([
-    {
-      name: "Productive",
-      data: [30, 40, 45, 50, 49, 60, 70, 91, 125],
-    },
-    {
-      name: "Neutral",
-      data: [20, 30, 35, 40, 39, 50, 60, 81, 95],
-    },
-    {
-      name: "Unproductive",
-      data: [10, 20, 25, 30, 29, 40, 50, 61, 75],
-    },
-  ]);
 
   const columns = [
     {
@@ -158,7 +185,7 @@ const ProductivityDetailed = ({ loading }) => {
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarSize={30} itemName={text} />
+            <CommonAvatar avatarSize={28} itemName={text} />
             <p className="reports_avatarname">{text}</p>
           </div>
         );
@@ -266,13 +293,30 @@ const ProductivityDetailed = ({ loading }) => {
         )}
       </div>
       <div className="devices_chartsContainer" style={{ marginTop: "25px" }}>
-        <p className="devices_chartheading">Productivity Trend</p>
-        <ReactApexChart
-          options={lineChartOptions}
-          series={lineChartSeries}
-          type="line"
-          height={350}
-        />
+        {loading ? (
+          <Skeleton
+            active
+            title={{ width: 140 }}
+            style={{ height: "45vh" }}
+            paragraph={{
+              rows: 0,
+            }}
+          />
+        ) : (
+          <>
+            <p className="devices_chartheading">Productivity Trend</p>
+            {productivityTrendData.length >= 1 ? (
+              <ReactApexChart
+                options={lineChartOptions}
+                series={productivityTrendSeries}
+                type="line"
+                height={350}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </>
+        )}
       </div>
 
       <div className="devices_chartsContainer" style={{ marginTop: "20px" }}>
@@ -282,6 +326,7 @@ const ProductivityDetailed = ({ loading }) => {
           dataSource={data}
           scroll={{ x: 1400 }}
           dataPerPage={10}
+          size="small"
           bordered="false"
           checkBox="false"
         />

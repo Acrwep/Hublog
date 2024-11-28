@@ -57,10 +57,8 @@ export default function UserBreak({ loading, filterLoading }) {
         if (text === null) {
           return null;
         } else {
-          const hour = text.split(":")[0];
-          const covertHourAsInteger = parseInt(hour);
-          const minute = text.split(":")[1];
-          return <p>{covertHourAsInteger + "h:" + minute + "m"}</p>;
+          const [hour, minutes, seconds] = text.split(":");
+          return <p>{hour + "h:" + minutes + "m:" + seconds + "s"}</p>;
         }
       },
     },
