@@ -380,6 +380,16 @@ const leastProductivityTeamsSlice = createSlice({
     },
   },
 });
+const productivityWorktimeTrendsSlice = createSlice({
+  name: "productivityworktimetrends",
+  initialState,
+  reducers: {
+    storeProductivityWorktimeTrends(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //datewise attendance
 const datewiseAttendanceSlice = createSlice({
   name: "datewiseattendance",
@@ -502,6 +512,8 @@ export const { storeMostProductivityTeams } =
   mostProductivityTeamsSlice.actions;
 export const { storeLeastProductivityTeams } =
   leastProductivityTeamsSlice.actions;
+export const { storeProductivityWorktimeTrends } =
+  productivityWorktimeTrendsSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
 export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
 export const { storeDatewiseAttendanceAbsentData } =
@@ -553,6 +565,8 @@ export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
 export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;
 export const leastProductivityTeamsReducer =
   leastProductivityTeamsSlice.reducer;
+export const productivityWorktimeTrendsReducer =
+  productivityWorktimeTrendsSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
 export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
 export const datewiseAttendanceAbsentReducer =

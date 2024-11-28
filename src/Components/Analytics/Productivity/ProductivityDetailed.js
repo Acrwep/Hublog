@@ -1,12 +1,52 @@
 import React, { useState } from "react";
-import { Flex, Progress } from "antd";
+import { Flex, Progress, Skeleton } from "antd";
 import ReactApexChart from "react-apexcharts";
 import CommonAvatar from "../../Common/CommonAvatar";
 import CommonTable from "../../Common/CommonTable";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { parseTimeToDecimal } from "../../Common/Validation";
+import CommonNodatafound from "../../Common/CommonNodatafound";
 
-const ProductivityDetailed = () => {
-  const [chartOptions, setChartOptions] = useState({
+const ProductivityDetailed = ({ loading }) => {
+  const worktimeTrendsData = useSelector(
+    (state) => state.productivityworktimetrends
+  );
+
+  const formatTimeInHours = (value) => {
+    const hours = Math.floor(value); // Only display whole hours
+    return `${hours}hr`;
+  };
+
+  const formatTooltipTime = (value) => {
+    if (isNaN(value) || value === null || value === undefined)
+      return "0hr 0m 0s";
+    const hours = Math.floor(value);
+    const minutes = Math.floor((value % 1) * 60);
+    const seconds = Math.floor(((value % 1) * 3600) % 60);
+    return `${hours}hr ${minutes}m ${seconds}s`;
+  };
+
+  const worktimeTrendsXasis = worktimeTrendsData.map((item) =>
+    moment(item.start_timing).format("DD/MM/YYYY")
+  );
+
+  const worktimeTrendsSeries = [
+    {
+      name: "Online time",
+      data: worktimeTrendsData.map((item) => {
+        return parseTimeToDecimal(item.active_duration);
+      }),
+    },
+    {
+      name: "Break time",
+      data: worktimeTrendsData.map((item) => {
+        return parseTimeToDecimal(item.break_duration);
+      }),
+    },
+  ];
+
+  const chartOptions = {
     chart: {
       type: "area",
       height: 350,
@@ -17,80 +57,52 @@ const ProductivityDetailed = () => {
     stroke: {
       curve: "smooth", // This makes it a Spline Area Chart
     },
-    colors: ["#00e396", "#0791fb"],
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
+      categories: worktimeTrendsXasis,
+      labels: {
+        show: true,
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
+    },
+    colors: ["#00e396", "#0791fb"],
+    labels: {
+      show: true,
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     yaxis: {
+      labels: {
+        formatter: function (value) {
+          return formatTimeInHours(value);
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
       title: {
-        text: "Values",
+        text: "Value",
       },
     },
     tooltip: {
-      x: {
-        format: "MM",
+      y: {
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
+            val
+          )}</span>: `;
+        },
       },
     },
     fill: {
       opacity: 0.3,
     },
-  });
-
-  const [chartSeries, setChartSeries] = useState([
-    {
-      name: "Online time",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 147],
-    },
-    {
-      name: "Break time",
-      data: [23, 42, 35, 27, 43, 22, 31, 34, 52],
-    },
-  ]);
-
-  const [splineAreaOptions, setSplineAreaOptions] = useState({
-    chart: {
-      type: "area",
-      height: 350,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth", // Spline for smooth curve
-    },
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
-    },
-    yaxis: {
-      title: {
-        text: "Values",
-      },
-    },
-    fill: {
-      opacity: 0.3,
-    },
-    colors: ["#FF0000", "#000000"], // Red and Black colors for the spline area chart
-  });
+  };
 
   const lineChartOptions = {
     chart: {
@@ -223,16 +235,35 @@ const ProductivityDetailed = () => {
       productivity_percentage: 20,
     },
   ];
+
   return (
     <div>
       <div className="devices_chartsContainer">
-        <p className="devices_chartheading">Working Time Trends</p>
-        <ReactApexChart
-          options={chartOptions}
-          series={chartSeries}
-          type="area"
-          height={350}
-        />
+        {loading ? (
+          <Skeleton
+            active
+            title={{ width: 140 }}
+            style={{ height: "45vh" }}
+            paragraph={{
+              rows: 0,
+            }}
+          />
+        ) : (
+          <>
+            <p className="devices_chartheading">Working Time Trends</p>
+            {worktimeTrendsData.length >= 1 ? (
+              <ReactApexChart
+                options={chartOptions}
+                xaxis={worktimeTrendsXasis}
+                series={worktimeTrendsSeries}
+                type="area"
+                height={350}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </>
+        )}
       </div>
       <div className="devices_chartsContainer" style={{ marginTop: "25px" }}>
         <p className="devices_chartheading">Productivity Trend</p>

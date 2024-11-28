@@ -14,6 +14,7 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getProductivityBreakdown,
   getProductivityOutliers,
+  getProductivityWorktimeTrends,
   getTeams,
   getTeamwiseProductivity,
   getTopAppsUsage,
@@ -28,6 +29,7 @@ import {
   storeLeastProductivityTeams,
   storeMostProductivityTeams,
   storeProductivityBreakdown,
+  storeProductivityWorktimeTrends,
   storeTeamwiseProductivity,
 } from "../../Redux/slice";
 import Loader from "../../Common/Loader";
@@ -54,6 +56,7 @@ const Productivity = () => {
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [loading, setLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
+  const [detailedLoading, setDetailedLoading] = useState(true);
   const [organizationId, setOrganizationId] = useState(null);
 
   const handlePageChange = (pageNumber) => {
@@ -66,6 +69,7 @@ const Productivity = () => {
     getBreakdownData(
       organizationId,
       teamId,
+      userId,
       selectedDates[0],
       selectedDates[1],
       pageNumber
@@ -88,8 +92,9 @@ const Productivity = () => {
       console.log("teams error", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
-      setTimeout(() => {}, 500);
-      getUsersData();
+      setTimeout(() => {
+        getUsersData();
+      }, 300);
     }
   };
 
@@ -113,6 +118,7 @@ const Productivity = () => {
         getBreakdownData(
           orgId,
           null,
+          null,
           PreviousAndCurrentDate[0],
           PreviousAndCurrentDate[1],
           activePage
@@ -124,6 +130,7 @@ const Productivity = () => {
   const getBreakdownData = async (
     orgId,
     teamid,
+    userid,
     startDate,
     endDate,
     pageNumber
@@ -170,6 +177,29 @@ const Productivity = () => {
       } finally {
         setTimeout(() => {
           getTeamwiseProductivityData(orgId, teamid, startDate, endDate);
+        }, 300);
+      }
+    } else {
+      setDetailedLoading(true);
+      const payload = {
+        organizationId: orgId,
+        ...(teamid && { teamId: teamid }),
+        ...(userid && { userId: userid }),
+        fromDate: startDate,
+        toDate: endDate,
+      };
+
+      try {
+        const response = await getProductivityWorktimeTrends(payload);
+        const worktrendsdata = response?.data?.data;
+        console.log("worktime trends response", worktrendsdata);
+        dispatch(storeProductivityWorktimeTrends(worktrendsdata));
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+        dispatch(storeProductivityWorktimeTrends([]));
+      } finally {
+        setTimeout(() => {
+          setDetailedLoading(false);
         }, 300);
       }
     }
@@ -272,7 +302,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getTopUrlUsageData(orgId, teamid, startdate, enddate);
-      }, 500);
+      }, 300);
     }
   };
 
@@ -303,7 +333,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getTopCategoryUsageData(orgId, teamid, startdate, enddate);
-      }, 500);
+      }, 300);
     }
   };
 
@@ -336,7 +366,7 @@ const Productivity = () => {
       setTimeout(() => {
         setSummaryLoading(false);
         setLoading(false);
-      }, 500);
+      }, 300);
     }
   };
 
@@ -356,6 +386,7 @@ const Productivity = () => {
       getBreakdownData(
         organizationId,
         value,
+        null,
         selectedDates[0],
         selectedDates[1],
         activePage
@@ -368,6 +399,14 @@ const Productivity = () => {
 
   const handleUser = (value) => {
     setUserId(value);
+    getBreakdownData(
+      organizationId,
+      teamId,
+      value,
+      selectedDates[0],
+      selectedDates[1],
+      activePage
+    );
   };
 
   const handleDateChange = (dates, dateStrings) => {
@@ -378,6 +417,7 @@ const Productivity = () => {
       getBreakdownData(
         organizationId,
         teamId,
+        userId,
         dateStrings[0],
         dateStrings[1],
         activePage
@@ -422,6 +462,7 @@ const Productivity = () => {
       setSelectedDates(PreviousandCurrentDate);
       getBreakdownData(
         organizationId,
+        null,
         null,
         PreviousandCurrentDate[0],
         PreviousandCurrentDate[1],
@@ -538,7 +579,7 @@ const Productivity = () => {
             </div>
           ) : (
             <div>
-              <ProductivityDetailed />
+              <ProductivityDetailed loading={detailedLoading} />
             </div>
           )}
         </>
