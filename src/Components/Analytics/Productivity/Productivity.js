@@ -13,6 +13,7 @@ import {
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getProductivityBreakdown,
+  getProductivityEmployeesList,
   getProductivityOutliers,
   getProductivityTrend,
   getProductivityWorktimeTrends,
@@ -30,6 +31,7 @@ import {
   storeLeastProductivityTeams,
   storeMostProductivityTeams,
   storeProductivityBreakdown,
+  storeProductivityEmployeelist,
   storeProductivityTrend,
   storeProductivityWorktimeTrends,
   storeTeamwiseProductivity,
@@ -248,21 +250,14 @@ const Productivity = () => {
     };
     try {
       const response = await getProductivityOutliers(payload);
+      setTotalProductivity(
+        response?.data.grandTotalpercentage.toFixed(2) + "%"
+      );
       const productivityOutliers = response?.data?.data;
       console.log("outliers response", productivityOutliers);
       const topTeams = productivityOutliers?.top;
       dispatch(storeMostProductivityTeams(topTeams));
       dispatch(storeLeastProductivityTeams(productivityOutliers?.bottom));
-      let totalProductivePercent = 0;
-      if (topTeams.length >= 1) {
-        productivityOutliers.top.map((item) => {
-          totalProductivePercent =
-            totalProductivePercent + item.productive_percent;
-        });
-        setTotalProductivity(totalProductivePercent.toFixed(2) + "%");
-      } else {
-        setTotalProductivity("-");
-      }
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
       dispatch(storeMostProductivityTeams([]));
@@ -395,6 +390,36 @@ const Productivity = () => {
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
       dispatch(storeProductivityTrend([]));
+    } finally {
+      setTimeout(() => {
+        getProductivityEmployeeData(orgId, teamid, userid, startDate, endDate);
+      }, 300);
+    }
+  };
+
+  const getProductivityEmployeeData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getProductivityEmployeesList(payload);
+      const productivityEmployeedata = response?.data;
+      console.log("prod employee response", productivityEmployeedata);
+      dispatch(storeProductivityEmployeelist(productivityEmployeedata));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeProductivityEmployeelist([]));
     } finally {
       setTimeout(() => {
         setDetailedLoading(false);

@@ -124,7 +124,7 @@ const Reports = () => {
               </p>
             </div>
           </Col>
-          {/* <Col xs={24} sm={24} md={12} lg={6}>
+          <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
               onClick={() => navigation("/productivityreport")}
@@ -137,7 +137,7 @@ const Reports = () => {
                 Download the Productivity report for your organisation
               </p>
             </div>
-          </Col> */}
+          </Col>
           {/* <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"

@@ -41,6 +41,7 @@ import {
   leastProductivityTeamsReducer,
   productivityWorktimeTrendsReducer,
   productivityTrendReducer,
+  productivityEmployeelistReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -72,6 +73,7 @@ export const store = configureStore({
     leastproductivityteams: leastProductivityTeamsReducer,
     productivityworktimetrends: productivityWorktimeTrendsReducer,
     productivitytrend: productivityTrendReducer,
+    productivityemployeelist: productivityEmployeelistReducer,
     rolesearchvalue: roleSearchValueReducer,
     userAttendance: userAttendanceReducer,
     userBreak: userBreakReducer,

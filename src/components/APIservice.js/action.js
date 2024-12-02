@@ -671,6 +671,16 @@ export const getProductivityTrend = async (payload) => {
     throw error;
   }
 };
+export const getProductivityEmployeesList = async (payload) => {
+  try {
+    const response = await api.get("/api/Productivity/GetEmployeeList", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //alerts
 export const getAlerts = async (payload) => {
   try {

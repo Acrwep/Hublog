@@ -61,6 +61,20 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
               : null;
           }
         }
+        if (
+          column.dataIndex === "online_duration" ||
+          column.dataIndex === "break_duration" ||
+          column.dataIndex === "TotalProductiveDuration" ||
+          column.dataIndex === "TotalNeutralDuration" ||
+          column.dataIndex === "TotalUnproductiveDuration"
+        ) {
+          if (row[column.dataIndex] === "0001-01-01T00:00:00") {
+            return null;
+          } else {
+            const [hours, minutes, seconds] = row[column.dataIndex].split(":");
+            return `${hours}h:${minutes}m:${seconds}s`;
+          }
+        }
         return row[column.dataIndex]; // other fields
       })
     ), // data rows

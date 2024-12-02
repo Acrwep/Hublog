@@ -13,6 +13,9 @@ const ProductivityDetailed = ({ loading }) => {
     (state) => state.productivityworktimetrends
   );
   const productivityTrendData = useSelector((state) => state.productivitytrend);
+  const productivityEmployeesListData = useSelector(
+    (state) => state.productivityemployeelist
+  );
 
   const formatTimeInHours = (value) => {
     const hours = Math.floor(value); // Only display whole hours
@@ -178,8 +181,8 @@ const ProductivityDetailed = ({ loading }) => {
   const columns = [
     {
       title: "Employee",
-      dataIndex: "full_Name",
-      key: "full_Name",
+      dataIndex: "FullName",
+      key: "FullName",
       width: 240,
       fixed: "left",
       render: (text, record) => {
@@ -193,56 +196,70 @@ const ProductivityDetailed = ({ loading }) => {
     },
     {
       title: "Attendance",
-      dataIndex: "attendance",
-      key: "attendance",
+      dataIndex: "AttendanceCount",
+      key: "AttendanceCount",
       width: "150px",
     },
     {
       title: "Online time",
-      dataIndex: "online_time",
-      key: "online_time",
+      dataIndex: "online_duration",
+      key: "online_duration",
       width: "170px",
-      // render: (text, record) => {
-      //   if (text === "0001-01-01T00:00:00" || text === null) {
-      //     return "00h:00m";
-      //   }
-      //   return <p>{moment(text, "HH:mm:ss").format("HH[h]:mm[m]")}</p>;
-      // },
-    },
-    {
-      title: "Productivity time",
-      dataIndex: "productivity_time",
-      key: "productivity_time",
-      width: "170px",
-    },
-    {
-      title: "Unproductivity time",
-      dataIndex: "unproductivty_time",
-      key: "unproductivty_time",
-      width: "180px",
-    },
-    {
-      title: "Neutral time",
-      dataIndex: "neutral_time",
-      key: "neutral_time",
-      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Break time",
-      dataIndex: "break_time",
-      key: "break_time",
+      dataIndex: "break_duration",
+      key: "break_duration",
       width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Productivity time",
+      dataIndex: "TotalProductiveDuration",
+      key: "TotalProductiveDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Neutral time",
+      dataIndex: "TotalNeutralDuration",
+      key: "TotalNeutralDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Unproductivity time",
+      dataIndex: "TotalUnproductiveDuration",
+      key: "TotalUnproductiveDuration",
+      width: "180px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Productivity",
-      dataIndex: "productivity_percentage",
-      key: "productivity_percentage",
+      dataIndex: "PercentageProductiveDuration",
+      key: "PercentageProductiveDuration",
       width: "170px",
       fixed: "right",
       render: (text) => {
         return (
           <Flex gap="small" vertical>
-            <Progress percent={text} strokeColor="#25a17d" />
+            <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
           </Flex>
         );
       },
@@ -323,12 +340,13 @@ const ProductivityDetailed = ({ loading }) => {
         <p className="devices_chartheading">Employee List</p>
         <CommonTable
           columns={columns}
-          dataSource={data}
+          dataSource={productivityEmployeesListData}
           scroll={{ x: 1400 }}
           dataPerPage={10}
           size="small"
           bordered="false"
           checkBox="false"
+          loading={loading}
         />
       </div>
     </div>
