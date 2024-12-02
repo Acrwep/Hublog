@@ -6,6 +6,7 @@ import Loader from "../Common/Loader";
 import "./styles.css";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import { useSelector } from "react-redux";
+import CommonAvatar from "../Common/CommonAvatar";
 
 export default function UserProductivity({
   breakdownTotalDuration,
@@ -22,31 +23,38 @@ export default function UserProductivity({
 }) {
   const breakdownData = useSelector((state) => state.productivitybreakdown);
   const columns = [
-    // {
-    //   title: "Employee",
-    //   dataIndex: "FullName",
-    //   key: "FullName",
-    //   width: 240,
-    //   fixed: "left",
-    //   render: (text, record) => {
-    //     return (
-    //       <div className="breakreport_employeenameContainer">
-    //         <CommonAvatar avatarSize={28} itemName={text} />
-    //         <p className="reports_avatarname">{text}</p>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      title: "Employee",
+      dataIndex: "full_Name",
+      key: "full_Name",
+      width: 240,
+      fixed: "left",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarSize={28} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
+    },
     {
       title: "Attendance",
       dataIndex: "AttendanceCount",
       key: "AttendanceCount",
       width: "150px",
+      render: (text, record) => {
+       if(text===null){
+        return 0
+       }else{
+        return <p>{text}</p>
+       }
+      },
     },
     {
       title: "Online time",
-      dataIndex: "online_duration",
-      key: "online_duration",
+      dataIndex: "OnlineDuration",
+      key: "OnlineDuration",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -55,8 +63,8 @@ export default function UserProductivity({
     },
     {
       title: "Break time",
-      dataIndex: "break_duration",
-      key: "break_duration",
+      dataIndex: "BreakDuration",
+      key: "BreakDuration",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -100,11 +108,15 @@ export default function UserProductivity({
       width: "170px",
       fixed: "right",
       render: (text) => {
+        if(text===null){
+          return 0;
+        }else{
         return (
           <Flex gap="small" vertical>
             <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
           </Flex>
         );
+      }
       },
     },
   ];

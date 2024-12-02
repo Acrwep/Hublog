@@ -35,8 +35,8 @@ const ProductivityReport = () => {
   const columns = [
     {
       title: "Employee",
-      dataIndex: "FullName",
-      key: "FullName",
+      dataIndex: "full_Name",
+      key: "full_Name",
       width: 240,
       fixed: "left",
       render: (text, record) => {
@@ -53,11 +53,18 @@ const ProductivityReport = () => {
       dataIndex: "AttendanceCount",
       key: "AttendanceCount",
       width: "150px",
+      render: (text, record) => {
+       if(text===null){
+        return 0
+       }else{
+        return <p>{text}</p>
+       }
+      },
     },
     {
       title: "Online time",
-      dataIndex: "online_duration",
-      key: "online_duration",
+      dataIndex: "OnlineDuration",
+      key: "OnlineDuration",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -66,8 +73,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Break time",
-      dataIndex: "break_duration",
-      key: "break_duration",
+      dataIndex: "BreakDuration",
+      key: "BreakDuration",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -111,11 +118,15 @@ const ProductivityReport = () => {
       width: "170px",
       fixed: "right",
       render: (text) => {
+        if(text===null){
+          return 0;
+        }else{
         return (
           <Flex gap="small" vertical>
             <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
           </Flex>
         );
+      }
       },
     },
   ];
