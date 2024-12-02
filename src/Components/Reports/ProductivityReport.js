@@ -49,16 +49,23 @@ const ProductivityReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "Team_Name",
+      key: "Team_Name",
+      width: "150px",
+      hidden: true,
+    },
+    {
       title: "Attendance",
       dataIndex: "AttendanceCount",
       key: "AttendanceCount",
       width: "150px",
       render: (text, record) => {
-       if(text===null){
-        return 0
-       }else{
-        return <p>{text}</p>
-       }
+        if (text === null) {
+          return 0;
+        } else {
+          return <p>{text}</p>;
+        }
       },
     },
     {
@@ -118,15 +125,15 @@ const ProductivityReport = () => {
       width: "170px",
       fixed: "right",
       render: (text) => {
-        if(text===null){
+        if (text === null) {
           return 0;
-        }else{
-        return (
-          <Flex gap="small" vertical>
-            <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
-          </Flex>
-        );
-      }
+        } else {
+          return (
+            <Flex gap="small" vertical>
+              <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
+            </Flex>
+          );
+        }
       },
     },
   ];

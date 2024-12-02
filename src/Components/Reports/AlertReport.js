@@ -40,6 +40,13 @@ const AlertReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
+      width: "150px",
+      hidden: true,
+    },
+    {
       title: "Triggered for",
       dataIndex: "triggered",
       key: "triggered",

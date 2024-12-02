@@ -59,6 +59,13 @@ const DeviceReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
+      width: "150px",
+      hidden: true,
+    },
+    {
       title: "Device Name",
       dataIndex: "deviceName",
       key: "deviceName",
