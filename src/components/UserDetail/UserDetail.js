@@ -26,6 +26,7 @@ import {
   getUserTotalBreak,
   getProductivityBreakdown,
   getTopCategoryUsage,
+  getProductivityEmployeesList,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -71,8 +72,10 @@ const UserDetail = () => {
   const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
   const [topCategoryName, setTopCategoryName] = useState("");
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
-  const [internetTime, setInternetTime] = useState("");
   const [breakdownTotalDuration, setBreakdownTotalDuration] = useState("");
+  const [productivityEmployeesData, setProductivityEmployeesData] = useState(
+    []
+  );
   //loadings
   const [initialLoading, setInitialLoading] = useState(true);
   const [attendanceFilterLoading, setAttendanceFilterLoading] = useState(true);
@@ -411,11 +414,38 @@ const UserDetail = () => {
       setTopCategoryUsageTime("-");
     } finally {
       setTimeout(() => {
+        getProductivityEmployeeData(userid, orgId, startdate, enddate);
+      }, 500);
+    }
+  };
+
+  const getProductivityEmployeeData = async (
+    userid,
+    orgId,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(userid && { userId: userid }),
+      fromDate: startdate,
+      toDate: enddate,
+    };
+
+    try {
+      const response = await getProductivityEmployeesList(payload);
+      const productivityEmployeedata = response?.data;
+      console.log("prod employee response", productivityEmployeedata);
+      setProductivityEmployeesData(productivityEmployeedata);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
         setAppsFilterLoading(false);
         setAppsLoading(false);
         setProductivityLoading(false);
         setProductivityFilterLoading(false);
-      }, 500);
+      }, 300);
     }
   };
 
@@ -642,6 +672,7 @@ const UserDetail = () => {
                 topUrlUsageTime={topUrlUsageTime}
                 topCategoryName={topCategoryName}
                 topCategoryUsageTime={topCategoryUsageTime}
+                productivityEmployeesData={productivityEmployeesData}
                 loading={productivityLoading}
                 filterLoading={productivityFilterLoading}
               />

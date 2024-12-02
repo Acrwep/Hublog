@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Skeleton, Tooltip } from "antd";
+import { Row, Col, Skeleton, Tooltip, Flex, Progress } from "antd";
 import CommonTable from "../../Components/Common/CommonTable";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
 import Loader from "../Common/Loader";
@@ -18,59 +18,96 @@ export default function UserProductivity({
   topUrlUsageTime,
   topCategoryName,
   topCategoryUsageTime,
+  productivityEmployeesData,
 }) {
   const breakdownData = useSelector((state) => state.productivitybreakdown);
   const columns = [
+    // {
+    //   title: "Employee",
+    //   dataIndex: "FullName",
+    //   key: "FullName",
+    //   width: 240,
+    //   fixed: "left",
+    //   render: (text, record) => {
+    //     return (
+    //       <div className="breakreport_employeenameContainer">
+    //         <CommonAvatar avatarSize={28} itemName={text} />
+    //         <p className="reports_avatarname">{text}</p>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Attendance",
-      dataIndex: "attendance",
-      key: "attendance",
-      width: 100,
+      dataIndex: "AttendanceCount",
+      key: "AttendanceCount",
+      width: "150px",
     },
     {
       title: "Online time",
-      dataIndex: "onlinetime",
-      key: "onlinetime",
-      width: 120,
+      dataIndex: "online_duration",
+      key: "online_duration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
-      title: "Productive Time",
-      dataIndex: "productivetime",
-      key: "productivetime",
-      width: 120,
+      title: "Break time",
+      dataIndex: "break_duration",
+      key: "break_duration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
-      title: "Unproductive Time",
-      dataIndex: "unproductivetime",
-      key: "unproductivetime",
-      width: 120,
+      title: "Productivity time",
+      dataIndex: "TotalProductiveDuration",
+      key: "TotalProductiveDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Neutral time",
+      dataIndex: "TotalNeutralDuration",
+      key: "TotalNeutralDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Unproductivity time",
+      dataIndex: "TotalUnproductiveDuration",
+      key: "TotalUnproductiveDuration",
+      width: "180px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Productivity",
+      dataIndex: "PercentageProductiveDuration",
+      key: "PercentageProductiveDuration",
+      width: "170px",
+      fixed: "right",
+      render: (text) => {
+        return (
+          <Flex gap="small" vertical>
+            <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
+          </Flex>
+        );
+      },
     },
   ];
-  const [dummydatas, setDummyDatas] = useState([
-    {
-      key: "1",
-      attendance: "6",
-      onlinetime: "27h:47m:27s",
-      productivetime: "17h:51m:34s",
-      unproductivetime: "00h:00m:00s",
-    },
-    {
-      key: "2",
-      attendance: "6",
-      onlinetime: "27h:47m:27s",
-      productivetime: "17h:51m:34s",
-      unproductivetime: "00h:00m:00s",
-    },
-    {
-      key: "3",
-      attendance: "6",
-      onlinetime: "27h:47m:27s",
-      productivetime: "17h:51m:34s",
-      unproductivetime: "00h:00m:00s",
-    },
-  ]);
-
-  const series = [2.72, 3.0, 1.1];
 
   return (
     <>
@@ -219,9 +256,11 @@ export default function UserProductivity({
 
             <CommonTable
               columns={columns}
-              dataSource={dummydatas}
+              dataSource={productivityEmployeesData}
               scroll={{ x: 600 }}
               dataPerPage={10}
+              loading={filterLoading}
+              size="small"
               checkBox="false"
             />
           </div>
