@@ -47,6 +47,16 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
           }
         }
 
+        if (column.dataIndex === "triggeredTime") {
+          if (row[column.dataIndex] === "0001-01-01T00:00:00") {
+            return null;
+          } else {
+            return row[column.dataIndex]
+              ? moment(row[column.dataIndex]).format("hh:mm A")
+              : null;
+          }
+        }
+
         if (column.dataIndex === "totalTime") {
           console.log(
             "eeeeeeeeeeeeeee",

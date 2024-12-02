@@ -51,6 +51,13 @@ const DailyAttendanceReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
+      width: "150px",
+      hidden: true,
+    },
+    {
       title: "In",
       dataIndex: "inTime",
       key: "inTime",

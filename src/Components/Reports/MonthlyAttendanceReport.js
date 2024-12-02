@@ -158,6 +158,7 @@ const MonthlyAttendanceReport = () => {
       const rowData = {
         key: index,
         full_Name: item.full_Name,
+        team_Name: item.team_Name,
       };
       // Initialize each date column with null
       currentMonthDates.forEach((date) => {
@@ -305,6 +306,13 @@ const MonthlyAttendanceReport = () => {
             </div>
           );
         },
+      },
+      {
+        title: "Team Name",
+        dataIndex: "team_Name",
+        key: "team_Name",
+        width: "150px",
+        hidden: true,
       },
       ...dateColumns,
     ];

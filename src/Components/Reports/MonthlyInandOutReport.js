@@ -49,7 +49,7 @@ const MonthlyInandOutReport = () => {
     const worksheetData = [];
 
     // Generate the header row
-    const header = ["Employee"];
+    const header = ["Employee", "Team Name"];
     for (let i = 1; i <= currentMonthDates.length; i++) {
       header.push(`In (${i})`, `Out (${i})`);
     }
@@ -57,7 +57,7 @@ const MonthlyInandOutReport = () => {
 
     // Iterate through the data and collect rows
     data.forEach((record) => {
-      const row = [record.full_Name]; // Start the row with the employee name
+      const row = [record.full_Name, record.team_Name]; // Start the row with the employee name
 
       for (let i = 1; i <= 30; i++) {
         const dayKey = i.toString().padStart(2, "0"); // Format day as "01", "02", ..., "30"
@@ -219,6 +219,7 @@ const MonthlyInandOutReport = () => {
       const rowData = {
         key: index,
         full_Name: item.full_Name,
+        team_Name: item.team_Name,
       };
       // Initialize each date column with null
       currentMonthDates.forEach((date) => {
@@ -424,6 +425,13 @@ const MonthlyInandOutReport = () => {
             </div>
           );
         },
+      },
+      {
+        title: "Team Name",
+        dataIndex: "team_Name",
+        key: "team_Name",
+        width: "150px",
+        hidden: true,
       },
       ...dateColumns,
     ];

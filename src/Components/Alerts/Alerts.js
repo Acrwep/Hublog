@@ -51,7 +51,7 @@ const Alerts = () => {
       key: "triggeredTime",
       width: "150px",
       render: (text) => {
-        return <p>{moment(text).format("hh:mm:A")}</p>;
+        return <p>{moment(text).format("hh:mm A")}</p>;
       },
     },
   ];
