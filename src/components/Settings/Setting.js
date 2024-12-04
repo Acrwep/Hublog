@@ -234,7 +234,7 @@ const Settings = () => {
     try {
       const response = await getImbuildAppsandUrls();
       console.log(response);
-      dispatch(storeImbuildAppsandUrls(response?.data));
+      dispatch(storeImbuildAppsandUrls(response?.data?.data));
     } catch (error) {
       dispatch(storeImbuildAppsandUrls([]));
     } finally {

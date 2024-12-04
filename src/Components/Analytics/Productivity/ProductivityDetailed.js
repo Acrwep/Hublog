@@ -200,11 +200,11 @@ const ProductivityDetailed = ({ loading }) => {
       key: "AttendanceCount",
       width: "150px",
       render: (text, record) => {
-       if(text===null){
-        return 0
-       }else{
-        return <p>{text}</p>
-       }
+        if (text === null) {
+          return 0;
+        } else {
+          return <p>{text}</p>;
+        }
       },
     },
     {
@@ -264,15 +264,19 @@ const ProductivityDetailed = ({ loading }) => {
       width: "170px",
       fixed: "right",
       render: (text) => {
-        if(text===null){
-          return 0;
-        }else{
-        return (
-          <Flex gap="small" vertical>
-            <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
-          </Flex>
-        );
-      }
+        if (text === null) {
+          return (
+            <Flex gap="small" vertical>
+              <Progress percent={0} strokeColor="#25a17d" />
+            </Flex>
+          );
+        } else {
+          return (
+            <Flex gap="small" vertical>
+              <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
+            </Flex>
+          );
+        }
       },
     },
   ];

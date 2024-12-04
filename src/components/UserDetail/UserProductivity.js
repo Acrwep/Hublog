@@ -10,6 +10,7 @@ import CommonAvatar from "../Common/CommonAvatar";
 
 export default function UserProductivity({
   breakdownTotalDuration,
+  breakdownAverageTime,
   isBreakdownEmpty,
   loading,
   filterLoading,
@@ -44,11 +45,11 @@ export default function UserProductivity({
       key: "AttendanceCount",
       width: "150px",
       render: (text, record) => {
-       if(text===null){
-        return 0
-       }else{
-        return <p>{text}</p>
-       }
+        if (text === null) {
+          return 0;
+        } else {
+          return <p>{text}</p>;
+        }
       },
     },
     {
@@ -108,15 +109,15 @@ export default function UserProductivity({
       width: "170px",
       fixed: "right",
       render: (text) => {
-        if(text===null){
+        if (text === null) {
           return 0;
-        }else{
-        return (
-          <Flex gap="small" vertical>
-            <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
-          </Flex>
-        );
-      }
+        } else {
+          return (
+            <Flex gap="small" vertical>
+              <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
+            </Flex>
+          );
+        }
       },
     },
   ];
@@ -238,7 +239,9 @@ export default function UserProductivity({
                         <p className="totalproductive_timeheading">
                           Average productive time
                         </p>
-                        <p className="totalproductive_time">2h 8m</p>
+                        <p className="totalproductive_time">
+                          {breakdownAverageTime}
+                        </p>
                         <p className="totalproductive_timeheading">
                           Average per day
                         </p>

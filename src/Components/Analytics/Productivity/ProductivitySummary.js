@@ -78,9 +78,7 @@ const ProductivitySummary = ({
                 <p>Productivity</p>
                 <p className="userproductivity_contents">{totalProductivity}</p>
                 <p className="userproductivity_hours">
-                  {totalProductivityTime === "00h:00m"
-                    ? "-"
-                    : totalProductivityTime}
+                  {totalProductivityTime}
                 </p>
               </>
             )}

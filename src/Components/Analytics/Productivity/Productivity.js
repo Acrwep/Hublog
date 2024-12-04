@@ -195,7 +195,7 @@ const Productivity = () => {
 
       try {
         const response = await getProductivityWorktimeTrends(payload);
-        const worktrendsdata = response?.data?.data;
+        const worktrendsdata = response?.data?.data?.data;
         console.log("worktime trends response", worktrendsdata);
         dispatch(storeProductivityWorktimeTrends(worktrendsdata));
       } catch (error) {
@@ -250,6 +250,7 @@ const Productivity = () => {
     };
     try {
       const response = await getProductivityOutliers(payload);
+      console.log("outttt", response);
       setTotalProductivity(
         response?.data.grandTotalpercentage.toFixed(2) + "%"
       );
@@ -384,7 +385,7 @@ const Productivity = () => {
 
     try {
       const response = await getProductivityTrend(payload);
-      const productivityTrenddata = response?.data;
+      const productivityTrenddata = response?.data?.data;
       console.log("trends response", productivityTrenddata);
       dispatch(storeProductivityTrend(productivityTrenddata));
     } catch (error) {
@@ -414,7 +415,7 @@ const Productivity = () => {
 
     try {
       const response = await getProductivityEmployeesList(payload);
-      const productivityEmployeedata = response?.data;
+      const productivityEmployeedata = response?.data?.data;
       console.log("prod employee response", productivityEmployeedata);
       dispatch(storeProductivityEmployeelist(productivityEmployeedata));
     } catch (error) {

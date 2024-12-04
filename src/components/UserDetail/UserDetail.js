@@ -73,6 +73,7 @@ const UserDetail = () => {
   const [topCategoryName, setTopCategoryName] = useState("");
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [breakdownTotalDuration, setBreakdownTotalDuration] = useState("");
+  const [breakdownAverageTime, setBreakdownAverageTime] = useState("");
   const [productivityEmployeesData, setProductivityEmployeesData] = useState(
     []
   );
@@ -222,6 +223,9 @@ const UserDetail = () => {
         const [hours, minutes] =
           breakdowndata.totalProductiveDuration.split(":");
         setBreakdownTotalDuration(`${hours}h ${minutes}m`);
+        const [avgHours, avgMinutes] =
+          breakdowndata.averageDuratiopn.split(":");
+        setBreakdownAverageTime(`${avgHours}h ${avgMinutes}m`);
         dispatch(
           storeProductivityBreakdown([
             parseTimeToDecimal(breakdowndata.totalProductiveDuration),
@@ -434,7 +438,7 @@ const UserDetail = () => {
 
     try {
       const response = await getProductivityEmployeesList(payload);
-      const productivityEmployeedata = response?.data;
+      const productivityEmployeedata = response?.data?.data;
       console.log("prod employee response", productivityEmployeedata);
       setProductivityEmployeesData(productivityEmployeedata);
     } catch (error) {
@@ -665,6 +669,7 @@ const UserDetail = () => {
             <div>
               <UserProductivity
                 breakdownTotalDuration={breakdownTotalDuration}
+                breakdownAverageTime={breakdownAverageTime}
                 isBreakdownEmpty={isBreakdownEmpty}
                 topAppName={topAppName}
                 topAppUsageTime={topAppUsageTime}

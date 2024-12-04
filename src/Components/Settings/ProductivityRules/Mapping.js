@@ -96,6 +96,7 @@ export default function Mapping() {
     console.log("payload", payload);
     try {
       const response = await updateImbuildAppsandUrls(id, payload);
+      console.log("ressss", response);
       CommonToaster("Category assigned", "success");
     } catch (error) {
       console.log(error);
@@ -110,7 +111,7 @@ export default function Mapping() {
     try {
       const response = await getImbuildAppsandUrls();
       console.log(response);
-      dispatch(storeImbuildAppsandUrls(response?.data));
+      dispatch(storeImbuildAppsandUrls(response?.data?.data));
     } catch (error) {
       dispatch(storeImbuildAppsandUrls([]));
     } finally {
