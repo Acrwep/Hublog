@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Row, Col, Button, Tooltip, Flex, Progress } from "antd";
-import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
@@ -204,7 +203,7 @@ const ProductivityReport = () => {
 
     try {
       const response = await getProductivityEmployeesList(payload);
-      const productivityEmployeedata = response?.data;
+      const productivityEmployeedata = response?.data?.data;
       console.log("prod employee response", productivityEmployeedata);
       setTableData(productivityEmployeedata);
     } catch (error) {

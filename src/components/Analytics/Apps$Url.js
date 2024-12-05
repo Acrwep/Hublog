@@ -122,7 +122,7 @@ const Apps$Url = () => {
     {
       data: appsData.map((item) => ({
         x: capitalizeFirstLetter(item.applicationName),
-        y: parseTimeToDecimal(item.totalUsage),
+        y: item.totalUsage,
       })),
     },
   ];
@@ -131,7 +131,7 @@ const Apps$Url = () => {
     {
       data: urlsData.map((item) => ({
         x: item.url,
-        y: parseTimeToDecimal(item.totalUsage),
+        y: item.totalUsage,
       })),
     },
   ];

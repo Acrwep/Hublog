@@ -197,6 +197,7 @@ export default function UserBreak({ loading, filterLoading }) {
               dataPerPage={10}
               checkBox="false"
               bordered="false"
+              size="small"
               loading={filterLoading}
             />
           </div>

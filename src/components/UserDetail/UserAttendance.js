@@ -137,6 +137,7 @@ export default function UserAttendance({
               dataPerPage={10}
               checkBox="false"
               bordered="false"
+              size="small"
               loading={filterLoading}
             />
           </div>

@@ -98,7 +98,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getUsersData();
-      }, 300);
+      }, 100);
     }
   };
 
@@ -127,7 +127,7 @@ const Productivity = () => {
           PreviousAndCurrentDate[1],
           activePage
         );
-      }, 300);
+      }, 100);
     }
   };
 
@@ -181,7 +181,7 @@ const Productivity = () => {
       } finally {
         setTimeout(() => {
           getTeamwiseProductivityData(orgId, teamid, startDate, endDate);
-        }, 300);
+        }, 100);
       }
     } else {
       setDetailedLoading(true);
@@ -204,7 +204,7 @@ const Productivity = () => {
       } finally {
         setTimeout(() => {
           getProductiveTrendData(orgId, teamid, userid, startDate, endDate);
-        }, 300);
+        }, 100);
       }
     }
   };
@@ -232,7 +232,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getProductivityOutliersData(orgId, teamid, startDate, endDate);
-      }, 300);
+      }, 100);
     }
   };
 
@@ -266,7 +266,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getTopAppUsageData(orgId, teamid, startDate, endDate);
-      }, 300);
+      }, 100);
     }
   };
 
@@ -300,7 +300,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getTopUrlUsageData(orgId, teamid, startdate, enddate);
-      }, 300);
+      }, 100);
     }
   };
 
@@ -331,7 +331,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getTopCategoryUsageData(orgId, teamid, startdate, enddate);
-      }, 300);
+      }, 100);
     }
   };
 
@@ -364,7 +364,7 @@ const Productivity = () => {
       setTimeout(() => {
         setSummaryLoading(false);
         setLoading(false);
-      }, 300);
+      }, 100);
     }
   };
 
@@ -394,7 +394,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         getProductivityEmployeeData(orgId, teamid, userid, startDate, endDate);
-      }, 300);
+      }, 100);
     }
   };
 
@@ -424,7 +424,7 @@ const Productivity = () => {
     } finally {
       setTimeout(() => {
         setDetailedLoading(false);
-      }, 300);
+      }, 100);
     }
   };
   //onchange functions
