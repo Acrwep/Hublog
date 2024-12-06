@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Modal } from "antd";
 import { AiOutlineEdit } from "react-icons/ai";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
@@ -24,171 +24,50 @@ import Loader from "../../Common/Loader";
 
 export default function AlertRules({ loading }) {
   const dispatch = useDispatch();
-  const alertRulesList = useSelector((state) => state.alertrules);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertThreshold, setAlertThreshold] = useState(null);
-  const [alertThresholdError, setAlertThresholdError] = useState("");
   const [punchoutThreshold, setPunchoutThreshold] = useState(null);
-  const [punchoutThresholdError, setPunchoutThresholdError] = useState("");
   const statusList = [
     { id: 1, name: "Active" },
     { id: 2, name: "In Active" },
   ];
   const [status, setStatus] = useState(1);
-  const [statusError, setStatusError] = useState("");
   const breakStatusList = [
     { id: 1, name: "Active" },
     { id: 2, name: "In Active" },
   ];
   const [breakStatus, setBreakStatus] = useState(1);
-  const [breakStatusError, setBreakStatusError] = useState("");
   const [inactivityId, setInactivityId] = useState();
-  const [edit, setEdit] = useState(false);
-  const [tableLoading, setTableLoading] = useState(false);
+  const [alertRulesList, setAlertRulesList] = useState([]);
 
-  const columns = [
-    {
-      title: "Break Alert Status",
-      dataIndex: "break_alert_status",
-      key: "break_alert_status",
-      width: 140,
-      render: (text) => {
-        if (text === true) {
-          return (
-            <div className="logsreport_mappingActivetextContainer">
-              <p>Active</p>
-            </div>
-          );
-        } else {
-          return (
-            <div className="logsreport_statusInActivetextContainer">
-              <p>In Active</p>
-            </div>
-          );
-        }
-      },
-    },
-    {
-      title: "Inactivity Alert Threshold",
-      dataIndex: "alertThreshold",
-      key: "alertThreshold",
-      width: 190,
-      render: (text) => {
-        return <p>{`${text} mins`}</p>;
-      },
-    },
-    {
-      title: "Inactivity Auto Punchout Threshold",
-      dataIndex: "punchoutThreshold",
-      key: "punchoutThreshold",
-      width: 210,
-      render: (text) => {
-        return <p>{`${text} mins`}</p>;
-      },
-    },
-    {
-      title: "Inactivity Alert Status",
-      dataIndex: "status",
-      key: "status",
-      width: 140,
-      render: (text) => {
-        if (text === true) {
-          return (
-            <div className="logsreport_mappingActivetextContainer">
-              <p>Active</p>
-            </div>
-          );
-        } else {
-          return (
-            <div className="logsreport_statusInActivetextContainer">
-              <p>In Active</p>
-            </div>
-          );
-        }
-      },
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      width: 120,
-      render: (text, record) => {
-        return (
-          <AiOutlineEdit
-            size={20}
-            className="alertrules_tableeditbutton"
-            onClick={() => handleModal(record)}
-          />
-        );
-      },
-    },
-  ];
-  const [dummydatas, setDummyDatas] = useState([
-    {
-      key: "1",
-      name: "Inactivity",
-      threshold: 10,
-      punchoutthreshold: 30,
-      status: 1,
-    },
-  ]);
-
-  const [duplicateDummydatas, setDuplicateDummyDatas] = useState([
-    {
-      key: "1",
-      name: "Application",
-      type: "Overtime Break",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-    {
-      key: "2",
-      name: "URL",
-      type: "Inactivity",
-      createdat: "2023-11-02",
-      action: "Active",
-    },
-  ]);
-
-  const handleModal = (record) => {
-    setBreakStatus(record.break_alert_status === true ? 1 : 2);
-    setAlertThreshold(record.alertThreshold);
-    setPunchoutThreshold(record.punchoutThreshold);
-    setStatus(record.status === true ? 1 : 2);
-    setEdit(true);
-    setInactivityId(record.id);
-    setIsModalOpen(true);
-  };
-
-  const handleReset = () => {
-    setBreakStatus(1);
-    setBreakStatusError("");
-    setAlertThreshold(null);
-    setAlertThresholdError("");
-    setPunchoutThreshold(null);
-    setPunchoutThresholdError("");
-    setStatus(1);
-    setStatusError("");
-    setEdit(false);
-    setInactivityId();
-    setIsModalOpen(false);
-  };
+  useEffect(() => {
+    getAlertRulesData();
+  }, []);
 
   const getAlertRulesData = async () => {
-    setTableLoading(true);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getAlertRules(orgId);
       console.log("alertrules response", response.data);
       const alertrulesData = response.data;
-      dispatch(storeAlertRules(alertrulesData));
+      if (alertrulesData.length >= 1) {
+        setAlertRulesList(alertrulesData);
+        setInactivityId(alertrulesData[0].id);
+        setBreakStatus(alertrulesData[0].break_alert_status === true ? 1 : 2);
+        setAlertThreshold(alertrulesData[0].alertThreshold);
+        setPunchoutThreshold(alertrulesData[0].punchoutThreshold);
+        setStatus(alertrulesData[0].status === true ? 1 : 2);
+        dispatch(storeAlertRules(alertrulesData));
+      } else {
+        setInactivityId(null);
+        setBreakStatus(1);
+        setAlertThreshold(null);
+        setPunchoutThreshold(null);
+        setStatus(1);
+        setAlertRulesList([]);
+      }
     } catch (error) {
       dispatch(storeAlertRules([]));
       CommonToaster(error?.response?.data?.message, "error");
-    } finally {
-      setTimeout(() => {
-        setTableLoading(false);
-      }, 1000);
     }
   };
 
@@ -198,18 +77,19 @@ export default function AlertRules({ loading }) {
     const punchoutValidate = breakTimeValidator(punchoutThreshold);
     const statusValidate = selectValidator(status);
 
-    setBreakStatusError(breakStatusValidate);
-    setAlertThresholdError(alertValidate);
-    setPunchoutThresholdError(punchoutValidate);
-    setStatusError(statusValidate);
-
-    if (
-      breakStatusValidate ||
-      alertValidate ||
-      punchoutValidate ||
-      statusValidate
-    )
+    if (breakStatusValidate) {
+      CommonToaster("Break Alert Status is required", "error");
       return;
+    } else if (alertValidate) {
+      CommonToaster("Inactivity Alert Threshold Duration is required", "error");
+      return;
+    } else if (punchoutValidate) {
+      CommonToaster("Inactivity Autopunchout Threshold is required", "error");
+      return;
+    } else if (statusValidate) {
+      CommonToaster("Inactivity Alert Status is required", "error");
+      return;
+    }
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     const request = {
@@ -218,57 +98,17 @@ export default function AlertRules({ loading }) {
       punchoutThreshold: punchoutThreshold,
       organizationId: orgId,
       status: status === 1 ? true : false,
-      ...(edit && { id: inactivityId }),
+      id: inactivityId,
     };
 
-    if (edit) {
-      setTableLoading(true);
-      try {
-        const response = await updateAlertRules(request);
-        console.log("alertrules update response", response);
-        CommonToaster("Alert rule updated", "success");
-        handleReset();
-        getAlertRulesData();
-      } catch (error) {
-        CommonToaster(error.response.data.message, "error");
-      } finally {
-        setTimeout(() => {
-          setTableLoading(false);
-        }, 1000);
-      }
-    } else {
-      setTableLoading(true);
-      try {
-        const response = await createAlertRules(request);
-        console.log("alertrule response", response);
-        CommonToaster("Alert rule created", "success");
-        handleReset();
-        getAlertRulesData();
-      } catch (error) {
-        CommonToaster(error.response.data.message, "error");
-      } finally {
-        setTimeout(() => {
-          setTableLoading(false);
-        }, 1000);
-      }
+    try {
+      const response = await updateAlertRules(request);
+      console.log("alertrules update response", response);
+      CommonToaster("Alert rule updated", "success");
+      getAlertRulesData();
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
     }
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    handleReset();
-  };
-  const handleSearch = (value) => {
-    console.log("Search value:", value);
-    if (value === "") {
-      setDummyDatas(duplicateDummydatas);
-      return;
-    }
-    const filterData = dummydatas.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
-    );
-    console.log("filter", filterData);
-    setDummyDatas(filterData);
   };
 
   return (
@@ -285,10 +125,6 @@ export default function AlertRules({ loading }) {
               lg={12}
               style={{ display: "flex", alignItems: "center" }}
             >
-              {/* <CommonSearchField
-            placeholder="Search alert rules..."
-            onSearch={handleSearch}
-          /> */}
               <p className="setting_alertrules_heading">Alert Rules</p>
             </Col>
             <Col
@@ -297,98 +133,85 @@ export default function AlertRules({ loading }) {
               md={24}
               lg={12}
               className="designion_adduserbuttonContainer"
-            >
-              {alertRulesList.length < 1 && (
-                <CommonAddButton
-                  name="Add Alert Rule"
-                  onClick={() => setIsModalOpen(true)}
-                />
-              )}
-            </Col>
+            ></Col>
           </Row>
 
-          <CommonTable
-            columns={columns}
-            dataSource={alertRulesList}
-            scroll={{ x: 950 }}
-            checkBox="false"
-            dataPerPage={4}
-            paginationStatus={false}
-          />
-          {/* addalert modal */}
-          <Modal
-            title="Edit Inactivity Alert Rules"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            footer={[
-              <button className="designation_submitbutton" onClick={handleOk}>
-                Submit
-              </button>,
-            ]}
-          >
-            {/* <CommonInputField
-              label="Name"
-              onChange={(e) => {
-                setName(e.target.value);
-                setNameError(nameValidator(e.target.value));
-              }}
-              value={name}
-              error={nameError}
-              style={{ marginTop: "12px" }}
-              mandatory
-            /> */}
-            <CommonSelectField
-              label="Break Alert Status"
-              onChange={(value) => {
-                setBreakStatus(value);
-                setBreakStatusError(selectValidator(value));
-              }}
-              options={breakStatusList}
-              value={breakStatus}
-              error={breakStatusError}
-              style={{ marginTop: "22px" }}
-              mandatory
-            />
-            <CommonInputField
-              label="Alert threshold duration"
-              onChange={(e) => {
-                setAlertThreshold(e.target.value);
-                setAlertThresholdError(breakTimeValidator(e.target.value));
-              }}
-              value={alertThreshold}
-              error={alertThresholdError}
-              suffix="min"
-              type="number"
-              style={{ marginTop: "22px" }}
-              mandatory
-            />
-            <CommonInputField
-              label="Auto punchout threshold duration"
-              onChange={(e) => {
-                setPunchoutThreshold(e.target.value);
-                setPunchoutThresholdError(breakTimeValidator(e.target.value));
-              }}
-              value={punchoutThreshold}
-              error={punchoutThresholdError}
-              suffix="min"
-              type="number"
-              style={{ marginTop: "22px" }}
-              mandatory
-            />
-            <CommonSelectField
-              label="Status"
-              onChange={(value) => {
-                setStatus(value);
-                setStatusError(selectValidator(value));
-              }}
-              options={statusList}
-              value={status}
-              error={statusError}
-              style={{ marginTop: "22px" }}
-              mandatory
-            />
-          </Modal>
+          {alertRulesList.length >= 1 && (
+            <>
+              <Row gutter={16}>
+                <Col xs={24} sm={24} md={24} lg={12}>
+                  <CommonSelectField
+                    label="Break Alert Status"
+                    onChange={(value) => {
+                      setBreakStatus(value);
+                    }}
+                    options={breakStatusList}
+                    value={breakStatus}
+                    style={{ width: "270px" }}
+                    mandatory
+                  />
+                </Col>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={12}
+                  className="alertrules_fieldsContainer"
+                >
+                  <CommonInputField
+                    label="Inactivity Alert Threshold Duration"
+                    onChange={(e) => {
+                      setAlertThreshold(e.target.value);
+                    }}
+                    value={alertThreshold}
+                    suffix="min"
+                    type="number"
+                    style={{ width: "270px" }}
+                    mandatory
+                  />
+                </Col>
+              </Row>
+
+              <Row gutter={16} style={{ marginTop: "20px" }}>
+                <Col xs={24} sm={24} md={24} lg={12}>
+                  <CommonInputField
+                    label="Inactivity Autopunchout Threshold"
+                    onChange={(e) => {
+                      setPunchoutThreshold(e.target.value);
+                    }}
+                    value={punchoutThreshold}
+                    suffix="min"
+                    type="number"
+                    style={{ width: "270px" }}
+                    mandatory
+                  />
+                </Col>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={12}
+                  className="alertrules_fieldsContainer"
+                >
+                  <CommonSelectField
+                    label="Inactivity Alert Status"
+                    onChange={(value) => {
+                      setStatus(value);
+                    }}
+                    options={statusList}
+                    value={status}
+                    style={{ width: "270px" }}
+                  />
+                </Col>
+              </Row>
+              <button
+                className="alertrules_savechangesbutton"
+                onClick={handleOk}
+              >
+                Save Changes
+              </button>
+            </>
+          )}
         </div>
       )}
     </>

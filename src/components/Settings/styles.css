@@ -566,3 +566,20 @@
   font-weight: 600 !important;
   font-size: 17px;
 }
+.alertrules_savechangesbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 130px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+.alertrules_savechangesbutton:hover {
+  background-color: #009737;
+}
+.alertrules_savechangesbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}
