@@ -429,11 +429,11 @@ export const getUserTotalBreak = async (payload) => {
   }
 };
 //settings break
-export const getBreak = async (name) => {
+export const getBreak = async (payload) => {
   try {
-    const response = await api.get(
-      `/api/Admin/GetBreakMaster?seachQuery=${name ? name : ""}`
-    );
+    const response = await api.get("/api/Admin/GetBreakMaster", {
+      params: payload,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -462,7 +462,33 @@ export const updateBreak = async (breakpayload) => {
     throw error;
   }
 };
-
+//settings alertrules
+export const getAlertRules = async (organizationId) => {
+  try {
+    const response = await api.get(
+      `/api/Alert/GetAlertRule?organizationId=${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createAlertRules = async (alertpayload) => {
+  try {
+    const response = await api.post("/api/Alert/InsertAlertRule", alertpayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateAlertRules = async (alertpayload) => {
+  try {
+    const response = await api.put("/api/Alert/UpdateAlertRule", alertpayload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //reports
 
 //daily attendance report

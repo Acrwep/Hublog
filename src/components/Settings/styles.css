@@ -562,3 +562,7 @@
   overflow: auto;
   position: relative;
 }
+.setting_alertrules_heading {
+  font-weight: 600 !important;
+  font-size: 17px;
+}

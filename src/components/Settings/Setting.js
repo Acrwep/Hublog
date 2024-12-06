@@ -20,6 +20,7 @@ import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import Break from "./Break/Break";
 import {
+  getAlertRules,
   getBreak,
   getCategories,
   getDesignation,
@@ -34,6 +35,7 @@ import {
   addteamMembers,
   storeActiveDesignation,
   storeActiveTeam,
+  storeAlertRules,
   storeBreakSearchValue,
   storeCategories,
   storeDesignation,
@@ -57,6 +59,7 @@ const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
+  const [alertRulesLoading, setAlertRulesLoading] = useState(true);
   const settingsList = [
     {
       id: 1,
@@ -81,9 +84,10 @@ const Settings = () => {
     useState(false);
   const [productivityRulesPageVisited, setProductivityRulesPageVisited] =
     useState(false);
+  const [alertRulesPageVisited, setAlertRulesPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
-    if (id === 4 || id === 5 || id >= 8) {
+    if (id === 4 || id === 5 || id > 8) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -99,6 +103,9 @@ const Settings = () => {
     }
     if (id === 7 && productivityRulesPageVisited === false) {
       getCategoryData();
+    }
+    if (id === 8 && alertRulesPageVisited === false) {
+      getAlertRulesData();
     }
   };
 
@@ -177,8 +184,12 @@ const Settings = () => {
 
   const getBreakData = async () => {
     setBreakLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const payload = {
+      organizationId: orgId,
+    };
     try {
-      const response = await getBreak();
+      const response = await getBreak(payload);
       const allbreakDetails = response.data;
       dispatch(storesettingsBreak(allbreakDetails));
     } catch (error) {
@@ -226,6 +237,24 @@ const Settings = () => {
     } finally {
       setTimeout(() => {
         getImbuildAppsandUrlsData();
+      }, 350);
+    }
+  };
+
+  const getAlertRulesData = async () => {
+    setAlertRulesLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    try {
+      const response = await getAlertRules(orgId);
+      const alertruleList = response?.data;
+      console.log("alertrules response", alertruleList);
+      dispatch(storeAlertRules(alertruleList));
+    } catch (error) {
+      dispatch(storeAlertRules([]));
+    } finally {
+      setTimeout(() => {
+        setAlertRulesPageVisited(true);
+        setAlertRulesLoading(false);
       }, 350);
     }
   };
@@ -293,7 +322,7 @@ const Settings = () => {
               <div
                 key={index}
                 className={
-                  index === 3 || index === 4 || index >= 7
+                  index === 3 || index === 4 || index > 7
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"
@@ -355,7 +384,7 @@ const Settings = () => {
           )}
           {activePage === 8 && (
             <div>
-              <AlertRules />
+              <AlertRules loading={alertRulesLoading} />
             </div>
           )}
           {activePage === 10 && (

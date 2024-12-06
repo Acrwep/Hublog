@@ -89,8 +89,12 @@ export default function Break({ loading }) {
 
   const getBreakData = async () => {
     setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const payload = {
+      organizationId: orgId,
+    };
     try {
-      const response = await getBreak();
+      const response = await getBreak(payload);
       console.log("break response", response.data);
       const allbreakDetails = response.data;
       dispatch(storesettingsBreak(allbreakDetails));
@@ -186,8 +190,12 @@ export default function Break({ loading }) {
 
     setTableLoading(true);
     const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      organizationId: orgId,
+      seachQuery: value,
+    };
     try {
-      const response = await getBreak(value);
+      const response = await getBreak(payload);
       const allbreakDetails = response.data;
       dispatch(storesettingsBreak(allbreakDetails));
     } catch (error) {

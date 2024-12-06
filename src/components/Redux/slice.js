@@ -339,6 +339,17 @@ const ImbuildAppsandUrlsSlice = createSlice({
     },
   },
 });
+//settings alert rules
+const alertRulesSlice = createSlice({
+  name: "alertrules",
+  initialState,
+  reducers: {
+    storeAlertRules(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //productivity
 const productivityBreakdownSlice = createSlice({
   name: "productivitybreakdown",
@@ -525,6 +536,7 @@ export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeCategories } = CategoriesSlice.actions;
 export const { storeImbuildAppsandUrls } = ImbuildAppsandUrlsSlice.actions;
+export const { storeAlertRules } = alertRulesSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
 export const { storeTeamwiseProductivity } = teamwiseProductivitySlice.actions;
@@ -583,6 +595,7 @@ export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const categoriesReducer = CategoriesSlice.reducer;
 export const imbuildAppsandUrlsReducer = ImbuildAppsandUrlsSlice.reducer;
+export const alertRulesReducer = alertRulesSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
 export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;
