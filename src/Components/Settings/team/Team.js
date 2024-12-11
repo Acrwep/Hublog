@@ -632,6 +632,7 @@ const Team = ({ loading }) => {
             setStatus(value);
           }}
           value={status}
+          mandatory
         />
       </Modal>
 

@@ -448,7 +448,7 @@
   border-right: 1px solid #00000026;
   border-radius: 12px;
   padding: 0px 9px;
-  height: 100vh;
+  height: 80vh;
   overflow: auto;
   position: relative;
 }
@@ -554,14 +554,26 @@
   border-color: #25a17d !important;
 }
 .productivityrules_inbuildtableContainer {
-  /* border-left: 1px solid #00000026;
-  border-right: 1px solid #00000026;
-  border-radius: 12px; */
-  /* padding: 0px 9px; */
-  height: 100vh;
-  overflow: auto;
+  height: 60vh;
+  overflow-y: auto;
   position: relative;
 }
+.settings_mappingaddbutton {
+  padding: 12px;
+  width: 80px;
+  border-color: #25a17d;
+  color: #25a17d;
+}
+.settings_mappingaddbutton:hover {
+  border-color: #009737 !important;
+  color: #25a17d !important;
+}
+.settingsmapping_categoryfieldlabel {
+  font-weight: 500 !important;
+  margin-bottom: 6px !important;
+  margin-top: 22px;
+}
+/* settings alert rules style */
 .setting_alertrules_heading {
   font-weight: 600 !important;
   font-size: 17px;

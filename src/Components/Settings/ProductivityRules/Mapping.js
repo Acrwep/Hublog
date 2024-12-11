@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Tooltip, Button, Select } from "antd";
+import { Row, Col, Tooltip, Button, Select, Modal } from "antd";
+import CommonInputField from "../../Common/CommonInputField";
 import CommonSearchField from "../../Common/CommonSearchbar";
 import CommonSelectField from "../../Common/CommonSelectField";
 import { RedoOutlined } from "@ant-design/icons";
@@ -9,30 +10,56 @@ import { IoGlobeOutline } from "react-icons/io5";
 import { FaDesktop } from "react-icons/fa";
 import "../styles.css";
 import {
+  createImbuildAppsandUrls,
   getImbuildAppsandUrls,
   updateImbuildAppsandUrls,
 } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
-import { storeImbuildAppsandUrls } from "../../Redux/slice";
+import {
+  storeImbuildAppsandUrls,
+  storeImbuildappsandurlsCount,
+  storeMappingSearchValue,
+  storeMappingShowId,
+  storeMappingStatusId,
+} from "../../Redux/slice";
+import { descriptionValidator, selectValidator } from "../../Common/Validation";
+import CommonAddButton from "../../Common/CommonAddButton";
 
 export default function Mapping() {
   const dispatch = useDispatch();
   const categoriesList = useSelector((state) => state.categories);
   const ImbuildAppsandUrls = useSelector((state) => state.imbuildappsandurls);
+  const ImbuildAppsandUrlsCount = useSelector(
+    (state) => state.imbuildappsandurlscount
+  );
+  const searchValuefromRedux = useSelector((state) => state.mappingsearchvalue);
+  const showIdfromRedux = useSelector((state) => state.mappingshowid);
+  const statusIdfromRedux = useSelector((state) => state.mappingstatusid);
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [type, setType] = useState(null);
+  const [typeError, setTypeError] = useState("");
+  const [categoryId, setCategoryId] = useState(null);
   const [search, setSearch] = useState("");
-  const [showId, setShowId] = useState(null);
-  const [mappedStatusId, setMappedStatusId] = useState(null);
+  const [showId, setShowId] = useState(1);
+  const [mappedStatusId, setMappedStatusId] = useState(1);
+  const typeList = [
+    { id: 1, name: "App" },
+    { id: 2, name: "Url" },
+  ];
   const showAll = [
     { id: 1, name: "Show All" },
     { id: 2, name: "Apps" },
     { id: 3, name: "Urls" },
   ];
   const MappedStatus = [
-    { id: 1, name: "Mapped" },
-    { id: 2, name: "Unmapped" },
+    { id: 1, name: "All" },
+    { id: 2, name: "Mapped" },
+    { id: 3, name: "Unmapped" },
   ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [validationTrigger, setValidationTrigger] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const columns = [
     {
       title: "Type",
@@ -87,6 +114,12 @@ export default function Mapping() {
     },
   ];
 
+  useEffect(() => {
+    setSearch(searchValuefromRedux);
+    setShowId(showIdfromRedux);
+    setMappedStatusId(statusIdfromRedux);
+  }, []);
+
   const handleCategory = async (value, id) => {
     console.log(value);
     setLoading(true);
@@ -108,10 +141,16 @@ export default function Mapping() {
   };
 
   const getImbuildAppsandUrlsData = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      organizationId: orgId,
+    };
     try {
-      const response = await getImbuildAppsandUrls();
+      const response = await getImbuildAppsandUrls(payload);
       console.log(response);
-      dispatch(storeImbuildAppsandUrls(response?.data?.data));
+      const imbuildData = response?.data?.data;
+      dispatch(storeImbuildAppsandUrls(imbuildData));
+      dispatch(storeImbuildappsandurlsCount(imbuildData.length));
     } catch (error) {
       dispatch(storeImbuildAppsandUrls([]));
     } finally {
@@ -119,17 +158,161 @@ export default function Mapping() {
     }
   };
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearch(value);
+  const formReset = () => {
+    setIsModalOpen(false);
+    setName("");
+    setNameError("");
+    setType(1);
+    setTypeError("");
+    setCategoryId(null);
+    setValidationTrigger(false);
   };
 
+  const handleCancel = () => {
+    formReset();
+  };
+
+  const handleOk = async () => {
+    setValidationTrigger(true);
+    const orgId = localStorage.getItem("organizationId");
+    const nameValidate = descriptionValidator(name);
+    const typeValidate = selectValidator(type);
+
+    setNameError(nameValidate);
+    setTypeError(typeValidate);
+
+    if (nameValidate || typeValidate) return;
+    setLoading(true);
+
+    const request = {
+      organizationId: orgId,
+      name: name,
+      type: type === 1 ? "app" : "url",
+      categoryId: categoryId,
+    };
+    try {
+      const response = await createImbuildAppsandUrls(request);
+      setIsModalOpen(false);
+      CommonToaster("Created", "success");
+      getImbuildAppsandUrlsData();
+      formReset();
+    } catch (error) {
+      const Error = error?.response?.data?.message;
+      CommonToaster(Error, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
+
+  const handleSearch = async (event) => {
+    const value = event.target.value;
+    setSearch(value);
+    dispatch(storeMappingSearchValue(value));
+    setLoading(true);
+
+    const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      organizationId: orgId,
+      ...(value && { userSearchQuery: value }),
+      type: showId === 1 ? "" : showId === 2 ? "app" : "url",
+      category:
+        mappedStatusId === 1
+          ? ""
+          : mappedStatusId === 2
+          ? "mapped"
+          : "unmapped",
+    };
+    try {
+      const response = await getImbuildAppsandUrls(payload);
+      dispatch(storeImbuildAppsandUrls(response?.data?.data));
+    } catch (error) {
+      const allUsers = [];
+      dispatch(storeImbuildAppsandUrls(allUsers));
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 350);
+    }
+  };
+
+  const handleShow = async (value) => {
+    setLoading(true);
+    setShowId(value);
+    dispatch(storeMappingShowId(value));
+    const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      organizationId: orgId,
+      ...(search && { userSearchQuery: search }),
+      type: value === 1 ? "" : value === 2 ? "app" : "url",
+      category:
+        mappedStatusId === 1
+          ? ""
+          : mappedStatusId === 2
+          ? "mapped"
+          : "unmapped",
+    };
+    try {
+      const response = await getImbuildAppsandUrls(payload);
+      dispatch(storeImbuildAppsandUrls(response?.data?.data));
+    } catch (error) {
+      const allUsers = [];
+      dispatch(storeImbuildAppsandUrls(allUsers));
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 350);
+    }
+  };
+
+  const handleMappedStatus = async (value) => {
+    setLoading(true);
+    setMappedStatusId(value);
+    dispatch(storeMappingStatusId(value));
+    const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      organizationId: orgId,
+      ...(search && { userSearchQuery: search }),
+      type: showId === 1 ? "" : showId === 2 ? "app" : "url",
+      category: value === 1 ? "" : value === 2 ? "mapped" : "unmapped",
+    };
+    try {
+      const response = await getImbuildAppsandUrls(payload);
+      dispatch(storeImbuildAppsandUrls(response?.data?.data));
+    } catch (error) {
+      const allUsers = [];
+      dispatch(storeImbuildAppsandUrls(allUsers));
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 350);
+    }
+  };
+
+  const handleRefresh = () => {
+    if (search === "" && showId === 1 && mappedStatusId === 1) {
+      return;
+    } else {
+      setLoading(true);
+      dispatch(storeMappingSearchValue(""));
+      dispatch(storeMappingShowId(1));
+      dispatch(storeMappingStatusId(1));
+      setSearch("");
+      setShowId(1);
+      setMappedStatusId(1);
+      getImbuildAppsandUrlsData();
+    }
+  };
   return (
     <div>
-      <Row>
+      <p className="users_totoalusersheading">
+        Total apps & urls ({ImbuildAppsandUrlsCount})
+      </p>
+      <Row style={{ marginTop: "14px" }}>
         <Col xs={24} sm={24} md={24} lg={12}>
           <CommonSearchField
-            placeholder="Search user..."
+            placeholder="Search apps and urls..."
             onChange={handleSearch}
             value={search}
           />
@@ -149,20 +332,28 @@ export default function Mapping() {
               placeholder="Show All"
               options={showAll}
               value={showId}
-              onChange={(value) => setShowId(value)}
+              onChange={handleShow}
               style={{ marginRight: "12px", width: "102px" }}
             />
             <CommonSelectField
               placeholder="Show All"
               options={MappedStatus}
               value={mappedStatusId}
-              onChange={(value) => setMappedStatusId(value)}
+              onChange={handleMappedStatus}
               style={{ width: "124px" }}
             />
+            <Button
+              className="settings_mappingaddbutton"
+              style={{ marginLeft: "12px" }}
+              onClick={() => setIsModalOpen(true)}
+            >
+              Add
+            </Button>
             <Tooltip placement="top" title="Refresh">
               <Button
                 className="dashboard_refresh_button"
                 style={{ marginLeft: "12px" }}
+                onClick={handleRefresh}
               >
                 <RedoOutlined className="refresh_icon" />
               </Button>
@@ -177,12 +368,58 @@ export default function Mapping() {
           columns={columns}
           dataSource={ImbuildAppsandUrls}
           scroll={{ x: 600 }}
-          dataPerPage={100}
+          dataPerPage={50}
           checkBox="false"
           size="small"
           loading={loading}
         />
       </div>
+
+      {/* add apps or url modal */}
+      <Modal
+        title="Add App or Url"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <button className="designation_submitbutton" onClick={handleOk}>
+            Submit
+          </button>,
+        ]}
+      >
+        <CommonInputField
+          label="Name"
+          onChange={(e) => {
+            setName(e.target.value);
+            if (validationTrigger) {
+              setNameError(descriptionValidator(e.target.value));
+            }
+          }}
+          value={name}
+          error={nameError}
+          mandatory
+        />
+        <CommonSelectField
+          label="Type"
+          options={typeList}
+          onChange={(value) => setType(value)}
+          value={type}
+          error={typeError}
+          style={{ marginTop: "22px" }}
+          mandatory
+        />
+        <p className="settingsmapping_categoryfieldlabel">Category</p>
+        <Select
+          className="maplisttable_selectfield"
+          options={categoriesList.map((item) => ({
+            value: item.categoryId,
+            label: item.categoryName,
+          }))}
+          value={categoryId}
+          onChange={(value) => setCategoryId(value)}
+          style={{ width: "100%" }}
+        />
+      </Modal>
     </div>
   );
 }

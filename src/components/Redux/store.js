@@ -43,6 +43,10 @@ import {
   productivityWorktimeTrendsReducer,
   productivityTrendReducer,
   productivityEmployeelistReducer,
+  imbuildAppsandUrlsCountReducer,
+  mappingSearchValueReducer,
+  mappingShowIdReducer,
+  mappingStatusIdReducer,
 } from "./slice";
 
 export const store = configureStore({
@@ -69,6 +73,10 @@ export const store = configureStore({
     categories: categoriesReducer,
     alertrules: alertRulesReducer,
     imbuildappsandurls: imbuildAppsandUrlsReducer,
+    imbuildappsandurlscount: imbuildAppsandUrlsCountReducer,
+    mappingsearchvalue: mappingSearchValueReducer,
+    mappingshowid: mappingShowIdReducer,
+    mappingstatusid: mappingStatusIdReducer,
     productivitybreakdown: productivityBreakdownReducer,
     teamwiseproductivity: teamwiseProductivityReducer,
     mostproductivityteams: mostProductivityTeamsReducer,

@@ -406,6 +406,7 @@ export default function Designation({ loading }) {
               options={statusOptions}
               onChange={(value) => setStatus(value)}
               value={status}
+              mandatory
               style={{ marginTop: "22px" }}
             />
           </Modal>

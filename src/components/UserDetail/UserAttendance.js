@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row, Skeleton } from "antd";
 import { useSelector } from "react-redux";
+import { FaRegUser } from "react-icons/fa6";
 import CommonTable from "../../Components/Common/CommonTable";
 import CommonMonthlyCalendar from "../../Components/Common/CommonMonthlyCalendar";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
+import Desktopicon from "../../assets/images/computer.png";
 import "./styles.css";
 import Loader from "../Common/Loader";
 import moment from "moment";
@@ -30,7 +32,16 @@ export default function UserAttendance({
       key: "start_Time",
       width: 120,
       render: (text, record) => {
-        return <p>{moment(text).format("hh:mm A")} </p>;
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <FaRegUser
+              color="#666767"
+              size={14}
+              style={{ marginRight: "4.5px" }}
+            />
+            <p>{moment(text).format("hh:mm A")} </p>
+          </div>
+        );
       },
     },
     {
@@ -41,8 +52,29 @@ export default function UserAttendance({
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
           return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {record.punchout_type === "system" ? (
+                <img
+                  src={Desktopicon}
+                  style={{
+                    width: "18px",
+                    height: "19px",
+                    marginRight: "5px",
+                  }}
+                />
+              ) : (
+                <FaRegUser
+                  color="#666767"
+                  size={14}
+                  style={{ marginRight: "4.5px" }}
+                />
+              )}
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
         }
-        return <p>{moment(text).format("hh:mm A")} </p>;
       },
     },
     {

@@ -101,6 +101,10 @@ const UserDetail = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+    setAttendanceFilterLoading(true);
+    setBreakFilterLoading(true);
+    setAppsFilterLoading(true);
+    setProductivityFilterLoading(true);
     getUsersData();
   }, [activePage]);
 

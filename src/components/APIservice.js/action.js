@@ -622,9 +622,22 @@ export const updateProductivity = async (categoryId, productivityId) => {
     throw error;
   }
 };
-export const getImbuildAppsandUrls = async () => {
+export const createImbuildAppsandUrls = async (payload) => {
   try {
-    const response = await api.get("/api/Productivity/GetImbuildAppsAndUrls");
+    const response = await api.post(
+      "/api/Productivity/AddImbuildAppsAndUrls",
+      payload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getImbuildAppsandUrls = async (payload) => {
+  try {
+    const response = await api.get("/api/Productivity/GetImbuildAppsAndUrls", {
+      params: payload,
+    });
     return response;
   } catch (error) {
     throw error;

@@ -339,6 +339,50 @@ const ImbuildAppsandUrlsSlice = createSlice({
     },
   },
 });
+const imbuildappsandurlsCount = 0;
+const imbuildappsandurlsCountSlice = createSlice({
+  name: "imbuildappsandurlscount",
+  initialState: imbuildappsandurlsCount,
+  reducers: {
+    storeImbuildappsandurlsCount(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const mappingSearchValue = "";
+const mappingSearchValueSlice = createSlice({
+  name: "mappingsearchvalue",
+  initialState: mappingSearchValue,
+  reducers: {
+    storeMappingSearchValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const mappingShowId = 1;
+const mappingShowIdSlice = createSlice({
+  name: "mappingshowid",
+  initialState: mappingShowId,
+  reducers: {
+    storeMappingShowId(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const mappingStatusId = 1;
+const mappingStatusIdSlice = createSlice({
+  name: "mappingstatusid",
+  initialState: mappingStatusId,
+  reducers: {
+    storeMappingStatusId(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //settings alert rules
 const alertRulesSlice = createSlice({
   name: "alertrules",
@@ -536,6 +580,11 @@ export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeCategories } = CategoriesSlice.actions;
 export const { storeImbuildAppsandUrls } = ImbuildAppsandUrlsSlice.actions;
+export const { storeImbuildappsandurlsCount } =
+  imbuildappsandurlsCountSlice.actions;
+export const { storeMappingSearchValue } = mappingSearchValueSlice.actions;
+export const { storeMappingShowId } = mappingShowIdSlice.actions;
+export const { storeMappingStatusId } = mappingStatusIdSlice.actions;
 export const { storeAlertRules } = alertRulesSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
@@ -595,6 +644,11 @@ export const breakSearchValueReducer = breakSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const categoriesReducer = CategoriesSlice.reducer;
 export const imbuildAppsandUrlsReducer = ImbuildAppsandUrlsSlice.reducer;
+export const imbuildAppsandUrlsCountReducer =
+  imbuildappsandurlsCountSlice.reducer;
+export const mappingSearchValueReducer = mappingSearchValueSlice.reducer;
+export const mappingShowIdReducer = mappingShowIdSlice.reducer;
+export const mappingStatusIdReducer = mappingStatusIdSlice.reducer;
 export const alertRulesReducer = alertRulesSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;

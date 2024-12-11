@@ -42,6 +42,10 @@ import {
   storeDesignationCount,
   storeDesignationSearchValue,
   storeImbuildAppsandUrls,
+  storeImbuildappsandurlsCount,
+  storeMappingSearchValue,
+  storeMappingShowId,
+  storeMappingStatusId,
   storeRole,
   storeRoleSearchValue,
   storesettingsBreak,
@@ -116,6 +120,9 @@ const Settings = () => {
     dispatch(storeDesignationSearchValue(searchValue));
     dispatch(storeRoleSearchValue(searchValue));
     dispatch(storeBreakSearchValue(searchValue));
+    dispatch(storeMappingSearchValue(searchValue));
+    dispatch(storeMappingShowId(1));
+    dispatch(storeMappingStatusId(1));
     //call user get api function
     getUsersData();
   }, []);
@@ -260,10 +267,16 @@ const Settings = () => {
   };
 
   const getImbuildAppsandUrlsData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const payload = {
+      organizationId: orgId,
+    };
     try {
-      const response = await getImbuildAppsandUrls();
+      const response = await getImbuildAppsandUrls(payload);
       console.log(response);
-      dispatch(storeImbuildAppsandUrls(response?.data?.data));
+      const imbuildData = response?.data?.data;
+      dispatch(storeImbuildappsandurlsCount(imbuildData.length));
+      dispatch(storeImbuildAppsandUrls(imbuildData));
     } catch (error) {
       dispatch(storeImbuildAppsandUrls([]));
     } finally {

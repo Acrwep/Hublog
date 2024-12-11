@@ -38,6 +38,12 @@ export default function AlertRules({ loading }) {
   const [breakStatus, setBreakStatus] = useState(1);
   const [inactivityId, setInactivityId] = useState();
   const [alertRulesList, setAlertRulesList] = useState([]);
+  //previous state
+  const [previousAlertThreshold, setPreviousAlertThreshold] = useState(null);
+  const [previousPunchoutThreshold, setPreviousPunchoutThreshold] =
+    useState(null);
+  const [previousStatus, setPreviousStatus] = useState(1);
+  const [previousBreakStatus, setPreviousBreakStatus] = useState(1);
 
   useEffect(() => {
     getAlertRulesData();
@@ -57,6 +63,13 @@ export default function AlertRules({ loading }) {
         setPunchoutThreshold(alertrulesData[0].punchoutThreshold);
         setStatus(alertrulesData[0].status === true ? 1 : 2);
         dispatch(storeAlertRules(alertrulesData));
+        //previous state handling
+        setPreviousAlertThreshold(alertrulesData[0].alertThreshold);
+        setPreviousPunchoutThreshold(alertrulesData[0].punchoutThreshold);
+        setPreviousStatus(alertrulesData[0].status === true ? 1 : 2);
+        setPreviousBreakStatus(
+          alertrulesData[0].break_alert_status === true ? 1 : 2
+        );
       } else {
         setInactivityId(null);
         setBreakStatus(1);
@@ -72,6 +85,16 @@ export default function AlertRules({ loading }) {
   };
 
   const handleOk = async () => {
+    if (
+      alertThreshold === previousAlertThreshold &&
+      punchoutThreshold === previousPunchoutThreshold &&
+      status === previousStatus &&
+      breakStatus === previousBreakStatus
+    ) {
+      CommonToaster("No changes found", "error");
+      return;
+    }
+
     const breakStatusValidate = selectValidator(breakStatus);
     const alertValidate = breakTimeValidator(alertThreshold);
     const punchoutValidate = breakTimeValidator(punchoutThreshold);
@@ -200,6 +223,7 @@ export default function AlertRules({ loading }) {
                     }}
                     options={statusList}
                     value={status}
+                    mandatory
                     style={{ width: "270px" }}
                   />
                 </Col>
