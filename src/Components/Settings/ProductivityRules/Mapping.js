@@ -197,7 +197,7 @@ export default function Mapping() {
       getImbuildAppsandUrlsData();
       formReset();
     } catch (error) {
-      const Error = error?.response?.data?.message;
+      const Error = error?.response?.data;
       CommonToaster(Error, "error");
     } finally {
       setTimeout(() => {
