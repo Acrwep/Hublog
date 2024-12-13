@@ -9,13 +9,21 @@ import CommonDoubleDatePicker from "../../Common/CommonDoubleDatePicker";
 import { getCurrentandPreviousweekDate } from "../../Common/Validation";
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
+  getProductivityWorktimeTrends,
   getTeams,
+  getTopAppsUsage,
+  getTopCategoryUsage,
+  getTopUrlsUsage,
   getUsers,
   getUsersByTeamId,
 } from "../../APIservice.js/action";
 import ActivityDetailed from "./ActivityDetailed";
+import { storeActivityWorktimeTrends } from "../../Redux/slice";
+import Loader from "../../Common/Loader";
+import { useDispatch } from "react-redux";
 
 const Activity = () => {
+  const dispatch = useDispatch();
   const [activePage, setActivePage] = useState(1);
   const [selectedDates, setSelectedDates] = useState([]);
   const [teamId, setTeamId] = useState(null);
@@ -23,6 +31,15 @@ const Activity = () => {
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [topAppName, setTopAppName] = useState("");
+  const [topAppUsageTime, setTopAppUsageTime] = useState("");
+  const [topUrlName, setTopUrlName] = useState("");
+  const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
+  const [topCategoryName, setTopCategoryName] = useState("");
+  const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [detailedLoading, setDetailedLoading] = useState(true);
   const [organizationId, setOrganizationId] = useState(null);
 
   const handlePageChange = (pageNumber) => {
@@ -32,6 +49,14 @@ const Activity = () => {
     ) {
       return;
     }
+    getOnlineBreakdownData(
+      organizationId,
+      teamId,
+      userId,
+      selectedDates[0],
+      selectedDates[1],
+      pageNumber
+    );
     setActivePage(pageNumber);
   };
 
@@ -40,9 +65,6 @@ const Activity = () => {
   }, []);
 
   const getTeamData = async () => {
-    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
-    setSelectedDates(PreviousAndCurrentDate);
-
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -62,6 +84,8 @@ const Activity = () => {
 
   const getUsersData = async () => {
     const orgId = localStorage.getItem("organizationId");
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
     try {
       const response = await getUsers(orgId);
       const users = response?.data;
@@ -72,6 +96,152 @@ const Activity = () => {
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
+    } finally {
+      setTimeout(() => {
+        getOnlineBreakdownData(
+          orgId,
+          null,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1],
+          activePage
+        );
+      }, 300);
+    }
+  };
+
+  const getOnlineBreakdownData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate,
+    pageNumber
+  ) => {
+    if (pageNumber === 1) {
+      setSummaryLoading(true);
+      getTopAppUsageData(orgId, teamid, startDate, endDate);
+    } else {
+      setDetailedLoading(true);
+      const payload = {
+        organizationId: orgId,
+        ...(teamid && { teamId: teamid }),
+        ...(userid && { userId: userid }),
+        fromDate: startDate,
+        toDate: endDate,
+      };
+
+      try {
+        const response = await getProductivityWorktimeTrends(payload);
+        const worktrendsdata = response?.data?.data?.data;
+        console.log("activity worktimetrends response", worktrendsdata);
+        dispatch(storeActivityWorktimeTrends(worktrendsdata));
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+        dispatch(storeActivityWorktimeTrends([]));
+      } finally {
+        setTimeout(() => {
+          setDetailedLoading(false);
+        }, 100);
+      }
+    }
+  };
+
+  const getTopAppUsageData = async (orgId, teamid, startdate, enddate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getTopAppsUsage(payload);
+      const TopAppsUsageData = response.data;
+      if (TopAppsUsageData.applicationName != null) {
+        setTopAppName(
+          TopAppsUsageData.applicationName[0].toUpperCase() +
+            TopAppsUsageData.applicationName.slice(1)
+        );
+
+        const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
+        setTopAppUsageTime(hours + "h:" + minutes + "m");
+        return;
+      } else {
+        setTopAppName("-");
+        setTopAppUsageTime("-");
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setTopAppName("-");
+      setTopAppUsageTime("-");
+    } finally {
+      setTimeout(() => {
+        getTopUrlUsageData(orgId, teamid, startdate, enddate);
+      }, 100);
+    }
+  };
+
+  const getTopUrlUsageData = async (orgId, teamid, startdate, enddate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getTopUrlsUsage(payload);
+      const TopUrlsUsageData = response.data;
+
+      if (TopUrlsUsageData.url) {
+        setTopUrlName(TopUrlsUsageData.url);
+
+        const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
+        setTopUrlUsageTime(hours + "h:" + minutes + "m");
+      } else {
+        setTopUrlName("-");
+        setTopUrlUsageTime("-");
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setTopUrlName("-");
+      setTopUrlUsageTime("-");
+    } finally {
+      setTimeout(() => {
+        getTopCategoryUsageData(orgId, teamid, startdate, enddate);
+      }, 100);
+    }
+  };
+
+  const getTopCategoryUsageData = async (orgId, teamid, startdate, enddate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startdate,
+      toDate: enddate,
+    };
+    try {
+      const response = await getTopCategoryUsage(payload);
+      const TopCategoryUsageData = response.data;
+      console.log("topcategory response", TopCategoryUsageData);
+
+      if (TopCategoryUsageData.applicationName) {
+        setTopCategoryName(TopCategoryUsageData.applicationName);
+
+        const [hours, minutes] = TopCategoryUsageData.maxUsage.split(":");
+        setTopCategoryUsageTime(hours + "h:" + minutes + "m");
+      } else {
+        setTopCategoryName("-");
+        setTopCategoryUsageTime("-");
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setTopCategoryName("-");
+      setTopCategoryUsageTime("-");
+    } finally {
+      setTimeout(() => {
+        setSummaryLoading(false);
+        setLoading(false);
+      }, 100);
     }
   };
 
@@ -88,6 +258,14 @@ const Activity = () => {
 
       setUserList(teamMembersList);
       setUserId(null);
+      getOnlineBreakdownData(
+        organizationId,
+        value,
+        null,
+        selectedDates[0],
+        selectedDates[1],
+        activePage
+      );
     } catch (error) {
       setUserList([]);
       CommonToaster(error.response.data.message, "error");
@@ -96,6 +274,14 @@ const Activity = () => {
 
   const handleUser = (value) => {
     setUserId(value);
+    getOnlineBreakdownData(
+      organizationId,
+      teamId,
+      value,
+      selectedDates[0],
+      selectedDates[1],
+      activePage
+    );
   };
 
   const handleDateChange = (dates, dateStrings) => {
@@ -104,6 +290,14 @@ const Activity = () => {
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
       console.log("call function");
+      getOnlineBreakdownData(
+        organizationId,
+        teamId,
+        userId,
+        dateStrings[0],
+        dateStrings[1],
+        activePage
+      );
     }
   };
 
@@ -230,14 +424,28 @@ const Activity = () => {
         </Col>
       </Row>
 
-      {activePage === 1 ? (
-        <div>
-          <ActivitySummary />
-        </div>
+      {loading ? (
+        <Loader />
       ) : (
-        <div>
-          <ActivityDetailed />
-        </div>
+        <>
+          {activePage === 1 ? (
+            <div>
+              <ActivitySummary
+                topAppName={topAppName}
+                topAppUsageTime={topAppUsageTime}
+                topUrlName={topUrlName}
+                topUrlUsageTime={topUrlUsageTime}
+                topCategoryName={topCategoryName}
+                topCategoryUsageTime={topCategoryUsageTime}
+                loading={summaryLoading}
+              />
+            </div>
+          ) : (
+            <div>
+              <ActivityDetailed loading={detailedLoading} />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

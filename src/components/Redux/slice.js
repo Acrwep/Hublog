@@ -394,6 +394,17 @@ const alertRulesSlice = createSlice({
     },
   },
 });
+//activity
+const activityWorktimeTrendsSlice = createSlice({
+  name: "activityworktimetrends",
+  initialState,
+  reducers: {
+    storeActivityWorktimeTrends(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //productivity
 const productivityBreakdownSlice = createSlice({
   name: "productivitybreakdown",
@@ -586,6 +597,8 @@ export const { storeMappingSearchValue } = mappingSearchValueSlice.actions;
 export const { storeMappingShowId } = mappingShowIdSlice.actions;
 export const { storeMappingStatusId } = mappingStatusIdSlice.actions;
 export const { storeAlertRules } = alertRulesSlice.actions;
+export const { storeActivityWorktimeTrends } =
+  activityWorktimeTrendsSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
 export const { storeTeamwiseProductivity } = teamwiseProductivitySlice.actions;
@@ -650,6 +663,8 @@ export const mappingSearchValueReducer = mappingSearchValueSlice.reducer;
 export const mappingShowIdReducer = mappingShowIdSlice.reducer;
 export const mappingStatusIdReducer = mappingStatusIdSlice.reducer;
 export const alertRulesReducer = alertRulesSlice.reducer;
+export const activityWorktimeTrendsReducer =
+  activityWorktimeTrendsSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
 export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;

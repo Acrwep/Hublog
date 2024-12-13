@@ -1,61 +1,37 @@
 import React, { useState } from "react";
-import { Flex, Progress } from "antd";
+import { Flex, Progress, Skeleton } from "antd";
 import ReactApexChart from "react-apexcharts";
 import CommonAvatar from "../../Common/CommonAvatar";
 import CommonTable from "../../Common/CommonTable";
+import { useSelector } from "react-redux";
 import moment from "moment";
+import { parseTimeToDecimal } from "../../Common/Validation";
+import CommonNodatafound from "../../Common/CommonNodatafound";
+import CommonTrendsChart from "../../Common/CommonTrendsChart";
 
-const ActivityDetailed = () => {
-  const [chartOptions, setChartOptions] = useState({
-    chart: {
-      type: "area",
-      height: 350,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth", // This makes it a Spline Area Chart
-    },
-    colors: ["#00e396", "#0791fb"],
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
-    },
-    yaxis: {
-      title: {
-        text: "Values",
-      },
-    },
-    tooltip: {
-      x: {
-        format: "MM",
-      },
-    },
-    fill: {
-      opacity: 0.3,
-    },
-  });
+const ActivityDetailed = ({ loading }) => {
+  const activityWorktimeTrendsData = useSelector(
+    (state) => state.activityworktimetrends
+  );
 
-  const [chartSeries, setChartSeries] = useState([
+  const activityWorktimeTrendsXasis = activityWorktimeTrendsData.map((item) =>
+    moment(item.start_timing).format("DD/MM/YYYY")
+  );
+
+  const activityWorktimeTrendsSeries = [
     {
       name: "Online time",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 147],
+      data: activityWorktimeTrendsData.map((item) => {
+        return parseTimeToDecimal(item.active_duration);
+      }),
     },
     {
       name: "Break time",
-      data: [23, 42, 35, 27, 43, 22, 31, 34, 52],
+      data: activityWorktimeTrendsData.map((item) => {
+        return parseTimeToDecimal(item.break_duration);
+      }),
     },
-  ]);
+  ];
 
   const [splineAreaOptions, setSplineAreaOptions] = useState({
     chart: {
@@ -215,16 +191,31 @@ const ActivityDetailed = () => {
   return (
     <div>
       <div className="devices_chartsContainer">
-        <p className="devices_chartheading">Working Time Trends</p>
-        <ReactApexChart
-          options={chartOptions}
-          series={chartSeries}
-          type="area"
-          height={350}
-        />
+        {loading ? (
+          <Skeleton
+            active
+            title={{ width: 140 }}
+            style={{ height: "45vh" }}
+            paragraph={{
+              rows: 0,
+            }}
+          />
+        ) : (
+          <>
+            <p className="devices_chartheading">Working Time Trends</p>
+            {activityWorktimeTrendsData.length >= 1 ? (
+              <CommonTrendsChart
+                xaxis={activityWorktimeTrendsXasis}
+                series={activityWorktimeTrendsSeries}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </>
+        )}
       </div>
       <div className="devices_chartsContainer" style={{ marginTop: "25px" }}>
-        <p className="devices_chartheading">Productivity Trend</p>
+        <p className="devices_chartheading">Activity Trend</p>
         <ReactApexChart
           options={lineChartOptions}
           series={lineChartSeries}

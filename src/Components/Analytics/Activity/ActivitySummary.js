@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { Row, Col, Divider, Progress, Flex, Tooltip } from "antd";
+import { Row, Col, Divider, Progress, Flex, Tooltip, Skeleton } from "antd";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../../Common/CommonDonutChart";
 import CommonBarChart from "../../Common/CommonBarChart";
 import "../styles.css";
 
-const ActivitySummary = () => {
+const ActivitySummary = ({
+  topAppName,
+  topAppUsageTime,
+  topUrlName,
+  topUrlUsageTime,
+  topCategoryName,
+  topCategoryUsageTime,
+  loading,
+}) => {
   const OverallWellness = [15, 6];
 
   const xasis = [
@@ -48,27 +56,70 @@ const ActivitySummary = () => {
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top Application</p>
-            <p className="userproductivity_contents">Chrome</p>
-            <p className="userproductivity_hours">346h:32m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Top Application</p>
+                <p className="userproductivity_contents">{topAppName}</p>
+                <p className="userproductivity_hours">{topAppUsageTime}</p>
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top URL</p>
-            <Tooltip placement="top" title="https://web.whatsapppppp">
-              <p className="userproductivity_contents">
-                https://web.whatsapppppp
-              </p>
-            </Tooltip>
-            <p className="userproductivity_hours">174h:42m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Top URL</p>
+                <Tooltip placement="top" title={`https://${topUrlName}`}>
+                  <p className="userproductivity_contents">
+                    {topUrlName === "-"
+                      ? topUrlName
+                      : `${
+                          topUrlName === "localhost" ? "http://" : "https://"
+                        }${topUrlName}`}
+                  </p>
+                </Tooltip>
+                <p className="userproductivity_hours">{topUrlUsageTime}</p>
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Top Category</p>
-            <p className="userproductivity_contents">Internet</p>
-            <p className="userproductivity_hours">661h:44m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Top Category</p>
+                <p className="userproductivity_contents">{topCategoryName}</p>
+                <p className="userproductivity_hours">{topCategoryUsageTime}</p>
+              </>
+            )}
           </div>
         </Col>
       </Row>
@@ -184,7 +235,7 @@ const ActivitySummary = () => {
 
       <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
-          <p className="devices_chartheading">Team Wise Utilization</p>
+          <p className="devices_chartheading">Team wise Activity Breakdown</p>
           <CommonBarChart
             xasis={xasis}
             series={series}

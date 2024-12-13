@@ -7,6 +7,7 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { parseTimeToDecimal } from "../../Common/Validation";
 import CommonNodatafound from "../../Common/CommonNodatafound";
+import CommonTrendsChart from "../../Common/CommonTrendsChart";
 
 const ProductivityDetailed = ({ loading }) => {
   const worktimeTrendsData = useSelector(
@@ -73,64 +74,6 @@ const ProductivityDetailed = ({ loading }) => {
       }),
     },
   ];
-
-  const chartOptions = {
-    chart: {
-      type: "area",
-      height: 350,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth", // This makes it a Spline Area Chart
-    },
-    xaxis: {
-      categories: worktimeTrendsXasis,
-      labels: {
-        show: true,
-        rotate: -45, // Rotate labels by -40 degrees
-        color: ["#ffffff"],
-        style: {
-          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
-        },
-      },
-      trim: true,
-    },
-    colors: ["#00e396", "#0791fb"],
-    labels: {
-      show: true,
-      style: {
-        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter: function (value) {
-          return formatTimeInHours(value);
-        },
-        style: {
-          fontFamily: "Poppins, sans-serif",
-        },
-      },
-      title: {
-        text: "Value",
-      },
-    },
-    tooltip: {
-      y: {
-        formatter: function (val, { seriesIndex, dataPointIndex }) {
-          // Show corresponding x-axis name and y value
-          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
-            val
-          )}</span>`;
-        },
-      },
-    },
-    fill: {
-      opacity: 0.3,
-    },
-  };
 
   const lineChartOptions = {
     chart: {
@@ -311,12 +254,9 @@ const ProductivityDetailed = ({ loading }) => {
           <>
             <p className="devices_chartheading">Working Time Trends</p>
             {worktimeTrendsData.length >= 1 ? (
-              <ReactApexChart
-                options={chartOptions}
+              <CommonTrendsChart
                 xaxis={worktimeTrendsXasis}
                 series={worktimeTrendsSeries}
-                type="area"
-                height={350}
               />
             ) : (
               <CommonNodatafound />
