@@ -118,7 +118,7 @@ const ActivityDetailed = ({ loading }) => {
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarSize={30} itemName={text} />
+            <CommonAvatar avatarSize={28} itemName={text} />
             <p className="reports_avatarname">{text}</p>
           </div>
         );
@@ -231,6 +231,7 @@ const ActivityDetailed = ({ loading }) => {
           dataSource={data}
           scroll={{ x: 1200 }}
           dataPerPage={10}
+          size="small"
           bordered="false"
           checkBox="false"
         />
