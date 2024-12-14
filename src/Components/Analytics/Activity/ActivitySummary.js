@@ -1,39 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Divider, Progress, Flex, Tooltip, Skeleton } from "antd";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../../Common/CommonDonutChart";
 import CommonBarChart from "../../Common/CommonBarChart";
+import { useSelector } from "react-redux";
 import "../styles.css";
+import { parseTimeToDecimal } from "../../Common/Validation";
+import CommonNodatafound from "../../Common/CommonNodatafound";
 
 const ActivitySummary = ({
+  totalActivity,
+  totalActivityTime,
+  totalBreakdownActivityTime,
+  breakdownAverageTime,
   topAppName,
   topAppUsageTime,
   topUrlName,
   topUrlUsageTime,
   topCategoryName,
   topCategoryUsageTime,
+  isBreakdownEmpty,
   loading,
 }) => {
+  const breakdownData = useSelector((state) => state.activitybreakdown);
+  const teamwiseActivityData = useSelector((state) => state.teamwiseactivity);
+
   const OverallWellness = [15, 6];
 
-  const xasis = [
-    "SEO",
-    "External HR",
-    "Internal HR",
-    "Branch Operation",
-    "Quality",
-    "Operation",
-    "Sales",
-  ];
+  const xasis = teamwiseActivityData.map((item) => item.team_name);
 
   const series = [
     {
       name: "Active time",
-      data: [3.0, 3.5, 5.5, 6.75, 9.0, 2.5, 4.25],
+      data: teamwiseActivityData.map((item) => {
+        return parseTimeToDecimal(item.active_time);
+      }),
     },
     {
       name: "Idle time",
-      data: [2.72, 4.42, 2.0, 2.58, 1.5, 5.0, 3.5], // Representing hours and minutes in decimal format
+      data: teamwiseActivityData.map((item) => {
+        return parseTimeToDecimal(item.idle_duration);
+      }),
     },
   ];
 
@@ -44,14 +51,28 @@ const ActivitySummary = ({
     { id: 2, name: "EXTERNAL HR", percentage: 85 },
     { id: 3, name: "SEO", percentage: 75 },
   ];
+
   return (
     <div>
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            <p>Productivity</p>
-            <p className="userproductivity_contents">41.69%</p>
-            <p className="userproductivity_hours">388h:49m</p>
+            {loading ? (
+              <Skeleton
+                active
+                title={{ height: "13px", borderRadius: "12px" }}
+                paragraph={{
+                  rows: 2,
+                }}
+                className="appsandurlcard_skeleton"
+              />
+            ) : (
+              <>
+                <p>Activity</p>
+                <p className="userproductivity_contents">{totalActivity}</p>
+                <p className="userproductivity_hours">{totalActivityTime}</p>
+              </>
+            )}
           </div>
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
@@ -128,26 +149,58 @@ const ActivitySummary = ({
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Online Time Breakdown</p>
-
-              <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">Total online time</p>
-                  <p className="totalactive_time">826h 39m</p>
-                  <p className="totalactive_timeheading">For the last 7 days</p>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <p className="totalactive_timeheading">Average online time</p>
-                  <p className="totalactive_time">4h 55m</p>
-                  <p className="totalactive_timeheading">Average per day</p>
-                </Col>
-              </Row>
-              <CommonDonutChart
-                labels={["Active time", "Idle time"]}
-                colors={["#25a17d", "#ABB3B3"]}
-                series={OverallWellness}
-                labelsfontSize="17px"
-              />
+              {loading ? (
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  style={{ height: "45vh" }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">Online Time Breakdown</p>
+                  {isBreakdownEmpty === false ? (
+                    <>
+                      <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p className="totalactive_timeheading">
+                            Total online time
+                          </p>
+                          <p className="totalactive_time">
+                            {totalBreakdownActivityTime}
+                          </p>
+                          <p className="totalactive_timeheading">
+                            For the selected days
+                          </p>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={12}>
+                          <p className="totalactive_timeheading">
+                            Average online time
+                          </p>
+                          <p className="totalactive_time">
+                            {breakdownAverageTime}
+                          </p>
+                          <p className="totalactive_timeheading">
+                            Average per day
+                          </p>
+                        </Col>
+                      </Row>
+                      <CommonDonutChart
+                        labels={["Active time", "Idle time"]}
+                        colors={["#25a17d", "#ABB3B3"]}
+                        series={breakdownData}
+                        timebased="true"
+                        labelsfontSize="16px"
+                        height={300}
+                      />
+                    </>
+                  ) : (
+                    <CommonNodatafound />
+                  )}
+                </>
+              )}
             </div>
           </Col>
 
@@ -235,13 +288,29 @@ const ActivitySummary = ({
 
       <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
-          <p className="devices_chartheading">Team wise Activity Breakdown</p>
-          <CommonBarChart
-            xasis={xasis}
-            series={series}
-            colors={barchartColors}
-            timebased="true"
-          />
+          {loading ? (
+            <div style={{ height: "45vh" }}>
+              <Skeleton
+                active
+                title={{ width: 140 }}
+                paragraph={{
+                  rows: 0,
+                }}
+              />
+            </div>
+          ) : (
+            <>
+              <p className="devices_chartheading">
+                Team wise Activity Breakdown
+              </p>
+              <CommonBarChart
+                xasis={xasis}
+                series={series}
+                colors={barchartColors}
+                timebased="true"
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

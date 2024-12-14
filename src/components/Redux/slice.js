@@ -395,6 +395,26 @@ const alertRulesSlice = createSlice({
   },
 });
 //activity
+const activityBreakdownSlice = createSlice({
+  name: "activitybreakdown",
+  initialState,
+  reducers: {
+    storeActivityBreakdown(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const teamwiseActivitySlice = createSlice({
+  name: "teamwiseactivity",
+  initialState,
+  reducers: {
+    storeTeamwiseActivity(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 const activityWorktimeTrendsSlice = createSlice({
   name: "activityworktimetrends",
   initialState,
@@ -597,6 +617,8 @@ export const { storeMappingSearchValue } = mappingSearchValueSlice.actions;
 export const { storeMappingShowId } = mappingShowIdSlice.actions;
 export const { storeMappingStatusId } = mappingStatusIdSlice.actions;
 export const { storeAlertRules } = alertRulesSlice.actions;
+export const { storeActivityBreakdown } = activityBreakdownSlice.actions;
+export const { storeTeamwiseActivity } = teamwiseActivitySlice.actions;
 export const { storeActivityWorktimeTrends } =
   activityWorktimeTrendsSlice.actions;
 export const { storeProductivityBreakdown } =
@@ -663,6 +685,8 @@ export const mappingSearchValueReducer = mappingSearchValueSlice.reducer;
 export const mappingShowIdReducer = mappingShowIdSlice.reducer;
 export const mappingStatusIdReducer = mappingStatusIdSlice.reducer;
 export const alertRulesReducer = alertRulesSlice.reducer;
+export const activityBreakdownReducer = activityBreakdownSlice.reducer;
+export const teamwiseActivityReducer = teamwiseActivitySlice.reducer;
 export const activityWorktimeTrendsReducer =
   activityWorktimeTrendsSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;

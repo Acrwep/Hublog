@@ -177,6 +177,9 @@ const Productivity = () => {
       } catch (error) {
         CommonToaster(error?.response?.data, "error");
         dispatch(storeProductivityBreakdown([]));
+        setTotalProductivityTime("-");
+        setBreakdownTotalDuration("-");
+        setBreakdownAverageTime("-");
         setIsBreakdownEmpty(true);
       } finally {
         setTimeout(() => {
@@ -261,6 +264,7 @@ const Productivity = () => {
       dispatch(storeLeastProductivityTeams(productivityOutliers?.bottom));
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
+      setTotalProductivity("-");
       dispatch(storeMostProductivityTeams([]));
       dispatch(storeLeastProductivityTeams([]));
     } finally {

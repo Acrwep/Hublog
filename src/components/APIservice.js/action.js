@@ -654,6 +654,7 @@ export const updateImbuildAppsandUrls = async (id, payload) => {
     throw error;
   }
 };
+//productivity
 export const getProductivityBreakdown = async (payload) => {
   try {
     const response = await api.get(
@@ -724,6 +725,17 @@ export const getProductivityEmployeesList = async (payload) => {
 export const getAlerts = async (payload) => {
   try {
     const response = await api.get("/api/Alert/GetAlert", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//activity
+export const getActivityBreakdown = async (payload) => {
+  try {
+    const response = await api.get("/api/Activity/GetActivityBreakDown", {
       params: payload,
     });
     return response;

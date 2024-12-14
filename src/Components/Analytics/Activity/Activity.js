@@ -6,9 +6,13 @@ import "../styles.css";
 import ActivitySummary from "./ActivitySummary";
 import CommonSelectField from "../../Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Common/CommonDoubleDatePicker";
-import { getCurrentandPreviousweekDate } from "../../Common/Validation";
+import {
+  getCurrentandPreviousweekDate,
+  parseTimeToDecimal,
+} from "../../Common/Validation";
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
+  getActivityBreakdown,
   getProductivityWorktimeTrends,
   getTeams,
   getTopAppsUsage,
@@ -18,7 +22,11 @@ import {
   getUsersByTeamId,
 } from "../../APIservice.js/action";
 import ActivityDetailed from "./ActivityDetailed";
-import { storeActivityWorktimeTrends } from "../../Redux/slice";
+import {
+  storeActivityBreakdown,
+  storeActivityWorktimeTrends,
+  storeTeamwiseActivity,
+} from "../../Redux/slice";
 import Loader from "../../Common/Loader";
 import { useDispatch } from "react-redux";
 
@@ -31,12 +39,18 @@ const Activity = () => {
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [totalActivity, setTotalActivity] = useState(null);
+  const [totalActivityTime, setTotalActivityTime] = useState("");
+  const [totalBreakdownActivityTime, setTotalBreakdownActivityTime] =
+    useState("");
+  const [breakdownAverageTime, setBreakdownAverageTime] = useState("");
   const [topAppName, setTopAppName] = useState("");
   const [topAppUsageTime, setTopAppUsageTime] = useState("");
   const [topUrlName, setTopUrlName] = useState("");
   const [topUrlUsageTime, setTopUrlUsageTime] = useState("");
   const [topCategoryName, setTopCategoryName] = useState("");
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
+  const [isBreakdownEmpty, setIsBreakdownEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [detailedLoading, setDetailedLoading] = useState(true);
@@ -49,7 +63,7 @@ const Activity = () => {
     ) {
       return;
     }
-    getOnlineBreakdownData(
+    getActivityBreakdownData(
       organizationId,
       teamId,
       userId,
@@ -98,7 +112,7 @@ const Activity = () => {
       setUserList([]);
     } finally {
       setTimeout(() => {
-        getOnlineBreakdownData(
+        getActivityBreakdownData(
           orgId,
           null,
           null,
@@ -110,7 +124,7 @@ const Activity = () => {
     }
   };
 
-  const getOnlineBreakdownData = async (
+  const getActivityBreakdownData = async (
     orgId,
     teamid,
     userid,
@@ -120,7 +134,58 @@ const Activity = () => {
   ) => {
     if (pageNumber === 1) {
       setSummaryLoading(true);
-      getTopAppUsageData(orgId, teamid, startDate, endDate);
+      const payload = {
+        organizationId: orgId,
+        ...(teamid && { teamId: teamid }),
+        ...(userid && { userId: userid }),
+        fromDate: startDate,
+        toDate: endDate,
+      };
+      try {
+        const response = await getActivityBreakdown(payload);
+        console.log("activity breakdown response", response);
+        const activityBreakdowndata = response?.data?.data;
+        const teamwiseActivityData = response?.data?.teams;
+        setTotalActivity(
+          activityBreakdowndata?.total_active_time_per.toFixed(2) + "%"
+        );
+        const [hours, minutes] =
+          activityBreakdowndata?.total_active_time.split(":");
+        setTotalActivityTime(`${hours}h:${minutes}m`);
+        setTotalBreakdownActivityTime(`${hours}h ${minutes}m`);
+        const [avgHours, avgMinutes] =
+          activityBreakdowndata?.averageDuratiopn.split(":");
+        setBreakdownAverageTime(`${avgHours}h ${avgMinutes}m`);
+        dispatch(
+          storeActivityBreakdown([
+            parseTimeToDecimal(activityBreakdowndata.total_active_time),
+            parseTimeToDecimal(activityBreakdowndata.total_idle_duration),
+          ])
+        );
+        dispatch(storeTeamwiseActivity(teamwiseActivityData));
+        if (
+          activityBreakdowndata.total_active_time === "00:00:00" &&
+          activityBreakdowndata.total_idle_duration === "00:00:00"
+        ) {
+          setIsBreakdownEmpty(true);
+        } else {
+          setIsBreakdownEmpty(false);
+        }
+      } catch (error) {
+        console.log("errr", error);
+        CommonToaster(error?.response?.data, "error");
+        setTotalActivity("0%");
+        setTotalActivityTime("-");
+        setIsBreakdownEmpty(true);
+        setTotalBreakdownActivityTime("-");
+        setBreakdownAverageTime("-");
+        dispatch(storeActivityBreakdown([]));
+        dispatch(storeTeamwiseActivity([]));
+      } finally {
+        setTimeout(() => {
+          getTopAppUsageData(orgId, teamid, startDate, endDate);
+        }, 100);
+      }
     } else {
       setDetailedLoading(true);
       const payload = {
@@ -258,7 +323,7 @@ const Activity = () => {
 
       setUserList(teamMembersList);
       setUserId(null);
-      getOnlineBreakdownData(
+      getActivityBreakdownData(
         organizationId,
         value,
         null,
@@ -274,7 +339,7 @@ const Activity = () => {
 
   const handleUser = (value) => {
     setUserId(value);
-    getOnlineBreakdownData(
+    getActivityBreakdownData(
       organizationId,
       teamId,
       value,
@@ -290,7 +355,7 @@ const Activity = () => {
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
       console.log("call function");
-      getOnlineBreakdownData(
+      getActivityBreakdownData(
         organizationId,
         teamId,
         userId,
@@ -336,6 +401,14 @@ const Activity = () => {
       setUserId(null);
       setUserList(nonChangeUserList);
       setSelectedDates(PreviousandCurrentDate);
+      getActivityBreakdownData(
+        organizationId,
+        null,
+        null,
+        PreviousandCurrentDate[0],
+        PreviousandCurrentDate[1],
+        activePage
+      );
     }
   };
   return (
@@ -431,12 +504,17 @@ const Activity = () => {
           {activePage === 1 ? (
             <div>
               <ActivitySummary
+                totalActivity={totalActivity}
+                totalActivityTime={totalActivityTime}
+                totalBreakdownActivityTime={totalBreakdownActivityTime}
+                breakdownAverageTime={breakdownAverageTime}
                 topAppName={topAppName}
                 topAppUsageTime={topAppUsageTime}
                 topUrlName={topUrlName}
                 topUrlUsageTime={topUrlUsageTime}
                 topCategoryName={topCategoryName}
                 topCategoryUsageTime={topCategoryUsageTime}
+                isBreakdownEmpty={isBreakdownEmpty}
                 loading={summaryLoading}
               />
             </div>
