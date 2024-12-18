@@ -23,6 +23,9 @@ const ActivitySummary = ({
   loading,
 }) => {
   const breakdownData = useSelector((state) => state.activitybreakdown);
+  const teamLevelbreakdownData = useSelector(
+    (state) => state.activityteamlevelbreakdown
+  );
   const teamwiseActivityData = useSelector((state) => state.teamwiseactivity);
   const mostActivityTeams = useSelector((state) => state.mostactivityteams);
   const leastActivityTeams = useSelector((state) => state.leastactivityteams);
@@ -208,17 +211,31 @@ const ActivitySummary = ({
 
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Activity Level Breakdown</p>
-
-              <CommonDonutChart
-                labels={["Healthy", "Overburdened"]}
-                colors={["#25a17d", "#ABB3B3"]}
-                series={OverallWellness}
-                labelsfontSize="15px"
-                style={{
-                  marginTop: "96px",
-                }}
-              />
+              {loading ? (
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  style={{ height: "45vh" }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">
+                    Team Level Activity Breakdown
+                  </p>
+                  <CommonDonutChart
+                    labels={["75-100%", "50-75%", "<50%"]}
+                    colors={["#25a17d", "rgba(20,94,240,0.70)", "#ABB3B3"]}
+                    series={teamLevelbreakdownData}
+                    labelsfontSize="16px"
+                    style={{
+                      marginTop: "97px",
+                    }}
+                  />
+                </>
+              )}
             </div>
           </Col>
 

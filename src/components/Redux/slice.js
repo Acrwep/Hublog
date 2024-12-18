@@ -405,6 +405,16 @@ const activityBreakdownSlice = createSlice({
     },
   },
 });
+const activityTeamlevelBreakdownSlice = createSlice({
+  name: "activityteamlevelbreakdown",
+  initialState,
+  reducers: {
+    storeActivityTeamLevelBreakdown(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 const teamwiseActivitySlice = createSlice({
   name: "teamwiseactivity",
   initialState,
@@ -450,6 +460,16 @@ const leastActivityTeamsSlice = createSlice({
   initialState,
   reducers: {
     storeLeastActivityTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const activityEmployeeslistSlice = createSlice({
+  name: "activityemployeeslist",
+  initialState,
+  reducers: {
+    storeActivityEmployeesList(state, action) {
       state = action.payload;
       return state;
     },
@@ -648,12 +668,16 @@ export const { storeMappingShowId } = mappingShowIdSlice.actions;
 export const { storeMappingStatusId } = mappingStatusIdSlice.actions;
 export const { storeAlertRules } = alertRulesSlice.actions;
 export const { storeActivityBreakdown } = activityBreakdownSlice.actions;
+export const { storeActivityTeamLevelBreakdown } =
+  activityTeamlevelBreakdownSlice.actions;
 export const { storeTeamwiseActivity } = teamwiseActivitySlice.actions;
 export const { storeActivityWorktimeTrends } =
   activityWorktimeTrendsSlice.actions;
 export const { storeActivityTrends } = activityTrendsSlice.actions;
 export const { storeMostActivityTeams } = mostActivityTeamsSlice.actions;
 export const { storeLeastActivityTeams } = leastActivityTeamsSlice.actions;
+export const { storeActivityEmployeesList } =
+  activityEmployeeslistSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
 export const { storeTeamwiseProductivity } = teamwiseProductivitySlice.actions;
@@ -719,12 +743,15 @@ export const mappingShowIdReducer = mappingShowIdSlice.reducer;
 export const mappingStatusIdReducer = mappingStatusIdSlice.reducer;
 export const alertRulesReducer = alertRulesSlice.reducer;
 export const activityBreakdownReducer = activityBreakdownSlice.reducer;
+export const activityTeamlevelBreakdownReducer =
+  activityTeamlevelBreakdownSlice.reducer;
 export const teamwiseActivityReducer = teamwiseActivitySlice.reducer;
 export const activityWorktimeTrendsReducer =
   activityWorktimeTrendsSlice.reducer;
 export const activityTrendsReducer = activityTrendsSlice.reducer;
 export const mostActivityTeamsReducer = mostActivityTeamsSlice.reducer;
 export const leastActivityTeamsReducer = leastActivityTeamsSlice.reducer;
+export const activityEmployeesListReducer = activityEmployeeslistSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
 export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;

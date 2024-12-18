@@ -753,3 +753,13 @@ export const getActivityTrend = async (payload) => {
     throw error;
   }
 };
+export const getActivityEmployeeslist = async (payload) => {
+  try {
+    const response = await api.get("/api/Activity/GetActivityEmployeeList", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

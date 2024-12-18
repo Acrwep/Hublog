@@ -14,6 +14,9 @@ const ActivityDetailed = ({ loading }) => {
     (state) => state.activityworktimetrends
   );
   const activityTrendsData = useSelector((state) => state.activitytrends);
+  const activityEmployeesListData = useSelector(
+    (state) => state.activityemployeeslist
+  );
 
   const activityWorktimeTrendsXasis = activityWorktimeTrendsData.map((item) =>
     moment(item.start_timing).format("DD/MM/YYYY")
@@ -131,52 +134,83 @@ const ActivityDetailed = ({ loading }) => {
     },
     {
       title: "Attendance",
-      dataIndex: "attendance",
-      key: "attendance",
+      dataIndex: "attendanceCount",
+      key: "attendanceCount",
       width: "150px",
+      render: (text, record) => {
+        if (text === null) {
+          return 0;
+        } else {
+          return <p>{text}</p>;
+        }
+      },
     },
     {
       title: "Online time",
-      dataIndex: "online_time",
-      key: "online_time",
+      dataIndex: "onlineTime",
+      key: "onlineTime",
       width: "170px",
-      // render: (text, record) => {
-      //   if (text === "0001-01-01T00:00:00" || text === null) {
-      //     return "00h:00m";
-      //   }
-      //   return <p>{moment(text, "HH:mm:ss").format("HH[h]:mm[m]")}</p>;
-      // },
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Active time",
-      dataIndex: "active_time",
-      key: "active_time",
+      dataIndex: "activeTime",
+      key: "activeTime",
       width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Idle time",
-      dataIndex: "idle_time",
-      key: "idle_time",
-      width: "180px",
+      dataIndex: "idleDuration",
+      key: "idleDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Break time",
-      dataIndex: "break_time",
-      key: "break_time",
+      dataIndex: "breakDuration",
+      key: "breakDuration",
       width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Activity",
-      dataIndex: "activity_percentage",
-      key: "activity_percentage",
+      dataIndex: "activePercentage",
+      key: "activePercentage",
       width: "170px",
       fixed: "right",
       render: (text) => {
-        return (
-          <Flex gap="small" vertical>
-            <Progress percent={text} strokeColor="#25a17d" />
-          </Flex>
-        );
+        if (text === null) {
+          return (
+            <Flex gap="small" vertical>
+              <Progress percent={0} strokeColor="#25a17d" />
+            </Flex>
+          );
+        } else {
+          return (
+            <Flex gap="small" vertical>
+              <Progress
+                percent={Math.floor(text)}
+                strokeColor="#25a17d"
+                format={(percent) => (
+                  <span style={{ color: "#1f1f1f" }}>{percent}%</span>
+                )}
+              />
+            </Flex>
+          );
+        }
       },
     },
   ];
@@ -250,12 +284,13 @@ const ActivityDetailed = ({ loading }) => {
         <p className="devices_chartheading">Employee List</p>
         <CommonTable
           columns={columns}
-          dataSource={data}
+          dataSource={activityEmployeesListData}
           scroll={{ x: 1200 }}
           dataPerPage={10}
           size="small"
           bordered="false"
           checkBox="false"
+          loading={loading}
         />
       </div>
     </div>

@@ -216,25 +216,17 @@ const ProductivityDetailed = ({ loading }) => {
         } else {
           return (
             <Flex gap="small" vertical>
-              <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
+              <Progress
+                percent={Math.floor(text)}
+                strokeColor="#25a17d"
+                format={(percent) => (
+                  <span style={{ color: "#1f1f1f" }}>{percent}%</span>
+                )}
+              />
             </Flex>
           );
         }
       },
-    },
-  ];
-
-  const data = [
-    {
-      id: 1,
-      full_Name: "Balaji R",
-      attendance: 2,
-      online_time: "17h:16m",
-      productivity_time: "00h:00m",
-      unproductivty_time: "00h:00m",
-      neutral_time: "15h:56m",
-      break_time: "02h:18m:05s",
-      productivity_percentage: 20,
     },
   ];
 

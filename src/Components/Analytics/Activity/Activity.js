@@ -13,6 +13,7 @@ import {
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getActivityBreakdown,
+  getActivityEmployeeslist,
   getActivityTrend,
   getProductivityWorktimeTrends,
   getTeams,
@@ -25,6 +26,8 @@ import {
 import ActivityDetailed from "./ActivityDetailed";
 import {
   storeActivityBreakdown,
+  storeActivityEmployeesList,
+  storeActivityTeamLevelBreakdown,
   storeActivityTrends,
   storeActivityWorktimeTrends,
   storeLeastActivityTeams,
@@ -148,6 +151,7 @@ const Activity = () => {
         const response = await getActivityBreakdown(payload);
         console.log("activity breakdown response", response);
         const activityBreakdowndata = response?.data?.data;
+        const activityTeamlevelBreakdowndata = response?.data?.percentages;
         const teamwiseActivityData = response?.data?.teams;
         const mostActivityteamsData = response?.data?.top;
         const leastActivityTeamsData = response?.data?.bottom;
@@ -171,6 +175,13 @@ const Activity = () => {
             parseTimeToDecimal(activityBreakdowndata.total_idle_duration),
           ])
         );
+        dispatch(
+          storeActivityTeamLevelBreakdown([
+            activityTeamlevelBreakdowndata.greaterThan75Active,
+            activityTeamlevelBreakdowndata.between50And75Active,
+            activityTeamlevelBreakdowndata.lessThan50Active,
+          ])
+        );
         dispatch(storeTeamwiseActivity(teamwiseActivityData));
         dispatch(storeMostActivityTeams(mostActivityteamsData));
         dispatch(storeLeastActivityTeams(leastActivityTeamsData));
@@ -191,6 +202,7 @@ const Activity = () => {
         setTotalBreakdownOnlineTime("-");
         setBreakdownAverageTime("-");
         dispatch(storeActivityBreakdown([]));
+        dispatch(storeActivityTeamLevelBreakdown([]));
         dispatch(storeTeamwiseActivity([]));
         dispatch(storeMostActivityTeams([]));
         dispatch(storeLeastActivityTeams([]));
@@ -348,8 +360,38 @@ const Activity = () => {
       dispatch(storeActivityTrends([]));
     } finally {
       setTimeout(() => {
-        setDetailedLoading(false);
+        getActivityEmployeesListData(orgId, teamid, userid, startDate, endDate);
       }, 100);
+    }
+  };
+
+  const getActivityEmployeesListData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getActivityEmployeeslist(payload);
+      const activityEmployeeData = response?.data?.data;
+      console.log("activity employeelist response", activityEmployeeData);
+      dispatch(storeActivityEmployeesList(activityEmployeeData));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeActivityEmployeesList([]));
+    } finally {
+      setTimeout(() => {
+        setDetailedLoading(false);
+      }, 300);
     }
   };
   //onchange functions
