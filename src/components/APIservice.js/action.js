@@ -743,3 +743,13 @@ export const getActivityBreakdown = async (payload) => {
     throw error;
   }
 };
+export const getActivityTrend = async (payload) => {
+  try {
+    const response = await api.get("/api/Activity/Date_wise_Activity", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

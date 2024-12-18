@@ -181,7 +181,7 @@ const ProductivitySummary = ({
                             {breakdownTotalDuration}
                           </p>
                           <p className="totalproductive_timeheading">
-                            For the selected days
+                            For the selected range
                           </p>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12}>
@@ -265,6 +265,11 @@ const ProductivitySummary = ({
                                 <Progress
                                   strokeColor="#25a17d"
                                   percent={Math.floor(item.productive_percent)}
+                                  format={(percent) => (
+                                    <span style={{ color: "#1f1f1f" }}>
+                                      {percent}%
+                                    </span>
+                                  )}
                                 />
                               </Flex>
                             </Col>
@@ -308,6 +313,11 @@ const ProductivitySummary = ({
                                 <Progress
                                   strokeColor="rgba(244, 67, 54, 0.62)"
                                   percent={Math.floor(item.productive_percent)}
+                                  format={(percent) => (
+                                    <span style={{ color: "#1f1f1f" }}>
+                                      {percent}%
+                                    </span>
+                                  )}
                                 />
                               </Flex>
                             </Col>

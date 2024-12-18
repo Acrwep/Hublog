@@ -13,9 +13,14 @@ const ActivityDetailed = ({ loading }) => {
   const activityWorktimeTrendsData = useSelector(
     (state) => state.activityworktimetrends
   );
+  const activityTrendsData = useSelector((state) => state.activitytrends);
 
   const activityWorktimeTrendsXasis = activityWorktimeTrendsData.map((item) =>
     moment(item.start_timing).format("DD/MM/YYYY")
+  );
+
+  const activityTrendXasis = activityTrendsData.map((item) =>
+    moment(item.date, "MM/DD/YYYY HH:mm:ss").format("DD/MM/YYYY")
   );
 
   const activityWorktimeTrendsSeries = [
@@ -33,40 +38,34 @@ const ActivityDetailed = ({ loading }) => {
     },
   ];
 
-  const [splineAreaOptions, setSplineAreaOptions] = useState({
-    chart: {
-      type: "area",
-      height: 350,
+  const activityTrendSeries = [
+    {
+      name: "Active time",
+      data: activityTrendsData.map((item) => {
+        return parseTimeToDecimal(item.active_Duration);
+      }),
     },
-    dataLabels: {
-      enabled: false,
+    {
+      name: "Ideal time",
+      data: activityTrendsData.map((item) => {
+        return parseTimeToDecimal(item.idle_Duration);
+      }),
     },
-    stroke: {
-      curve: "smooth", // Spline for smooth curve
-    },
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
-    },
-    yaxis: {
-      title: {
-        text: "Values",
-      },
-    },
-    fill: {
-      opacity: 0.3,
-    },
-    colors: ["#FF0000", "#000000"], // Red and Black colors for the spline area chart
-  });
+  ];
+
+  const formatTimeInHours = (value) => {
+    const hours = Math.floor(value); // Only display whole hours
+    return `${hours}hr`;
+  };
+
+  const formatTooltipTime = (value) => {
+    if (isNaN(value) || value === null || value === undefined)
+      return "0hr 0m 0s";
+    const hours = Math.floor(value);
+    const minutes = Math.floor((value % 1) * 60);
+    const seconds = Math.floor(((value % 1) * 3600) % 60);
+    return `${hours}hr ${minutes}m ${seconds}s`;
+  };
 
   const lineChartOptions = {
     chart: {
@@ -74,39 +73,45 @@ const ActivityDetailed = ({ loading }) => {
       height: 350,
     },
     stroke: {
-      curve: "straight", // Keeps the line straight for the line chart
+      curve: "smooth", // Keeps the line straight for the line chart
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-      ],
+      categories: activityTrendXasis,
+      labels: {
+        show: true,
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
     },
     yaxis: {
+      labels: {
+        formatter: function (value) {
+          return formatTimeInHours(value);
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
       title: {
-        text: "Values",
+        text: "Value",
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
+            val
+          )}</span>`;
+        },
       },
     },
     colors: ["#25a17d", "#8a8c8c"], // Different colors for the three series
   };
-
-  const [lineChartSeries, setLineChartSeries] = useState([
-    {
-      name: "Active time",
-      data: [30, 40, 45, 50, 49, 60, 70, 91, 125],
-    },
-    {
-      name: "Idle time",
-      data: [20, 30, 35, 40, 39, 50, 60, 81, 95],
-    },
-  ]);
 
   const columns = [
     {
@@ -215,13 +220,30 @@ const ActivityDetailed = ({ loading }) => {
         )}
       </div>
       <div className="devices_chartsContainer" style={{ marginTop: "25px" }}>
-        <p className="devices_chartheading">Activity Trend</p>
-        <ReactApexChart
-          options={lineChartOptions}
-          series={lineChartSeries}
-          type="line"
-          height={350}
-        />
+        {loading ? (
+          <Skeleton
+            active
+            title={{ width: 140 }}
+            style={{ height: "45vh" }}
+            paragraph={{
+              rows: 0,
+            }}
+          />
+        ) : (
+          <>
+            <p className="devices_chartheading">Activity Trend</p>
+            {activityTrendsData.length >= 1 ? (
+              <ReactApexChart
+                options={lineChartOptions}
+                series={activityTrendSeries}
+                type="line"
+                height={350}
+              />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </>
+        )}
       </div>
 
       <div className="devices_chartsContainer" style={{ marginTop: "20px" }}>

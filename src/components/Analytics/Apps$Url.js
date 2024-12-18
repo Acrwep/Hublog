@@ -43,14 +43,19 @@ const Apps$Url = () => {
   const [loading, setLoading] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
 
-  const formatTooltipTime = (value) => {
-    if (isNaN(value) || value === null || value === undefined)
-      return "0hr 0m 0s";
-    const hours = Math.floor(value);
-    const minutes = Math.floor((value % 1) * 60);
-    const seconds = Math.floor(((value % 1) * 3600) % 60);
-    return `${hours}hr ${minutes}m ${seconds}s`;
-  };
+  // Function to convert "HH:MM:SS" to total seconds
+  function convertToSeconds(timeString) {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + seconds; // Convert to seconds
+  }
+
+  // Function to format time for tooltip
+  function formatTooltipTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours}h ${minutes}m ${secs}s`;
+  }
 
   const barchartoptions = {
     chart: {
@@ -107,7 +112,7 @@ const Apps$Url = () => {
           fontFamily: "Poppins, sans-serif",
         },
         formatter: function (value) {
-          const hours = Math.floor(value);
+          const hours = Math.floor(value / 3600);
           return `${hours}h`;
         },
       },
@@ -122,7 +127,7 @@ const Apps$Url = () => {
     {
       data: appsData.map((item) => ({
         x: capitalizeFirstLetter(item.applicationName),
-        y: item.totalUsage,
+        y: convertToSeconds(item.totalUsage),
       })),
     },
   ];
@@ -130,8 +135,8 @@ const Apps$Url = () => {
   const urlsbarchartseries = [
     {
       data: urlsData.map((item) => ({
-        x: item.url,
-        y: item.totalUsage,
+        x: capitalizeFirstLetter(item.url),
+        y: convertToSeconds(item.totalUsage),
       })),
     },
   ];
@@ -195,6 +200,7 @@ const Apps$Url = () => {
     try {
       const response = await getAppsUsage(payload);
       const AppsandurlsData = response.data;
+      console.log("apps and urls response", AppsandurlsData);
       setAppsData(AppsandurlsData);
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");

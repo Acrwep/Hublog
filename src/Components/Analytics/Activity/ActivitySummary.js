@@ -11,7 +11,7 @@ import CommonNodatafound from "../../Common/CommonNodatafound";
 const ActivitySummary = ({
   totalActivity,
   totalActivityTime,
-  totalBreakdownActivityTime,
+  totalBreakdownOnlineTime,
   breakdownAverageTime,
   topAppName,
   topAppUsageTime,
@@ -24,6 +24,8 @@ const ActivitySummary = ({
 }) => {
   const breakdownData = useSelector((state) => state.activitybreakdown);
   const teamwiseActivityData = useSelector((state) => state.teamwiseactivity);
+  const mostActivityTeams = useSelector((state) => state.mostactivityteams);
+  const leastActivityTeams = useSelector((state) => state.leastactivityteams);
 
   const OverallWellness = [15, 6];
 
@@ -169,10 +171,10 @@ const ActivitySummary = ({
                             Total online time
                           </p>
                           <p className="totalactive_time">
-                            {totalBreakdownActivityTime}
+                            {totalBreakdownOnlineTime}
                           </p>
                           <p className="totalactive_timeheading">
-                            For the selected days
+                            For the selected range
                           </p>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12}>
@@ -222,65 +224,122 @@ const ActivitySummary = ({
 
           <Col xs={24} sm={24} md={10} lg={10}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Activity outliers</p>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalHighFill
-                  color="#25a17d"
-                  size={22}
-                  style={{ marginRight: "12px" }}
+              {loading ? (
+                <Skeleton
+                  active
+                  style={{ height: "45vh" }}
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
                 />
-                <p className="mostproductive_heading">Most active Team(s)</p>
-              </div>
+              ) : (
+                <>
+                  <p className="devices_chartheading">Activity outliers</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalHighFill
+                      color="#25a17d"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Most active Team(s)
+                    </p>
+                  </div>
 
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {mostActivityTeams.length >= 1 ? (
+                      <>
+                        {mostActivityTeams.map((item, index) => (
+                          <React.Fragment key={index}>
+                            <Row>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <p style={{ fontWeight: 500 }}>
+                                  {index + 1 + ")" + " " + item.team_name}
+                                </p>
+                              </Col>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <Flex gap="small" vertical>
+                                  <Progress
+                                    strokeColor="#25a17d"
+                                    percent={Math.floor(item.activeTimePercent)}
+                                    format={(percent) => (
+                                      <span style={{ color: "#1f1f1f" }}>
+                                        {percent}%
+                                      </span>
+                                    )}
+                                  />
+                                </Flex>
+                              </Col>
+                            </Row>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
 
-              <Divider className="productivity_outliersDivider" />
+                  <Divider className="productivity_outliersDivider" />
 
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "20px",
-                }}
-              >
-                <PiCellSignalLowFill
-                  color="#e93b3a"
-                  size={22}
-                  style={{ marginRight: "12px" }}
-                />
-                <p className="mostproductive_heading">Least active Team(s)</p>
-              </div>
-              <div style={{ marginTop: "15px" }}>
-                {productiveTeamsItems.map((item) => (
-                  <Row>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p style={{ fontWeight: 500 }}>{item.name}</p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <Flex gap="small" vertical>
-                        <Progress percent={item.percentage} />
-                      </Flex>
-                    </Col>
-                  </Row>
-                ))}
-              </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <PiCellSignalLowFill
+                      color="#e93b3a"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Least active Team(s)
+                    </p>
+                  </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {leastActivityTeams.length >= 1 ? (
+                      <>
+                        {leastActivityTeams.map((item, index) => (
+                          <React.Fragment key={index}>
+                            <Row>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <p style={{ fontWeight: 500 }}>
+                                  {index + 1 + ")" + " " + item.team_name}
+                                </p>
+                              </Col>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <Flex gap="small" vertical>
+                                  <Progress
+                                    strokeColor="rgba(244, 67, 54, 0.62)"
+                                    percent={Math.floor(item.activeTimePercent)}
+                                    format={(percent) => (
+                                      <span style={{ color: "#1f1f1f" }}>
+                                        {percent}%
+                                      </span>
+                                    )}
+                                  />
+                                </Flex>
+                              </Col>
+                            </Row>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </Col>
         </Row>

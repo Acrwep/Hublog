@@ -13,6 +13,7 @@ import {
 import { CommonToaster } from "../../Common/CommonToaster";
 import {
   getActivityBreakdown,
+  getActivityTrend,
   getProductivityWorktimeTrends,
   getTeams,
   getTopAppsUsage,
@@ -24,7 +25,10 @@ import {
 import ActivityDetailed from "./ActivityDetailed";
 import {
   storeActivityBreakdown,
+  storeActivityTrends,
   storeActivityWorktimeTrends,
+  storeLeastActivityTeams,
+  storeMostActivityTeams,
   storeTeamwiseActivity,
 } from "../../Redux/slice";
 import Loader from "../../Common/Loader";
@@ -41,8 +45,7 @@ const Activity = () => {
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [totalActivity, setTotalActivity] = useState(null);
   const [totalActivityTime, setTotalActivityTime] = useState("");
-  const [totalBreakdownActivityTime, setTotalBreakdownActivityTime] =
-    useState("");
+  const [totalBreakdownOnlineTime, setTotalBreakdownOnlineTime] = useState("");
   const [breakdownAverageTime, setBreakdownAverageTime] = useState("");
   const [topAppName, setTopAppName] = useState("");
   const [topAppUsageTime, setTopAppUsageTime] = useState("");
@@ -146,15 +149,21 @@ const Activity = () => {
         console.log("activity breakdown response", response);
         const activityBreakdowndata = response?.data?.data;
         const teamwiseActivityData = response?.data?.teams;
+        const mostActivityteamsData = response?.data?.top;
+        const leastActivityTeamsData = response?.data?.bottom;
         setTotalActivity(
           activityBreakdowndata?.total_active_time_per.toFixed(2) + "%"
         );
         const [hours, minutes] =
           activityBreakdowndata?.total_active_time.split(":");
         setTotalActivityTime(`${hours}h:${minutes}m`);
-        setTotalBreakdownActivityTime(`${hours}h ${minutes}m`);
+
+        const [totalOnlinehrs, totalOnlinemin] =
+          activityBreakdowndata?.total_Online_Duration.split(":");
+        setTotalBreakdownOnlineTime(`${totalOnlinehrs}h ${totalOnlinemin}m`);
+
         const [avgHours, avgMinutes] =
-          activityBreakdowndata?.averageDuratiopn.split(":");
+          activityBreakdowndata?.averageDuration.split(":");
         setBreakdownAverageTime(`${avgHours}h ${avgMinutes}m`);
         dispatch(
           storeActivityBreakdown([
@@ -163,6 +172,8 @@ const Activity = () => {
           ])
         );
         dispatch(storeTeamwiseActivity(teamwiseActivityData));
+        dispatch(storeMostActivityTeams(mostActivityteamsData));
+        dispatch(storeLeastActivityTeams(leastActivityTeamsData));
         if (
           activityBreakdowndata.total_active_time === "00:00:00" &&
           activityBreakdowndata.total_idle_duration === "00:00:00"
@@ -177,10 +188,12 @@ const Activity = () => {
         setTotalActivity("0%");
         setTotalActivityTime("-");
         setIsBreakdownEmpty(true);
-        setTotalBreakdownActivityTime("-");
+        setTotalBreakdownOnlineTime("-");
         setBreakdownAverageTime("-");
         dispatch(storeActivityBreakdown([]));
         dispatch(storeTeamwiseActivity([]));
+        dispatch(storeMostActivityTeams([]));
+        dispatch(storeLeastActivityTeams([]));
       } finally {
         setTimeout(() => {
           getTopAppUsageData(orgId, teamid, startDate, endDate);
@@ -206,7 +219,7 @@ const Activity = () => {
         dispatch(storeActivityWorktimeTrends([]));
       } finally {
         setTimeout(() => {
-          setDetailedLoading(false);
+          getActivityTrendData(orgId, teamid, userid, startDate, endDate);
         }, 100);
       }
     }
@@ -310,6 +323,35 @@ const Activity = () => {
     }
   };
 
+  const getActivityTrendData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getActivityTrend(payload);
+      const activityTrendData = response?.data;
+      console.log("activity trend response", activityTrendData);
+      dispatch(storeActivityTrends(activityTrendData));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeActivityTrends([]));
+    } finally {
+      setTimeout(() => {
+        setDetailedLoading(false);
+      }, 100);
+    }
+  };
   //onchange functions
   const handleTeam = async (value) => {
     setTeamId(value);
@@ -441,6 +483,7 @@ const Activity = () => {
                   : "productivity_detailedbutton"
               }
               onClick={() => handlePageChange(2)}
+              disabled={loading ? true : false}
             >
               Detailed
             </Button>
@@ -506,7 +549,7 @@ const Activity = () => {
               <ActivitySummary
                 totalActivity={totalActivity}
                 totalActivityTime={totalActivityTime}
-                totalBreakdownActivityTime={totalBreakdownActivityTime}
+                totalBreakdownOnlineTime={totalBreakdownOnlineTime}
                 breakdownAverageTime={breakdownAverageTime}
                 topAppName={topAppName}
                 topAppUsageTime={topAppUsageTime}

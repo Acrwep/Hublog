@@ -425,6 +425,36 @@ const activityWorktimeTrendsSlice = createSlice({
     },
   },
 });
+const activityTrendsSlice = createSlice({
+  name: "activitytrends",
+  initialState,
+  reducers: {
+    storeActivityTrends(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const mostActivityTeamsSlice = createSlice({
+  name: "mostactivityteams",
+  initialState,
+  reducers: {
+    storeMostActivityTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const leastActivityTeamsSlice = createSlice({
+  name: "leastactivityteams",
+  initialState,
+  reducers: {
+    storeLeastActivityTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //productivity
 const productivityBreakdownSlice = createSlice({
   name: "productivitybreakdown",
@@ -621,6 +651,9 @@ export const { storeActivityBreakdown } = activityBreakdownSlice.actions;
 export const { storeTeamwiseActivity } = teamwiseActivitySlice.actions;
 export const { storeActivityWorktimeTrends } =
   activityWorktimeTrendsSlice.actions;
+export const { storeActivityTrends } = activityTrendsSlice.actions;
+export const { storeMostActivityTeams } = mostActivityTeamsSlice.actions;
+export const { storeLeastActivityTeams } = leastActivityTeamsSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
 export const { storeTeamwiseProductivity } = teamwiseProductivitySlice.actions;
@@ -689,6 +722,9 @@ export const activityBreakdownReducer = activityBreakdownSlice.reducer;
 export const teamwiseActivityReducer = teamwiseActivitySlice.reducer;
 export const activityWorktimeTrendsReducer =
   activityWorktimeTrendsSlice.reducer;
+export const activityTrendsReducer = activityTrendsSlice.reducer;
+export const mostActivityTeamsReducer = mostActivityTeamsSlice.reducer;
+export const leastActivityTeamsReducer = leastActivityTeamsSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
 export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;

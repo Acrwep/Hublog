@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Space, Dropdown, Input, Modal } from "antd";
+import { Row, Col, Space, Dropdown, Input, Modal, Drawer } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
 import "../styles.css";
@@ -16,6 +16,8 @@ import {
 import moment from "moment";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import { AiOutlineEdit } from "react-icons/ai";
+import { RxCross2 } from "react-icons/rx";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import Loader from "../../../Components/Common/Loader";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { CommonToaster } from "../../Common/CommonToaster";
@@ -168,54 +170,51 @@ const Users = ({ loading }) => {
       align: "center",
       width: 90,
       render: (text, record) => {
-        // const items = [
-        //   {
-        //     key: "1",
-        //     label: (
-        //       <div
-        //         style={{ display: "flex" }}
-        //         onClick={() => handleEdit(record)}
-        //       >
-        //         <AiOutlineEdit size={19} className="users_tableeditbutton" />
-        //         <button onClick={() => console.log(record)}>Edit</button>
-        //       </div>
-        //     ),
-        //   },
-        //   {
-        //     key: "2",
-        //     label: (
-        //       <div style={{ display: "flex" }}>
-        //         <RiDeleteBin7Line
-        //           size={19}
-        //           className="users_tabledeletebutton"
-        //         />
-        //         <button onClick={() => console.log(record)}>Delete</button>
-        //       </div>
-        //     ),
-        //   },
-        // ];
-        // return (
-        //   <Space direction="vertical">
-        //     <Space wrap>
-        //       <Dropdown
-        //         menu={{
-        //           items,
-        //         }}
-        //         placement="bottomLeft"
-        //         arrow
-        //       >
-        //         <button className="usertable_actionbutton">
-        //           <BsThreeDotsVertical />
-        //         </button>
-        //       </Dropdown>
-        //     </Space>
-        //   </Space>
-        // );
+        const items = [
+          {
+            key: "1",
+            label: (
+              <div
+                style={{ display: "flex" }}
+                onClick={() => handleEdit(record)}
+              >
+                <AiOutlineEdit size={19} className="users_tableeditbutton" />
+                <button onClick={() => console.log(record)}>Edit</button>
+              </div>
+            ),
+          },
+          {
+            key: "2",
+            label: (
+              <div style={{ display: "flex" }}>
+                <RxCross2 size={19} className="users_tabledeletebutton" />
+                <button onClick={() => console.log(record)}>Deactivate</button>
+              </div>
+            ),
+          },
+        ];
         return (
-          <button onClick={() => handleEdit(record)}>
-            <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
-          </button>
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <button className="usertable_actionbutton">
+                  <BsThreeDotsVertical />
+                </button>
+              </Dropdown>
+            </Space>
+          </Space>
         );
+        // return (
+        //   <button onClick={() => handleEdit(record)}>
+        //     <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
+        //   </button>
+        // );
       },
     },
   ];
@@ -534,17 +533,12 @@ const Users = ({ loading }) => {
         </div>
       )}
       {/* user creation drawer */}
-      <Modal
+      <Drawer
         title={edit ? "Update User" : "Add User"}
         open={open}
+        width="45%"
         onOk={handleSubmit}
-        onCancel={onClose}
-        footer={[
-          <button className="designation_submitbutton" onClick={handleSubmit}>
-            Submit
-          </button>,
-        ]}
-        centered
+        onClose={onClose}
       >
         <Row gutter={16}>
           <Col span={12}>
@@ -734,7 +728,16 @@ const Users = ({ loading }) => {
             />
           </Col>
         </Row>
-      </Modal>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button
+            className="org_createbutton"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </Drawer>
     </div>
   );
 };
