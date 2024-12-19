@@ -102,6 +102,23 @@
   border-radius: 7px;
   margin-top: 20px;
 }
+.userattendance_drawerContainer {
+  margin-top: 20px;
+}
+.userattendance_avatarContainer {
+  border: 1px solid #abb3b3b9;
+  border-radius: 12px;
+  padding: 16px 32px;
+  display: flex;
+  background-color: rgba(20, 184, 166, 0.1);
+}
+.userattendance_drawername {
+  font-weight: 600;
+}
+.userattendance_drawermail {
+  color: rgba(128, 128, 128, 0.774);
+  font-weight: 500;
+}
 .userbreak_linechartContainer {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   padding: 12px 12px;

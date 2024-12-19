@@ -653,6 +653,9 @@ const UserDetail = () => {
                 loading={initialLoading}
                 filterLoading={attendanceFilterLoading}
                 attendanceSummary={attendanceSummary}
+                selectedUserId={userId}
+                userFullName={fullName}
+                userEmail={email}
               />
             </div>
           )}

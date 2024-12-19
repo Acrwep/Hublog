@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Skeleton } from "antd";
+import { Col, Row, Skeleton, Drawer, Avatar } from "antd";
 import { useSelector } from "react-redux";
 import { FaRegUser } from "react-icons/fa6";
 import CommonTable from "../../Components/Common/CommonTable";
@@ -9,13 +9,26 @@ import Desktopicon from "../../assets/images/computer.png";
 import "./styles.css";
 import Loader from "../Common/Loader";
 import moment from "moment";
+import { CommonToaster } from "../Common/CommonToaster";
+import { getUserAttendance } from "../APIservice.js/action";
 
 export default function UserAttendance({
   attendanceSummary,
+  selectedUserId,
+  userFullName,
+  userEmail,
   loading,
   filterLoading,
 }) {
   const userAttendanceDetails = useSelector((state) => state.userAttendance);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDateAttendanceData, setSelectedDateAttendanceData] = useState(
+    []
+  );
+  const [firstName, setFisrtName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [drawerLoading, setDrawerLoading] = useState(false);
   const columns = [
     {
       title: "Date",
@@ -96,9 +109,106 @@ export default function UserAttendance({
     },
   ];
 
-  const presentCount = 30;
-  const absentCount = 20;
-  const series = [presentCount, absentCount];
+  const drawerColumns = [
+    {
+      title: "In",
+      dataIndex: "start_Time",
+      key: "start_Time",
+      width: 90,
+      render: (text, record) => {
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <FaRegUser
+              color="#666767"
+              size={14}
+              style={{ marginRight: "4.5px" }}
+            />
+            <p>{moment(text).format("hh:mm A")} </p>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Out",
+      dataIndex: "end_Time",
+      key: "end_Time",
+      width: 90,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {record.punchout_type === "system" ? (
+                <img
+                  src={Desktopicon}
+                  style={{
+                    width: "18px",
+                    height: "19px",
+                    marginRight: "5px",
+                  }}
+                />
+              ) : (
+                <FaRegUser
+                  color="#666767"
+                  size={14}
+                  style={{ marginRight: "4.5px" }}
+                />
+              )}
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
+        }
+      },
+    },
+    {
+      title: "Duration",
+      dataIndex: "total_Time",
+      key: "total_Time",
+      width: 90,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00" || text === null) {
+          return null;
+        } else {
+          const [hours, minutes, seconds] = text.split(":");
+          const formattedDuration = `${parseInt(hours)}h:${parseInt(
+            minutes
+          )}m:${parseInt(seconds)}s`;
+          return <p>{formattedDuration} </p>;
+        }
+      },
+    },
+  ];
+
+  const handleMothlyCalendar = async (value) => {
+    setSelectedDate(value);
+    setDrawerLoading(true);
+    setIsDrawerOpen(true);
+    const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      userId: selectedUserId,
+      organizationId: orgId,
+      startDate: value,
+      endDate: value,
+    };
+    try {
+      const response = await getUserAttendance(payload);
+      const details = response?.data?.attendanceDetails;
+      const reverseData = details.reverse();
+      console.log("selected date attendance", reverseData);
+      setSelectedDateAttendanceData(reverseData);
+      const name = userFullName.split(" ");
+      setFisrtName(name[0]);
+      setLastName(name[1]);
+    } catch (error) {
+      console.log("attendance error", error);
+      CommonToaster(error.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        setDrawerLoading(false);
+      }, 350);
+    }
+  };
 
   return (
     <>
@@ -148,7 +258,13 @@ export default function UserAttendance({
                 ) : (
                   <p className="userattendance_heading">Monthly Attendance</p>
                 )}
-                {filterLoading ? "" : <CommonMonthlyCalendar />}
+                {filterLoading ? (
+                  ""
+                ) : (
+                  <CommonMonthlyCalendar
+                    monthlyCalendarSelectedDate={handleMothlyCalendar}
+                  />
+                )}
               </div>
             </Col>
           </Row>
@@ -173,6 +289,50 @@ export default function UserAttendance({
               loading={filterLoading}
             />
           </div>
+
+          <Drawer
+            title={moment(selectedDate).format("DD/MM/YYYY")}
+            onClose={() => setIsDrawerOpen(false)}
+            open={isDrawerOpen}
+            width="36%"
+            styles={{ body: { padding: "0px 12px" } }}
+          >
+            <div className="userattendance_drawerContainer">
+              <div className="userattendance_avatarContainer">
+                <Avatar
+                  size={42}
+                  style={{
+                    backgroundColor: "#25a17d",
+                    fontWeight: "600",
+                    marginRight: "12px",
+                    textTransform: "uppercase",
+                    letterSpacing: "1px",
+                    fontSize: "18px",
+                  }}
+                >
+                  {firstName[0] + lastName[0]}
+                </Avatar>
+                <div>
+                  <p className="userattendance_drawername">{userFullName}</p>
+                  <p className="userattendance_drawermail">{userEmail}</p>
+                </div>
+              </div>
+
+              <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+                <CommonTable
+                  columns={drawerColumns}
+                  dataSource={selectedDateAttendanceData}
+                  scroll={{ x: 400 }}
+                  dataPerPage={1000}
+                  checkBox="false"
+                  bordered="true"
+                  size="small"
+                  paginationStatus={false}
+                  loading={drawerLoading}
+                />
+              </div>
+            </div>
+          </Drawer>
         </div>
       )}
     </>
