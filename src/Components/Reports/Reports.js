@@ -95,20 +95,6 @@ const Reports = () => {
 
         <p className="reports_headings">Analytics</p>
         <Row gutter={16} className="reports_rowcontainer">
-          {/* <Col xs={24} sm={24} md={12} lg={6}>
-            <div
-              className="reports_card"
-              onClick={() => navigation("/activityreport")}
-            >
-              <div className="reports_activityiconContainer">
-                <FiActivity size={26} />
-              </div>
-              <p className="reports_cardheading">Activity Report</p>
-              <p className="reports_cardcontent">
-                Download the Activity report for your organisation
-              </p>
-            </div>
-          </Col> */}
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
@@ -121,6 +107,20 @@ const Reports = () => {
               <p className="reports_cardcontent">
                 Download the detailed application/URL usage report for your
                 organisation
+              </p>
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
+              onClick={() => navigation("/activityreport")}
+            >
+              <div className="reports_activityiconContainer">
+                <FiActivity size={26} />
+              </div>
+              <p className="reports_cardheading">Activity Report</p>
+              <p className="reports_cardcontent">
+                Download the Activity report for your organisation
               </p>
             </div>
           </Col>

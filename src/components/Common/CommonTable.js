@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "antd";
+import { v4 as uuidv4 } from "uuid";
 
 const CommonTable = ({
   columns,
@@ -57,11 +58,16 @@ const CommonTable = ({
           },
         };
 
+  const dataWithKeys = dataSource.map((item) => ({
+    ...item,
+    key: uuidv4(), // Generates a unique key for each row
+  }));
+
   return (
     <Table
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={dataWithKeys}
       scroll={scroll}
       pagination={paginationStatus === false ? false : tableParams.pagination}
       onChange={handleTableChange}
@@ -70,7 +76,7 @@ const CommonTable = ({
       loading={loading}
       size={size}
       className={className}
-      rowKey={(record) => record.id}
+      // rowKey="id"
     />
   );
 };
