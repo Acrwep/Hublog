@@ -178,21 +178,24 @@ const MonthlyAttendanceReport = () => {
         }
       });
 
-      // Set "Weekly off" for Sundays
-      //use this if use datesToCheck
-      // currentMonthDates.forEach((date) => {
-      //   const isSunday = moment(date, "YYYY-MM-DD").day() === 0;
-      //   if (isSunday) {
-      //     rowData[date] = "weeklyoff";
-      //   }
-      // });
+      // Set "Weekly off" for Sundays, but show total_time if it's not "00:00"
       currentMonthDates.forEach((date) => {
         const dateString = `${year}-${
           moment().month(monthname).month() + 1
         }-${date}`;
         const isSunday = moment(dateString, "YYYY-M-D").day() === 0;
+
         if (isSunday) {
-          rowData[date] = "weeklyoff";
+          // Check if the total_time for that Sunday is not "00:00"
+          const sundayLog = item.logs.find(
+            (log) => moment(log.date).format("DD") === date
+          );
+          if (sundayLog && sundayLog.total_time !== "00:00:00") {
+            const [hour, minute] = sundayLog.total_time.split(":");
+            rowData[date] = `${hour}h:${minute}m`; // Show the time for Sundays if not "00:00"
+          } else {
+            rowData[date] = "weeklyoff"; // Show "weeklyoff" if total_time is "00:00"
+          }
         }
       });
       return rowData;

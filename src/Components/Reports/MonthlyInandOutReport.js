@@ -233,23 +233,35 @@ const MonthlyInandOutReport = () => {
         }
       });
 
-      // Set "Weekly off" for Sundays
-      //use this if use datesToCheck
-      // currentMonthDates.forEach((date) => {
-      //   const isSunday = moment(date, "YYYY-MM-DD").day() === 0;
-      //   if (isSunday) {
-      //     rowData[date] = "weeklyoff";
-      //   }
-      // });
+      // Set "Weekly off" for Sundays and check in and out times
       currentMonthDates.forEach((date) => {
         const dateString = `${year}-${
           moment().month(monthname).month() + 1
         }-${date}`;
         const isSunday = moment(dateString, "YYYY-M-D").day() === 0;
+
         if (isSunday) {
-          rowData[date] = { in: "weeklyoff", out: "weeklyoff" };
+          const sundayLog = item.logs.find(
+            (log) => moment(log.date).format("DD") === date
+          );
+
+          // Check if the 'in' and 'out' times for Sunday are not "00:00"
+          if (sundayLog) {
+            const { in: sundayIn, out: sundayOut } = sundayLog;
+            if (
+              sundayIn !== "0001-01-01T00:00:00" &&
+              sundayOut !== "0001-01-01T00:00:00"
+            ) {
+              rowData[date] = { in: sundayIn, out: sundayOut }; // Show the in and out times if they are not "00:00"
+            } else {
+              rowData[date] = { in: "weeklyoff", out: "weeklyoff" }; // Show "weeklyoff" if in or out is "00:00"
+            }
+          } else {
+            rowData[date] = { in: "weeklyoff", out: "weeklyoff" }; // No log for Sunday, set weeklyoff
+          }
         }
       });
+
       return rowData;
     });
     // Transform rowData into DD: value format

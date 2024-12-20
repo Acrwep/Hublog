@@ -135,6 +135,12 @@ export default function Mapping() {
       console.log(error);
     } finally {
       setTimeout(() => {
+        setSearch("");
+        setShowId(1);
+        setMappedStatusId(1);
+        dispatch(storeMappingSearchValue(""));
+        dispatch(storeMappingShowId(1));
+        dispatch(storeMappingStatusId(1));
         getImbuildAppsandUrlsData();
       }, 350);
     }

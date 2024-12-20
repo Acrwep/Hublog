@@ -76,7 +76,8 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
           column.dataIndex === "break_duration" ||
           column.dataIndex === "TotalProductiveDuration" ||
           column.dataIndex === "TotalNeutralDuration" ||
-          column.dataIndex === "TotalUnproductiveDuration"
+          column.dataIndex === "TotalUnproductiveDuration" ||
+          column.dataIndex === "totalUsage"
         ) {
           if (row[column.dataIndex] === "0001-01-01T00:00:00") {
             return null;
@@ -84,6 +85,10 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
             const [hours, minutes, seconds] = row[column.dataIndex].split(":");
             return `${hours}h:${minutes}m:${seconds}s`;
           }
+        }
+
+        if (column.dataIndex === "usagePercentage") {
+          return row[column.dataIndex].toFixed(2) + "%";
         }
         return row[column.dataIndex]; // other fields
       })

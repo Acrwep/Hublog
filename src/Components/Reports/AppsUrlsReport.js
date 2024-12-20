@@ -7,7 +7,6 @@ import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
-import CommonBarChart from "../Common/CommonBarChart";
 import {
   getAppsandUrlsReport,
   getTeams,
@@ -17,8 +16,11 @@ import {
 import { getCurrentandPreviousweekDate } from "../Common/Validation";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import { CommonToaster } from "../Common/CommonToaster";
-import Loader from "../Common/Loader";
-import CommonNodatafound from "../Common/CommonNodatafound";
+import { IoGlobeOutline } from "react-icons/io5";
+import { FaDesktop } from "react-icons/fa";
+import { MdOutlineDesktopWindows } from "react-icons/md";
+import CommonAvatar from "../Common/CommonAvatar";
+import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 
 const AppsUrlsReport = () => {
   const navigation = useNavigate();
@@ -28,20 +30,61 @@ const AppsUrlsReport = () => {
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
-  const [topUsageXaxis, setTopUsageXasis] = useState([]);
-  const [topUsageSeries, setTopUsageSeries] = useState([]);
+  const typeOptions = [
+    { id: 1, name: "Show All" },
+    {
+      id: 2,
+      name: "App",
+    },
+    {
+      id: 3,
+      name: "Url",
+    },
+  ];
+  const [typeId, setTypeId] = useState(1);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [tableLoading, setTableLoading] = useState(false);
 
   const columns = [
+    {
+      title: "Employee",
+      dataIndex: "fullName",
+      key: "fullName",
+      width: 140,
+      fixed: "left",
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarSize={26} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
+    },
     {
       title: "Type",
       dataIndex: "type",
       key: "type",
       width: 120,
       render: (text) => {
-        return <p style={{ fontWeight: "600" }}>{text}</p>;
+        if (text === "URL") {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <IoGlobeOutline size={19} color="rgba(128, 128, 128, 0.85)" />
+              <p style={{ marginLeft: "12px" }}>Url</p>
+            </div>
+          );
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <MdOutlineDesktopWindows
+                size={19}
+                color="rgba(128, 128, 128, 0.85)"
+              />
+              <p style={{ marginLeft: "12px" }}>{text}</p>
+            </div>
+          );
+        }
       },
     },
     {
@@ -65,8 +108,8 @@ const AppsUrlsReport = () => {
       key: "totalUsage",
       width: 160,
       render: (text, record) => {
-        const [hours, minutes] = text.split(":");
-        return <p>{hours + "h:" + minutes + "m"}</p>;
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m" + seconds + "s"}</p>;
       },
     },
   ];
@@ -112,15 +155,11 @@ const AppsUrlsReport = () => {
           userId,
           orgId,
           PreviousandCurrentDate[0],
-          PreviousandCurrentDate[1]
+          PreviousandCurrentDate[1],
+          typeId
         );
       }, 500);
     }
-  };
-
-  const convertTimeToHours = (timeStr) => {
-    const [hours, minutes, seconds] = timeStr.split(":").map(Number);
-    return hours + minutes / 60 + seconds / 3600; // Convert minutes and seconds to hours
   };
 
   const getAppsandUrlsData = async (
@@ -128,34 +167,27 @@ const AppsUrlsReport = () => {
     userid,
     orgId,
     startdate,
-    enddate
+    enddate,
+    Type
   ) => {
-    setTableLoading(true);
+    setLoading(true);
     const payload = {
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
       organizationId: parseInt(orgId),
       startDate: startdate,
       endDate: enddate,
+      type: Type === 2 ? "app" : Type === 3 ? "url" : "",
     };
     try {
       const response = await getAppsandUrlsReport(payload);
       console.log("apps and urls report response", response.data);
       const ReportData = response.data;
       setData(ReportData);
-      //chart handle
-      const topUsageXasis = ReportData.map((a) => a?.details);
-      const topUsageSeries = ReportData.map((a) =>
-        convertTimeToHours(a?.totalUsage)
-      );
-
-      setTopUsageXasis(topUsageXasis);
-      setTopUsageSeries([{ name: "", data: topUsageSeries }]);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        setTableLoading(false);
         setLoading(false);
       }, 500);
     }
@@ -180,7 +212,8 @@ const AppsUrlsReport = () => {
         userIdd,
         organizationId,
         selectedDates[0],
-        selectedDates[1]
+        selectedDates[1],
+        typeId
       );
     } catch (error) {
       console.log("errrrrr", error);
@@ -196,7 +229,8 @@ const AppsUrlsReport = () => {
       value,
       organizationId,
       selectedDates[0],
-      selectedDates[1]
+      selectedDates[1],
+      typeId
     );
   };
 
@@ -209,6 +243,17 @@ const AppsUrlsReport = () => {
     }
   };
 
+  const handleType = (value) => {
+    setTypeId(value);
+    getAppsandUrlsData(
+      teamId,
+      userId,
+      organizationId,
+      selectedDates[0],
+      selectedDates[1],
+      value
+    );
+  };
   const handleRefresh = () => {
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     let isCurrentDate = false;
@@ -230,20 +275,22 @@ const AppsUrlsReport = () => {
       teamId === null &&
       userId === null &&
       isCurrentDate === true &&
-      isPreviousChange === false
+      isPreviousChange === false &&
+      typeId === 1
     ) {
       return;
     }
 
     setTeamId(null);
     setUserId(null);
+    setTypeId(1);
     setSelectedDates(PreviousandCurrentDate);
     getAppsandUrlsData(
       null,
       null,
       organizationId,
-      selectedDates[0],
-      selectedDates[1]
+      PreviousandCurrentDate[0],
+      PreviousandCurrentDate[1]
     );
   };
   return (
@@ -284,6 +331,14 @@ const AppsUrlsReport = () => {
                 value={userId}
               />
             </div>
+            <div style={{ width: "120px", marginLeft: "12px" }}>
+              <CommonSelectField
+                options={typeOptions}
+                placeholder="Select Type"
+                onChange={handleType}
+                value={typeId}
+              />
+            </div>
           </div>
         </Col>
         <Col
@@ -297,11 +352,24 @@ const AppsUrlsReport = () => {
             value={selectedDates}
             onChange={handleDateChange}
           />
+          <Tooltip placement="top" title="Download">
+            <Button
+              className="dashboard_download_button"
+              onClick={() => {
+                DownloadTableAsXLSX(
+                  data,
+                  columns,
+                  "Daily Apps&Urls Report.xlsx"
+                );
+              }}
+            >
+              <DownloadOutlined className="download_icon" />
+            </Button>
+          </Tooltip>
           <Tooltip placement="top" title="Refresh">
             <Button
               className="dashboard_refresh_button"
               onClick={handleRefresh}
-              style={{ marginLeft: "12px" }}
             >
               <RedoOutlined className="refresh_icon" />
             </Button>
@@ -309,54 +377,18 @@ const AppsUrlsReport = () => {
         </Col>
       </Row>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          <div
-            className="devices_chartsContainer"
-            style={{
-              height: tableLoading ? "28.7vh" : "100%",
-            }}
-          >
-            {tableLoading ? (
-              <div className="screenshots_spinContainer">
-                <Spin />
-              </div>
-            ) : (
-              <>
-                <p className="devices_chartheading">Top Usage Statistics</p>
-                {data.length >= 1 ? (
-                  <CommonBarChart
-                    xasis={topUsageXaxis}
-                    series={topUsageSeries}
-                    timebased="true"
-                    distributed="true"
-                    legend="false"
-                  />
-                ) : (
-                  <CommonNodatafound />
-                )}
-              </>
-            )}
-          </div>
-
-          <div style={{ marginTop: "25px" }}>
-            <div className="breakreport_tableContainer">
-              <p className="appurlreport_tableheading">Detailed Usage list</p>
-              <CommonTable
-                columns={columns}
-                dataSource={data}
-                scroll={{ x: 600 }}
-                dataPerPage={10}
-                checkBox="false"
-                loading={tableLoading}
-                size="medium"
-              />
-            </div>
-          </div>
-        </>
-      )}
+      <div className="breakreport_tableContainer">
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 900 }}
+          dataPerPage={10}
+          checkBox="false"
+          bordered="true"
+          loading={loading}
+          size="small"
+        />
+      </div>
     </div>
   );
 };

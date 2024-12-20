@@ -17,7 +17,7 @@ import {
   getUsers,
   getUsersByTeamId,
 } from "../APIservice.js/action";
-import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
+import { IoArrowDownOutline, IoArrowUp } from "react-icons/io5";
 import moment from "moment";
 
 const DailyAttendanceReport = () => {
@@ -54,18 +54,21 @@ const DailyAttendanceReport = () => {
       title: "Team Name",
       dataIndex: "team_Name",
       key: "team_Name",
-      width: "150px",
+      width: 150,
       hidden: true,
     },
     {
       title: "In",
       dataIndex: "inTime",
       key: "inTime",
-      width: 90,
+      width: 100,
       render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
         return (
           <div style={{ display: "flex", alignItems: "center" }}>
-            <HiArrowNarrowDown style={{ marginRight: "6px" }} size={16} />
+            <IoArrowDownOutline style={{ marginRight: "6px" }} size={16} />
             <p>{moment(text).format("hh:mm A")}</p>
           </div>
         );
@@ -75,14 +78,14 @@ const DailyAttendanceReport = () => {
       title: "Out",
       dataIndex: "out",
       key: "out",
-      width: 90,
+      width: 100,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
           return null;
         }
         return (
           <div style={{ display: "flex", alignItems: "center" }}>
-            <HiArrowNarrowUp style={{ marginRight: "6px" }} size={16} />
+            <IoArrowUp style={{ marginRight: "6px" }} size={16} />
             <p>{moment(text).format("hh:mm A")}</p>
           </div>
         );
@@ -92,13 +95,19 @@ const DailyAttendanceReport = () => {
       title: "Working time",
       dataIndex: "totalTime",
       key: "totalTime",
-      width: "190px",
+      width: 140,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
           return null;
         }
-        return <p>{moment(text).format("HH[h]:mm[m]")}</p>;
+        return <p>{moment(text).format("HH[h]:mm[m]:ss[s]")}</p>;
       },
+    },
+    {
+      title: "Remark",
+      dataIndex: "remark",
+      key: "remark",
+      width: 100,
     },
   ];
 
@@ -157,8 +166,7 @@ const DailyAttendanceReport = () => {
       console.log("daily attendance report response", response.data);
 
       const ReportData = response.data;
-      const reverseData = ReportData.reverse();
-      setData(reverseData);
+      setData(ReportData);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
