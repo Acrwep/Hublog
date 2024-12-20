@@ -58,22 +58,21 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
         }
 
         if (column.dataIndex === "totalTime") {
-          console.log(
-            "eeeeeeeeeeeeeee",
-            column.dataIndex,
-            row[column.dataIndex]
-          );
           if (row[column.dataIndex] === "0001-01-01T00:00:00") {
             return null;
           } else {
             return row[column.dataIndex]
-              ? moment(row[column.dataIndex]).format("HH[h]:mm[m]")
+              ? moment(row[column.dataIndex]).format("HH[h]:mm[m]:ss[s]")
               : null;
           }
         }
         if (
           column.dataIndex === "online_duration" ||
-          column.dataIndex === "break_duration" ||
+          column.dataIndex === "OnlineDuration" ||
+          column.dataIndex === "BreakDuration" ||
+          column.dataIndex === "breakDuration" ||
+          column.dataIndex === "idleDuration" ||
+          column.dataIndex === "activeTime" ||
           column.dataIndex === "TotalProductiveDuration" ||
           column.dataIndex === "TotalNeutralDuration" ||
           column.dataIndex === "TotalUnproductiveDuration" ||
@@ -87,8 +86,18 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
           }
         }
 
-        if (column.dataIndex === "usagePercentage") {
+        if (
+          column.dataIndex === "usagePercentage" ||
+          column.dataIndex === "activePercentage" ||
+          column.dataIndex === "PercentageProductiveDuration"
+        ) {
           return row[column.dataIndex].toFixed(2) + "%";
+        }
+
+        if (column.dataIndex === "onlineTime") {
+          const [date, time] = row[column.dataIndex].split("T"); // Split date and time
+          const [hours, minutes, seconds] = time.split(":"); // Split time into h, m, s
+          return `${hours}h:${minutes}m:${seconds}s`;
         }
         return row[column.dataIndex]; // other fields
       })

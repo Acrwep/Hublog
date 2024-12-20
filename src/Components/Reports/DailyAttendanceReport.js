@@ -95,12 +95,23 @@ const DailyAttendanceReport = () => {
       title: "Working time",
       dataIndex: "totalTime",
       key: "totalTime",
-      width: 140,
+      width: 110,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
           return null;
         }
         return <p>{moment(text).format("HH[h]:mm[m]:ss[s]")}</p>;
+      },
+    },
+    {
+      title: "Online time",
+      dataIndex: "onlineTime",
+      key: "onlineTime",
+      width: 110,
+      render: (text, record) => {
+        const [date, time] = text.split("T"); // Split date and time
+        const [hours, minutes, seconds] = time.split(":"); // Split time into h, m, s
+        return `${hours}h:${minutes}m:${seconds}s`;
       },
     },
     {
@@ -313,7 +324,7 @@ const DailyAttendanceReport = () => {
         <CommonTable
           columns={columns}
           dataSource={data}
-          scroll={{ x: 600 }}
+          scroll={{ x: 700 }}
           dataPerPage={10}
           checkBox="false"
           bordered="true"

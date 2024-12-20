@@ -18,6 +18,7 @@ import {
   getUsers,
   getUsersByTeamId,
 } from "../APIservice.js/action";
+import moment from "moment";
 
 const ActivityReport = () => {
   const navigation = useNavigate();
@@ -61,9 +62,16 @@ const ActivityReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
+      width: "150px",
+      hidden: true,
+    },
+    {
       title: "Online time",
-      dataIndex: "onlineTime",
-      key: "onlineTime",
+      dataIndex: "online_duration",
+      key: "online_duration",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -361,7 +369,13 @@ const ActivityReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(tableData, columns, "Activity Report.xlsx");
+                DownloadTableAsXLSX(
+                  tableData,
+                  columns,
+                  `Activity Report ${moment(selectedDates[0]).format(
+                    "DD/MM/YYYY"
+                  )} to ${moment(selectedDates[1]).format("DD/MM/YYYY")}.xlsx`
+                );
               }}
             >
               <DownloadOutlined className="download_icon" />

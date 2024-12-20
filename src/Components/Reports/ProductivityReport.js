@@ -18,6 +18,7 @@ import {
   getUsersByTeamId,
 } from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
+import moment from "moment";
 
 const ProductivityReport = () => {
   const navigation = useNavigate();
@@ -372,7 +373,9 @@ const ProductivityReport = () => {
                 DownloadTableAsXLSX(
                   tableData,
                   columns,
-                  "Productivity Report.xlsx"
+                  `Productivity Report ${moment(selectedDates[0]).format(
+                    "DD/MM/YYYY"
+                  )} to ${moment(selectedDates[1]).format("DD/MM/YYYY")}.xlsx`
                 );
               }}
             >

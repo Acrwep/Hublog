@@ -147,8 +147,8 @@ const ActivityDetailed = ({ loading }) => {
     },
     {
       title: "Online time",
-      dataIndex: "onlineTime",
-      key: "onlineTime",
+      dataIndex: "online_duration",
+      key: "online_duration",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
