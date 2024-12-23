@@ -136,7 +136,7 @@ const ActivityDetailed = ({ loading }) => {
       title: "Attendance",
       dataIndex: "attendanceCount",
       key: "attendanceCount",
-      width: "150px",
+      width: 140,
       render: (text, record) => {
         if (text === null) {
           return 0;
@@ -146,10 +146,20 @@ const ActivityDetailed = ({ loading }) => {
       },
     },
     {
+      title: "Working time",
+      dataIndex: "todalTime",
+      key: "todalTime",
+      width: 160,
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
       title: "Online time",
       dataIndex: "online_duration",
       key: "online_duration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -159,7 +169,7 @@ const ActivityDetailed = ({ loading }) => {
       title: "Active time",
       dataIndex: "activeTime",
       key: "activeTime",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -169,7 +179,7 @@ const ActivityDetailed = ({ loading }) => {
       title: "Idle time",
       dataIndex: "idleDuration",
       key: "idleDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -179,7 +189,7 @@ const ActivityDetailed = ({ loading }) => {
       title: "Break time",
       dataIndex: "breakDuration",
       key: "breakDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -189,7 +199,7 @@ const ActivityDetailed = ({ loading }) => {
       title: "Activity",
       dataIndex: "activePercentage",
       key: "activePercentage",
-      width: "170px",
+      width: 150,
       fixed: "right",
       render: (text) => {
         if (text === null) {
@@ -285,7 +295,7 @@ const ActivityDetailed = ({ loading }) => {
         <CommonTable
           columns={columns}
           dataSource={activityEmployeesListData}
-          scroll={{ x: 1200 }}
+          scroll={{ x: 1300 }}
           dataPerPage={10}
           size="small"
           bordered="false"

@@ -302,3 +302,25 @@
   margin-top: 16px;
   margin-bottom: 16px;
 }
+.dynamicreport_accordionmainContainer {
+  /* height: 60vh; */
+  /* overflow-y: auto; */
+}
+.dynamicreport_downloadbutton {
+  color: #fff;
+  background-color: #25a17d;
+  border-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 145px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+.dynamicreport_downloadbutton:hover {
+  background-color: #009737 !important;
+}
+.dynamicreport_downloadbutton:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
+}

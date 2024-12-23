@@ -508,6 +508,19 @@ const UserDetail = () => {
       const activityEmployeeData = response?.data?.data;
       console.log("activity employeelist response", activityEmployeeData);
       setActivityEmployeesData(activityEmployeeData);
+
+      setActivityBreakdownData([
+        parseTimeToDecimal(activityEmployeeData[0].activeTime),
+        parseTimeToDecimal(activityEmployeeData[0].idleDuration),
+      ]);
+      if (
+        activityEmployeeData[0].activeTime === "00:00:00" &&
+        activityEmployeeData[0].idleDuration === "00:00:00"
+      ) {
+        setIsActivityBreakdownEmpty(true);
+      } else {
+        setIsActivityBreakdownEmpty(false);
+      }
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
       setActivityEmployeesData([]);

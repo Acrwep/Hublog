@@ -141,7 +141,7 @@ const ProductivityDetailed = ({ loading }) => {
       title: "Attendance",
       dataIndex: "AttendanceCount",
       key: "AttendanceCount",
-      width: "150px",
+      width: 140,
       render: (text, record) => {
         if (text === null) {
           return 0;
@@ -151,10 +151,20 @@ const ProductivityDetailed = ({ loading }) => {
       },
     },
     {
+      title: "Working time",
+      dataIndex: "ActiveDuration",
+      key: "ActiveDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
       title: "Online time",
       dataIndex: "OnlineDuration",
       key: "OnlineDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -164,7 +174,7 @@ const ProductivityDetailed = ({ loading }) => {
       title: "Break time",
       dataIndex: "BreakDuration",
       key: "BreakDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -174,7 +184,7 @@ const ProductivityDetailed = ({ loading }) => {
       title: "Productivity time",
       dataIndex: "TotalProductiveDuration",
       key: "TotalProductiveDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -184,7 +194,7 @@ const ProductivityDetailed = ({ loading }) => {
       title: "Neutral time",
       dataIndex: "TotalNeutralDuration",
       key: "TotalNeutralDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -194,7 +204,7 @@ const ProductivityDetailed = ({ loading }) => {
       title: "Unproductivity time",
       dataIndex: "TotalUnproductiveDuration",
       key: "TotalUnproductiveDuration",
-      width: "180px",
+      width: 170,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -204,7 +214,7 @@ const ProductivityDetailed = ({ loading }) => {
       title: "Productivity",
       dataIndex: "PercentageProductiveDuration",
       key: "PercentageProductiveDuration",
-      width: "170px",
+      width: 150,
       fixed: "right",
       render: (text) => {
         if (text === null) {

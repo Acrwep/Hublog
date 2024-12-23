@@ -23,7 +23,40 @@ export default function DynamicReport() {
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [activePage, setActivePage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  //userinfo useStates
+  const [firstNameStatus, setFirstNameStatus] = useState(true);
+  const [lastNameStatus, setLastNameStatus] = useState(true);
+  const [employeeIdStatus, setEmployeeIdStatus] = useState(true);
+  const [emailStatus, setEmailStatus] = useState(true);
+  const [teamNameStatus, setTeamNameStatus] = useState(false);
+  // workingtime useStates
+  const [totalWorkingtimeStatus, setTotalWorkingtimeStatus] = useState(true);
+  const [totalOnlinetimeStatus, setTotalOnlinetimeStatus] = useState(true);
+  const [totalBreaktimeStatus, setTotalBreaktimeStatus] = useState(true);
+  const [averageWorkingtimeStatus, setAverageWorkingtimeStatus] =
+    useState(false);
+  const [punchIntimeStatus, setPunchIntimeStatus] = useState(false);
+  const [punchOuttimeStatus, setPunchOuttimeStatus] = useState(false);
+  //activity useStates
+  const [totalActivetimeStatus, setTotalActivetimeStatus] = useState(true);
+  const [activityPercentStatus, setActivityPercentStatus] = useState(true);
+  const [averageActivetimeStatus, setAverageActivetimeStatus] = useState(false);
+  const [totalIdletimeStatus, setTotalIdletimeStatus] = useState(false);
+  const [averageIdletimeStatus, setAverageIdletimeStatus] = useState(false);
+  //productivity useStates
+  const [totalProductivetimeStatus, setTotalProductivetimeStatus] =
+    useState(true);
+  const [productivePercentStatus, setProductivePercentStatus] = useState(true);
+  const [averageProductivetimeStatus, setAverageProductivetimeStatus] =
+    useState(false);
+  const [totalNeutraltimeStatus, setTotalNeutraltimeStatus] = useState(false);
+  const [averageNeutraltimeStatus, setAverageNeutraltimeStatus] =
+    useState(false);
+  const [totalUnproductivetimeStatus, setTotalUnproductivetimeStatus] =
+    useState(false);
+  const [averageUnproductivetimeStatus, setAverageUnproductivetimeStatus] =
+    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const text = `
   A dog is a type of domesticated animal.
@@ -40,21 +73,234 @@ export default function DynamicReport() {
       <div className="dynamicreport_accordionbody_container">
         <Row>
           <Col xs={24} sm={24} md={8} lg={8}>
-            <Checkbox onChange={handleCheckbox}>First Name</Checkbox>
+            <Checkbox
+              onChange={(e) => setFirstNameStatus(e.target.checked)}
+              checked={firstNameStatus}
+            >
+              First Name
+            </Checkbox>
           </Col>
           <Col xs={24} sm={24} md={8} lg={8}>
-            <Checkbox onChange={handleCheckbox}>Last Name</Checkbox>
+            <Checkbox
+              onChange={(e) => setLastNameStatus(e.target.checked)}
+              checked={lastNameStatus}
+            >
+              Last Name
+            </Checkbox>
           </Col>
           <Col xs={24} sm={24} md={8} lg={8}>
-            <Checkbox onChange={handleCheckbox}>Employee ID</Checkbox>
+            <Checkbox
+              onChange={(e) => setEmployeeIdStatus(e.target.checked)}
+              checked={employeeIdStatus}
+            >
+              Employee ID
+            </Checkbox>
           </Col>
         </Row>
         <Row style={{ marginTop: "25px" }}>
           <Col xs={24} sm={24} md={8} lg={8}>
-            <Checkbox onChange={handleCheckbox}>Email</Checkbox>
+            <Checkbox
+              onChange={(e) => setEmailStatus(e.target.checked)}
+              checked={emailStatus}
+            >
+              Email
+            </Checkbox>
           </Col>
           <Col xs={24} sm={24} md={8} lg={8}>
-            <Checkbox onChange={handleCheckbox}>Team Name</Checkbox>
+            <Checkbox
+              onChange={(e) => setTeamNameStatus(e.target.checked)}
+              checked={teamNameStatus}
+            >
+              Team Name
+            </Checkbox>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
+  const renderWorkingTime = () => {
+    return (
+      <div className="dynamicreport_accordionbody_container">
+        <Row>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalWorkingtimeStatus(e.target.checked)}
+              checked={totalWorkingtimeStatus}
+            >
+              Total Working time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalOnlinetimeStatus(e.target.checked)}
+              checked={totalOnlinetimeStatus}
+            >
+              Total Online time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalBreaktimeStatus(e.target.checked)}
+              checked={totalBreaktimeStatus}
+            >
+              Total Break time
+            </Checkbox>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "25px" }}>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setAverageWorkingtimeStatus(e.target.checked)}
+              checked={averageWorkingtimeStatus}
+            >
+              Average Working time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setPunchIntimeStatus(e.target.checked)}
+              checked={punchIntimeStatus}
+              disabled={activePage === 1 ? true : false}
+            >
+              Punch In time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setPunchOuttimeStatus(e.target.checked)}
+              checked={punchOuttimeStatus}
+              disabled={activePage === 1 ? true : false}
+            >
+              Punch Out time
+            </Checkbox>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
+  const renderActivity = () => {
+    return (
+      <div className="dynamicreport_accordionbody_container">
+        <Row>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalActivetimeStatus(e.target.checked)}
+              checked={totalActivetimeStatus}
+            >
+              Total Active time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setActivityPercentStatus(e.target.checked)}
+              checked={activityPercentStatus}
+            >
+              Activity Percent
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setAverageActivetimeStatus(e.target.checked)}
+              checked={averageActivetimeStatus}
+              disabled={activePage === 2 ? true : false}
+            >
+              Average Active time
+            </Checkbox>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "25px" }}>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalIdletimeStatus(e.target.checked)}
+              checked={totalIdletimeStatus}
+            >
+              Total Idle time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setAverageIdletimeStatus(e.target.checked)}
+              checked={averageIdletimeStatus}
+              disabled={activePage === 2 ? true : false}
+            >
+              Average Idle time
+            </Checkbox>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
+  const renderProductivity = () => {
+    return (
+      <div className="dynamicreport_accordionbody_container">
+        <Row>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalProductivetimeStatus(e.target.checked)}
+              checked={totalProductivetimeStatus}
+            >
+              Total Productive time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setProductivePercentStatus(e.target.checked)}
+              checked={productivePercentStatus}
+            >
+              Productivity Percent
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setAverageProductivetimeStatus(e.target.checked)}
+              checked={averageProductivetimeStatus}
+              disabled={activePage === 2 ? true : false}
+            >
+              Average Productive time
+            </Checkbox>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "25px" }}>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalNeutraltimeStatus(e.target.checked)}
+              checked={totalNeutraltimeStatus}
+            >
+              Total Neutral time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setAverageNeutraltimeStatus(e.target.checked)}
+              checked={averageNeutraltimeStatus}
+              disabled={activePage === 2 ? true : false}
+            >
+              Average Neutral time
+            </Checkbox>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) => setTotalUnproductivetimeStatus(e.target.checked)}
+              checked={totalUnproductivetimeStatus}
+            >
+              Total Unproductive time
+            </Checkbox>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "25px" }}>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Checkbox
+              onChange={(e) =>
+                setAverageUnproductivetimeStatus(e.target.checked)
+              }
+              checked={averageUnproductivetimeStatus}
+              disabled={activePage === 2 ? true : false}
+            >
+              Average Unproductive time
+            </Checkbox>
           </Col>
         </Row>
       </div>
@@ -74,17 +320,17 @@ export default function DynamicReport() {
     {
       key: "2",
       label: <div style={headerStyle}>Working Time</div>,
-      children: <p>{text}</p>,
+      children: renderWorkingTime(),
     },
     {
       key: "3",
       label: <div style={headerStyle}>Activity</div>,
-      children: <p>{text}</p>,
+      children: renderActivity(),
     },
     {
       key: "4",
       label: <div style={headerStyle}>Productivity</div>,
-      children: <p>{text}</p>,
+      children: renderProductivity(),
     },
   ];
 
@@ -293,39 +539,47 @@ export default function DynamicReport() {
               value={selectedDates}
             />{" "}
           </div>
-          <Tooltip placement="top" title="Download">
+          {/* <Tooltip placement="top" title="Download">
             <Button
               className="dashboard_download_button"
-              // onClick={() => {
-              //   DownloadTableAsXLSX(
-              //     data,
-              //     columns,
-              //     `${moment(date).format("DD-MM-YYYY")} Break Report.xlsx`
-              //   );
-              // }}
+              onClick={() => {
+                DownloadTableAsXLSX(
+                  data,
+                  columns,
+                  `${moment(date).format("DD-MM-YYYY")} Break Report.xlsx`
+                );
+              }}
             >
               <DownloadOutlined className="download_icon" />
             </Button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip placement="top" title="Refresh">
             <Button
               className="dashboard_refresh_button"
               onClick={handleRefresh}
+              style={{ marginLeft: "12px" }}
             >
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>
         </Col>
       </Row>
-      <Collapse
-        defaultActiveKey={["1", "2", "3", "4"]}
-        onChange={handleAccordion}
-        items={items}
-        size="small"
-        expandIcon={({ isActive }) => (
-          <CaretRightOutlined rotate={isActive ? 90 : 0} />
-        )}
-      />
+      {/* <div className="dynamicreport_headingContainer">
+        <p>Filter</p>
+      </div> */}
+      <div className="dynamicreport_accordionmainContainer">
+        <Collapse
+          defaultActiveKey={["1", "2", "3", "4"]}
+          onChange={handleAccordion}
+          items={items}
+          size="small"
+          expandIcon={({ isActive }) => (
+            <CaretRightOutlined rotate={isActive ? 90 : 0} />
+          )}
+          bordered={false}
+        />
+      </div>
+      <button className="dynamicreport_downloadbutton">Download Report</button>
     </div>
   );
 }

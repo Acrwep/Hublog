@@ -49,17 +49,10 @@ const ProductivityReport = () => {
       },
     },
     {
-      title: "Team Name",
-      dataIndex: "Team_Name",
-      key: "Team_Name",
-      width: "150px",
-      hidden: true,
-    },
-    {
       title: "Attendance",
       dataIndex: "AttendanceCount",
       key: "AttendanceCount",
-      width: "150px",
+      width: 140,
       render: (text, record) => {
         if (text === null) {
           return 0;
@@ -69,10 +62,20 @@ const ProductivityReport = () => {
       },
     },
     {
+      title: "Working time",
+      dataIndex: "ActiveDuration",
+      key: "ActiveDuration",
+      width: "170px",
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
       title: "Online time",
       dataIndex: "OnlineDuration",
       key: "OnlineDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -82,7 +85,7 @@ const ProductivityReport = () => {
       title: "Break time",
       dataIndex: "BreakDuration",
       key: "BreakDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -92,7 +95,7 @@ const ProductivityReport = () => {
       title: "Productivity time",
       dataIndex: "TotalProductiveDuration",
       key: "TotalProductiveDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -102,7 +105,7 @@ const ProductivityReport = () => {
       title: "Neutral time",
       dataIndex: "TotalNeutralDuration",
       key: "TotalNeutralDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -112,7 +115,7 @@ const ProductivityReport = () => {
       title: "Unproductivity time",
       dataIndex: "TotalUnproductiveDuration",
       key: "TotalUnproductiveDuration",
-      width: "180px",
+      width: 170,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -122,15 +125,25 @@ const ProductivityReport = () => {
       title: "Productivity",
       dataIndex: "PercentageProductiveDuration",
       key: "PercentageProductiveDuration",
-      width: "170px",
+      width: 150,
       fixed: "right",
       render: (text) => {
         if (text === null) {
-          return 0;
+          return (
+            <Flex gap="small" vertical>
+              <Progress percent={0} strokeColor="#25a17d" />
+            </Flex>
+          );
         } else {
           return (
             <Flex gap="small" vertical>
-              <Progress percent={Math.floor(text)} strokeColor="#25a17d" />
+              <Progress
+                percent={Math.floor(text)}
+                strokeColor="#25a17d"
+                format={(percent) => (
+                  <span style={{ color: "#1f1f1f" }}>{percent}%</span>
+                )}
+              />
             </Flex>
           );
         }
@@ -396,7 +409,7 @@ const ProductivityReport = () => {
         <CommonTable
           columns={columns}
           dataSource={tableData}
-          scroll={{ x: 1200 }}
+          scroll={{ x: 1400 }}
           dataPerPage={10}
           loading={loading}
           size="small"

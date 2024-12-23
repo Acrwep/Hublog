@@ -52,7 +52,7 @@ const ActivityReport = () => {
       title: "Attendance",
       dataIndex: "attendanceCount",
       key: "attendanceCount",
-      width: "150px",
+      width: 140,
       render: (text, record) => {
         if (text === null) {
           return 0;
@@ -62,17 +62,20 @@ const ActivityReport = () => {
       },
     },
     {
-      title: "Team Name",
-      dataIndex: "team_Name",
-      key: "team_Name",
-      width: "150px",
-      hidden: true,
+      title: "Working time",
+      dataIndex: "todalTime",
+      key: "todalTime",
+      width: 160,
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
     },
     {
       title: "Online time",
       dataIndex: "online_duration",
       key: "online_duration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -82,7 +85,7 @@ const ActivityReport = () => {
       title: "Active time",
       dataIndex: "activeTime",
       key: "activeTime",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -92,7 +95,7 @@ const ActivityReport = () => {
       title: "Idle time",
       dataIndex: "idleDuration",
       key: "idleDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -102,7 +105,7 @@ const ActivityReport = () => {
       title: "Break time",
       dataIndex: "breakDuration",
       key: "breakDuration",
-      width: "170px",
+      width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
@@ -112,7 +115,7 @@ const ActivityReport = () => {
       title: "Activity",
       dataIndex: "activePercentage",
       key: "activePercentage",
-      width: "170px",
+      width: 150,
       fixed: "right",
       render: (text) => {
         if (text === null) {
@@ -395,7 +398,7 @@ const ActivityReport = () => {
         <CommonTable
           columns={columns}
           dataSource={tableData}
-          scroll={{ x: 1200 }}
+          scroll={{ x: 1300 }}
           dataPerPage={10}
           loading={loading}
           size="small"
