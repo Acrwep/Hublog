@@ -343,6 +343,8 @@ export default function DynamicReport() {
   }, []);
 
   const getTeamData = async () => {
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(parseInt(orgId));
@@ -546,7 +548,7 @@ export default function DynamicReport() {
                 DownloadTableAsXLSX(
                   data,
                   columns,
-                  `${moment(date).format("DD-MM-YYYY")} Break Report.xlsx`
+                  `${moment(date).format("DD-MM-YYYY")} Break Report.csv`
                 );
               }}
             >
@@ -576,7 +578,6 @@ export default function DynamicReport() {
           expandIcon={({ isActive }) => (
             <CaretRightOutlined rotate={isActive ? 90 : 0} />
           )}
-          bordered={false}
         />
       </div>
       <button className="dynamicreport_downloadbutton">Download Report</button>

@@ -5,7 +5,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { Row, Col, Button, Tooltip, Flex, Progress } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsCSV from "../Common/DownloadTableAsCSV";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -156,6 +156,8 @@ const ProductivityReport = () => {
   }, []);
 
   const getTeamData = async () => {
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getTeams(parseInt(orgId));
@@ -383,14 +385,15 @@ const ProductivityReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(
+                DownloadTableAsCSV(
                   tableData,
                   columns,
                   `Productivity Report ${moment(selectedDates[0]).format(
                     "DD/MM/YYYY"
-                  )} to ${moment(selectedDates[1]).format("DD/MM/YYYY")}.xlsx`
+                  )} to ${moment(selectedDates[1]).format("DD/MM/YYYY")}.csv`
                 );
               }}
+              disabled={loading ? true : false}
             >
               <DownloadOutlined className="download_icon" />
             </Button>

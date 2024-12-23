@@ -1,7 +1,7 @@
 import * as XLSX from "xlsx";
 import moment from "moment";
 
-const DownloadTableAsXlSX = (data, columns, fileName) => {
+const DownloadTableAsCSV = (data, columns, fileName) => {
   // Create a new workbook
   const workbook = XLSX.utils.book_new();
 
@@ -28,6 +28,12 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
         }
 
         // Format time fields using moment
+        if (column.dataIndex === "AttendanceCount") {
+          if (row[column.dataIndex] === null) {
+            return 0;
+          }
+        }
+
         if (
           column.dataIndex === "start_Time" ||
           column.dataIndex === "end_Time"
@@ -114,4 +120,4 @@ const DownloadTableAsXlSX = (data, columns, fileName) => {
   XLSX.writeFile(workbook, fileName);
 };
 
-export default DownloadTableAsXlSX;
+export default DownloadTableAsCSV;

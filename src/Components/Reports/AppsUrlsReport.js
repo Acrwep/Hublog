@@ -20,7 +20,7 @@ import { IoGlobeOutline } from "react-icons/io5";
 import { FaDesktop } from "react-icons/fa";
 import { MdOutlineDesktopWindows } from "react-icons/md";
 import CommonAvatar from "../Common/CommonAvatar";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsCSV from "../Common/DownloadTableAsCSV";
 
 const AppsUrlsReport = () => {
   const navigation = useNavigate();
@@ -120,6 +120,8 @@ const AppsUrlsReport = () => {
 
   const getTeamData = async () => {
     setLoading(true);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -356,12 +358,9 @@ const AppsUrlsReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(
-                  data,
-                  columns,
-                  "Daily Apps&Urls Report.xlsx"
-                );
+                DownloadTableAsCSV(data, columns, "Daily Apps&Urls Report.csv");
               }}
+              disabled={loading ? true : false}
             >
               <DownloadOutlined className="download_icon" />
             </Button>

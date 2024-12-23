@@ -6,7 +6,7 @@ import { Row, Col, Button, Tooltip, DatePicker } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX.js";
+import DownloadTableAsCSV from "../Common/DownloadTableAsCSV.js";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import moment from "moment";
@@ -40,6 +40,8 @@ const MonthlyAttendanceReport = () => {
 
   const getTeamData = async () => {
     setLoading(true);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -477,12 +479,13 @@ const MonthlyAttendanceReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(
+                DownloadTableAsCSV(
                   data,
                   columns,
-                  `${monthName} Monthly Attendance Report.xlsx`
+                  `${monthName} Monthly Attendance Report.csv`
                 );
               }}
+              disabled={loading ? true : false}
             >
               <DownloadOutlined className="download_icon" />
             </Button>

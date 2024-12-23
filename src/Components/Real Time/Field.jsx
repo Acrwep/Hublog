@@ -110,12 +110,7 @@ const Field = () => {
             </div>
             <CommonDoubleDatePicker />
             <Tooltip placement="top" title="Download">
-              <Button
-                className="dashboard_download_button"
-                // onClick={() => {
-                //   DownloadTableAsXLSX(data, columns, "alerts.xlsx");
-                // }}
-              >
+              <Button className="dashboard_download_button">
                 <DownloadOutlined className="download_icon" />
               </Button>
             </Tooltip>

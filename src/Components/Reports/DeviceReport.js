@@ -6,7 +6,7 @@ import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
+import DownloadTableAsCSV from "../Common/DownloadTableAsCSV";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -124,6 +124,8 @@ const DeviceReport = () => {
     setUserId(null);
     setPlatformId(null);
     setSystemId(null);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -318,8 +320,9 @@ const DeviceReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTableAsXLSX(devicesData, columns, `Device Report.xlsx`);
+                DownloadTableAsCSV(devicesData, columns, `Device Report.csv`);
               }}
+              disabled={tableLoading ? true : false}
             >
               <DownloadOutlined className="download_icon" />
             </Button>

@@ -10,7 +10,6 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -203,12 +202,7 @@ const ProjectReport = () => {
         >
           <CommonDoubleDatePicker onChange={onDateChange} value={date} />
           <Tooltip placement="top" title="Download">
-            <Button
-              className="dashboard_download_button"
-              onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
-              }}
-            >
+            <Button className="dashboard_download_button">
               <DownloadOutlined className="download_icon" />
             </Button>
           </Tooltip>

@@ -6,7 +6,6 @@ import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -235,12 +234,7 @@ const LogsReport = () => {
             <CommonDatePicker onChange={onDateChange} value={date} />
           </div>
           <Tooltip placement="top" title="Download">
-            <Button
-              className="dashboard_download_button"
-              onClick={() => {
-                DownloadTableAsXLSX(data, columns, "alerts.xlsx");
-              }}
-            >
+            <Button className="dashboard_download_button">
               <DownloadOutlined className="download_icon" />
             </Button>
           </Tooltip>

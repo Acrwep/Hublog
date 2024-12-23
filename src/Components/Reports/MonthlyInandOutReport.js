@@ -5,7 +5,6 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { Row, Col, Button, Tooltip, DatePicker } from "antd";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX.js";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import moment from "moment";
@@ -115,6 +114,8 @@ const MonthlyInandOutReport = () => {
 
   const getTeamData = async () => {
     setLoading(true);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -606,8 +607,9 @@ const MonthlyInandOutReport = () => {
             <Button
               className="dashboard_download_button"
               onClick={() => {
-                DownloadTable(data, `${monthName} Monthly IN-Out Report.xlsx`);
+                DownloadTable(data, `${monthName} Monthly IN-Out Report.csv`);
               }}
+              disabled={loading ? true : false}
             >
               <DownloadOutlined className="download_icon" />
             </Button>

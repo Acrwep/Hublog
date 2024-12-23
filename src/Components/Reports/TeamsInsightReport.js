@@ -5,7 +5,6 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { Row, Col, Button, Tooltip, Collapse } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
-import DownloadTableAsXLSX from "../Common/DownloadTableAsXLSX";
 import { FiAward } from "react-icons/fi";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
