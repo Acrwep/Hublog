@@ -225,7 +225,7 @@ export default function UserActivity({
                     <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
                       <Col xs={24} sm={24} md={24} lg={6}>
                         <p className="totalproductive_timeheading">
-                          Total productive time
+                          Total online time
                         </p>
                         <p className="totalproductive_time">
                           {totalBreakdownOnlineTime}
@@ -236,7 +236,7 @@ export default function UserActivity({
                       </Col>
                       <Col xs={24} sm={24} md={24} lg={18}>
                         <p className="totalproductive_timeheading">
-                          Average productive time
+                          Average online time
                         </p>
                         <p className="totalproductive_time">
                           {activityBreakdownAverageTime}
