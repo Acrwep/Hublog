@@ -76,6 +76,7 @@ import ProjectReport from "../Components/Reports/ProjectReport";
 import LogsReport from "../Components/Reports/LogsReport";
 import AppsUrlsReport from "../Components/Reports/AppsUrlsReport";
 import DeviceReport from "../Components/Reports/DeviceReport";
+import DynamicReport from "../Components/Reports/DynamicReport.js";
 //projects
 import Projects from "../Components/Projects/Project";
 //notebook
@@ -615,6 +616,7 @@ function SidebarMenu() {
                 <Route path="/projectreport" element={<ProjectReport />} />
                 <Route path="/logsreport" element={<LogsReport />} />
                 <Route path="/devicereport" element={<DeviceReport />} />
+                <Route path="/dynamicreport" element={<DynamicReport />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/userdetail" element={<UserDetail />} />

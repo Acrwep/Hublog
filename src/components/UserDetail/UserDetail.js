@@ -27,6 +27,8 @@ import {
   getProductivityBreakdown,
   getTopCategoryUsage,
   getProductivityEmployeesList,
+  getActivityBreakdown,
+  getActivityEmployeeslist,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -77,6 +79,13 @@ const UserDetail = () => {
   const [productivityEmployeesData, setProductivityEmployeesData] = useState(
     []
   );
+  const [activityBreakdownData, setActivityBreakdownData] = useState([]);
+  const [totalBreakdownOnlineTime, setTotalBreakdownOnlineTime] = useState("");
+  const [activityBreakdownAverageTime, setActivityBreakdownAverageTime] =
+    useState("");
+  const [activityEmployeesData, setActivityEmployeesData] = useState([]);
+  const [isActivityBreakdownEmpty, setIsActivityBreakdownEmpty] =
+    useState(false);
   //loadings
   const [initialLoading, setInitialLoading] = useState(true);
   const [attendanceFilterLoading, setAttendanceFilterLoading] = useState(true);
@@ -89,9 +98,11 @@ const UserDetail = () => {
   const [productivityLoading, setProductivityLoading] = useState(true);
   const [productivityFilterLoading, setProductivityFilterLoading] =
     useState(true);
+  const [activityLoading, setActivityLoading] = useState(true);
+  const [activityFilterLoading, setActivityFilterLoading] = useState(true);
 
   const handlePageChange = (id) => {
-    if (id === 3 || id === 5) {
+    if (id === 3) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -105,6 +116,7 @@ const UserDetail = () => {
     setBreakFilterLoading(true);
     setAppsFilterLoading(true);
     setProductivityFilterLoading(true);
+    setActivityFilterLoading(true);
     getUsersData();
   }, [activePage]);
 
@@ -168,6 +180,7 @@ const UserDetail = () => {
     setAttendanceFilterLoading(true);
     setBreakFilterLoading(true);
     setAppsFilterLoading(true);
+    setActivityFilterLoading(true);
     setProductivityFilterLoading(true);
     if (activePage === 1) {
       const payload = {
@@ -250,6 +263,47 @@ const UserDetail = () => {
         CommonToaster(error?.response?.data, "error");
         dispatch(storeProductivityBreakdown([]));
         setIsBreakdownEmpty(true);
+      } finally {
+        setTimeout(() => {
+          getTopAppUsageData(userId, orgId, startdate, enddate);
+        }, 300);
+      }
+    }
+    if (activePage === 5) {
+      const payload = {
+        organizationId: orgId,
+        ...(userId && { userId: userId }),
+        fromDate: startdate,
+        toDate: enddate,
+      };
+      try {
+        const response = await getActivityBreakdown(payload);
+        console.log("activity breakdown response", response);
+        const activityBreakdowndata = response?.data?.data;
+        setActivityBreakdownData([
+          parseTimeToDecimal(activityBreakdowndata.total_active_time),
+          parseTimeToDecimal(activityBreakdowndata.total_idle_duration),
+        ]);
+        const [totalOnlinehrs, totalOnlinemin] =
+          activityBreakdowndata?.total_Online_Duration.split(":");
+        setTotalBreakdownOnlineTime(`${totalOnlinehrs}h ${totalOnlinemin}m`);
+
+        const [avgHours, avgMinutes] =
+          activityBreakdowndata?.averageDuration.split(":");
+        setActivityBreakdownAverageTime(`${avgHours}h ${avgMinutes}m`);
+        if (
+          activityBreakdowndata.total_active_time === "00:00:00" &&
+          activityBreakdowndata.total_idle_duration === "00:00:00"
+        ) {
+          setIsActivityBreakdownEmpty(true);
+        } else {
+          setIsActivityBreakdownEmpty(false);
+        }
+      } catch (error) {
+        console.log("errr", error);
+        CommonToaster(error?.response?.data, "error");
+        setTotalBreakdownOnlineTime("-");
+        setActivityBreakdownAverageTime("-");
       } finally {
         setTimeout(() => {
           getTopAppUsageData(userId, orgId, startdate, enddate);
@@ -341,7 +395,7 @@ const UserDetail = () => {
   };
 
   const getUrlsUsageData = async (userid, orgId, startdate, enddate) => {
-    if (activePage === 4) {
+    if (activePage === 4 || activePage === 5) {
       getTopUrlUsageData(userid, orgId, startdate, enddate);
       return;
     }
@@ -422,8 +476,46 @@ const UserDetail = () => {
       setTopCategoryUsageTime("-");
     } finally {
       setTimeout(() => {
-        getProductivityEmployeeData(userid, orgId, startdate, enddate);
+        if (activePage === 5) {
+          getActivityEmployeesListData(userid, orgId, startdate, enddate);
+          return;
+        }
+        if (activePage === 4) {
+          getProductivityEmployeeData(userid, orgId, startdate, enddate);
+          return;
+        }
+        setAppsFilterLoading(false);
+        setAppsLoading(false);
       }, 500);
+    }
+  };
+
+  const getActivityEmployeesListData = async (
+    userid,
+    orgId,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(userid && { userId: userid }),
+      fromDate: startdate,
+      toDate: enddate,
+    };
+
+    try {
+      const response = await getActivityEmployeeslist(payload);
+      const activityEmployeeData = response?.data?.data;
+      console.log("activity employeelist response", activityEmployeeData);
+      setActivityEmployeesData(activityEmployeeData);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setActivityEmployeesData([]);
+    } finally {
+      setTimeout(() => {
+        setActivityLoading(false);
+        setActivityFilterLoading(false);
+      }, 300);
     }
   };
 
@@ -449,8 +541,6 @@ const UserDetail = () => {
       CommonToaster(error?.response?.data, "error");
     } finally {
       setTimeout(() => {
-        setAppsFilterLoading(false);
-        setAppsLoading(false);
         setProductivityLoading(false);
         setProductivityFilterLoading(false);
       }, 300);
@@ -616,7 +706,7 @@ const UserDetail = () => {
               <React.Fragment key={index}>
                 <div
                   className={
-                    index === 2 || index === 4
+                    index === 2
                       ? "settings_disabledlistContainer"
                       : item.id === activePage
                       ? "settings_activelistContainer"
@@ -692,7 +782,21 @@ const UserDetail = () => {
           )}
           {activePage === 5 && (
             <div>
-              <UserActivity />
+              <UserActivity
+                loading={activityLoading}
+                filterLoading={activityFilterLoading}
+                topAppName={topAppName}
+                topAppUsageTime={topAppUsageTime}
+                topUrlName={topUrlName}
+                topUrlUsageTime={topUrlUsageTime}
+                topCategoryName={topCategoryName}
+                topCategoryUsageTime={topCategoryUsageTime}
+                totalBreakdownOnlineTime={totalBreakdownOnlineTime}
+                activityBreakdownAverageTime={activityBreakdownAverageTime}
+                activityBreakdownData={activityBreakdownData}
+                activityEmployeesData={activityEmployeesData}
+                isActivityBreakdownEmpty={isActivityBreakdownEmpty}
+              />
             </div>
           )}
           {activePage === 6 && (

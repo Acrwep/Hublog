@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { FiCoffee, FiActivity } from "react-icons/fi";
-import { FaUsersLine } from "react-icons/fa6";
 import {
   TbAppsFilled,
   TbDeviceDesktopMinus,
@@ -221,7 +220,21 @@ const Reports = () => {
               </p>
             </div>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={6}></Col>
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
+              onClick={() => navigation("/dynamicreport")}
+            >
+              <div className="reports_dynamiciconContainer">
+                <MdDynamicFeed size={26} />
+              </div>
+              <p className="reports_cardheading">Dynamic Report</p>
+              <p className="reports_cardcontent">
+                Customise, save and download reports of the key indicators and
+                metrics of your organisation.{" "}
+              </p>
+            </div>
+          </Col>
         </Row>
       </div>
     </div>

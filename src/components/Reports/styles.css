@@ -123,8 +123,8 @@
   align-items: center;
 }
 .reports_dynamiciconContainer {
-  background-color: rgb(252, 209, 220);
-  color: #e91e63;
+  background-color: #ccf5f8ea;
+  color: #29c8ceea;
   border-radius: 10px;
   padding: 12px;
   display: flex;
@@ -296,4 +296,9 @@
   .devicereport_selectfieldContainers {
     margin-bottom: 12px;
   }
+}
+/* dynamicreport styles */
+.dynamicreport_accordionbody_container {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
