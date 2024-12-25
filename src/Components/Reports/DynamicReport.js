@@ -2,16 +2,35 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
-import { Row, Col, Button, Tooltip, Collapse, Checkbox } from "antd";
+import {
+  Row,
+  Col,
+  Button,
+  Tooltip,
+  Collapse,
+  Checkbox,
+  Modal,
+  Spin,
+} from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import CommonInputField from "../Common/CommonInputField";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
-import { getTeams, getUsers, getUsersByTeamId } from "../APIservice.js/action";
-import { getCurrentandPreviousweekDate } from "../Common/Validation";
+import {
+  getDynamicReport,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
+import {
+  descriptionValidator,
+  getCurrentandPreviousweekDate,
+} from "../Common/Validation";
 import { CommonToaster } from "../Common/CommonToaster";
 import moment from "moment";
 import "./styles.css";
+import DownloadDynamicReport from "./DownloadDynamicReport";
 
 export default function DynamicReport() {
   const navigation = useNavigate();
@@ -23,6 +42,12 @@ export default function DynamicReport() {
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [activePage, setActivePage] = useState(1);
+  const [reportData, setReportData] = useState([]);
+  const [reportName, setReportName] = useState("");
+  const [reportNameError, setReportNameError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [validationTrigger, setValidationTrigger] = useState(false);
+
   //userinfo useStates
   const [firstNameStatus, setFirstNameStatus] = useState(true);
   const [lastNameStatus, setLastNameStatus] = useState(true);
@@ -33,8 +58,7 @@ export default function DynamicReport() {
   const [totalWorkingtimeStatus, setTotalWorkingtimeStatus] = useState(true);
   const [totalOnlinetimeStatus, setTotalOnlinetimeStatus] = useState(true);
   const [totalBreaktimeStatus, setTotalBreaktimeStatus] = useState(true);
-  const [averageWorkingtimeStatus, setAverageWorkingtimeStatus] =
-    useState(false);
+  const [averageBreaktimeStatus, setAverageBreaktimeStatus] = useState(false);
   const [punchIntimeStatus, setPunchIntimeStatus] = useState(false);
   const [punchOuttimeStatus, setPunchOuttimeStatus] = useState(false);
   //activity useStates
@@ -56,7 +80,7 @@ export default function DynamicReport() {
     useState(false);
   const [averageUnproductivetimeStatus, setAverageUnproductivetimeStatus] =
     useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const text = `
   A dog is a type of domesticated animal.
@@ -151,10 +175,10 @@ export default function DynamicReport() {
         <Row style={{ marginTop: "25px" }}>
           <Col xs={24} sm={24} md={8} lg={8}>
             <Checkbox
-              onChange={(e) => setAverageWorkingtimeStatus(e.target.checked)}
-              checked={averageWorkingtimeStatus}
+              onChange={(e) => setAverageBreaktimeStatus(e.target.checked)}
+              checked={averageBreaktimeStatus}
             >
-              Average Working time
+              Average Break time
             </Checkbox>
           </Col>
           <Col xs={24} sm={24} md={8} lg={8}>
@@ -376,9 +400,190 @@ export default function DynamicReport() {
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
+    } finally {
+      setTimeout(() => {
+        getDynamicReportData(
+          orgId,
+          null,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1]
+        );
+      }, 300);
     }
   };
 
+  const getDynamicReportData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate
+  ) => {
+    setLoading(true);
+    const payload = {
+      OrganizationId: orgId,
+      ...(teamid && { TeamId: teamid }),
+      ...(userid && { UserId: userid }),
+      StartDate: startDate,
+      EndDate: endDate,
+      FirstName: firstNameStatus,
+      LastName: lastNameStatus,
+      EmployeeId: employeeIdStatus,
+      Email: emailStatus,
+      TeamName: teamNameStatus,
+      Manager: false,
+      TotalWorkingtime: totalWorkingtimeStatus,
+      TotalOnlinetime: totalOnlinetimeStatus,
+      TotalBreaktime: totalBreaktimeStatus,
+      AverageBreaktime: averageBreaktimeStatus,
+      TotalActivetime: totalActivetimeStatus,
+      ActivitePercent: activityPercentStatus,
+      TotalIdletime: totalIdletimeStatus,
+      AverageIdletime: averageIdletimeStatus,
+      TotalProductivetime: totalProductivetimeStatus,
+      ProductivityPercent: productivePercentStatus,
+      AverageProductivetime: averageProductivetimeStatus,
+      Totalunproductivetime: totalUnproductivetimeStatus,
+      Averageunproductivetime: averageUnproductivetimeStatus,
+      Totalneutraltime: totalNeutraltimeStatus,
+      Averageneutraltime: averageNeutraltimeStatus,
+    };
+    try {
+      const response = await getDynamicReport(payload);
+      console.log("dynamic report response", response);
+      setReportData(response.data);
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
+    }
+  };
+
+  const columns = [
+    {
+      title: "First Name",
+      dataIndex: "FirstName",
+      key: "FirstName",
+      status: firstNameStatus,
+    },
+    {
+      title: "Last Name",
+      dataIndex: "LastName",
+      key: "LastName",
+      status: lastNameStatus,
+    },
+    {
+      title: "Employee Id",
+      dataIndex: "EmployeeId",
+      key: "EmployeeId",
+      status: employeeIdStatus,
+    },
+    {
+      title: "Email",
+      dataIndex: "Email",
+      key: "Email",
+      status: emailStatus,
+    },
+    {
+      title: "Team Name",
+      dataIndex: "TeamName",
+      key: "TeamName",
+      status: teamNameStatus,
+    },
+    {
+      title: "Total Working Time",
+      dataIndex: "TotalWorkingtime",
+      key: "TotalWorkingtime",
+      status: totalWorkingtimeStatus,
+    },
+    {
+      title: "Total Online Time",
+      dataIndex: "TotalOnlinetime",
+      key: "TotalOnlinetime",
+      status: totalOnlinetimeStatus,
+    },
+    {
+      title: "Total Break Time",
+      dataIndex: "TotalBreaktime",
+      key: "TotalBreaktime",
+      status: totalBreaktimeStatus,
+    },
+    {
+      title: "Average Break Time",
+      dataIndex: "AverageBreaktime",
+      key: "AverageBreaktime",
+      status: averageBreaktimeStatus,
+    },
+    {
+      title: "Total Active Time",
+      dataIndex: "TotalActivetime",
+      key: "TotalActivetime",
+      status: totalActivetimeStatus,
+    },
+    {
+      title: "Activity Percent",
+      dataIndex: "ActivitePercent",
+      key: "ActivitePercent",
+      status: activityPercentStatus,
+    },
+    {
+      title: "Total Idle Time",
+      dataIndex: "TotalIdletime",
+      key: "TotalIdletime",
+      status: totalIdletimeStatus,
+    },
+    {
+      title: "Average Idle Time",
+      dataIndex: "AverageIdletime",
+      key: "AverageIdletime",
+      status: averageIdletimeStatus,
+    },
+    {
+      title: "Total Productive Time",
+      dataIndex: "Total_Productivetime",
+      key: "Total_Productivetime",
+      status: totalProductivetimeStatus,
+    },
+    {
+      title: "Productivity Percent",
+      dataIndex: "Productivity_Percent",
+      key: "Productivity_Percent",
+      status: productivePercentStatus,
+    },
+    {
+      title: "Average Productive Time",
+      dataIndex: "Average_Productivetime",
+      key: "Average_Productivetime",
+      status: averageProductivetimeStatus,
+    },
+    {
+      title: "Total Neutral Time",
+      dataIndex: "Total_neutraltime",
+      key: "Total_neutraltime",
+      status: totalNeutraltimeStatus,
+    },
+    {
+      title: "Average Neutral Time",
+      dataIndex: "Average_neutraltime",
+      key: "Average_neutraltime",
+      status: averageNeutraltimeStatus,
+    },
+    {
+      title: "Total Unproductive Time",
+      dataIndex: "Total_unproductivetime",
+      key: "Total_unproductivetime",
+      status: totalUnproductivetimeStatus,
+    },
+    {
+      title: "Average Unproductive Time",
+      dataIndex: "Average_unproductivetime",
+      key: "Average_unproductivetime",
+      status: averageUnproductivetimeStatus,
+    },
+  ];
   //onchange functions
   const handlePageChange = (pageNumber) => {
     if (
@@ -458,6 +663,47 @@ export default function DynamicReport() {
       setUserList(nonChangeUserList);
       setSelectedDates(PreviousandCurrentDate);
     }
+  };
+
+  const handleDownload = () => {
+    setIsModalOpen(true);
+    getDynamicReportData(
+      organizationId,
+      teamId,
+      userId,
+      selectedDates[0],
+      selectedDates[1]
+    );
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setReportName("");
+    setReportNameError("");
+    // setValidationTrigger(false);
+  };
+
+  const handleOk = () => {
+    setValidationTrigger(true);
+    const reportNameValidate = descriptionValidator(reportName);
+    setReportNameError(reportNameValidate);
+
+    if (reportNameValidate) return;
+
+    const enableColumns = columns.filter((f) => f.status === true);
+    console.log("enableColumns", enableColumns);
+    DownloadDynamicReport(
+      reportData,
+      enableColumns,
+      `${reportName} ${moment(selectedDates[0]).format(
+        "DD/MM/YYYY"
+      )} to ${moment(selectedDates[1]).format("DD/MM/YYYY")}.csv`
+    );
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setReportName("");
+      setReportNameError("");
+    }, 350);
   };
 
   return (
@@ -541,20 +787,6 @@ export default function DynamicReport() {
               value={selectedDates}
             />{" "}
           </div>
-          {/* <Tooltip placement="top" title="Download">
-            <Button
-              className="dashboard_download_button"
-              onClick={() => {
-                DownloadTableAsXLSX(
-                  data,
-                  columns,
-                  `${moment(date).format("DD-MM-YYYY")} Break Report.csv`
-                );
-              }}
-            >
-              <DownloadOutlined className="download_icon" />
-            </Button>
-          </Tooltip> */}
           <Tooltip placement="top" title="Refresh">
             <Button
               className="dashboard_refresh_button"
@@ -566,10 +798,10 @@ export default function DynamicReport() {
           </Tooltip>
         </Col>
       </Row>
-      {/* <div className="dynamicreport_headingContainer">
-        <p>Filter</p>
-      </div> */}
-      <div className="dynamicreport_accordionmainContainer">
+      <div
+        className="dynamicreport_accordionmainContainer"
+        style={{ opacity: loading ? 0.5 : 1 }}
+      >
         <Collapse
           defaultActiveKey={["1", "2", "3", "4"]}
           onChange={handleAccordion}
@@ -579,8 +811,50 @@ export default function DynamicReport() {
             <CaretRightOutlined rotate={isActive ? 90 : 0} />
           )}
         />
+        <div
+          className={
+            loading
+              ? "dynamicreport_loaderContainer"
+              : "dynamicreport_disableloaderContainer"
+          }
+        >
+          <Spin />
+        </div>
       </div>
-      <button className="dynamicreport_downloadbutton">Download Report</button>
+      <button
+        className="dynamicreport_downloadbutton"
+        onClick={handleDownload}
+        disabled={loading ? true : false}
+        style={{ opacity: loading ? 0.7 : 1 }}
+      >
+        Download Report
+      </button>
+
+      <Modal
+        title="Download Report"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <button className="designation_submitbutton" onClick={handleOk}>
+            Submit
+          </button>,
+        ]}
+      >
+        <CommonInputField
+          label="Report Name"
+          onChange={(e) => {
+            setReportName(e.target.value);
+            if (validationTrigger) {
+              setReportNameError(descriptionValidator(e.target.value));
+            }
+          }}
+          value={reportName}
+          error={reportNameError}
+          style={{ marginTop: "22px" }}
+          mandatory
+        />
+      </Modal>
     </div>
   );
 }

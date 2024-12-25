@@ -303,8 +303,17 @@
   margin-bottom: 16px;
 }
 .dynamicreport_accordionmainContainer {
-  /* height: 60vh; */
-  /* overflow-y: auto; */
+  position: relative;
+}
+.dynamicreport_loaderContainer {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  z-index: 1;
+  opacity: 1 !important;
+}
+.dynamicreport_disableloaderContainer {
+  display: none;
 }
 .dynamicreport_downloadbutton {
   color: #fff;

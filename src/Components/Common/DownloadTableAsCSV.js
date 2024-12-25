@@ -28,7 +28,10 @@ const DownloadTableAsCSV = (data, columns, fileName) => {
         }
 
         // Format time fields using moment
-        if (column.dataIndex === "AttendanceCount") {
+        if (
+          column.dataIndex === "AttendanceCount" ||
+          column.dataIndex === "attendanceCount"
+        ) {
           if (row[column.dataIndex] === null) {
             return 0;
           }
@@ -79,6 +82,7 @@ const DownloadTableAsCSV = (data, columns, fileName) => {
           column.dataIndex === "breakDuration" ||
           column.dataIndex === "idleDuration" ||
           column.dataIndex === "activeTime" ||
+          column.dataIndex === "total_wokingtime" ||
           column.dataIndex === "TotalProductiveDuration" ||
           column.dataIndex === "TotalNeutralDuration" ||
           column.dataIndex === "TotalUnproductiveDuration" ||

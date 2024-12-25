@@ -545,6 +545,17 @@ export const getAppsandUrlsReport = async (reportPayload) => {
     throw error;
   }
 };
+//dynamic report
+export const getDynamicReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/DynamicReport`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //notebook
 export const getNotebook = async (reportPayload) => {
   try {
