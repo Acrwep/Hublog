@@ -152,8 +152,8 @@ const ProductivityDetailed = ({ loading }) => {
     },
     {
       title: "Working time",
-      dataIndex: "ActiveDuration",
-      key: "ActiveDuration",
+      dataIndex: "total_wokingtime",
+      key: "total_wokingtime",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
