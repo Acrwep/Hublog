@@ -62,9 +62,15 @@ const ActivityReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
+      hidden: true,
+    },
+    {
       title: "Working time",
-      dataIndex: "todalTime",
-      key: "todalTime",
+      dataIndex: "total_wokingtime",
+      key: "total_wokingtime",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");

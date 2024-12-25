@@ -62,9 +62,15 @@ const ProductivityReport = () => {
       },
     },
     {
+      title: "Team Name",
+      dataIndex: "Team_Name",
+      key: "Team_Name",
+      hidden: true,
+    },
+    {
       title: "Working time",
-      dataIndex: "ActiveDuration",
-      key: "ActiveDuration",
+      dataIndex: "total_wokingtime",
+      key: "total_wokingtime",
       width: "170px",
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");

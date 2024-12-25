@@ -36,7 +36,7 @@ const BreakReports = () => {
       title: "Employee",
       dataIndex: "full_Name",
       key: "full_Name",
-      width: "150px",
+      width: 150,
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
@@ -50,20 +50,20 @@ const BreakReports = () => {
       title: "Team Name",
       dataIndex: "team_Name",
       key: "team_Name",
-      width: "150px",
+      width: 150,
       hidden: true,
     },
     {
       title: "Break type",
       dataIndex: "breakName",
       key: "breakName",
-      width: "150px",
+      width: 150,
     },
     {
       title: "Break start",
       dataIndex: "start_Time",
       key: "start_Time",
-      width: "150px",
+      width: 150,
       render: (text, record) => {
         return <p>{moment(text).format("hh:mm A")}</p>;
       },
@@ -72,12 +72,22 @@ const BreakReports = () => {
       title: "Break end",
       dataIndex: "end_Time",
       key: "end_Time",
-      width: "150px",
+      width: 150,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
           return null;
         }
         return <p>{moment(text).format("hh:mm A")}</p>;
+      },
+    },
+    {
+      title: "Break duration",
+      dataIndex: "breakDuration",
+      key: "breakDuration",
+      width: 150,
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":"); // Split time into h, m, s
+        return `${hours}h:${minutes}m:${seconds}s`;
       },
     },
   ];
@@ -141,7 +151,7 @@ const BreakReports = () => {
       const reverseData = ReportData.reverse();
       setData(reverseData);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
         setLoading(false);
