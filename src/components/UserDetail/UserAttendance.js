@@ -45,6 +45,10 @@ export default function UserAttendance({
       key: "start_Time",
       width: 120,
       render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        }
+          else{
         return (
           <div style={{ display: "flex", alignItems: "center" }}>
             <FaRegUser
@@ -55,7 +59,7 @@ export default function UserAttendance({
             <p>{moment(text).format("hh:mm A")} </p>
           </div>
         );
-      },
+      }}
     },
     {
       title: "Punch Out",
