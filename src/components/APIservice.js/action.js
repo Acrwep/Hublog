@@ -406,6 +406,16 @@ export const getUserAttendance = async (payload) => {
     throw error;
   }
 };
+export const getUserPunchInOutDetails = async (payload) => {
+  try {
+    const response = await api.get(`api/Users/GetUserPunchInOutDetails`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 // ?userId=${userId}&startDate=${startDate}&endDate=${endDate}
 //userdetail break
 export const getUserBreak = async (userId, startDate, endDate) => {
@@ -549,6 +559,16 @@ export const getAppsandUrlsReport = async (reportPayload) => {
 export const getDynamicReport = async (reportPayload) => {
   try {
     const response = await api.get(`/api/Report/DynamicReport`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getDynamicDetailedReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/DynamicDetailReport`, {
       params: reportPayload,
     });
     return response;

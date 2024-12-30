@@ -18,6 +18,7 @@ const DownloadDynamicReport = (data, columns, fileName) => {
           columnData === "TotalBreaktime" ||
           columnData === "AverageBreaktime" ||
           columnData === "TotalActivetime" ||
+          columnData === "AverageActivetime" ||
           columnData === "TotalIdletime" ||
           columnData === "AverageIdletime" ||
           columnData === "Total_Productivetime" ||
@@ -32,6 +33,8 @@ const DownloadDynamicReport = (data, columns, fileName) => {
             row.records[column.dataIndex] === undefined
           ) {
             return null;
+          } else if (row.records[column.dataIndex] === 0) {
+            return "0h:0m:0s";
           } else {
             const [hours, minutes, seconds] =
               row.records[column.dataIndex].split(":");
@@ -43,10 +46,31 @@ const DownloadDynamicReport = (data, columns, fileName) => {
           columnData === "Productivity_Percent"
         ) {
           if (row.records[column.dataIndex] === null) {
-            return 0;
+            return "0.00%";
+          } else {
+            const convertToNumber = parseInt(row.records[column.dataIndex]);
+            return convertToNumber.toFixed(2) + "%";
           }
-          const convertToNumber = parseInt(row.records[column.dataIndex]);
-          return convertToNumber.toFixed(2) + "%";
+        }
+
+        if (columnData === "Date") {
+          if (row.records[column.dataIndex] === null) {
+            return null;
+          } else {
+            return moment(row.records[column.dataIndex]).format("DD/MM/YYYY");
+          }
+        }
+
+        if (columnData === "PunchIntime" || columnData === "PunchOuttime") {
+          if (row.records[column.dataIndex] === null) {
+            return null;
+          } else {
+            const formattedTime = moment(
+              row.records[column.dataIndex],
+              "MM/DD/YYYY HH:mm:ss"
+            ).format("hh:mm A");
+            return formattedTime;
+          }
         }
 
         return row.records[column.dataIndex];

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Col, Row, Skeleton, Drawer, Avatar } from "antd";
 import { useSelector } from "react-redux";
 import { FaRegUser } from "react-icons/fa6";
+import { IoEyeOutline } from "react-icons/io5";
+import { SlEye } from "react-icons/sl";
 import CommonTable from "../../Components/Common/CommonTable";
 import CommonMonthlyCalendar from "../../Components/Common/CommonMonthlyCalendar";
 import CommonDonutChart from "../../Components/Common/CommonDonutChart";
@@ -10,7 +12,10 @@ import "./styles.css";
 import Loader from "../Common/Loader";
 import moment from "moment";
 import { CommonToaster } from "../Common/CommonToaster";
-import { getUserAttendance } from "../APIservice.js/action";
+import {
+  getUserAttendance,
+  getUserPunchInOutDetails,
+} from "../APIservice.js/action";
 
 export default function UserAttendance({
   attendanceSummary,
@@ -47,19 +52,19 @@ export default function UserAttendance({
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
           return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaRegUser
+                color="#666767"
+                size={14}
+                style={{ marginRight: "4.5px" }}
+              />
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
         }
-          else{
-        return (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <FaRegUser
-              color="#666767"
-              size={14}
-              style={{ marginRight: "4.5px" }}
-            />
-            <p>{moment(text).format("hh:mm A")} </p>
-          </div>
-        );
-      }}
+      },
     },
     {
       title: "Punch Out",
@@ -103,12 +108,26 @@ export default function UserAttendance({
         if (text === "0001-01-01T00:00:00" || text === null) {
           return null;
         } else {
-          const [hours, minutes, seconds] = text.split(":");
-          const formattedDuration = `${parseInt(hours)}h:${parseInt(
-            minutes
-          )}m:${parseInt(seconds)}s`;
+          const [hours, minutes] = text.split(":");
+          const formattedDuration = `${parseInt(hours)}h:${parseInt(minutes)}m`;
           return <p>{formattedDuration} </p>;
         }
+      },
+    },
+    {
+      title: "Logs",
+      dataIndex: "logs",
+      key: "logs",
+      width: 90,
+      render: (text, record) => {
+        return (
+          <SlEye
+            color="#666767"
+            size={18}
+            style={{ cursor: "pointer" }}
+            onClick={() => handleMothlyCalendar(record.attendanceDate)}
+          />
+        );
       },
     },
   ];
@@ -120,16 +139,20 @@ export default function UserAttendance({
       key: "start_Time",
       width: 90,
       render: (text, record) => {
-        return (
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <FaRegUser
-              color="#666767"
-              size={14}
-              style={{ marginRight: "4.5px" }}
-            />
-            <p>{moment(text).format("hh:mm A")} </p>
-          </div>
-        );
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaRegUser
+                color="#666767"
+                size={14}
+                style={{ marginRight: "4.5px" }}
+              />
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
+        }
       },
     },
     {
@@ -174,10 +197,8 @@ export default function UserAttendance({
         if (text === "0001-01-01T00:00:00" || text === null) {
           return null;
         } else {
-          const [hours, minutes, seconds] = text.split(":");
-          const formattedDuration = `${parseInt(hours)}h:${parseInt(
-            minutes
-          )}m:${parseInt(seconds)}s`;
+          const [hours, minutes] = text.split(":");
+          const formattedDuration = `${parseInt(hours)}h:${parseInt(minutes)}m`;
           return <p>{formattedDuration} </p>;
         }
       },
@@ -192,15 +213,13 @@ export default function UserAttendance({
     const payload = {
       userId: selectedUserId,
       organizationId: orgId,
-      startDate: value,
-      endDate: value,
+      date: value,
     };
     try {
-      const response = await getUserAttendance(payload);
-      const details = response?.data?.attendanceDetails;
-      const reverseData = details.reverse();
-      console.log("selected date attendance", reverseData);
-      setSelectedDateAttendanceData(reverseData);
+      const response = await getUserPunchInOutDetails(payload);
+      const details = response?.data;
+      console.log("logs response", response);
+      setSelectedDateAttendanceData(details);
       const name = userFullName.split(" ");
       setFisrtName(name[0]);
       setLastName(name[1]);

@@ -70,17 +70,14 @@ const AppsUrlsReport = () => {
         if (text === "URL") {
           return (
             <div style={{ display: "flex", alignItems: "center" }}>
-              <IoGlobeOutline size={19} color="rgba(128, 128, 128, 0.85)" />
+              <IoGlobeOutline size={19} color="rgb(128, 128, 128)" />
               <p style={{ marginLeft: "12px" }}>Url</p>
             </div>
           );
         } else {
           return (
             <div style={{ display: "flex", alignItems: "center" }}>
-              <MdOutlineDesktopWindows
-                size={19}
-                color="rgba(128, 128, 128, 0.85)"
-              />
+              <MdOutlineDesktopWindows size={19} color="rgba(128, 128, 128)" />
               <p style={{ marginLeft: "12px" }}>{text}</p>
             </div>
           );

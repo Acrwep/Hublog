@@ -18,6 +18,7 @@ import CommonInputField from "../Common/CommonInputField";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import {
+  getDynamicDetailedReport,
   getDynamicReport,
   getTeams,
   getUsers,
@@ -54,6 +55,7 @@ export default function DynamicReport() {
   const [employeeIdStatus, setEmployeeIdStatus] = useState(true);
   const [emailStatus, setEmailStatus] = useState(true);
   const [teamNameStatus, setTeamNameStatus] = useState(false);
+  const [attendanceDateStatus, setAttendanceDateStatus] = useState(false);
   // workingtime useStates
   const [totalWorkingtimeStatus, setTotalWorkingtimeStatus] = useState(true);
   const [totalOnlinetimeStatus, setTotalOnlinetimeStatus] = useState(true);
@@ -80,6 +82,7 @@ export default function DynamicReport() {
     useState(false);
   const [averageUnproductivetimeStatus, setAverageUnproductivetimeStatus] =
     useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const text = `
@@ -177,6 +180,7 @@ export default function DynamicReport() {
             <Checkbox
               onChange={(e) => setAverageBreaktimeStatus(e.target.checked)}
               checked={averageBreaktimeStatus}
+              disabled={activePage === 2 ? true : false}
             >
               Average Break time
             </Checkbox>
@@ -433,12 +437,15 @@ export default function DynamicReport() {
       Email: emailStatus,
       TeamName: teamNameStatus,
       Manager: false,
+      PunchIntime: false,
+      PunchOuttime: false,
       TotalWorkingtime: totalWorkingtimeStatus,
       TotalOnlinetime: totalOnlinetimeStatus,
       TotalBreaktime: totalBreaktimeStatus,
       AverageBreaktime: averageBreaktimeStatus,
       TotalActivetime: totalActivetimeStatus,
       ActivitePercent: activityPercentStatus,
+      AverageActivetime: averageActivetimeStatus,
       TotalIdletime: totalIdletimeStatus,
       AverageIdletime: averageIdletimeStatus,
       TotalProductivetime: totalProductivetimeStatus,
@@ -458,11 +465,76 @@ export default function DynamicReport() {
     } finally {
       setTimeout(() => {
         setLoading(false);
+        setInitialLoading(false);
+      }, 300);
+    }
+  };
+
+  const getDynamicDetailedReportData = async (
+    orgId,
+    teamid,
+    userid,
+    startDate,
+    endDate
+  ) => {
+    setLoading(true);
+    const payload = {
+      OrganizationId: orgId,
+      ...(teamid && { TeamId: teamid }),
+      ...(userid && { UserId: userid }),
+      StartDate: startDate,
+      EndDate: endDate,
+      FirstName: firstNameStatus,
+      LastName: lastNameStatus,
+      EmployeeId: employeeIdStatus,
+      Email: emailStatus,
+      TeamName: teamNameStatus,
+      Manager: false,
+      PunchIntime: true,
+      PunchOuttime: true,
+      TotalWorkingtime: totalWorkingtimeStatus,
+      TotalOnlinetime: totalOnlinetimeStatus,
+      TotalBreaktime: totalBreaktimeStatus,
+      AverageBreaktime: false,
+      TotalActivetime: totalActivetimeStatus,
+      ActivitePercent: activityPercentStatus,
+      AverageActivetime: false,
+      TotalIdletime: totalIdletimeStatus,
+      AverageIdletime: false,
+      TotalProductivetime: totalProductivetimeStatus,
+      ProductivityPercent: productivePercentStatus,
+      AverageProductivetime: false,
+      Totalunproductivetime: totalUnproductivetimeStatus,
+      Averageunproductivetime: false,
+      Totalneutraltime: totalNeutraltimeStatus,
+      Averageneutraltime: false,
+    };
+    try {
+      const response = await getDynamicDetailedReport(payload);
+      console.log("dynamic detailed report response", response);
+      setReportData(response.data);
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
       }, 300);
     }
   };
 
   const columns = [
+    {
+      title: "Attendance Date",
+      dataIndex: "Date",
+      key: "Date",
+      status: attendanceDateStatus,
+    },
+    {
+      title: "Employee Id",
+      dataIndex: "EmployeeId",
+      key: "EmployeeId",
+      status: employeeIdStatus,
+    },
     {
       title: "First Name",
       dataIndex: "FirstName",
@@ -476,12 +548,6 @@ export default function DynamicReport() {
       status: lastNameStatus,
     },
     {
-      title: "Employee Id",
-      dataIndex: "EmployeeId",
-      key: "EmployeeId",
-      status: employeeIdStatus,
-    },
-    {
       title: "Email",
       dataIndex: "Email",
       key: "Email",
@@ -492,6 +558,18 @@ export default function DynamicReport() {
       dataIndex: "TeamName",
       key: "TeamName",
       status: teamNameStatus,
+    },
+    {
+      title: "Punch In Time",
+      dataIndex: "PunchIntime",
+      key: "PunchIntime",
+      status: punchIntimeStatus,
+    },
+    {
+      title: "Punch Out Time",
+      dataIndex: "PunchOuttime",
+      key: "PunchOuttime",
+      status: punchOuttimeStatus,
     },
     {
       title: "Total Working Time",
@@ -528,6 +606,12 @@ export default function DynamicReport() {
       dataIndex: "ActivitePercent",
       key: "ActivitePercent",
       status: activityPercentStatus,
+    },
+    {
+      title: "Average Active Time",
+      dataIndex: "AverageActivetime",
+      key: "AverageActivetime",
+      status: averageActivetimeStatus,
     },
     {
       title: "Total Idle Time",
@@ -586,18 +670,45 @@ export default function DynamicReport() {
   ];
   //onchange functions
   const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
     if (
       (pageNumber === 1 && activePage === 1) ||
       (pageNumber === 2 && activePage === 2)
     ) {
       return;
     }
-    setActivePage(pageNumber);
+    if (pageNumber === 1) {
+      setPunchIntimeStatus(false);
+      setPunchOuttimeStatus(false);
+      setAttendanceDateStatus(false);
+      getDynamicReportData(
+        organizationId,
+        teamId,
+        userId,
+        selectedDates[0],
+        selectedDates[1]
+      );
+    }
+    if (pageNumber === 2) {
+      setAttendanceDateStatus(true);
+      setAverageBreaktimeStatus(false);
+      setAverageActivetimeStatus(false);
+      setAverageIdletimeStatus(false);
+      setAverageProductivetimeStatus(false);
+      setAverageNeutraltimeStatus(false);
+      setAverageUnproductivetimeStatus(false);
+      getDynamicDetailedReportData(
+        organizationId,
+        teamId,
+        userId,
+        selectedDates[0],
+        selectedDates[1]
+      );
+    }
   };
 
   const handleTeam = async (value) => {
     setTeamId(value);
-    setLoading(true);
     try {
       const response = await getUsersByTeamId(value);
       const teamMembersList = response?.data?.team?.users;
@@ -616,7 +727,6 @@ export default function DynamicReport() {
 
   const handleUser = (value) => {
     setUserId(value);
-    setLoading(true);
   };
 
   const onDateChange = (date, dateString) => {
@@ -657,23 +767,57 @@ export default function DynamicReport() {
     ) {
       return;
     } else {
-      setLoading(true);
+      setActivePage(1);
       setTeamId(null);
       setUserId(null);
       setUserList(nonChangeUserList);
       setSelectedDates(PreviousandCurrentDate);
+      //checkbox handling
+      setFirstNameStatus(true);
+      setLastNameStatus(true);
+      setEmployeeIdStatus(true);
+      setEmailStatus(true);
+      setTeamNameStatus(false);
+      setTotalWorkingtimeStatus(true);
+      setTotalOnlinetimeStatus(true);
+      setTotalBreaktimeStatus(true);
+      setAverageBreaktimeStatus(false);
+      setPunchIntimeStatus(false);
+      setPunchOuttimeStatus(false);
+      setTotalActivetimeStatus(true);
+      setActivityPercentStatus(true);
+      setAverageActivetimeStatus(false);
+      setTotalIdletimeStatus(false);
+      setAverageIdletimeStatus(false);
+      setTotalProductivetimeStatus(true);
+      setProductivePercentStatus(true);
+      setAverageProductivetimeStatus(false);
+      setTotalNeutraltimeStatus(false);
+      setAverageNeutraltimeStatus(false);
+      setTotalUnproductivetimeStatus(false);
+      setAverageUnproductivetimeStatus(false);
     }
   };
 
   const handleDownload = () => {
     setIsModalOpen(true);
-    getDynamicReportData(
-      organizationId,
-      teamId,
-      userId,
-      selectedDates[0],
-      selectedDates[1]
-    );
+    if (activePage === 1) {
+      getDynamicReportData(
+        organizationId,
+        teamId,
+        userId,
+        selectedDates[0],
+        selectedDates[1]
+      );
+    } else {
+      getDynamicDetailedReportData(
+        organizationId,
+        teamId,
+        userId,
+        selectedDates[0],
+        selectedDates[1]
+      );
+    }
   };
 
   const handleCancel = () => {
@@ -732,11 +876,11 @@ export default function DynamicReport() {
             <Button
               className={
                 activePage === 2
-                  ? "productivity_activedetailedbutton "
+                  ? "productivity_activedetailedbutton"
                   : "productivity_detailedbutton"
               }
               onClick={() => handlePageChange(2)}
-              disabled={loading ? true : false}
+              disabled={initialLoading ? true : false}
             >
               Detailed
             </Button>
