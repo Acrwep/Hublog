@@ -54,8 +54,8 @@ export default function UserActivity({
     },
     {
       title: "Working time",
-      dataIndex: "todalTime",
-      key: "todalTime",
+      dataIndex: "total_wokingtime",
+      key: "total_wokingtime",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
