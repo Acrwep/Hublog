@@ -19,6 +19,21 @@ export default function UserAppsUrls({
   const appsData = useSelector((state) => state.userappsusage);
   const urlsData = useSelector((state) => state.userurlsusage);
 
+  // Function to convert "HH:MM:SS" to total seconds
+  function convertToSeconds(timeString) {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + seconds; // Convert to seconds
+  }
+
+  // Function to format time for tooltip
+  function formatTooltipTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours}h ${minutes}m ${secs}s`;
+  }
+
+
   const barchartoptions = {
     chart: {
       type: "bar",
@@ -28,7 +43,6 @@ export default function UserAppsUrls({
         borderRadius: 0,
         borderRadiusApplication: "end",
         horizontal: true,
-        backgroundColor: "red",
       },
     },
     grid: {
@@ -51,7 +65,7 @@ export default function UserAppsUrls({
         return `
           <div style="padding: 5px 9px;">
             <span style="display:inline-block; width: 10px; height: 10px; background-color: ${color}; border-radius: 50%; margin-right: 5px;"></span>
-            <strong>${xValue}</strong>: ${hours}h:${minutes}m
+            <strong>${xValue}</strong>: ${formatTooltipTime(yValue)}
           </div>
         `;
       },
@@ -62,6 +76,7 @@ export default function UserAppsUrls({
           fontWeight: "500", // Make the labels bold
           fontSize: "13px",
           fontFamily: "Poppins, sans-serif",
+          userSelect: "text",
         },
         formatter: function (value) {
           return value; // Simply return the value
@@ -74,7 +89,7 @@ export default function UserAppsUrls({
           fontFamily: "Poppins, sans-serif",
         },
         formatter: function (value) {
-          const hours = Math.floor(value);
+          const hours = Math.floor(value / 3600);
           return `${hours}h`;
         },
       },
@@ -90,11 +105,11 @@ export default function UserAppsUrls({
     return parseFloat(hours) + parseFloat(minutes) / 60;
   };
 
-  const barchartseries = [
+ const barchartseries = [
     {
       data: appsData.map((item) => ({
         x: capitalizeFirstLetter(item.applicationName),
-        y: convertToTimeFormat(item.totalUsage),
+        y: convertToSeconds(item.totalUsage),
       })),
     },
   ];
@@ -102,8 +117,8 @@ export default function UserAppsUrls({
   const urlsbarchartseries = [
     {
       data: urlsData.map((item) => ({
-        x: item.url,
-        y: convertToTimeFormat(item.totalUsage),
+        x: capitalizeFirstLetter(item.url),
+        y: convertToSeconds(item.totalUsage),
       })),
     },
   ];
