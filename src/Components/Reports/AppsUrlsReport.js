@@ -65,7 +65,7 @@ const AppsUrlsReport = () => {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      width: 120,
+      width: 90,
       render: (text) => {
         if (text === "URL") {
           return (
@@ -88,13 +88,13 @@ const AppsUrlsReport = () => {
       title: "Details",
       dataIndex: "details",
       key: "details",
-      width: 190,
+      width: 150,
     },
     {
       title: "Usage%",
       dataIndex: "usagePercentage",
       key: "usagePercentage",
-      width: 150,
+      width: 90,
       render: (text, record) => {
         return <p>{text.toFixed(2) + "%"}</p>;
       },
@@ -103,7 +103,7 @@ const AppsUrlsReport = () => {
       title: "Usage duration",
       dataIndex: "totalUsage",
       key: "totalUsage",
-      width: 160,
+      width: 120,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
         return <p>{hours + "h:" + minutes + "m" + seconds + "s"}</p>;

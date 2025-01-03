@@ -800,7 +800,6 @@ export default function DynamicReport() {
   };
 
   const handleDownload = () => {
-    setIsModalOpen(true);
     if (activePage === 1) {
       getDynamicReportData(
         organizationId,
@@ -809,6 +808,9 @@ export default function DynamicReport() {
         selectedDates[0],
         selectedDates[1]
       );
+      setTimeout(() => {
+        setIsModalOpen(true);
+      }, 2000);
     } else {
       getDynamicDetailedReportData(
         organizationId,
@@ -817,6 +819,9 @@ export default function DynamicReport() {
         selectedDates[0],
         selectedDates[1]
       );
+      setTimeout(() => {
+        setIsModalOpen(true);
+      }, 2000);
     }
   };
 

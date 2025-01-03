@@ -197,8 +197,10 @@ export default function UserAttendance({
         if (text === "0001-01-01T00:00:00" || text === null) {
           return null;
         } else {
-          const [hours, minutes] = text.split(":");
-          const formattedDuration = `${parseInt(hours)}h:${parseInt(minutes)}m`;
+          const [hours, minutes, seconds] = text.split(":");
+          const formattedDuration = `${parseInt(hours)}h:${parseInt(
+            minutes
+          )}m:${parseInt(seconds)}s`;
           return <p>{formattedDuration} </p>;
         }
       },
@@ -213,7 +215,8 @@ export default function UserAttendance({
     const payload = {
       userId: selectedUserId,
       organizationId: orgId,
-      date: value,
+      startDate: value,
+      endDate: value,
     };
     try {
       const response = await getUserPunchInOutDetails(payload);
