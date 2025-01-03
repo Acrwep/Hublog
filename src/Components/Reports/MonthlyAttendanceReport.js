@@ -171,7 +171,7 @@ const MonthlyAttendanceReport = () => {
       item.logs.forEach((log) => {
         const logDate = moment(log.date).format("DD"); // Format log date
         if (currentMonthDates.includes(logDate)) {
-          if (log.total_time === "00:00") {
+          if (log.total_time === "00:00"||log.total_time===null) {
             rowData[logDate] = null;
           } else {
             const [hour, minute] = log.total_time.split(":");
@@ -192,7 +192,7 @@ const MonthlyAttendanceReport = () => {
           const sundayLog = item.logs.find(
             (log) => moment(log.date).format("DD") === date
           );
-          if (sundayLog && sundayLog.total_time !== "00:00:00") {
+          if (sundayLog && sundayLog.total_time !== "00:00:00"&&sundayLog.total_time !== null) {
             const [hour, minute] = sundayLog.total_time.split(":");
             rowData[date] = `${hour}h:${minute}m`; // Show the time for Sundays if not "00:00"
           } else {
