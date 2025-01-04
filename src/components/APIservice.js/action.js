@@ -612,7 +612,7 @@ export const deleteNotebook = async (noteid) => {
   }
 };
 //devices
-export const getDeviceInfo = async (payload) => {
+export const getSystemInfo = async (payload) => {
   try {
     const response = await api.get("/api/SystemInfo/GetSystemInfo", {
       params: payload,

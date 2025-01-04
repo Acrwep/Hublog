@@ -5,8 +5,8 @@ import { RedoOutlined } from "@ant-design/icons";
 import CommonDonutChart from "../Common/CommonDonutChart";
 import "./styles.css";
 import {
-  getDeviceInfo,
   getDeviceInfoCount,
+  getSystemInfo,
   getTeams,
   getUsers,
   getUsersByTeamId,
@@ -96,15 +96,19 @@ const Devices = () => {
       title: "System Type",
       dataIndex: "systemType",
       key: "systemType",
-      width: 150,
+      width: 140,
     },
     {
       title: "IP",
       dataIndex: "ipAddress",
       key: "ipAddress",
-      width: 160,
-      // defaultSortOrder: "descend",
-      // sorter: (a, b) => a.ip - b.ip,
+      width: 140,
+    },
+    {
+      title: "Hublog Version",
+      dataIndex: "hublogVersion",
+      key: "hublogVersion",
+      width: 140,
     },
   ];
 
@@ -160,67 +164,44 @@ const Devices = () => {
       ...(system && { systemTypeSearchQuery: system }),
     };
     try {
-      const response = await getDeviceInfo(payload);
+      const response = await getSystemInfo(payload);
       const devicedata = response?.data;
       console.log("devices response", devicedata);
-      setDevicesData(devicedata);
-    } catch (error) {
-      CommonToaster(error?.response?.data, "error");
-      setDevicesData([]);
-    } finally {
-      setTimeout(() => {
-        getDeviceChartData(orgId, teamid, userid, platform, system);
-      }, 300);
-    }
-  };
-
-  const getDeviceChartData = async (
-    orgId,
-    teamid,
-    userid,
-    platform,
-    system
-  ) => {
-    const payload = {
-      organizationId: orgId,
-      ...(teamid && { teamId: teamid }),
-      ...(userid && { userId: userid }),
-      ...(platform && { platformSearchQuery: platform }),
-      ...(system && { systemTypeSearchQuery: system }),
-    };
-    try {
-      const response = await getDeviceInfoCount(payload);
-      const devicechartdata = response?.data;
-      console.log("devices chart response", devicechartdata);
+      //online and offline handling
       if (
-        devicechartdata?.onlineCount === 0 &&
-        devicechartdata?.offlineCount === 0
+        devicedata?.aggregateCounts?.onlineCount === 0 &&
+        devicedata?.aggregateCounts?.offlineCount === 0
       ) {
         setStatusOfDeviceSeries([]);
       } else {
         setStatusOfDeviceSeries([
-          parseInt(devicechartdata?.onlineCount),
-          parseInt(devicechartdata?.offlineCount),
+          parseInt(devicedata?.aggregateCounts?.onlineCount),
+          parseInt(devicedata?.aggregateCounts?.offlineCount),
         ]);
       }
-      //handle platform chart
+      //windows or mac handling
       if (
-        devicechartdata?.winUICount === 0 &&
-        devicechartdata?.macCount === 0 &&
-        devicechartdata?.linuxCount === 0
+        devicedata?.aggregateCounts?.winUICount === 0 &&
+        devicedata?.aggregateCounts?.macCount === 0 &&
+        devicedata?.aggregateCounts?.linuxCount === 0
       ) {
         setPlatformSeries([]);
       } else {
         setPlatformSeries([
-          devicechartdata?.winUICount,
-          devicechartdata?.macCount,
-          devicechartdata?.linuxCount,
+          devicedata?.aggregateCounts?.winUICount,
+          devicedata?.aggregateCounts?.macCount,
+          devicedata?.aggregateCounts?.linuxCount,
         ]);
+      }
+      //table handling
+      if (devicedata.systemInfoList.length >= 1) {
+        setDevicesData(devicedata.systemInfoList);
+      } else {
+        setDevicesData([]);
       }
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
-      setStatusOfDeviceSeries([]);
-      setPlatformSeries([]);
+      setDevicesData([]);
     } finally {
       setTimeout(() => {
         setLoading(false);

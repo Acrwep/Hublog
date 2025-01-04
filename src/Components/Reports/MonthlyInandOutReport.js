@@ -228,9 +228,11 @@ const MonthlyInandOutReport = () => {
       });
       // Fill in the total_time if the log date matches
       item.logs.forEach((log) => {
-        const logDate = moment(log.date).format("DD"); // Format log date
-        if (currentMonthDates.includes(logDate)) {
-          rowData[logDate] = { in: log.in, out: log.out };
+        if (log.date != "0001-01-01") {
+          const logDate = moment(log.date).format("DD"); // Format log date
+          if (currentMonthDates.includes(logDate)) {
+            rowData[logDate] = { in: log.in, out: log.out };
+          }
         }
       });
 

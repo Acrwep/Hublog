@@ -59,8 +59,8 @@
   }
 }
 .userdetail_avatar {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
 }
 @media (min-width: 320px) and (max-width: 800px) {
   .userdetail_avatar {

@@ -106,7 +106,7 @@ const AppsUrlsReport = () => {
       width: 120,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
-        return <p>{hours + "h:" + minutes + "m" + seconds + "s"}</p>;
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
       },
     },
   ];

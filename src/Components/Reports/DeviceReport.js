@@ -11,8 +11,7 @@ import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
 import {
-  getDeviceInfo,
-  getDeviceInfoCount,
+  getSystemInfo,
   getTeams,
   getUsers,
   getUsersByTeamId,
@@ -103,15 +102,19 @@ const DeviceReport = () => {
       title: "System Type",
       dataIndex: "systemType",
       key: "systemType",
-      width: 150,
+      width: 140,
     },
     {
       title: "IP",
       dataIndex: "ipAddress",
       key: "ipAddress",
-      width: 160,
-      // defaultSortOrder: "descend",
-      // sorter: (a, b) => a.ip - b.ip,
+      width: 140,
+    },
+    {
+      title: "Hublog Version",
+      dataIndex: "hublogVersion",
+      key: "hublogVersion",
+      width: 140,
     },
   ];
 
@@ -168,10 +171,14 @@ const DeviceReport = () => {
       ...(system && { systemTypeSearchQuery: system }),
     };
     try {
-      const response = await getDeviceInfo(payload);
+      const response = await getSystemInfo(payload);
       const devicedata = response?.data;
       console.log("devices response", devicedata);
-      setDevicesData(devicedata);
+      if (devicedata.systemInfoList.length >= 1) {
+        setDevicesData(devicedata.systemInfoList);
+      } else {
+        setDevicesData([]);
+      }
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
       setDevicesData([]);
