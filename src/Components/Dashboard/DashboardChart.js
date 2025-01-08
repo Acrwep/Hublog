@@ -10,10 +10,10 @@ const DashboardChart = ({ data }) => {
   };
 
   // Extracting data for the chart
-  const attendanceDates = data.map((item) =>(
-    // new Date(item.attendanceDate).toLocaleDateString()
-    item.attendanceDate
-  )
+  const attendanceDates = data.map(
+    (item) =>
+      // new Date(item.attendanceDate).toLocaleDateString()
+      item.attendanceDate
   );
   const presentCount = data.map((item) => item.presentCount);
   const absentCount = data.map((item) => item.absentCount);
@@ -58,6 +58,9 @@ const DashboardChart = ({ data }) => {
         title: { text: "Attendance Count" },
         min: 0,
         max: Math.max(...presentCount, ...absentCount) + 1,
+        labels: {
+          formatter: (value) => Math.round(value), // Remove decimals
+        },
       },
       {
         opposite: true,
@@ -65,6 +68,9 @@ const DashboardChart = ({ data }) => {
         max: 100,
         title: { text: "Attendance % / Avg Working Hours" },
         max: 100,
+        labels: {
+          formatter: (value) => Math.round(value), // Remove decimals
+        },
       },
     ],
     tooltip: {

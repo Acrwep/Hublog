@@ -108,32 +108,7 @@ export const LoginApi = async (loginCredential) => {
   }
 };
 //dashboard
-export const getTopProductivityTeams = async (payload) => {
-  try {
-    const response = await api.get(
-      `/api/AttendanceDashboard/top-productivity-Teams`,
-      {
-        params: payload,
-      }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getLeastProductivityTeams = async (payload) => {
-  try {
-    const response = await api.get(
-      `/api/AttendanceDashboard/Least-Productivity-Teams`,
-      {
-        params: payload,
-      }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
+
 //Attendance dashboard
 export const getAttendanceSummary = async (payload) => {
   try {

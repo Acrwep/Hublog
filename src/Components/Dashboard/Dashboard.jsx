@@ -8,7 +8,9 @@ import {
   Progress,
   Spin,
   Skeleton,
+  Divider,
 } from "antd";
+import ReactApexChart from "react-apexcharts";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import { PiCellSignalHighFill, PiCellSignalLowFill } from "react-icons/pi";
 import CommonDonutChart from "../Common/CommonDonutChart";
@@ -16,11 +18,13 @@ import { LineCharts } from "../chart/RangeChart";
 import { MdDashboardCustomize } from "react-icons/md";
 import "./styles.css";
 import {
+  getActivityBreakdown,
+  getActivityTrend,
   getAttendanceSummary,
   getAttendanceTrends,
-  getLeastProductivityTeams,
+  getProductivityOutliers,
+  getProductivityTrend,
   getTeams,
-  getTopProductivityTeams,
 } from "../APIservice.js/action";
 import Loader from "../Common/Loader";
 import { CommonToaster } from "../Common/CommonToaster";
@@ -30,6 +34,7 @@ import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import { getCurrentandPreviousweekDate } from "../Common/Validation";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import DashboardChart from "./DashboardChart";
+import { parseTimeToDecimal } from "../Common/Validation";
 // import { Progress } from 'antd';
 // import { DatePicker } from 'antd';
 
@@ -43,259 +48,163 @@ const Dashboard = () => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [topProductivityTeams, setTopproductivityTeams] = useState([]);
   const [leastProductivityTeams, setLeastproductivityTeams] = useState([]);
+  const [topActivityTeams, setTopactivityTeams] = useState([]);
+  const [leastActivityTeams, setLeastactivityTeams] = useState([]);
   const [dashboardData, setDashboardData] = useState([]);
+  const [productivityTrendData, setProductivityTrendData] = useState([]);
+  const [activityTrendsData, setActivityTrendsData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterLoading, setFilterLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(true);
   // Sample data for charts
 
-  const lineData = {
-    dates: ["02-01", "02-02", "02-03", "02-04", "02-05", "02-06", "02-06"],
-    present: [40, 30, 35, 50, 40, 35, 10],
-    absent: [10, 20, 15, 0, 10, 15, 40],
-    attendancePercentage: [80, 65, 70, 75, 85, 70, 65],
-    averageWorkingHours: [6.5, 6.7, 7.0, 9, 7.2, 8, 7.1],
+  const formatTimeInHours = (value) => {
+    const hours = Math.floor(value); // Only display whole hours
+    return `${hours}hr`;
   };
 
-  const lineData1 = {
-    labels: [
-      "2024-02-01",
-      "2024-02-02",
-      "2024-02-03",
-      "2024-02-04",
-      "2024-02-05",
-      "2024-02-06",
-    ], // Sample dates
-    // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    // activeTime: [45, 51, 30, 30, 64, 55],
-    // idealTime: [35, 41, 20, 19, 44, 45],
-
-    datasets: [
-      {
-        label: "Active Time",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        borderColor: "rgba(75, 192, 192, 1)",
-      },
-      {
-        label: "Ideal Time",
-        data: [28, 48, 40, 19, 86, 27, 90],
-        borderColor: "rgba(0, 0, 0, 1)",
-      },
-    ],
+  const formatTooltipTime = (value) => {
+    if (isNaN(value) || value === null || value === undefined)
+      return "0hr 0m 0s";
+    const hours = Math.floor(value);
+    const minutes = Math.floor((value % 1) * 60);
+    const seconds = Math.floor(((value % 1) * 3600) % 60);
+    return `${hours}hr ${minutes}m ${seconds}s`;
   };
 
-  const lineData2 = {
-    labels: [
-      "2024-02-01",
-      "2024-02-02",
-      "2024-02-03",
-      "2024-02-04",
-      "2024-02-05",
-      "2024-02-06",
-    ], // Sample dates
-    datasets: [
-      {
-        label: "Productive Time",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        borderColor: "rgba(75, 192, 192, 1)",
-      },
-      {
-        label: "UnProductive Time",
-        data: [0, 0, 0, 0, 0, 0, 0],
-        borderColor: "rgba(0, 0, 0, 1)",
-      },
-      {
-        label: "Natural Time",
-        data: [40, 35, 30, 28, 54, 50],
-        borderColor: "rgba(0, 0, 255, 1)",
-      },
-    ],
-  };
+  const productivityTrendXasis = productivityTrendData.map((item) =>
+    moment(item.date).format("DD/MM/YYYY")
+  );
 
-  var options = {
-    series: [
-      {
-        name: "TEAM A",
-        type: "column",
-        data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-      },
-      {
-        name: "TEAM B",
-        type: "area",
-        data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-      },
-      {
-        name: "TEAM C",
-        type: "line",
-        data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "line",
-      stacked: false,
+  const productivityTrendSeries = [
+    {
+      name: "Productive",
+      data: productivityTrendData.map((item) => {
+        return parseTimeToDecimal(item.productive_Duration);
+      }),
     },
-    colors: ["#25a17d", "#ABB3B3", "rgba(0,126,241,0.64)"], // Colors for TEAM A, TEAM B, and TEAM C respectively
-    stroke: {
-      width: [0, 2, 5],
-      curve: "smooth",
+    {
+      name: "Neutral",
+      data: productivityTrendData.map((item) => {
+        return parseTimeToDecimal(item.neutral_Duration);
+      }),
     },
-    plotOptions: {
-      bar: {
-        columnWidth: "50%",
-      },
+    {
+      name: "Unproductive",
+      data: productivityTrendData.map((item) => {
+        return parseTimeToDecimal(item.unproductive_Duration);
+      }),
     },
-
-    fill: {
-      opacity: [0.85, 0.25, 1],
-      gradient: {
-        inverseColors: false,
-        shade: "light",
-        type: "vertical",
-        opacityFrom: 0.85,
-        opacityTo: 0.55,
-        stops: [0, 100, 100, 100],
-      },
-    },
-    labels: [
-      "01/01/2003",
-      "02/01/2003",
-      "03/01/2003",
-      "04/01/2003",
-      "05/01/2003",
-      "06/01/2003",
-      "07/01/2003",
-      "08/01/2003",
-      "09/01/2003",
-      "10/01/2003",
-      "11/01/2003",
-    ],
-    markers: {
-      size: 0,
-    },
-    xaxis: {
-      type: "datetime",
-    },
-    yaxis: {
-      title: {
-        text: "Points",
-      },
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: function (y) {
-          if (typeof y !== "undefined") {
-            return y.toFixed(0) + " points";
-          }
-          return y;
-        },
-      },
-    },
-  };
-
-  const series = options.series;
-
-  const productiveTeamsItems = [
-    { id: 1, name: "INTERNAL HR", percentage: 90 },
-    { id: 2, name: "EXTERNAL HR", percentage: 85 },
-    { id: 3, name: "SEO", percentage: 75 },
   ];
 
-  var activityTrend = {
-    series: [
-      {
-        name: "Session Duration",
-        data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10],
-      },
-      {
-        name: "Page Views",
-        data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35],
-      },
-      {
-        name: "Total Visits",
-        data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47],
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "line",
-      zoom: {
-        enabled: false,
-      },
+  const activityTrendXasis = activityTrendsData.map((item) =>
+    moment(item.date, "MM/DD/YYYY HH:mm:ss").format("DD/MM/YYYY")
+  );
+
+  const activityTrendSeries = [
+    {
+      name: "Active time",
+      data: activityTrendsData.map((item) => {
+        return parseTimeToDecimal(item.active_Duration);
+      }),
     },
-    dataLabels: {
-      enabled: false,
+    {
+      name: "Ideal time",
+      data: activityTrendsData.map((item) => {
+        return parseTimeToDecimal(item.idle_Duration);
+      }),
+    },
+  ];
+
+  const productivityTrendLineChartOptions = {
+    chart: {
+      type: "line",
+      height: 350,
     },
     stroke: {
-      width: [5, 7, 5],
-      curve: "straight",
-      dashArray: [0, 8, 5],
-    },
-    title: {
-      text: "Page Statistics",
-      align: "left",
-    },
-    legend: {
-      tooltipHoverFormatter: function (val, opts) {
-        return (
-          val +
-          " - <strong>" +
-          opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
-          "</strong>"
-        );
-      },
-    },
-    markers: {
-      size: 0,
-      hover: {
-        sizeOffset: 6,
-      },
+      curve: "smooth", // Keeps the line straight for the line chart
     },
     xaxis: {
-      categories: [
-        "01 Jan",
-        "02 Jan",
-        "03 Jan",
-        "04 Jan",
-        "05 Jan",
-        "06 Jan",
-        "07 Jan",
-        "08 Jan",
-        "09 Jan",
-        "10 Jan",
-        "11 Jan",
-        "12 Jan",
-      ],
+      categories: productivityTrendXasis,
+      labels: {
+        show: true,
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return formatTimeInHours(value);
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
+      title: {
+        text: "Value",
+      },
     },
     tooltip: {
-      y: [
-        {
-          title: {
-            formatter: function (val) {
-              return val + " (mins)";
-            },
-          },
+      y: {
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
+            val
+          )}</span>`;
         },
-        {
-          title: {
-            formatter: function (val) {
-              return val + " per session";
-            },
-          },
-        },
-        {
-          title: {
-            formatter: function (val) {
-              return val;
-            },
-          },
-        },
-      ],
+      },
     },
-    grid: {
-      borderColor: "#f1f1f1",
+    colors: ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"], // Different colors for the three series
+  };
+
+  const activityLineChartOptions = {
+    chart: {
+      type: "line",
+      height: 350,
     },
+    stroke: {
+      curve: "smooth", // Keeps the line straight for the line chart
+    },
+    xaxis: {
+      categories: activityTrendXasis,
+      labels: {
+        show: true,
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
+    },
+    yaxis: {
+      labels: {
+        formatter: function (value) {
+          return formatTimeInHours(value);
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
+      title: {
+        text: "Value",
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${formatTooltipTime(
+            val
+          )}</span>`;
+        },
+      },
+    },
+    colors: ["#25a17d", "#8a8c8c"], // Different colors for the three series
   };
 
   useEffect(() => {
@@ -348,49 +257,19 @@ const Dashboard = () => {
       setTodatAttendanceData(details);
     } finally {
       setTimeout(() => {
-        getTopProductivityData(
-          teamid ? teamid : null,
+        // getTopProductivityData(
+        //   teamid ? teamid : null,
+        //   orgId,
+        //   startdate != undefined || startdate != null
+        //     ? startdate
+        //     : PreviousandCurrentDate[0],
+        //   enddate != undefined || enddate != null
+        //     ? enddate
+        //     : PreviousandCurrentDate[1]
+        // );
+        getProductivityOutliersData(
           orgId,
-          startdate != undefined || startdate != null
-            ? startdate
-            : PreviousandCurrentDate[0],
-          enddate != undefined || enddate != null
-            ? enddate
-            : PreviousandCurrentDate[1]
-        );
-      }, 500);
-    }
-  };
-
-  const getTopProductivityData = async (teamid, orgId, startdate, enddate) => {
-    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
-
-    const payload = {
-      ...(teamid && { teamId: teamid }),
-      organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getTopProductivityTeams(payload);
-      console.log("top productivity response", response);
-      const topData = response?.data;
-      if (
-        topData?.Title ===
-        "Conversion failed when converting date and/or time from character string."
-      ) {
-        setTopproductivityTeams([]);
-      } else {
-        setTopproductivityTeams(topData);
-      }
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      setTopproductivityTeams([]);
-    } finally {
-      setTimeout(() => {
-        getLeastProductivityData(
           teamid ? teamid : null,
-          orgId,
           startdate != undefined || startdate != null
             ? startdate
             : PreviousandCurrentDate[0],
@@ -402,38 +281,74 @@ const Dashboard = () => {
     }
   };
 
-  const getLeastProductivityData = async (teamid, orgId, stardate, enddate) => {
+  const getProductivityOutliersData = async (
+    orgId,
+    teamid,
+    startDate,
+    endDate
+  ) => {
     const payload = {
-      ...(teamid && { teamId: teamid }),
       organizationId: orgId,
-      startDate: stardate,
-      endDate: enddate,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
     };
     try {
-      const response = await getLeastProductivityTeams(payload);
-      console.log("least productivity response", response);
-      const leastData = response?.data;
-      if (
-        leastData?.Title ===
-        "Conversion failed when converting date and/or time from character string."
-      ) {
+      const response = await getProductivityOutliers(payload);
+      console.log("outttt", response);
+      const productivityOutliers = response?.data?.data;
+      console.log("outliers response", productivityOutliers);
+      if (productivityOutliers === undefined) {
+        setTopproductivityTeams([]);
         setLeastproductivityTeams([]);
-      } else {
-        setLeastproductivityTeams(leastData);
+        return;
       }
+      const topTeams = productivityOutliers?.top;
+      setTopproductivityTeams(topTeams);
+      setLeastproductivityTeams(productivityOutliers?.bottom);
     } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
+      CommonToaster(error?.response?.data, "error");
+      setTopproductivityTeams([]);
       setLeastproductivityTeams([]);
     } finally {
       setTimeout(() => {
-        getSummaryAttendanceTrendsData(teamid, orgId, stardate, enddate);
+        getActivityOutlisersData(orgId, teamid, startDate, endDate);
       }, 300);
+    }
+  };
+
+  const getActivityOutlisersData = async (
+    orgId,
+    teamid,
+    startDate,
+    endDate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+    try {
+      const response = await getActivityBreakdown(payload);
+      console.log("activity breakdown response", response);
+      const mostActivityteamsData = response?.data?.top;
+      const leastActivityTeamsData = response?.data?.bottom;
+      setTopactivityTeams(mostActivityteamsData);
+      setLeastactivityTeams(leastActivityTeamsData);
+    } catch (error) {
+      setTopactivityTeams([]);
+      setLeastactivityTeams([]);
+    } finally {
+      setTimeout(() => {
+        getSummaryAttendanceTrendsData(orgId, teamid, startDate, endDate);
+      }, 100);
     }
   };
 
   const getSummaryAttendanceTrendsData = async (
-    teamid,
     orgId,
+    teamid,
     startdate,
     enddate
   ) => {
@@ -460,9 +375,55 @@ const Dashboard = () => {
       setDashboardData([]);
     } finally {
       setTimeout(() => {
+        getProductiveTrendData(orgId, teamid, startdate, enddate);
+      }, 300);
+    }
+  };
+
+  const getProductiveTrendData = async (orgId, teamid, startDate, endDate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getProductivityTrend(payload);
+      const productivityTrenddata = response?.data?.data;
+      console.log("trends response", productivityTrenddata);
+      setProductivityTrendData(productivityTrenddata);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setProductivityTrendData([]);
+    } finally {
+      setTimeout(() => {
+        getActivityTrendData(orgId, teamid, startDate, endDate);
+      }, 300);
+    }
+  };
+
+  const getActivityTrendData = async (orgId, teamid, startDate, endDate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getActivityTrend(payload);
+      const activityTrendData = response?.data;
+      console.log("activity trend response", activityTrendData);
+      setActivityTrendsData(activityTrendData);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setActivityTrendsData([]);
+    } finally {
+      setTimeout(() => {
         setLoading(false);
         setFilterLoading(false);
-      }, 350);
+      }, 100);
     }
   };
 
@@ -577,95 +538,104 @@ const Dashboard = () => {
           </div>
         </Col>
       </Row>
-      {loading ? (
+      {/* {loading ? (
         <Loader />
       ) : (
-        <>
-          <div>
-            <Row gutter={16}>
-              <Col xs={24} sm={24} md={7} lg={7}>
-                <div className="devices_chartsContainer">
-                  {filterLoading ? (
-                    <Skeleton
-                      active
-                      title={{ width: 140 }}
-                      paragraph={{
-                        rows: 0,
-                      }}
-                    />
-                  ) : (
-                    <>
-                      <p className="devices_chartheading">Today's Attendance</p>
+        <> */}
+      <div>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              {filterLoading ? (
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">Today's Attendance</p>
 
-                      <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <p className="totalactive_timeheading">
-                            On time arrivals
-                          </p>
-                          <p className="totalactive_time">
-                            {todatAttendanceData?.onTimeArrivals || 0}
-                          </p>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <p className="totalactive_timeheading">
-                            Late arrivals
-                          </p>
-                          <p className="totalactive_time">
-                            {todatAttendanceData?.lateArrivals || 0}
-                          </p>
-                        </Col>
-                      </Row>
-                      <CommonDonutChart
-                        labels={["Present", "Absent"]}
-                        colors={["#25a17d", "#ABB3B3"]}
-                        series={todayAttendanceSeries}
-                        labelsfontSize="17px"
-                      />
-                    </>
-                  )}
-                </div>
-              </Col>
-              <Col xs={24} sm={24} md={17} lg={17}>
-                <div className="devices_chartsContainer">
-                  {/* <ReactApexChart
+                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p className="totalactive_timeheading">
+                        On time arrivals
+                      </p>
+                      <p className="totalactive_time">
+                        {todatAttendanceData?.onTimeArrivals || 0}
+                      </p>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                      <p className="totalactive_timeheading">Late arrivals</p>
+                      <p className="totalactive_time">
+                        {todatAttendanceData?.lateArrivals || 0}
+                      </p>
+                    </Col>
+                  </Row>
+                  <CommonDonutChart
+                    labels={["Present", "Absent"]}
+                    colors={["#25a17d", "#ABB3B3"]}
+                    series={todayAttendanceSeries}
+                    labelsfontSize="17px"
+                  />
+                </>
+              )}
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={17} lg={17}>
+            <div className="devices_chartsContainer">
+              {/* <ReactApexChart
                     options={options}
                     series={series}
                     // type="line"
                     height={350}
                   /> */}
-                  {filterLoading ? (
-                    <div style={{ height: "50vh" }}>
-                      <div className="screenshots_spinContainer">
-                        <Spin />
-                      </div>
-                    </div>
-                  ) : (
-                    <DashboardChart data={dashboardData} />
-                  )}
-                </div>
-              </Col>
-            </Row>
-          </div>
-
-          <div style={{ marginTop: "25px" }}>
-            <Row gutter={16}>
-              <Col xs={24} sm={24} md={7} lg={7}>
-                <div className="devices_chartsContainer">
-                  <p className="devices_chartheading">Achieved goals</p>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "100%",
-                    }}
-                  >
-                    <CommonNodatafound />
+              {filterLoading ? (
+                <div style={{ height: "50vh" }}>
+                  <div className="screenshots_spinContainer">
+                    <Spin />
                   </div>
                 </div>
-              </Col>
-              <Col xs={24} sm={24} md={9} lg={9}>
-                <div className="devices_chartsContainer">
+              ) : (
+                <DashboardChart data={dashboardData} />
+              )}
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div style={{ marginTop: "25px" }}>
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={7} lg={7}>
+            <div className="devices_chartsContainer">
+              <p className="devices_chartheading">Achieved goals</p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                }}
+              >
+                <CommonNodatafound />
+              </div>
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={9} lg={9}>
+            <div className="devices_chartsContainer">
+              {filterLoading ? (
+                <Skeleton
+                  active
+                  style={{ height: "45vh" }}
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
                   <p className="devices_chartheading">Productivity outliers</p>
                   <div
                     style={{
@@ -686,16 +656,22 @@ const Dashboard = () => {
                   <div style={{ marginTop: "15px" }}>
                     {topProductivityTeams.length >= 1 ? (
                       <>
-                        {topProductivityTeams.map((item) => (
+                        {topProductivityTeams.map((item, index) => (
                           <Row>
                             <Col xs={24} sm={24} md={12} lg={12}>
-                              <p style={{ fontWeight: 500 }}>{item.name}</p>
+                              <p style={{ fontWeight: 500 }}>
+                                {index + 1 + ")" + " " + item.team_name}
+                              </p>
                             </Col>
                             <Col xs={24} sm={24} md={12} lg={12}>
                               <Flex gap="small" vertical>
                                 <Progress
-                                  percent={item.workingHourPercentage.toFixed(
-                                    2
+                                  strokeColor="#25a17d"
+                                  percent={Math.floor(item.productive_percent)}
+                                  format={(percent) => (
+                                    <span style={{ color: "#1f1f1f" }}>
+                                      {percent}%
+                                    </span>
                                   )}
                                 />
                               </Flex>
@@ -704,10 +680,13 @@ const Dashboard = () => {
                         ))}
                       </>
                     ) : (
-                      <CommonNodatafound />
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
                     )}
                   </div>
 
+                  <Divider className="productivity_outliersDivider" />
                   <div
                     style={{
                       display: "flex",
@@ -716,7 +695,7 @@ const Dashboard = () => {
                   >
                     <PiCellSignalLowFill
                       color="#e93b3a"
-                      size={22}
+                      size={23}
                       style={{ marginRight: "12px" }}
                     />
                     <p className="mostproductive_heading">
@@ -726,16 +705,22 @@ const Dashboard = () => {
                   <div style={{ marginTop: "15px" }}>
                     {leastProductivityTeams.length >= 1 ? (
                       <>
-                        {leastProductivityTeams.map((item) => (
+                        {leastProductivityTeams.map((item, index) => (
                           <Row>
                             <Col xs={24} sm={24} md={12} lg={12}>
-                              <p style={{ fontWeight: 500 }}>{item.name}</p>
+                              <p style={{ fontWeight: 500 }}>
+                                {index + 1 + ")" + " " + item.team_name}
+                              </p>
                             </Col>
                             <Col xs={24} sm={24} md={12} lg={12}>
                               <Flex gap="small" vertical>
                                 <Progress
-                                  percent={item.workingHourPercentage.toFixed(
-                                    2
+                                  strokeColor="rgba(244, 67, 54, 0.62)"
+                                  percent={Math.floor(item.productive_percent)}
+                                  format={(percent) => (
+                                    <span style={{ color: "#1f1f1f" }}>
+                                      {percent}%
+                                    </span>
                                   )}
                                 />
                               </Flex>
@@ -744,15 +729,30 @@ const Dashboard = () => {
                         ))}
                       </>
                     ) : (
-                      <CommonNodatafound />
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
                     )}
                   </div>
-                </div>
-              </Col>
-              <Col xs={24} sm={24} md={9} lg={8}>
-                <div className="devices_chartsContainer">
+                </>
+              )}
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={9} lg={8}>
+            <div className="devices_chartsContainer">
+              {filterLoading ? (
+                <Skeleton
+                  active
+                  style={{ height: "45vh" }}
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
                   <p className="devices_chartheading">Activity outliers</p>
-                  {/* <div
+                  <div
                     style={{
                       display: "flex",
                       marginTop: "20px",
@@ -769,31 +769,43 @@ const Dashboard = () => {
                   </div>
 
                   <div style={{ marginTop: "15px" }}>
-                    {productiveTeamsItems.map((item) => (
-                      <Row>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <p style={{ fontWeight: 500 }}>{item.name}</p>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <Flex gap="small" vertical>
-                            <Progress percent={item.percentage} />
-                          </Flex>
-                        </Col>
-                      </Row>
-                    ))}
-                  </div> */}
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "100%",
-                    }}
-                  >
-                    <CommonNodatafound />
+                    {topActivityTeams.length >= 1 ? (
+                      <>
+                        {topActivityTeams.map((item, index) => (
+                          <React.Fragment key={index}>
+                            <Row>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <p style={{ fontWeight: 500 }}>
+                                  {index + 1 + ")" + " " + item.team_name}
+                                </p>
+                              </Col>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <Flex gap="small" vertical>
+                                  <Progress
+                                    strokeColor="#25a17d"
+                                    percent={Math.floor(item.activeTimePercent)}
+                                    format={(percent) => (
+                                      <span style={{ color: "#1f1f1f" }}>
+                                        {percent}%
+                                      </span>
+                                    )}
+                                  />
+                                </Flex>
+                              </Col>
+                            </Row>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
                   </div>
 
-                  {/* <div
+                  <Divider className="productivity_outliersDivider" />
+
+                  <div
                     style={{
                       display: "flex",
                       marginTop: "20px",
@@ -807,48 +819,114 @@ const Dashboard = () => {
                     <p className="mostproductive_heading">
                       Least active Team(s)
                     </p>
-                  </div> */}
-                  {/* <div style={{ marginTop: "15px" }}>
-                    {productiveTeamsItems.map((item) => (
-                      <Row>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <p style={{ fontWeight: 500 }}>{item.name}</p>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12}>
-                          <Flex gap="small" vertical>
-                            <Progress percent={item.percentage} />
-                          </Flex>
-                        </Col>
-                      </Row>
-                    ))}
-                  </div> */}
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
-            <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:w-full max-sm:p-0">
-              <h3 className="mb-3">Activity Trend</h3>
-              <div className=" h-72">
-                <hr />
-                <LineCharts data={lineData1} />
-                {/* <ReactApexChart
-              options={activityTrend}
-              series={series}
-              height={350}
-            /> */}
-              </div>
+                  </div>
+                  <div style={{ marginTop: "15px" }}>
+                    {leastActivityTeams.length >= 1 ? (
+                      <>
+                        {leastActivityTeams.map((item, index) => (
+                          <React.Fragment key={index}>
+                            <Row>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <p style={{ fontWeight: 500 }}>
+                                  {index + 1 + ")" + " " + item.team_name}
+                                </p>
+                              </Col>
+                              <Col xs={24} sm={24} md={12} lg={12}>
+                                <Flex gap="small" vertical>
+                                  <Progress
+                                    strokeColor="rgba(244, 67, 54, 0.62)"
+                                    percent={Math.floor(item.activeTimePercent)}
+                                    format={(percent) => (
+                                      <span style={{ color: "#1f1f1f" }}>
+                                        {percent}%
+                                      </span>
+                                    )}
+                                  />
+                                </Flex>
+                              </Col>
+                            </Row>
+                          </React.Fragment>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
-            <div className="mt-8 col-span-1 shadow-lg p-8 bg-white max-sm:grid-cols-1 max-sm:p-0">
-              <h3 className="mb-3">Productivity Trend</h3>
-              <div className="">
-                <hr />
-                <LineCharts data={lineData2} />
-              </div>
-            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <Row gutter={16} style={{ marginBottom: "30px" }}>
+        <Col xs={24} sm={24} lg={12} xl={12}>
+          <div
+            className="devices_chartsContainer"
+            style={{ marginTop: "25px" }}
+          >
+            {filterLoading ? (
+              <Skeleton
+                active
+                title={{ width: 140 }}
+                style={{ height: "45vh" }}
+                paragraph={{
+                  rows: 0,
+                }}
+              />
+            ) : (
+              <>
+                <p className="devices_chartheading">Productivity Trend</p>
+                {productivityTrendData.length >= 1 ? (
+                  <ReactApexChart
+                    options={productivityTrendLineChartOptions}
+                    series={productivityTrendSeries}
+                    type="line"
+                    height={350}
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
+              </>
+            )}
           </div>
-        </>
-      )}
+        </Col>
+        <Col xs={24} sm={24} lg={12} xl={12}>
+          <div
+            className="devices_chartsContainer"
+            style={{ marginTop: "25px" }}
+          >
+            {filterLoading ? (
+              <Skeleton
+                active
+                title={{ width: 140 }}
+                style={{ height: "45vh" }}
+                paragraph={{
+                  rows: 0,
+                }}
+              />
+            ) : (
+              <>
+                <p className="devices_chartheading">Activity Trend</p>
+                {activityTrendsData.length >= 1 ? (
+                  <ReactApexChart
+                    options={activityLineChartOptions}
+                    series={activityTrendSeries}
+                    type="line"
+                    height={350}
+                  />
+                ) : (
+                  <CommonNodatafound />
+                )}
+              </>
+            )}
+          </div>
+        </Col>
+      </Row>
+      {/* </>
+      )} */}
     </div>
   );
 };
