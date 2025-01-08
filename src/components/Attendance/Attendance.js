@@ -25,7 +25,7 @@ import {
   storeSummaryAttendanceTrends,
   storeLateArrival,
   storeAttendanceTrends,
-  storeDatewiseAttendance,
+  storeDatewiseAttendancePresentData,
   storeDatewiseAttendanceAbsentData,
   storeDatewiseAttendanceDateValue,
   storeDatewiseAttendanceTeamValue,
@@ -89,7 +89,7 @@ const Attendance = () => {
     dispatch(storeDatewiseAttendanceTeamValue(null));
     dispatch(storeDatewiseAttendanceUserValue(null));
     dispatch(storeDatewiseAttendanceDateValue(null));
-    dispatch(storeDatewiseAttendance(emptyData));
+    dispatch(storeDatewiseAttendancePresentData(emptyData));
     dispatch(storeDatewiseAttendanceAbsentData(emptyData));
     dispatch(storeDatewiseAttendanceUsersData(emptyData));
 

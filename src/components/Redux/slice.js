@@ -547,11 +547,11 @@ const productivityEmployeelistSlice = createSlice({
   },
 });
 //datewise attendance
-const datewiseAttendanceSlice = createSlice({
-  name: "datewiseattendance",
+const datewiseAttendancePresentListSlice = createSlice({
+  name: "datewiseattendancepresentdata",
   initialState,
   reducers: {
-    storeDatewiseAttendance(state, action) {
+    storeDatewiseAttendancePresentData(state, action) {
       state = action.payload;
       return state;
     },
@@ -559,7 +559,7 @@ const datewiseAttendanceSlice = createSlice({
 });
 
 const datewiseAttendanceAbsentSlice = createSlice({
-  name: "datewiseattendanceabsent",
+  name: "datewiseattendanceabsentdata",
   initialState,
   reducers: {
     storeDatewiseAttendanceAbsentData(state, action) {
@@ -598,18 +598,6 @@ const datewiseAttendanceUserValueSlice = createSlice({
   initialState: datewiseAttendanceUserValue,
   reducers: {
     storeDatewiseAttendanceUserValue(state, action) {
-      state = action.payload;
-      return state;
-    },
-  },
-});
-
-const datewiseAttendancePresentCount = null;
-const datewiseAttendancePresentCountSlice = createSlice({
-  name: "datewiseAttendancepresentcount",
-  initialState: datewiseAttendancePresentCount,
-  reducers: {
-    storeDatewiseAttendancePresentCount(state, action) {
       state = action.payload;
       return state;
     },
@@ -691,7 +679,8 @@ export const { storeProductivityTrend } = productivityTrendSlice.actions;
 export const { storeProductivityEmployeelist } =
   productivityEmployeelistSlice.actions;
 export const { storeRoleSearchValue } = roleSearchValueSlice.actions;
-export const { storeDatewiseAttendance } = datewiseAttendanceSlice.actions;
+export const { storeDatewiseAttendancePresentData } =
+  datewiseAttendancePresentListSlice.actions;
 export const { storeDatewiseAttendanceAbsentData } =
   datewiseAttendanceAbsentSlice.actions;
 export const { storeDatewiseAttendanceUsersData } =
@@ -700,8 +689,6 @@ export const { storeDatewiseAttendanceTeamValue } =
   datewiseAttendanceTeamValueSlice.actions;
 export const { storeDatewiseAttendanceUserValue } =
   datewiseAttendanceUserValueSlice.actions;
-export const { storeDatewiseAttendancePresentCount } =
-  datewiseAttendancePresentCountSlice.actions;
 export const { storeDatewiseAttendanceDateValue } =
   datewiseAttendanceDateValueSlice.actions;
 // export default teamMemberSlice.reducer;
@@ -763,7 +750,8 @@ export const productivityTrendReducer = productivityTrendSlice.reducer;
 export const productivityEmployeelistReducer =
   productivityEmployeelistSlice.reducer;
 export const roleSearchValueReducer = roleSearchValueSlice.reducer;
-export const datewiseAttendanceReducer = datewiseAttendanceSlice.reducer;
+export const datewiseAttendancePresentListReducer =
+  datewiseAttendancePresentListSlice.reducer;
 export const datewiseAttendanceAbsentReducer =
   datewiseAttendanceAbsentSlice.reducer;
 export const datewiseAttendanceUsersReducer =
@@ -772,7 +760,5 @@ export const datewiseAttendanceTeamValueReducer =
   datewiseAttendanceTeamValueSlice.reducer;
 export const datewiseAttendanceUserValueReducer =
   datewiseAttendanceUserValueSlice.reducer;
-export const datewiseAttendancePresentCountReducer =
-  datewiseAttendancePresentCountSlice.reducer;
 export const datewiseAttendanceDateValueReducer =
   datewiseAttendanceDateValueSlice.reducer;

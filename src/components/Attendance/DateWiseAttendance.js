@@ -13,10 +13,9 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import "./styles.css";
 import {
-  storeDatewiseAttendance,
+  storeDatewiseAttendancePresentData,
   storeDatewiseAttendanceAbsentData,
   storeDatewiseAttendanceDateValue,
-  storeDatewiseAttendancePresentCount,
   storeDatewiseAttendanceTeamValue,
   storeDatewiseAttendanceUsersData,
   storeDatewiseAttendanceUserValue,
@@ -29,14 +28,11 @@ const DateWiseAttendance = ({ tList, uList }) => {
   const teamValue = useSelector((state) => state.datewiseattendanceteamvalue);
   const userValue = useSelector((state) => state.datewiseattendanceuservalue);
   const dateValue = useSelector((state) => state.datewiseattendancedatevalue);
-  const PresentValue = useSelector(
-    (state) => state.datewiseAttendancepresentcount
-  );
-  const datewiseAttendanceData = useSelector(
-    (state) => state.datewiseattendance
+  const datewiseAttendancePresentData = useSelector(
+    (state) => state.datewiseattendancepresentdata
   );
   const datewiseAttendanceAbsentData = useSelector(
-    (state) => state.datewiseattendanceabsent
+    (state) => state.datewiseattendanceabsentdata
   );
   const datewiseAttendanceUsersData = useSelector(
     (state) => state.datewiseattendanceusers
@@ -46,17 +42,17 @@ const DateWiseAttendance = ({ tList, uList }) => {
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
-  const [data, setData] = useState([]);
+  const [presentList, setPresentList] = useState([]);
   const [presentCount, setPresentCount] = useState(null);
   const [absentList, setAbsentList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (
-      datewiseAttendanceData.length >= 1 ||
+      datewiseAttendancePresentData.length >= 1 ||
       datewiseAttendanceAbsentData.length >= 1
     ) {
-      setData(datewiseAttendanceData);
+      setPresentList(datewiseAttendancePresentData);
       setAbsentList(datewiseAttendanceAbsentData);
       setTeamList(tList);
       setUserList(
@@ -66,7 +62,6 @@ const DateWiseAttendance = ({ tList, uList }) => {
       );
       setTeamId(teamValue);
       setUserId(userValue);
-      setPresentCount(PresentValue);
       setDate(dateValue === null ? date : dateValue);
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -97,46 +92,17 @@ const DateWiseAttendance = ({ tList, uList }) => {
       const response = await getDailyAttendanceReport(payload);
       console.log("daily attendance response", response.data);
 
-      const ReportData = response.data;
+      const dailyAttendanceReportData = response.data;
 
-      const reverseData = ReportData.reverse();
-      let presentList = [];
+      const reverseData = dailyAttendanceReportData.reverse();
 
-      reverseData.map((item) => {
-        if (!presentList.some((s) => s.id === item.id)) {
-          presentList.push(item);
-        }
-      });
-      console.log("presentList", presentList);
-      setPresentCount(presentList.length);
-      dispatch(storeDatewiseAttendancePresentCount(presentList.length));
-      const absentList = uList.filter(
-        (f) => !reverseData.some((item) => item.id === f.id)
-      );
-      console.log("absent list", absentList);
-      dispatch(storeDatewiseAttendanceAbsentData(absentList));
-      setAbsentList(absentList);
+      const presentData = reverseData.filter((p) => p.remark === "Present");
+      const absentData = reverseData.filter((p) => p.remark === "Absent");
 
-      //filter selected team absent list
-      if ((userid === null || userid === undefined) && teamid) {
-        const selectedTeamAbsentList = absentList.filter((f) =>
-          teamMembers.some((item) => item.id === f.id)
-        );
-        setAbsentList(selectedTeamAbsentList);
-        dispatch(storeDatewiseAttendanceAbsentData(selectedTeamAbsentList));
-      }
-
-      //filter selected user absent list
-      if (userid) {
-        const selectedUserAbsentlist = absentList.filter(
-          (f) => f.id === userid
-        );
-        setAbsentList(selectedUserAbsentlist);
-        dispatch(storeDatewiseAttendanceAbsentData(selectedUserAbsentlist));
-      }
-
-      dispatch(storeDatewiseAttendance(reverseData));
-      setData(reverseData);
+      setPresentList(presentData);
+      dispatch(storeDatewiseAttendancePresentData(presentData));
+      dispatch(storeDatewiseAttendanceAbsentData(absentData));
+      setAbsentList(absentData);
     } catch (error) {
       CommonToaster(error?.response?.data, "error");
     } finally {
@@ -262,7 +228,7 @@ const DateWiseAttendance = ({ tList, uList }) => {
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="datewise_Container">
             <p className="datewise_presenttext">
-              Present - {presentCount ? presentCount : 0}
+              Present - {presentList.length}
             </p>
 
             <div className="datewise_presentlistmainContainer">
@@ -272,7 +238,7 @@ const DateWiseAttendance = ({ tList, uList }) => {
                 </div>
               ) : (
                 <>
-                  {data.map((item, index) => (
+                  {presentList.map((item, index) => (
                     <React.Fragment key={index}>
                       <div
                         className="datewise_presentlistContainer"
