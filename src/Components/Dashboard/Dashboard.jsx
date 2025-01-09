@@ -127,6 +127,7 @@ const Dashboard = () => {
       categories: productivityTrendXasis,
       labels: {
         show: true,
+        rotateAlways: productivityTrendData.length >= 6 ? true : false, // Ensure rotation is applied
         rotate: -45, // Rotate labels by -40 degrees
         color: ["#ffffff"],
         style: {
@@ -173,6 +174,7 @@ const Dashboard = () => {
       categories: activityTrendXasis,
       labels: {
         show: true,
+        rotateAlways: activityTrendsData.length >= 6 ? true : false, // Ensure rotation is applied
         rotate: -45, // Rotate labels by -40 degrees
         color: ["#ffffff"],
         style: {
@@ -230,6 +232,7 @@ const Dashboard = () => {
     }
   };
   const getTodayAttendanceData = async (teamid, orgId, startdate, enddate) => {
+    setFilterLoading(true);
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const currentDate = new Date();
@@ -423,7 +426,7 @@ const Dashboard = () => {
       setTimeout(() => {
         setLoading(false);
         setFilterLoading(false);
-      }, 100);
+      }, 300);
     }
   };
 
@@ -574,12 +577,16 @@ const Dashboard = () => {
                       </p>
                     </Col>
                   </Row>
-                  <CommonDonutChart
-                    labels={["Present", "Absent"]}
-                    colors={["#25a17d", "#ABB3B3"]}
-                    series={todayAttendanceSeries}
-                    labelsfontSize="17px"
-                  />
+                  {todayAttendanceSeries.length >= 1 ? (
+                    <CommonDonutChart
+                      labels={["Present", "Absent"]}
+                      colors={["#25a17d", "#ABB3B3"]}
+                      series={todayAttendanceSeries}
+                      labelsfontSize="17px"
+                    />
+                  ) : (
+                    <CommonNodatafound />
+                  )}
                 </>
               )}
             </div>
@@ -592,14 +599,20 @@ const Dashboard = () => {
                     // type="line"
                     height={350}
                   /> */}
-              {filterLoading ? (
+              {loading ? (
                 <div style={{ height: "50vh" }}>
                   <div className="screenshots_spinContainer">
                     <Spin />
                   </div>
                 </div>
               ) : (
-                <DashboardChart data={dashboardData} />
+                <>
+                  {dashboardData.length >= 1 ? (
+                    <DashboardChart data={dashboardData} />
+                  ) : (
+                    <CommonNodatafound />
+                  )}
+                </>
               )}
             </div>
           </Col>

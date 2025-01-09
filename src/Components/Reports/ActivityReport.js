@@ -269,6 +269,7 @@ const ActivityReport = () => {
     console.log(date, dateString);
     setSelectedDates(dateString); // Update the state when the date changes
     if (dateString[0] != "" && dateString[1] != "") {
+      setLoading(true);
       getActivityEmployeesData(
         organizationId,
         teamId,
