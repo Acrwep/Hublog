@@ -41,7 +41,7 @@ const Devices = () => {
   const [statusOfDeviceSeries, setStatusOfDeviceSeries] = useState([]);
   const [platformSeries, setPlatformSeries] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [tableLoading, setTableloading] = useState(false);
+  const [tableLoading, setTableloading] = useState(true);
 
   const columns = [
     {
@@ -348,98 +348,96 @@ const Devices = () => {
         </Col>
       </Row>
 
-      {loading && tableLoading === false ? (
+      {/* {loading && tableLoading === false ? (
         <Loader />
-      ) : (
-        <>
-          <Row gutter={16} style={{ marginTop: "20px" }}>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <div
-                className="devices_chartsContainer"
-                style={{
-                  height: tableLoading ? "40vh" : "100%",
-                }}
-              >
-                {tableLoading ? (
-                  <Skeleton
-                    active
-                    title={{ width: 140 }}
-                    paragraph={{
-                      rows: 0,
-                    }}
-                  />
-                ) : (
-                  <>
-                    <p className="devices_chartheading">
-                      Status of devices: PC
-                    </p>
-                    <p className="devices_chartsubheading">
-                      Distribution between offline and online devices.
-                    </p>
-                    {statusOfDeviceSeries.length >= 1 ? (
-                      <CommonDonutChart
-                        labels={["Online Devices", "Offline Devices"]}
-                        colors={["#25a17d", "#ABB3B3"]}
-                        series={statusOfDeviceSeries}
-                        labelsfontSize="17px"
-                      />
-                    ) : (
-                      <CommonNodatafound />
-                    )}
-                  </>
-                )}
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <div className="devices_chartsContainer">
-                {tableLoading ? (
-                  <Skeleton
-                    active
-                    title={{ width: 140 }}
-                    paragraph={{
-                      rows: 0,
-                    }}
-                  />
-                ) : (
-                  <>
-                    <p className="devices_chartheading">Platform</p>
-                    <p className="devices_chartsubheading">
-                      Summarized view of the distribution of all the operating
-                      systems.
-                    </p>
-                    {platformSeries.length >= 1 ? (
-                      <CommonDonutChart
-                        labels={["Windows", "Mac", "Linux"]}
-                        colors={["#0078d7", "#ABB3B3", "rgba(255,185,0,0.70"]}
-                        series={platformSeries}
-                        labelsfontSize="17px"
-                      />
-                    ) : (
-                      <CommonNodatafound />
-                    )}
-                  </>
-                )}
-              </div>
-            </Col>
-          </Row>
+      ) : ( */}
+      <>
+        <Row gutter={16} style={{ marginTop: "20px" }}>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <div
+              className="devices_chartsContainer"
+              style={{
+                height: tableLoading ? "40vh" : "100%",
+              }}
+            >
+              {tableLoading ? (
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">Status of devices: PC</p>
+                  <p className="devices_chartsubheading">
+                    Distribution between offline and online devices.
+                  </p>
+                  {statusOfDeviceSeries.length >= 1 ? (
+                    <CommonDonutChart
+                      labels={["Online Devices", "Offline Devices"]}
+                      colors={["#25a17d", "#ABB3B3"]}
+                      series={statusOfDeviceSeries}
+                      labelsfontSize="17px"
+                    />
+                  ) : (
+                    <CommonNodatafound />
+                  )}
+                </>
+              )}
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <div className="devices_chartsContainer">
+              {tableLoading ? (
+                <Skeleton
+                  active
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">Platform</p>
+                  <p className="devices_chartsubheading">
+                    Summarized view of the distribution of all the operating
+                    systems.
+                  </p>
+                  {platformSeries.length >= 1 ? (
+                    <CommonDonutChart
+                      labels={["Windows", "Mac", "Linux"]}
+                      colors={["#0078d7", "#ABB3B3", "rgba(255,185,0,0.70"]}
+                      series={platformSeries}
+                      labelsfontSize="17px"
+                    />
+                  ) : (
+                    <CommonNodatafound />
+                  )}
+                </>
+              )}
+            </div>
+          </Col>
+        </Row>
 
-          <div
-            className="breakreport_tableContainer"
-            style={{ marginTop: "20px" }}
-          >
-            <CommonTable
-              columns={columns}
-              dataSource={devicesData}
-              scroll={{ x: 1600 }}
-              dataPerPage={10}
-              loading={tableLoading}
-              size="small"
-              checkBox="false"
-              bordered="false"
-            />
-          </div>
-        </>
-      )}
+        <div
+          className="breakreport_tableContainer"
+          style={{ marginTop: "20px" }}
+        >
+          <CommonTable
+            columns={columns}
+            dataSource={devicesData}
+            scroll={{ x: 1600 }}
+            dataPerPage={10}
+            loading={tableLoading}
+            size="small"
+            checkBox="false"
+            bordered="false"
+          />
+        </div>
+      </>
+      {/* )} */}
     </div>
   );
 };
