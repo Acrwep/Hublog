@@ -1,41 +1,195 @@
-import React, { useState } from "react";
-import { Row, Col, Button, Modal } from "antd";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Button, Modal, Tooltip } from "antd";
 import { MdTimer } from "react-icons/md";
-import { IoIosAdd } from "react-icons/io";
+import { RedoOutlined } from "@ant-design/icons";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import CommonSelectField from "../Common/CommonSelectField";
 import "./styles.css";
 import CommonTimePicker from "../Common/CommonTimePicker";
 import CommonTable from "../Common/CommonTable";
 import CommonTextArea from "../Common/CommonTextArea";
-import { selectValidator, nameValidator } from "../Common/Validation";
+import {
+  selectValidator,
+  descriptionValidator,
+  endTimeValidator,
+} from "../Common/Validation";
 import CommonImageUpload from "../Common/CommonImageUpload";
-import PendingManulaTime from "./PendingManualTime";
-import ApprovedManualTime from "./ApprovedManualTime";
-import RejectedManualTime from "./RejectedManulaTime";
+import CommonAvatar from "../Common/CommonAvatar";
 import CommonAddButton from "../Common/CommonAddButton";
 import { CommonToaster } from "../Common/CommonToaster";
+import { getTeams, getUsers, getUsersByTeamId } from "../APIservice.js/action";
 
 export default function ManualTime() {
-  const [activePage, setActivePage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [teamList, setTeamList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [formUserId, setFormUserId] = useState(null);
+  const [formUserIdError, setFormUserIdError] = useState("");
+  const [teamId, setTeamId] = useState(null);
   const [date, setDate] = useState("");
   const [dateError, setDateError] = useState("");
   const [startTime, setStartTime] = useState(null);
   const [startTimeError, setStartTimeError] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [endTimeError, setEndTimeError] = useState(null);
-  const [timeAttribution, setTimeAttribution] = useState("");
-  const [timeAttributionError, setTimeAttributionError] = useState("");
-  const timedistributionOptions = [
-    { id: 1, name: "Productive" },
-    { id: 2, name: "Neutral" },
-    { id: 3, name: "Un Productive" },
-  ];
   const [summary, setSummary] = useState("");
   const [summaryError, setSummaryError] = useState("");
   const [attachment, setAttachment] = useState([]);
   const [attachmentName, setAttachmentName] = useState("");
+  const [organizationId, setOrganizationId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const columns = [
+    {
+      title: "Employee",
+      dataIndex: "full_Name",
+      key: "full_Name",
+      width: 160,
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarSize={26} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      width: 120,
+    },
+    {
+      title: "Start time",
+      dataIndex: "starttime",
+      key: "starttime",
+      width: 120,
+    },
+    {
+      title: "End time",
+      dataIndex: "endtime",
+      key: "endtime",
+      width: 120,
+    },
+    {
+      title: "Summary",
+      dataIndex: "summary",
+      key: "summary",
+      width: 220,
+    },
+  ];
+  const data = [
+    {
+      key: "1",
+      full_Name: "Balaji R",
+      date: "07/07/2024",
+      starttime: "09:23 AM",
+      endtime: "11:23 AM",
+      timeattribution: "Productive",
+      summary:
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    },
+    {
+      key: "2",
+      full_Name: "Leo Dass",
+      date: "09/07/2024",
+      starttime: "12:23 AM",
+      endtime: "01:23 PM",
+      timeattribution: "Productive",
+      summary:
+        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+    },
+    {
+      key: "3",
+      full_Name: "Rahul R",
+      date: "12/07/2024",
+      starttime: "14:23 AM",
+      endtime: "16:23 PM",
+      timeattribution: "Productive",
+      summary:
+        "when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    },
+    {
+      key: "4",
+      full_Name: "Fazil S",
+      date: "14/07/2024",
+      starttime: "16:23 AM",
+      endtime: "17:23 PM",
+      timeattribution: "Productive",
+      summary:
+        "It has roots in a piece of classical Latin literature from 45 BC",
+    },
+  ];
+
+  useEffect(() => {
+    getTeamData();
+  }, []);
+
+  const getTeamData = async () => {
+    setLoading(true);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
+    try {
+      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+      setOrganizationId(orgId);
+      const response = await getTeams(orgId);
+      const teamList = response.data;
+      setTeamList(teamList);
+      setTeamId(null);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData();
+      }, 500);
+    }
+  };
+
+  const getUsersData = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getUsers(orgId);
+      const users = response?.data;
+
+      setUserId(null);
+      setUserList(users);
+      setNonChangeUserList(users);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+
+      setUserList(teamMembersList);
+      const userIdd = null;
+      setUserId(userIdd);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
+  };
+
+  const handleUser = (value) => {
+    setUserId(value);
+  };
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
@@ -51,7 +205,7 @@ export default function ManualTime() {
 
   const handleEndTime = (time, timeString) => {
     setEndTime(time);
-    setEndTimeError(selectValidator(time));
+    setEndTimeError(endTimeValidator(time, startTime));
   };
 
   const handleAttachment = (file) => {
@@ -74,12 +228,22 @@ export default function ManualTime() {
     setStartTimeError("");
     setEndTime("");
     setEndTimeError("");
-    setTimeAttribution("");
-    setTimeAttributionError("");
+    setFormUserId(null);
+    setFormUserIdError("");
     setSummary("");
     setSummaryError("");
     setAttachment("");
     setAttachmentName("");
+  };
+
+  const handleRefresh = () => {
+    if (teamId === null && userId === null) {
+      return;
+    } else {
+      setTeamId(null);
+      setUserId(null);
+      setUserList(nonChangeUserList);
+    }
   };
   const handleCancel = () => {
     formRestart();
@@ -88,21 +252,21 @@ export default function ManualTime() {
   const handleOk = () => {
     const dateValidate = selectValidator(date);
     const starttimeValidate = selectValidator(startTime);
-    const endtimeValidate = selectValidator(endTime);
-    const timeattributionValidate = selectValidator(timeAttribution);
-    const summaryValidate = nameValidator(summary);
+    const endtimeValidate = endTimeValidator(endTime, startTime);
+    const userValidate = selectValidator(formUserId);
+    const summaryValidate = descriptionValidator(summary);
 
     setDateError(dateValidate);
     setStartTimeError(starttimeValidate);
     setEndTimeError(endtimeValidate);
-    setTimeAttributionError(timeattributionValidate);
+    setFormUserIdError(userValidate);
     setSummaryError(summaryValidate);
 
     if (
       dateValidate ||
       starttimeValidate ||
       endtimeValidate ||
-      timeattributionValidate ||
+      userValidate ||
       summaryValidate
     )
       return;
@@ -111,7 +275,7 @@ export default function ManualTime() {
       date: date.format("DD-MM-YYYY"),
       startTime: startTime.format("HH:mm"),
       endTime: endTime.format("HH:mm"),
-      timeAttribution: timeAttribution,
+      userId: formUserId,
       summary: summary,
       ...(attachment.length >= 1 ? { attachment: attachment[0] } : {}),
     };
@@ -119,6 +283,7 @@ export default function ManualTime() {
     formRestart();
     CommonToaster("Manual Time Created Successfully", "success");
   };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -128,39 +293,28 @@ export default function ManualTime() {
         <h2 className="allpage_mainheadings">Manual Time</h2>
       </div>
 
-      <Row style={{ marginTop: "20px" }}>
+      <Row className="breakreports_calendarrowContainer">
         <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="manualpending_container">
-            <Button
-              className={
-                activePage === 1
-                  ? "manualpending_activebutton "
-                  : "manualpending_button"
-              }
-              onClick={() => setActivePage(1)}
-            >
-              Pending
-            </Button>
-            <Button
-              className={
-                activePage === 2
-                  ? "manualpending_activebutton "
-                  : "manualpending_button"
-              }
-              onClick={() => setActivePage(2)}
-            >
-              Approved
-            </Button>
-            <Button
-              className={
-                activePage === 3
-                  ? "attendance_activesummarybutton "
-                  : "attendance_summarybutton"
-              }
-              onClick={() => setActivePage(3)}
-            >
-              Rejected
-            </Button>
+          <div
+            className="field_selectfielsContainer"
+            style={{ display: "flex" }}
+          >
+            <div className="field_teamselectfieldContainer">
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+              />
+            </div>
+            <div style={{ width: "170px" }}>
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />
+            </div>
           </div>
         </Col>
         <Col
@@ -168,25 +322,35 @@ export default function ManualTime() {
           sm={24}
           md={12}
           lg={12}
-          className="addmanualtimebutton_column"
+          className="breakreports_calendarContainer"
         >
           <CommonAddButton
             name="Add Manual Time"
             onClick={() => setIsModalOpen(true)}
           />
+          <Tooltip placement="top" title="Refresh">
+            <Button
+              className="dashboard_refresh_button"
+              onClick={handleRefresh}
+              style={{ marginLeft: "12px" }}
+            >
+              <RedoOutlined className="refresh_icon" />
+            </Button>
+          </Tooltip>
         </Col>
       </Row>
 
       <div style={{ marginTop: "20px" }}>
-        {activePage === 1 ? (
-          <PendingManulaTime />
-        ) : activePage === 2 ? (
-          <ApprovedManualTime />
-        ) : activePage === 3 ? (
-          <RejectedManualTime />
-        ) : (
-          ""
-        )}
+        <CommonTable
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: 900 }}
+          dataPerPage={10}
+          checkBox="false"
+          bordered="true"
+          size="small"
+          loading={loading}
+        />
       </div>
 
       {/* add manualtime modal */}
@@ -234,14 +398,14 @@ export default function ManualTime() {
           </Col>
         </Row>
         <CommonSelectField
-          label="Time attribution"
-          options={timedistributionOptions}
+          label="User"
+          options={nonChangeUserList}
           onChange={(value) => {
-            setTimeAttribution(value);
-            setTimeAttributionError(selectValidator(value));
+            setFormUserId(value);
+            setFormUserIdError(selectValidator(value));
           }}
-          value={timeAttribution}
-          error={timeAttributionError}
+          value={formUserId}
+          error={formUserIdError}
           mandatory
           style={{ marginBottom: "20px" }}
         />
@@ -249,7 +413,7 @@ export default function ManualTime() {
           label="Summary"
           onChange={(e) => {
             setSummary(e.target.value);
-            setSummaryError(nameValidator(e.target.value));
+            setSummaryError(descriptionValidator(e.target.value));
           }}
           value={summary}
           error={summaryError}

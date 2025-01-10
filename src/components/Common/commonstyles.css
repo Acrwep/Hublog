@@ -140,7 +140,10 @@
   transition: "background" 0.2s;
   background: transparent;
 }
-
+/* common textarea */
+.commontextarea:hover {
+  border-color: #25a17d !important;
+}
 /* loader styles */
 .lottieloader_container {
   display: flex;

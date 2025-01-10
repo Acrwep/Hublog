@@ -77,6 +77,17 @@ export const addressValidator = (address) => {
   return error;
 };
 
+export const endTimeValidator = (endtime, starttime) => {
+  let error = "";
+
+  if (!endtime || endtime.length <= 0) error = " is required";
+  // Validation: End time should not be less than start time
+  else if (starttime && endtime < starttime)
+    error = " must be after start time";
+
+  return error;
+};
+
 export const addAppandUrlTime = (time1, time2) => {
   // Split the time values into hours and minutes
   const [hours1, minutes1] = time1.split(":");
