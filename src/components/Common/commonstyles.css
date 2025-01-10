@@ -38,7 +38,7 @@
   top: 0%;
 }
 .commoninput_errormessage_activediv {
-  top: 99%;
+  /* top: 99%; */
   /* transform: translateY(2%); */
   transform: translateX(2%);
   opacity: 1;
@@ -143,6 +143,15 @@
 /* common textarea */
 .commontextarea:hover {
   border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17 !important;
+}
+.commontextarea:focus {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17 !important;
+}
+.commontextarea_error:hover {
+  border-color: #ff7875 !important;
+  box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06) !important;
 }
 /* loader styles */
 .lottieloader_container {

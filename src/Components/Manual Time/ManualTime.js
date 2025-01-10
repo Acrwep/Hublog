@@ -18,6 +18,7 @@ import CommonAvatar from "../Common/CommonAvatar";
 import CommonAddButton from "../Common/CommonAddButton";
 import { CommonToaster } from "../Common/CommonToaster";
 import { getTeams, getUsers, getUsersByTeamId } from "../APIservice.js/action";
+import moment from "moment";
 
 export default function ManualTime() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -198,7 +199,6 @@ export default function ManualTime() {
   };
 
   const handleStartTime = (time, timeString) => {
-    console.log(time, timeString);
     setStartTime(time);
     setStartTimeError(selectValidator(time));
   };
@@ -255,7 +255,6 @@ export default function ManualTime() {
     const endtimeValidate = endTimeValidator(endTime, startTime);
     const userValidate = selectValidator(formUserId);
     const summaryValidate = descriptionValidator(summary);
-
     setDateError(dateValidate);
     setStartTimeError(starttimeValidate);
     setEndTimeError(endtimeValidate);
@@ -270,11 +269,12 @@ export default function ManualTime() {
       summaryValidate
     )
       return;
-
+    const star_Time = new Date(startTime.$d);
+    const end_Time = new Date(endTime.$d);
     const payload = {
-      date: date.format("DD-MM-YYYY"),
-      startTime: startTime.format("HH:mm"),
-      endTime: endTime.format("HH:mm"),
+      date: moment(date).format("DD-MM-YYYY"),
+      startTime: moment(star_Time).format("HH:mm:ss"),
+      endTime: moment(end_Time).format("HH:mm:ss"),
       userId: formUserId,
       summary: summary,
       ...(attachment.length >= 1 ? { attachment: attachment[0] } : {}),
