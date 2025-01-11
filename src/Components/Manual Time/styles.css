@@ -1,3 +1,12 @@
 .manualtime_attahmnt_heading {
   font-weight: 500;
 }
+.manualtime_attachmentContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.manualtime_attachment {
+  width: 140px;
+}

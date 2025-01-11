@@ -211,6 +211,7 @@ export default function Role({ loading }) {
             loading={tableLoading}
             bordered="false"
             checkBox="false"
+            size="middle"
           />
 
           {/* addrole modal */}

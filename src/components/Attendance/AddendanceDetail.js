@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Drawer, Calendar, Divider, Spin, Skeleton } from "antd";
+import { Drawer, Calendar, Divider } from "antd";
 import CommonTable from "../Common/CommonTable";
 import CommonAvatar from "../Common/CommonAvatar";
 import { useSelector } from "react-redux";
@@ -8,9 +8,11 @@ import "./styles.css";
 import { HiOutlineCalendar } from "react-icons/hi2";
 import { dayJs } from "../Utils";
 import { CommonToaster } from "../Common/CommonToaster";
-import { getAttendanceAndBreakSummary } from "../APIservice.js/action";
-import ReactApexChart from "react-apexcharts";
+import { getUserPunchInOutDetails } from "../APIservice.js/action";
+import { FaRegUser } from "react-icons/fa6";
+import Desktopicon from "../../assets/images/computer.png";
 import CommonNodatafound from "../Common/CommonNodatafound";
+import DashboardChart from "../Dashboard/DashboardChart";
 
 const AddendanceDetail = ({ loading, uList, selectUser }) => {
   const employeeAttendanceList = useSelector(
@@ -19,12 +21,12 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
   const attendanceTrendsData = useSelector((state) => state.attendancetrends);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [userAttendanceData, setUserAttendanceData] = useState([]);
+  const [userPunchInOutData, setUserPunchInOutData] = useState([]);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState("");
   const [organizationId, setOrganizationId] = useState("");
   const [calendarDate, setCalendarDate] = useState(dayJs());
-  const userAttendanceTableHeading = ["In", "Out", "Duration"];
+  const [drawerTableLoading, setDrawerTableLoading] = useState(false);
 
   const attendanceTrendsXaxis = attendanceTrendsData.map((a) =>
     moment(a.attendanceDate).format("DD/MM/YYYY")
@@ -46,162 +48,19 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
         }
       }),
     },
-    // {
-    //   name: "Attendance Percentage",
-    //   type: "line",
-    //   data: attendanceTrendsData.map((item, index) => {
-    //     // Add check for attendancePercentage
-    //     if (
-    //       item?.attendancePercentage !== undefined &&
-    //       item.attendancePercentage !== null
-    //     ) {
-    //       const convertString = item.attendancePercentage.toString();
-    //       const round = convertString.split(".")[0];
-    //       console.log(`Attendance Percentage for index ${index}:`, round);
-    //       return round;
-    //     } else {
-    //       console.warn(`Missing attendancePercentage at index ${index}`);
-    //       return 0; // Fallback to 0 if undefined
-    //     }
-    //   }),
-    // },
-    // {
-    //   name: "Average Working Time",
-    //   type: "line",
-    //   data: attendanceTrendsData.map((item, index) => {
-    //     // Safeguard for averageWorkingTime
-    //     if (item?.averageWorkingTime && item.averageWorkingTime !== "null") {
-    //       const [hours, minutes] = item.averageWorkingTime
-    //         .split(":")
-    //         .map(Number);
-    //       const totalMinutes = hours * 60 + minutes; // Convert to total minutes
-    //       console.log(
-    //         `Average Working Time (minutes) for index ${index}:`,
-    //         totalMinutes
-    //       );
-    //       return totalMinutes;
-    //     } else {
-    //       console.warn(`Invalid averageWorkingTime at index ${index}`);
-    //       return 0; // Fallback to 0 if undefined
-    //     }
-    //   }),
-    // },
   ];
-
-  const options = {
-    chart: {
-      type: "bar",
-      height: 350,
-      stacked: true,
-    },
-    plotOptions: {
-      bar: {
-        labels: true,
-        distributed: false,
-        columnWidth: "40%", // Corrected column width to a percentage
-        horizontal: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ["transparent"],
-    },
-    xaxis: {
-      categories: attendanceTrendsXaxis,
-      labels: {
-        show: true,
-        rotate: -40, // Rotate labels by -40 degrees
-        style: {
-          fontFamily: "Poppins, sans-serif", // Change font family of x-axis labels
-        },
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter: function (value) {
-          return value;
-        },
-        style: {
-          fontFamily: "Poppins, sans-serif",
-        },
-      },
-      title: {
-        text: "Value",
-      },
-    },
-    fill: {
-      opacity: 1,
-    },
-    tooltip: {
-      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-        const data = attendanceTrendsData[dataPointIndex]; // Get the relevant data for the hovered point
-        const category = w.globals.labels[dataPointIndex];
-        const presentCount = data.presentCount || 0;
-        let absentCount = 0;
-        let attendancePercentage = 0;
-        if (selectUser === true && data.presentCount >= 1) {
-          absentCount = 0;
-        } else {
-          absentCount = data?.absentCount || 0;
-        }
-        // const absentCount = data.absentCount || 0;
-        if (selectUser === true && data.presentCount >= 1) {
-          attendancePercentage = 100;
-        } else {
-          attendancePercentage = data?.attendancePercentage || 0;
-        }
-        // const attendancePercentage = data.attendancePercentage || 0;
-        const averageWorkingTime = data.averageWorkingTime || "00:00:00";
-
-        return `
-       <div class="apexcharts-tooltip-custom">
-        <div style="display: flex; align-items: center;">
-          <div style="width: 12px; height: 12px; background-color: #25a17d; border-radius: 50%; margin-right: 8px;"></div>
-          <strong style="margin-right:4px">Present Count:</strong> ${presentCount}
-        </div>
-        <div style="display: flex; align-items: center; margin-top: 4px;">
-          <div style="width: 12px; height: 12px; background-color: #ABB3B3; border-radius: 50%; margin-right: 8px;"></div>
-          <strong style="margin-right:4px">Absent Count:</strong> ${absentCount}
-        </div>
-          <div style="display: flex; align-items: center; margin-top: 4px;">
-          <div style="width: 12px; height: 12px; background-color: rgba(0,126,241,0.64); border-radius: 50%; margin-right: 8px;"></div>
-          <strong style="margin-right:4px">Attendance Percentage:</strong>${attendancePercentage.toFixed(
-            2
-          )}%
-        </div>
-        <div style="display: flex; align-items: center; margin-top: 4px;">
-          <div style="width: 12px; height: 12px; background-color: rgba(255,193,7,0.74); border-radius: 50%; margin-right: 8px;"></div>
-          <strong style="margin-right:4px">Average Working Time:</strong>${moment(
-            averageWorkingTime,
-            "HH:mm:ss"
-          ).format("H[h]:mm[m]")}
-        </div>
-        </div>
-        `;
-      },
-    },
-    legend: {
-      show: true, // Fixed legend display logic
-    },
-    colors: ["#25a17d", "#ABB3B3"], // Added colors here instead of passing directly as a prop
-  };
-
-  const attendanceTrendsColors = ["#25a17d", "#ABB3B3"];
 
   const columns = [
     {
       title: "Employee",
       dataIndex: "full_Name",
       key: "full_Name",
-      width: "170px",
+      width: 240,
+      fixed: "left",
       render: (text, record) => {
         return (
           <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarSize={30} itemName={text} />
+            <CommonAvatar avatarSize={28} itemName={text} />
             <p className="reports_avatarname">{text}</p>
           </div>
         );
@@ -209,37 +68,79 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
     },
     {
       title: "Attendance",
-      dataIndex: "attendance",
-      key: "attendance",
-      width: "150px",
+      dataIndex: "attendanceCount",
+      key: "attendanceCount",
+      width: 140,
+      render: (text, record) => {
+        if (text === null) {
+          return 0;
+        } else {
+          return <p>{text}</p>;
+        }
+      },
+    },
+    {
+      title: "Team Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
+      hidden: true,
     },
     {
       title: "Working time",
-      dataIndex: "workingTime",
-      key: "workingTime",
-      width: "150px",
+      dataIndex: "total_wokingtime",
+      key: "total_wokingtime",
+      width: 160,
       render: (text, record) => {
-        if (text === null) return "00h:00m";
-        return <p>{moment(text, "HH:mm:ss").format("H[h]:mm[m]")}</p>;
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Online time",
+      dataIndex: "online_duration",
+      key: "online_duration",
+      width: 160,
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Active time",
+      dataIndex: "activeTime",
+      key: "activeTime",
+      width: 160,
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
+      },
+    },
+    {
+      title: "Idle time",
+      dataIndex: "idleDuration",
+      key: "idleDuration",
+      width: 160,
+      render: (text, record) => {
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
       },
     },
     {
       title: "Break time",
-      dataIndex: "breakTime",
-      key: "breakTime",
-      width: "150px",
+      dataIndex: "breakDuration",
+      key: "breakDuration",
+      width: 160,
       render: (text, record) => {
-        if (text === "0001-01-01T00:00:00" || text === null) {
-          return "00h:00m";
-        }
-        return <p>{moment(text, "HH:mm:ss").format("HH[h]:mm[m]")}</p>;
+        const [hours, minutes, seconds] = text.split(":");
+        return <p>{hours + "h:" + minutes + "m:" + seconds + "s"}</p>;
       },
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      width: 100,
+      width: 90,
+      fixed: "right",
       align: "center",
       render: (text, record) => {
         return (
@@ -251,39 +152,110 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
     },
   ];
 
-  const getUserAttendanceData = async (userid, orgId, startdate, enddate) => {
+  const drawerColumns = [
+    {
+      title: "In",
+      dataIndex: "start_Time",
+      key: "start_Time",
+      width: 90,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaRegUser
+                color="#666767"
+                size={14}
+                style={{ marginRight: "4.5px" }}
+              />
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
+        }
+      },
+    },
+    {
+      title: "Out",
+      dataIndex: "end_Time",
+      key: "end_Time",
+      width: 90,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {record.punchout_type === "system" ? (
+                <img
+                  src={Desktopicon}
+                  style={{
+                    width: "18px",
+                    height: "19px",
+                    marginRight: "5px",
+                  }}
+                />
+              ) : (
+                <FaRegUser
+                  color="#666767"
+                  size={14}
+                  style={{ marginRight: "4.5px" }}
+                />
+              )}
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
+        }
+      },
+    },
+    {
+      title: "Duration",
+      dataIndex: "total_Time",
+      key: "total_Time",
+      width: 90,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00" || text === null) {
+          return null;
+        } else {
+          const [hours, minutes, seconds] = text.split(":");
+          const formattedDuration = `${parseInt(hours)}h:${parseInt(
+            minutes
+          )}m:${parseInt(seconds)}s`;
+          return <p>{formattedDuration} </p>;
+        }
+      },
+    },
+  ];
+
+  const getUserPunchInOutData = async (userid, date) => {
+    setDrawerTableLoading(true);
+    const orgId = localStorage.getItem("organizationId");
     const payload = {
-      ...(userid || userId, { userId: userid ? userid : userId }),
+      userId: userid,
       organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
+      startDate: date,
+      endDate: date,
     };
     try {
-      const response = await getAttendanceAndBreakSummary(payload);
-      console.log("user attendance response", response);
+      const response = await getUserPunchInOutDetails(payload);
       const details = response?.data;
-
-      const addFullNameProperty = details.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-
-      if (addFullNameProperty[0].startTime === "0001-01-01T00:00:00") {
-        setUserAttendanceData([]);
-      } else {
-        setUserAttendanceData(addFullNameProperty);
-      }
+      console.log("logs response", response);
+      setUserPunchInOutData(details);
     } catch (error) {
       console.log("attendance error", error);
       CommonToaster(error.response?.data?.message, "error");
-      setUserAttendanceData([]);
+    } finally {
+      setTimeout(() => {
+        setDrawerTableLoading(false);
+      }, 300);
     }
   };
-
+  //onchange functions
   const handleCalendarChange = (date) => {
     const dates = new Date(date.$d);
     setCalendarDate(dayJs(dates));
     const convertDate = moment(dates).format("YYYY-MM-DD");
-    getUserAttendanceData(userId, organizationId, convertDate, convertDate);
+    getUserPunchInOutData(userId, convertDate);
   };
 
   const handleCalendar = (record) => {
@@ -296,12 +268,7 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
     setOrganizationId(orgId);
     const currentDate = new Date();
     const formattedCurrentDate = formatDate(currentDate);
-    getUserAttendanceData(
-      clickedUser.id,
-      orgId,
-      formattedCurrentDate,
-      formattedCurrentDate
-    );
+    getUserPunchInOutData(clickedUser.id, formattedCurrentDate);
   };
 
   const formatDate = (date) => {
@@ -329,11 +296,11 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
     <div>
       <div
         className="devices_chartsContainer"
-        style={{
-          height: loading ? "40vh" : "100%",
-        }}
+        // style={{
+        //   height: loading ? "40vh" : "100%",
+        // }}
       >
-        {loading ? (
+        {/* {loading ? (
           <Skeleton
             active
             title={{ width: 140 }}
@@ -342,27 +309,28 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
             }}
           />
         ) : (
-          <>
-            <p className="devices_chartheading">Attendance Trends</p>
-            {attendanceTrendsData.length >= 1 ? (
-              // <AttendanceTrendsChart
-              //   // xasis={attendanceTrendsXaxis}
-              //   series={attendanceTrendsSeries}
-              //   // colors={attendanceTrendsColors}
-              // />
+          <> */}
+        <p className="devices_chartheading">Attendance Trends</p>
+        {attendanceTrendsData.length >= 1 ? (
+          // <AttendanceTrendsChart
+          //   // xasis={attendanceTrendsXaxis}
+          //   series={attendanceTrendsSeries}
+          //   // colors={attendanceTrendsColors}
+          // />
 
-              <ReactApexChart
-                series={attendanceTrendsSeries}
-                colors={attendanceTrendsColors}
-                options={options}
-                type="bar"
-                height={350}
-              />
-            ) : (
-              <CommonNodatafound />
-            )}
-          </>
+          // <ReactApexChart
+          //   series={attendanceTrendsSeries}
+          //   colors={attendanceTrendsColors}
+          //   options={options}
+          //   type="bar"
+          //   height={350}
+          // />
+          <DashboardChart data={attendanceTrendsData} />
+        ) : (
+          <CommonNodatafound />
         )}
+        {/* </>
+        )} */}
       </div>
 
       <div style={{ marginTop: "20px" }}>
@@ -371,10 +339,11 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
           <CommonTable
             columns={columns}
             dataSource={employeeAttendanceList}
-            scroll={{ x: 1000 }}
+            scroll={{ x: 1200 }}
             dataPerPage={10}
             bordered="false"
             checkBox="false"
+            size="small"
             loading={loading}
           />
         </div>
@@ -385,7 +354,7 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
         title={userName}
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
-        width="25%"
+        width="30%"
         styles={{ body: { padding: "0px 12px" } }}
       >
         <div className="attendancedetail_employeelistCalender">
@@ -396,69 +365,19 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
             onChange={handleCalendarChange}
             disabledDate={disableFutureDates}
           />
-          <Divider className="attendancedetail_userattendanceDivider" />
-          <div className="attendance_employeelistContainer">
-            <Row>
-              {userAttendanceTableHeading.map((item) => (
-                <Col
-                  span={8}
-                  className="attendancedetail_userattendancetableColumnContainer"
-                >
-                  <p className="attendancedetail_userattendancetableheading">
-                    {item}
-                  </p>
-                </Col>
-              ))}
-            </Row>
 
-            <Divider
-              style={{
-                margin: 0,
-                background: "#abb3b36e",
-                marginBottom: "12px",
-              }}
+          <div style={{ marginTop: "10px" }}>
+            <CommonTable
+              columns={drawerColumns}
+              dataSource={userPunchInOutData}
+              scroll={{ x: 350 }}
+              dataPerPage={1000}
+              checkBox="false"
+              bordered="true"
+              size="small"
+              paginationStatus={false}
+              loading={drawerTableLoading}
             />
-            {userAttendanceData.length >= 1 ? (
-              <Row
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {userAttendanceData.map((item) => (
-                  <Col span={8}>
-                    <p className="attendancedetail_userattendancetableColumnContainer">
-                      {item.startTime === "0001-01-01T00:00:00"
-                        ? ""
-                        : moment(item.startTime).format("hh:mm A")}
-                    </p>
-                  </Col>
-                ))}
-                {userAttendanceData.map((item) => (
-                  <Col span={8}>
-                    <p className="attendancedetail_userattendancetableColumnContainer">
-                      {item.endTime === "0001-01-01T00:00:00"
-                        ? ""
-                        : moment(item.endTime).format("hh:mm A")}
-                    </p>
-                  </Col>
-                ))}
-                {userAttendanceData.map((item) => (
-                  <Col span={8}>
-                    <p className="attendancedetail_userattendancetableColumnContainer">
-                      {item.workingTime === null
-                        ? ""
-                        : moment(item.workingTime, "HH:mm:ss").format(
-                            "H[h]:mm[m]"
-                          )}
-                    </p>
-                  </Col>
-                ))}
-              </Row>
-            ) : (
-              <CommonNodatafound />
-            )}
           </div>
         </div>
       </Drawer>

@@ -529,6 +529,7 @@ const Users = ({ loading }) => {
             dataPerPage={10}
             loading={tableLoading}
             checkBox="false"
+            size="middle"
           />
         </div>
       )}

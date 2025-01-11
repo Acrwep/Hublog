@@ -60,6 +60,17 @@ const DashboardChart = ({ data }) => {
         max: Math.max(...presentCount, ...absentCount) + 1,
         labels: {
           formatter: (value) => Math.round(value), // Remove decimals
+          style: {
+            colors: "#25a17d", // Color for this axis
+          },
+        },
+        axisBorder: {
+          show: true,
+          color: "#25a17d", // Axis line color
+        },
+        axisTicks: {
+          show: true,
+          color: "#25a17d",
         },
       },
       {
@@ -67,10 +78,21 @@ const DashboardChart = ({ data }) => {
         min: 0,
         max: 100,
         title: { text: "Attendance % / Avg Working Hours" },
-        max: 100,
         labels: {
           formatter: (value) => Math.round(value), // Remove decimals
+          style: {
+            colors: "#FEB019", // Color for this axis
+          },
         },
+        axisBorder: {
+          show: true,
+          color: "#FEB019",
+        },
+        axisTicks: {
+          show: true,
+          color: "#FEB019",
+        },
+        offsetX: 10, // Adjust the position to prevent overlap
       },
     ],
     tooltip: {

@@ -769,3 +769,14 @@ export const getActivityEmployeeslist = async (payload) => {
     throw error;
   }
 };
+//manual time
+export const getManualtime = async (payload) => {
+  try {
+    const response = await api.get("/api/Manual_Time/get_Manual_Time", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

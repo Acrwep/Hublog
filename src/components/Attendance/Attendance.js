@@ -10,7 +10,7 @@ import CommonSelectField from "../Common/CommonSelectField";
 import { CommonToaster } from "../Common/CommonToaster";
 import Loader from "../Common/Loader";
 import {
-  getAttendanceAndBreakSummary,
+  getActivityEmployeeslist,
   getAttendanceSummary,
   getAttendanceTrends,
   getLateArrivals,
@@ -245,7 +245,7 @@ const Attendance = () => {
     }
     if (pageNumber === 2) {
       setAttendancedetailLoading(true);
-      dispatch(storeAttendanceTrends([]));
+      // dispatch(storeAttendanceTrends([]));
       if (userid) {
         setSelectUser(true);
       } else {
@@ -255,25 +255,20 @@ const Attendance = () => {
         ...(userid && { userId: userid }),
         ...(teamid && { teamId: teamid }),
         organizationId: orgId,
-        startDate:
+        fromDate:
           startdate === undefined || startdate === null
             ? PreviousandCurrentDate[0]
             : startdate,
-        endDate:
+        toDate:
           enddate === undefined || enddate === null
             ? PreviousandCurrentDate[1]
             : enddate,
       };
       try {
-        const response = await getAttendanceAndBreakSummary(payload);
-        console.log("attendance response", response);
-        const details = response?.data;
-
-        const addFullNameProperty = details.map((item) => {
-          return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-        });
-        const reverseData = addFullNameProperty.reverse();
-        dispatch(storeAttendanceAndBreakSummary(reverseData));
+        const response = await getActivityEmployeeslist(payload);
+        const activityEmployeedata = response?.data?.data;
+        console.log("activity employee response", activityEmployeedata);
+        dispatch(storeAttendanceAndBreakSummary(activityEmployeedata));
       } catch (error) {
         CommonToaster(error.response?.data?.message, "error");
         const details = [];

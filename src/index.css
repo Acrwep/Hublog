@@ -207,7 +207,12 @@ select:focus {
 .ant-pagination .ant-pagination-item-active a {
   color: #009737 !important;
 }
-
+.ant-pagination
+  .ant-pagination-jump-next
+  .ant-pagination-item-container
+  .ant-pagination-item-link-icon {
+  color: #25a17d !important;
+}
 /* primary button styles */
 .ant-btn-primary {
   color: #fff;

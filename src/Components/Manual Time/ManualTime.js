@@ -17,7 +17,15 @@ import CommonImageUpload from "../Common/CommonImageUpload";
 import CommonAvatar from "../Common/CommonAvatar";
 import CommonAddButton from "../Common/CommonAddButton";
 import { CommonToaster } from "../Common/CommonToaster";
-import { getTeams, getUsers, getUsersByTeamId } from "../APIservice.js/action";
+import {
+  getManualtime,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
+import { FaRegUser } from "react-icons/fa6";
+import { SlEye } from "react-icons/sl";
+import axios from "axios";
 import moment from "moment";
 
 export default function ManualTime() {
@@ -37,91 +45,109 @@ export default function ManualTime() {
   const [endTimeError, setEndTimeError] = useState(null);
   const [summary, setSummary] = useState("");
   const [summaryError, setSummaryError] = useState("");
-  const [attachment, setAttachment] = useState([]);
+  const [attachment, setAttachment] = useState();
   const [attachmentName, setAttachmentName] = useState("");
+  const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
+  const [modalImage, setModalImage] = useState();
+  const [modalImageName, setModalImageName] = useState("");
   const [organizationId, setOrganizationId] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const columns = [
-    {
-      title: "Employee",
-      dataIndex: "full_Name",
-      key: "full_Name",
-      width: 160,
-      render: (text, record) => {
-        return (
-          <div className="breakreport_employeenameContainer">
-            <CommonAvatar avatarSize={26} itemName={text} />
-            <p className="reports_avatarname">{text}</p>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Employee",
+    //   dataIndex: "full_Name",
+    //   key: "full_Name",
+    //   width: 160,
+    //   render: (text, record) => {
+    //     return (
+    //       <div className="breakreport_employeenameContainer">
+    //         <CommonAvatar avatarSize={26} itemName={text} />
+    //         <p className="reports_avatarname">{text}</p>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Date",
       dataIndex: "date",
       key: "date",
       width: 120,
+      render: (text, record) => {
+        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+      },
     },
     {
       title: "Start time",
-      dataIndex: "starttime",
-      key: "starttime",
+      dataIndex: "startTime",
+      key: "startTime",
       width: 120,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaRegUser
+                color="#666767"
+                size={14}
+                style={{ marginRight: "4.5px" }}
+              />
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
+        }
+      },
     },
     {
       title: "End time",
-      dataIndex: "endtime",
-      key: "endtime",
+      dataIndex: "endTime",
+      key: "endTime",
       width: 120,
+      render: (text, record) => {
+        if (text === "0001-01-01T00:00:00") {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FaRegUser
+                color="#666767"
+                size={14}
+                style={{ marginRight: "4.5px" }}
+              />
+              <p>{moment(text).format("hh:mm A")} </p>
+            </div>
+          );
+        }
+      },
     },
     {
       title: "Summary",
       dataIndex: "summary",
       key: "summary",
-      width: 220,
-    },
-  ];
-  const data = [
-    {
-      key: "1",
-      full_Name: "Balaji R",
-      date: "07/07/2024",
-      starttime: "09:23 AM",
-      endtime: "11:23 AM",
-      timeattribution: "Productive",
-      summary:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      width: 200,
     },
     {
-      key: "2",
-      full_Name: "Leo Dass",
-      date: "09/07/2024",
-      starttime: "12:23 AM",
-      endtime: "01:23 PM",
-      timeattribution: "Productive",
-      summary:
-        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-    },
-    {
-      key: "3",
-      full_Name: "Rahul R",
-      date: "12/07/2024",
-      starttime: "14:23 AM",
-      endtime: "16:23 PM",
-      timeattribution: "Productive",
-      summary:
-        "when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    },
-    {
-      key: "4",
-      full_Name: "Fazil S",
-      date: "14/07/2024",
-      starttime: "16:23 AM",
-      endtime: "17:23 PM",
-      timeattribution: "Productive",
-      summary:
-        "It has roots in a piece of classical Latin literature from 45 BC",
+      title: "Attachment",
+      dataIndex: "attachment",
+      key: "attachment",
+      width: 100,
+      align: "center",
+      render: (text, record) => {
+        return (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <SlEye
+              color="#666767"
+              size={19}
+              style={{ cursor: "pointer" }}
+              onClick={() =>
+                handleAttachmetModal(record.attachment, record.fileName)
+              }
+            />
+          </div>
+        );
+      },
     },
   ];
 
@@ -163,11 +189,31 @@ export default function ManualTime() {
       setUserList([]);
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        getManualtimeData(orgId, null, null);
       }, 500);
     }
   };
 
+  const getManualtimeData = async (orgId, teamid, userid) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+    };
+    try {
+      const response = await getManualtime(payload);
+      const datas = response?.data;
+      setData(datas);
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message, "error");
+      setData([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+  //onchange function
   const handleTeam = async (value) => {
     setTeamId(value);
     try {
@@ -209,17 +255,28 @@ export default function ManualTime() {
   };
 
   const handleAttachment = (file) => {
-    console.log("Attachment", file, file.name);
-    if (file.length >= 1) {
-      setAttachment(file);
-      file.map((f) => {
-        setAttachmentName(f.name);
-      });
+    console.log("Attachment", file);
+
+    // Ensure file is an array and has at least one element
+    if (Array.isArray(file) && file.length > 0) {
+      const firstFile = file[0];
+      setAttachment(firstFile); // Save the first file
+      setAttachmentName(firstFile.name); // Save the name of the first file
+
+      // Create FormData and append the first file
+      const formData = new FormData();
+      formData.append("image", firstFile.originFileObj);
+      // Log FormData content
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
     } else {
+      // Handle case when no file is selected
       setAttachment([]);
       setAttachmentName("");
     }
   };
+
   const formRestart = () => {
     setIsModalOpen(false);
     setDate("");
@@ -249,7 +306,7 @@ export default function ManualTime() {
     formRestart();
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     const dateValidate = selectValidator(date);
     const starttimeValidate = selectValidator(startTime);
     const endtimeValidate = endTimeValidator(endTime, startTime);
@@ -271,17 +328,58 @@ export default function ManualTime() {
       return;
     const star_Time = new Date(startTime.$d);
     const end_Time = new Date(endTime.$d);
-    const payload = {
-      date: moment(date).format("DD-MM-YYYY"),
-      startTime: moment(star_Time).format("HH:mm:ss"),
-      endTime: moment(end_Time).format("HH:mm:ss"),
-      userId: formUserId,
-      summary: summary,
-      ...(attachment.length >= 1 ? { attachment: attachment[0] } : {}),
-    };
-    console.log("Manula Time Payload", payload);
-    formRestart();
-    CommonToaster("Manual Time Created Successfully", "success");
+    const orgId = localStorage.getItem("organizationId");
+
+    const formData = new FormData();
+    formData.append("organizationId", orgId);
+    formData.append("date", moment(date).format("YYYY-MM-DD HH:mm:ss.SSS"));
+    formData.append("startTime", moment(star_Time).format("HH:mm:ss"));
+    formData.append("endTime", moment(end_Time).format("HH:mm:ss"));
+    formData.append("userId", formUserId);
+    formData.append("summary", summary);
+    if (attachment?.originFileObj) {
+      formData.append("attachment", attachment.originFileObj);
+    }
+
+    // Log FormData content
+    for (let [key, value] of formData.entries()) {
+      if (key === "image" && value instanceof File) {
+        console.log(
+          `${key}:`,
+          `name=${value.name}, size=${value.size} bytes, type=${value.type}`
+        );
+      } else {
+        console.log(`${key}: ${value}`);
+      }
+    }
+
+    try {
+      const API_URL = process.env.REACT_APP_API_URL;
+      const AccessToken = localStorage.getItem("Accesstoken");
+      const response = await axios.post(
+        `${API_URL}/api/Manual_Time/InsertManualTime`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${AccessToken}`, // Replace with your token
+          },
+        }
+      );
+      formRestart();
+      CommonToaster("Manual Time Created Successfully", "success");
+    } catch (error) {
+      console.error("Error posting data:", error);
+      CommonToaster(error?.response?.data?.message, "error");
+    }
+  };
+
+  const handleAttachmetModal = (attachment, attachmentName) => {
+    setIsAttachmentOpen(true);
+    const type = attachmentName.split(".")[1];
+    const base64String = `data:image/${type};base64,${attachment}`;
+    setModalImage(base64String);
+    setModalImageName(attachmentName);
   };
 
   return (
@@ -426,6 +524,23 @@ export default function ManualTime() {
             uploadedFile={handleAttachment}
             imageName={attachmentName}
             style={{ marginBottom: "20px" }}
+          />
+        </div>
+      </Modal>
+
+      <Modal
+        title={modalImageName}
+        open={isAttachmentOpen}
+        centered={true}
+        onCancel={() => setIsAttachmentOpen(false)}
+        footer={false}
+      >
+        <div className="manualtime_attachmentContainer">
+          <img
+            src={modalImage}
+            className="manualtime_attachment"
+            alt="Base64 Image"
+            style={{ cursor: "pointer" }}
           />
         </div>
       </Modal>
