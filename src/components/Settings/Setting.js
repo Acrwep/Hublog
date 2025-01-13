@@ -91,7 +91,7 @@ const Settings = () => {
   const [alertRulesPageVisited, setAlertRulesPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
-    if (id === 4 || id === 5 || id > 8) {
+    if (id === 5 || id > 8) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -335,7 +335,7 @@ const Settings = () => {
               <div
                 key={index}
                 className={
-                  index === 3 || index === 4 || index > 7
+                  index === 4 || index > 7
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"

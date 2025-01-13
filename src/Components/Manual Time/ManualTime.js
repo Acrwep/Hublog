@@ -14,6 +14,7 @@ import {
   endTimeValidator,
 } from "../Common/Validation";
 import CommonImageUpload from "../Common/CommonImageUpload";
+import PrismaZoom from "react-prismazoom";
 import CommonAvatar from "../Common/CommonAvatar";
 import CommonAddButton from "../Common/CommonAddButton";
 import { CommonToaster } from "../Common/CommonToaster";
@@ -55,20 +56,20 @@ export default function ManualTime() {
   const [loading, setLoading] = useState(false);
 
   const columns = [
-    // {
-    //   title: "Employee",
-    //   dataIndex: "full_Name",
-    //   key: "full_Name",
-    //   width: 160,
-    //   render: (text, record) => {
-    //     return (
-    //       <div className="breakreport_employeenameContainer">
-    //         <CommonAvatar avatarSize={26} itemName={text} />
-    //         <p className="reports_avatarname">{text}</p>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      title: "Employee",
+      dataIndex: "full_Name",
+      key: "full_Name",
+      width: 160,
+      render: (text, record) => {
+        return (
+          <div className="breakreport_employeenameContainer">
+            <CommonAvatar avatarSize={26} itemName={text} />
+            <p className="reports_avatarname">{text}</p>
+          </div>
+        );
+      },
+    },
     {
       title: "Date",
       dataIndex: "date",
@@ -135,18 +136,22 @@ export default function ManualTime() {
       width: 100,
       align: "center",
       render: (text, record) => {
-        return (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <SlEye
-              color="#666767"
-              size={19}
-              style={{ cursor: "pointer" }}
-              onClick={() =>
-                handleAttachmetModal(record.attachment, record.fileName)
-              }
-            />
-          </div>
-        );
+        if (record.attachment === null) {
+          return null;
+        } else {
+          return (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <SlEye
+                color="#666767"
+                size={19}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  handleAttachmetModal(record.attachment, record.fileName)
+                }
+              />
+            </div>
+          );
+        }
       },
     },
   ];
@@ -195,6 +200,7 @@ export default function ManualTime() {
   };
 
   const getManualtimeData = async (orgId, teamid, userid) => {
+    setLoading(true);
     const payload = {
       organizationId: orgId,
       ...(teamid && { teamId: teamid }),
@@ -203,10 +209,14 @@ export default function ManualTime() {
     try {
       const response = await getManualtime(payload);
       const datas = response?.data;
-      setData(datas);
+      const reverse = datas.reverse();
+      setData(reverse);
     } catch (error) {
-      CommonToaster(error?.response?.data?.message, "error");
       setData([]);
+      const Error = error?.response?.data?.message;
+      if (Error != "No manual time entries found.") {
+        CommonToaster(Error, "error");
+      }
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -228,14 +238,16 @@ export default function ManualTime() {
       setUserList(teamMembersList);
       const userIdd = null;
       setUserId(userIdd);
+      getManualtimeData(organizationId, value, null);
     } catch (error) {
-      CommonToaster(error.response.data.message, "error");
+      CommonToaster(error?.response?.data?.message, "error");
       setUserList([]);
     }
   };
 
   const handleUser = (value) => {
     setUserId(value);
+    getManualtimeData(organizationId, teamId, value);
   };
 
   const onDateChange = (date, dateString) => {
@@ -300,6 +312,7 @@ export default function ManualTime() {
       setTeamId(null);
       setUserId(null);
       setUserList(nonChangeUserList);
+      getManualtimeData(organizationId, null, null);
     }
   };
   const handleCancel = () => {
@@ -371,6 +384,8 @@ export default function ManualTime() {
     } catch (error) {
       console.error("Error posting data:", error);
       CommonToaster(error?.response?.data?.message, "error");
+    } finally {
+      getManualtimeData(organizationId, teamId, userId);
     }
   };
 
@@ -536,12 +551,14 @@ export default function ManualTime() {
         footer={false}
       >
         <div className="manualtime_attachmentContainer">
-          <img
-            src={modalImage}
-            className="manualtime_attachment"
-            alt="Base64 Image"
-            style={{ cursor: "pointer" }}
-          />
+          <PrismaZoom className="prismazoom">
+            <img
+              src={modalImage}
+              className="manualtime_attachment"
+              alt="Base64 Image"
+              style={{ cursor: "pointer" }}
+            />
+          </PrismaZoom>
         </div>
       </Modal>
     </div>
