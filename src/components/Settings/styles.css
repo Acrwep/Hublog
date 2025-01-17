@@ -595,3 +595,40 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
+/* settings workplace style */
+.settings_workplaceheading {
+  font-weight: 600 !important;
+  margin-bottom: 52px;
+  font-size: 15px;
+}
+.custom-slider .ant-slider-tooltip .ant-tooltip-arrow {
+  display: none;
+}
+/* Optional: Adjust tooltip styling for consistency */
+.custom-slider .ant-slider-tooltip .ant-tooltip-inner {
+  border-radius: 4px; /* Smooth corners */
+  padding: 4px 12px; /* Adjust padding as needed */
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e3e3e3;
+  box-shadow: 2px 2px 6px -4px #999;
+  color: black;
+  display: flex;
+  align-items: center;
+}
+.workplace_UndertooltipCircle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #abb3b3;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.workplace_healthytooltipCircle {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #25a17d;
+  border-radius: 50%;
+  margin-right: 5px;
+}
