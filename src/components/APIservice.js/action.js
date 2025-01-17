@@ -474,8 +474,41 @@ export const updateAlertRules = async (alertpayload) => {
     throw error;
   }
 };
-//reports
+//settings wellness
+export const getWellnessRules = async (organizationId) => {
+  try {
+    const response = await api.get(
+      `/api/Wellness/GetWellness?organizationId=${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createWellnessRules = async (organizationId, wellnesspayload) => {
+  try {
+    const response = await api.post(
+      `/api/Wellness/InsertWellness?organizationId=${organizationId}`,
+      wellnesspayload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateWellnessRules = async (organizationId, wellnesspayload) => {
+  try {
+    const response = await api.put(
+      `/api/Wellness/UpdateWellness?organizationId=${organizationId}`,
+      wellnesspayload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
+//reports
 //daily attendance report
 export const getDailyAttendanceReport = async (reportPayload) => {
   try {

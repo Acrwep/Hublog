@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { MdSettings } from "react-icons/md";
 import UserandDesignation from "./usersandDesignation/UsersandDesignation";
 import { FiUser, FiCoffee } from "react-icons/fi";
 import { MdAccessTime } from "react-icons/md";
@@ -29,6 +28,7 @@ import {
   getTeams,
   getUsers,
   getUsersByTeamId,
+  getWellnessRules,
 } from "../APIservice.js/action";
 import AlertRules from "./AlertRules/AlertRules";
 import {
@@ -54,6 +54,7 @@ import {
   storeUsersCount,
   storeUserSearchValue,
   storeUsersForTeamsTab,
+  storeWellnessRules,
 } from "../Redux/slice";
 import { CommonToaster } from "../Common/CommonToaster";
 import ProductivityRules from "./ProductivityRules/ProductivityRules";
@@ -62,6 +63,7 @@ const Settings = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
+  const [workplaceLoading, setWorkplaceLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
   const [alertRulesLoading, setAlertRulesLoading] = useState(true);
   const settingsList = [
@@ -89,6 +91,7 @@ const Settings = () => {
   const [productivityRulesPageVisited, setProductivityRulesPageVisited] =
     useState(false);
   const [alertRulesPageVisited, setAlertRulesPageVisited] = useState(false);
+  const [workplacePageVisited, setWorkplacePageVisited] = useState(false);
 
   const handlePageChange = (id) => {
     if (id === 5 || id > 8) {
@@ -101,6 +104,9 @@ const Settings = () => {
     // }
     if (id === 3 && rolePageVisited === false) {
       getRoleData();
+    }
+    if (id === 4 && workplacePageVisited === false) {
+      getWellnessData();
     }
     if (id === 6 && breakPageVisited === false) {
       getBreakData();
@@ -266,6 +272,24 @@ const Settings = () => {
     }
   };
 
+  const getWellnessData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    try {
+      const response = await getWellnessRules(orgId);
+      console.log("wellness response", response.data);
+      const wellnessData = response.data;
+      dispatch(storeWellnessRules(wellnessData));
+    } catch (error) {
+      dispatch(storeWellnessRules([]));
+      CommonToaster(error?.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        setWorkplacePageVisited(true);
+        setWorkplaceLoading(false);
+      }, 350);
+    }
+  };
+
   const getImbuildAppsandUrlsData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     const payload = {
@@ -382,7 +406,7 @@ const Settings = () => {
           )}
           {activePage === 4 && (
             <div>
-              <Workplace />
+              <Workplace mainloader={workplaceLoading} />
             </div>
           )}
           {activePage === 6 && (

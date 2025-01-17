@@ -394,6 +394,17 @@ const alertRulesSlice = createSlice({
     },
   },
 });
+//settings wellness rules
+const wellnessRulesSlice = createSlice({
+  name: "wellnessrules",
+  initialState,
+  reducers: {
+    storeWellnessRules(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //activity
 const activityBreakdownSlice = createSlice({
   name: "activitybreakdown",
@@ -655,6 +666,7 @@ export const { storeMappingSearchValue } = mappingSearchValueSlice.actions;
 export const { storeMappingShowId } = mappingShowIdSlice.actions;
 export const { storeMappingStatusId } = mappingStatusIdSlice.actions;
 export const { storeAlertRules } = alertRulesSlice.actions;
+export const { storeWellnessRules } = wellnessRulesSlice.actions;
 export const { storeActivityBreakdown } = activityBreakdownSlice.actions;
 export const { storeActivityTeamLevelBreakdown } =
   activityTeamlevelBreakdownSlice.actions;
@@ -729,6 +741,7 @@ export const mappingSearchValueReducer = mappingSearchValueSlice.reducer;
 export const mappingShowIdReducer = mappingShowIdSlice.reducer;
 export const mappingStatusIdReducer = mappingStatusIdSlice.reducer;
 export const alertRulesReducer = alertRulesSlice.reducer;
+export const wellnessRulesReducer = wellnessRulesSlice.reducer;
 export const activityBreakdownReducer = activityBreakdownSlice.reducer;
 export const activityTeamlevelBreakdownReducer =
   activityTeamlevelBreakdownSlice.reducer;
