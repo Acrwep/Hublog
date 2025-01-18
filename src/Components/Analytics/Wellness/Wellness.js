@@ -10,15 +10,33 @@ import {
   getTeams,
   getUsers,
   getUsersByTeamId,
+  getWellnessEmployeeDetails,
+  getWellnessSummary,
+  getWellnessWorktimeTrends,
 } from "../../APIservice.js/action";
 import { dayJs } from "../../Utils";
 import WellnessSummary from "./WellnessSummary";
 import WellnessDetailed from "./WellnessDetailed";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import {
+  storeOverallWellness,
+  storeTeamwiseWellness,
+  storeTopHealthyTeams,
+  storeTopOverburdenedTeams,
+  storeTopUnderutilizedTeams,
+  storeWellnessEmployeesList,
+  storeWellnessWorktimeTrends,
+} from "../../Redux/slice";
+import CommonDoubleDatePicker from "../../Common/CommonDoubleDatePicker";
+import { getCurrentandPreviousweekDate } from "../../Common/Validation";
 
 const Wellness = () => {
+  const dispatch = useDispatch();
+
   const [activePage, setActivePage] = useState(1);
   const [date, setDate] = useState(new Date());
+  const [selectedDates, setSelectedDates] = useState([]);
   const [month, setMonth] = useState(dayJs().subtract(0, "month"));
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
@@ -27,16 +45,36 @@ const Wellness = () => {
   const [teamId, setTeamId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [teamList, setTeamList] = useState([]);
+  const [healthyPercentage, setHealthyPercentage] = useState("");
+  const [workingTime, setWorkingTime] = useState("");
+  const [healthyEmployeeName, setHealthyEmployeeName] = useState("");
+  const [healthyEmployeeWorkingtime, setHealthyEmployeeWorkingtime] =
+    useState("");
+  const [overburdenedEmployeeName, setOverburdenedEmployeeName] = useState("");
+  const [overburdenedEmployeeWorkingtime, setOverburdenedEmployeeWorkingtime] =
+    useState("");
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  const [detailedLoading, setDetailedLoading] = useState(true);
   const [organizationId, setOrganizationId] = useState(null);
 
   const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
     if (
       (pageNumber === 1 && activePage === 1) ||
       (pageNumber === 2 && activePage === 2)
     ) {
       return;
+    } else {
+      getWellnessSummaryData(
+        organizationId,
+        null,
+        null,
+        date,
+        selectedDates[0],
+        selectedDates[1],
+        pageNumber
+      );
     }
-    setActivePage(pageNumber);
   };
 
   useEffect(() => {
@@ -44,7 +82,6 @@ const Wellness = () => {
   }, []);
 
   const getTeamData = async () => {
-    setDate(new Date());
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
@@ -64,6 +101,10 @@ const Wellness = () => {
 
   const getUsersData = async () => {
     const orgId = localStorage.getItem("organizationId");
+    const currentDate = new Date();
+    setDate(currentDate);
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
     try {
       const response = await getUsers(orgId);
       const users = response?.data;
@@ -79,6 +120,221 @@ const Wellness = () => {
       const currentYear = moment().year(); // get current year
       setMonthName(currentMonthName);
       setYear(currentYear);
+      setTimeout(() => {
+        getWellnessSummaryData(
+          orgId,
+          null,
+          null,
+          currentDate,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1],
+          activePage
+        );
+      }, 300);
+    }
+  };
+
+  const getWellnessSummaryData = async (
+    orgId,
+    teamid,
+    userid,
+    date,
+    startdate,
+    enddate,
+    pageNumber
+  ) => {
+    if (pageNumber === 1) {
+      setSummaryLoading(true);
+      const payload = {
+        organizationId: orgId,
+        ...(teamid && { teamId: teamid }),
+        Date: moment(date).format("YYYY-MM-DD"),
+      };
+      try {
+        const response = await getWellnessSummary(payload);
+        console.log("wellness summary response", response);
+        //healthy percentage handling
+        setHealthyPercentage(
+          response?.data?.healthyemployeesPercentage !== undefined
+            ? response.data.healthyemployeesPercentage + "%"
+            : "-"
+        );
+        //workingtime handling
+        if (response?.data?.workingtime !== undefined) {
+          const [hours, minutes, seconds] =
+            response?.data?.workingtime.split(":");
+          setWorkingTime(hours + "h:" + minutes + "m:" + seconds + "s");
+        } else {
+          setWorkingTime("-");
+        }
+        //healthy employee handling
+        setHealthyEmployeeName(
+          response?.data?.topHealthyemployee?.fullName !== undefined
+            ? response.data.topHealthyemployee?.fullName
+            : "-"
+        );
+        if (response?.data?.topHealthyemployee?.activeTimeSec !== undefined) {
+          const [hours, minutes, seconds] =
+            response?.data?.topHealthyemployee?.activeTimeSec.split(":");
+          setHealthyEmployeeWorkingtime(
+            hours + "h:" + minutes + "m:" + seconds + "s"
+          );
+        } else {
+          setHealthyEmployeeWorkingtime("-");
+        }
+        //overburdened employee handling
+        setOverburdenedEmployeeName(
+          response?.data?.topOverburdenedemployee?.fullName !== undefined
+            ? response.data.topOverburdenedemployee?.fullName
+            : "-"
+        );
+        if (
+          response?.data?.topOverburdenedemployee?.activeTimeSec !== undefined
+        ) {
+          const [hours, minutes, seconds] =
+            response?.data?.topOverburdenedemployee?.activeTimeSec.split(":");
+          setOverburdenedEmployeeWorkingtime(
+            hours + "h:" + minutes + "m:" + seconds + "s"
+          );
+        } else {
+          setOverburdenedEmployeeWorkingtime("-");
+        }
+
+        //teamwise wellness handling
+        if (response?.data?.wellnessSummaries) {
+          dispatch(storeTeamwiseWellness(response?.data?.wellnessSummaries));
+        } else {
+          dispatch(storeTeamwiseWellness([]));
+        }
+
+        //overall wellness handling
+        if (response?.data?.overallWellnessCount) {
+          const overallWellness = response?.data?.overallWellnessCount;
+          dispatch(
+            storeOverallWellness([
+              overallWellness.healthyCount,
+              overallWellness.overburdenedCount,
+              overallWellness.underutilizedCount,
+            ])
+          );
+        } else {
+          dispatch(storeOverallWellness([]));
+        }
+
+        //top healthy teams handling
+        if (response?.data?.top3WellnessHealthy) {
+          const topList = response?.data?.top3WellnessHealthy;
+          const allZero = topList.every((item) => item.healthy === 0);
+
+          if (allZero) {
+            dispatch(storeTopHealthyTeams([]));
+          } else {
+            dispatch(storeTopHealthyTeams(topList));
+          }
+        } else {
+          dispatch(storeTopHealthyTeams([]));
+        }
+
+        //top overburdened teams handling
+        if (response?.data?.top3WellnessOverburdened) {
+          const topList = response?.data?.top3WellnessOverburdened;
+
+          const allZero = topList.every((item) => item.overburdened === 0);
+
+          if (allZero) {
+            dispatch(storeTopOverburdenedTeams([]));
+          } else {
+            dispatch(storeTopOverburdenedTeams(topList));
+          }
+        } else {
+          dispatch(storeTopOverburdenedTeams([]));
+        }
+
+        //top underutilized teams handling
+        if (response?.data?.top3WellnessUnderutilized) {
+          const topList = response?.data?.top3WellnessUnderutilized;
+
+          const allZero = topList.every((item) => item.underutilized === 0);
+
+          if (allZero) {
+            dispatch(storeTopUnderutilizedTeams([]));
+          } else {
+            dispatch(storeTopUnderutilizedTeams(topList));
+          }
+        } else {
+          dispatch(storeTopUnderutilizedTeams([]));
+        }
+      } catch (error) {
+        console.log("errr", error);
+        CommonToaster(error?.response?.data, "error");
+        setHealthyPercentage("-");
+        setWorkingTime("-");
+        setHealthyEmployeeName("-");
+        setHealthyEmployeeWorkingtime("-");
+        setOverburdenedEmployeeName("-");
+        setOverburdenedEmployeeWorkingtime("-");
+        dispatch(storeTeamwiseWellness([]));
+        dispatch(storeOverallWellness([]));
+        dispatch(storeTopHealthyTeams([]));
+        dispatch(storeTopOverburdenedTeams([]));
+        dispatch(storeTopUnderutilizedTeams([]));
+      } finally {
+        setTimeout(() => {
+          setSummaryLoading(false);
+          // getTopAppUsageData(orgId, teamid, startDate, endDate);
+        }, 100);
+      }
+    } else {
+      setDetailedLoading(true);
+      const payload = {
+        organizationId: orgId,
+        ...(teamid && { teamId: teamid }),
+        ...(userid && { userId: userid }),
+        startDate: startdate,
+        endDate: enddate,
+      };
+      try {
+        const response = await getWellnessWorktimeTrends(payload);
+        console.log("wellness detailed response", response);
+        const wellnessTrendData = response?.data?.datewiseWellnessCount;
+        dispatch(storeWellnessWorktimeTrends(wellnessTrendData));
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+        dispatch(storeWellnessWorktimeTrends([]));
+      } finally {
+        setTimeout(() => {
+          getWellnessEmployeesData(orgId, teamid, userid, startdate, enddate);
+        }, 150);
+      }
+    }
+  };
+
+  const getWellnessEmployeesData = async (
+    orgId,
+    teamid,
+    userid,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      ...(userid && { userId: userid }),
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getWellnessEmployeeDetails(payload);
+      console.log("wellness employees response", response);
+      const wellnessEmployeesData = response?.data?.employees;
+      dispatch(storeWellnessEmployeesList(wellnessEmployeesData));
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      dispatch(storeWellnessEmployeesList([]));
+    } finally {
+      setTimeout(() => {
+        setDetailedLoading(false);
+      }, 150);
     }
   };
 
@@ -98,41 +354,60 @@ const Wellness = () => {
     } catch (error) {
       setUserList([]);
       CommonToaster(error.response.data.message, "error");
+    } finally {
+      getWellnessSummaryData(
+        organizationId,
+        value,
+        userId,
+        date,
+        selectedDates[0],
+        selectedDates[1],
+        activePage
+      );
     }
   };
 
   const handleUser = (value) => {
     setUserId(value);
+    getWellnessSummaryData(
+      organizationId,
+      teamId,
+      value,
+      date,
+      selectedDates[0],
+      selectedDates[1],
+      activePage
+    );
   };
 
   const onDateChange = (date, dateString) => {
     console.log(date, dateString);
     setDate(date); // Update the state when the date changes
+    getWellnessSummaryData(
+      organizationId,
+      teamId,
+      userId,
+      date,
+      selectedDates[0],
+      selectedDates[1],
+      activePage
+    );
   };
 
-  const handleMonthChange = (date, dateString) => {
-    // Log the date and formatted date string
-    setMonth(date);
-    // If a date is selected, format it to get the month name and log it
-    if (date) {
-      const selectedMonthName = date.format("MMMM");
-      const selectedYear = date.format("YYYY");
-      console.log("Selected Month:", selectedMonthName, selectedYear);
-      setMonthName(selectedMonthName);
-      setYear(selectedYear);
+  const handleDoubleDateChange = (dates, dateStrings) => {
+    setSelectedDates(dateStrings);
+    if (dateStrings[0] != "" && dateStrings[1] != "") {
+      console.log("call function");
+      getWellnessSummaryData(
+        organizationId,
+        teamId,
+        userId,
+        date,
+        dateStrings[0],
+        dateStrings[1],
+        activePage
+      );
     }
-  };
-
-  const getMonthName = (date) => {
-    if (date) {
-      return date.format("MMMM");
-    }
-    return "";
-  };
-
-  const disabledDate = (current) => {
-    // Disable all future dates
-    return current && current > dayJs().endOf("month");
   };
 
   const handleRefresh = () => {
@@ -168,11 +443,13 @@ const Wellness = () => {
     } else {
       setTeamId(null);
       setUserId(null);
-      setDate(new Date());
+      const currentDate = new Date();
+      setDate(currentDate);
       setMonth(dayJs());
       setMonthName(currentMonthName);
       setYear(currentYear);
       setUserList(nonChangeUserList);
+      getWellnessSummaryData(organizationId, null, currentDate, activePage);
     }
   };
   return (
@@ -246,13 +523,9 @@ const Wellness = () => {
               {activePage === 1 ? (
                 <CommonDatePicker onChange={onDateChange} value={date} />
               ) : (
-                <DatePicker
-                  picker="month"
-                  onChange={handleMonthChange}
-                  value={month}
-                  format={getMonthName}
-                  disabledDate={disabledDate}
-                  allowClear={false}
+                <CommonDoubleDatePicker
+                  value={selectedDates}
+                  onChange={handleDoubleDateChange}
                 />
               )}
             </div>
@@ -271,11 +544,19 @@ const Wellness = () => {
 
       {activePage === 1 ? (
         <div>
-          <WellnessSummary />
+          <WellnessSummary
+            healthyPercentage={healthyPercentage}
+            workingTime={workingTime}
+            healthyEmployeeName={healthyEmployeeName}
+            healthyEmployeeWorkingtime={healthyEmployeeWorkingtime}
+            overburdenedEmployeeName={overburdenedEmployeeName}
+            overburdenedEmployeeWorkingtime={overburdenedEmployeeWorkingtime}
+            loading={summaryLoading}
+          />
         </div>
       ) : (
         <div>
-          <WellnessDetailed />
+          <WellnessDetailed loading={detailedLoading} />
         </div>
       )}
     </div>

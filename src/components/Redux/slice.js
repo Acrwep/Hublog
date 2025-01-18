@@ -486,6 +486,78 @@ const activityEmployeeslistSlice = createSlice({
     },
   },
 });
+//wellness
+const teamwiseWellnessSlice = createSlice({
+  name: "teamwisewellness",
+  initialState,
+  reducers: {
+    storeTeamwiseWellness(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const overallWellnessSlice = createSlice({
+  name: "overallwellness",
+  initialState,
+  reducers: {
+    storeOverallWellness(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const topHealthyTeamsSlice = createSlice({
+  name: "tophealthyteams",
+  initialState,
+  reducers: {
+    storeTopHealthyTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const topOverburdenedTeamsSlice = createSlice({
+  name: "topoverburdenedteams",
+  initialState,
+  reducers: {
+    storeTopOverburdenedTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const topUnderutilizedTeamsSlice = createSlice({
+  name: "topunderutilizedteams",
+  initialState,
+  reducers: {
+    storeTopUnderutilizedTeams(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const wellnessWorktimeTrendsSlice = createSlice({
+  name: "wellnessworktimetrends",
+  initialState,
+  reducers: {
+    storeWellnessWorktimeTrends(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+const wellnessEmployeesListSlice = createSlice({
+  name: "wellnessemployeeslist",
+  initialState,
+  reducers: {
+    storeWellnessEmployeesList(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
 //productivity
 const productivityBreakdownSlice = createSlice({
   name: "productivitybreakdown",
@@ -678,6 +750,16 @@ export const { storeMostActivityTeams } = mostActivityTeamsSlice.actions;
 export const { storeLeastActivityTeams } = leastActivityTeamsSlice.actions;
 export const { storeActivityEmployeesList } =
   activityEmployeeslistSlice.actions;
+export const { storeTeamwiseWellness } = teamwiseWellnessSlice.actions;
+export const { storeOverallWellness } = overallWellnessSlice.actions;
+export const { storeTopHealthyTeams } = topHealthyTeamsSlice.actions;
+export const { storeTopOverburdenedTeams } = topOverburdenedTeamsSlice.actions;
+export const { storeTopUnderutilizedTeams } =
+  topUnderutilizedTeamsSlice.actions;
+export const { storeWellnessWorktimeTrends } =
+  wellnessWorktimeTrendsSlice.actions;
+export const { storeWellnessEmployeesList } =
+  wellnessEmployeesListSlice.actions;
 export const { storeProductivityBreakdown } =
   productivityBreakdownSlice.actions;
 export const { storeTeamwiseProductivity } = teamwiseProductivitySlice.actions;
@@ -752,6 +834,14 @@ export const activityTrendsReducer = activityTrendsSlice.reducer;
 export const mostActivityTeamsReducer = mostActivityTeamsSlice.reducer;
 export const leastActivityTeamsReducer = leastActivityTeamsSlice.reducer;
 export const activityEmployeesListReducer = activityEmployeeslistSlice.reducer;
+export const teamwiseWellnessReducer = teamwiseWellnessSlice.reducer;
+export const overallWellnessReducer = overallWellnessSlice.reducer;
+export const topHealthyTeamsReducer = topHealthyTeamsSlice.reducer;
+export const topOverburdenedTeamsReducer = topOverburdenedTeamsSlice.reducer;
+export const topUnderutilizedTeamsReducer = topUnderutilizedTeamsSlice.reducer;
+export const wellnessWorktimeTrendsReducer =
+  wellnessWorktimeTrendsSlice.reducer;
+export const wellnessEmployeesListReducer = wellnessEmployeesListSlice.reducer;
 export const productivityBreakdownReducer = productivityBreakdownSlice.reducer;
 export const teamwiseProductivityReducer = teamwiseProductivitySlice.reducer;
 export const mostProductivityTeamsReducer = mostProductivityTeamsSlice.reducer;

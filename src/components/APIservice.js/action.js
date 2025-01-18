@@ -813,3 +813,34 @@ export const getManualtime = async (payload) => {
     throw error;
   }
 };
+//wellness
+export const getWellnessSummary = async (payload) => {
+  try {
+    const response = await api.get("/api/Wellness/GetWellnessSummary", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getWellnessWorktimeTrends = async (payload) => {
+  try {
+    const response = await api.get("/api/Wellness/GetWellnessTimeTrend", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getWellnessEmployeeDetails = async (payload) => {
+  try {
+    const response = await api.get("/api/Wellness/GetWellnessUserDetails", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

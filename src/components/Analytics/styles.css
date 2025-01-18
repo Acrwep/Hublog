@@ -4,7 +4,10 @@
 }
 .wellness_employeename {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
+  margin-top: 7px;
+}
+.wellness_employeeactivetime {
   margin-top: 10px;
 }
 /* productivity styles */
