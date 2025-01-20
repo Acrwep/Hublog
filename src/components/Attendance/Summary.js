@@ -16,6 +16,10 @@ const Summary = ({ loading }) => {
     (state) => state.summaryattendancetrends
   );
   const lateArrivalData = useSelector((state) => state.latearrival);
+  const attendanceBreakTrendsData = useSelector(
+    (state) => state.attendancebreaktrends
+  );
+
   //usestates
   const [attendancePercentage, setAttendancePercentage] = useState("");
   const [lateArrivalPercentage, setLateArrivalPercentage] = useState("");
@@ -68,18 +72,27 @@ const Summary = ({ loading }) => {
     },
   ];
 
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
+  const convertTimeToDecimal = (time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours + minutes / 60;
   };
 
-  const datas = {
+  // Map the response data to x-axis and y-axis data
+  const breakTrendsXais = attendanceBreakTrendsData.map((item) =>
+    moment(item.breakDate).format("DD-MM-YYYY")
+  ); // Get the date only
+  const breakTrendsYaxis = attendanceBreakTrendsData.map((item) =>
+    convertTimeToDecimal(item.breakDuration)
+  );
+
+  const breakTrendsChart = {
     series: [
       {
-        name: "Active Time",
-        data: [65, 59, 80, 81, 56, 55],
+        name: "Break Time",
+        data: breakTrendsYaxis, // Converted break hours in decimal format
       },
     ],
+
     options: {
       chart: {
         type: "line",
@@ -92,28 +105,45 @@ const Summary = ({ loading }) => {
         curve: "smooth",
       },
       xaxis: {
-        categories: [
-          "2024-02-01",
-          "2024-02-02",
-          "2024-02-03",
-          "2024-02-04",
-          "2024-02-05",
-          "2024-02-06",
-        ],
+        categories: breakTrendsXais, // Dates from response
         title: {
-          text: "",
+          text: "Break Date",
         },
         labels: {
-          rotate: -45,
+          show: true,
+          rotateAlways: attendanceBreakTrendsData.length >= 6 ? true : false, // Ensure rotation is applied
+          rotate: -45, // Rotate labels by -40 degrees
+          color: ["#ffffff"],
+          style: {
+            fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+          },
         },
+        trim: true,
       },
       yaxis: {
         title: {
           text: "Time (hours)",
         },
+        labels: {
+          formatter: function (val) {
+            return `${Math.floor(val)}h`; // Display values as whole hours like 0h, 1h
+          },
+        },
         forceNiceScale: true,
       },
-      colors: ["#25a17d", "#F44336"], // Blue for Active Time, Red for Idle Time
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            const hours = Math.floor(val);
+            const minutes = Math.round((val - hours) * 60);
+            return `${hours}h:${minutes}m`; // Format as "0h:1m"
+          },
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      colors: ["#25a17d"], // Customize color if needed
       legend: {
         position: "top",
       },
@@ -127,14 +157,18 @@ const Summary = ({ loading }) => {
     setLateArrivalPercentage(summaryData?.lateArrivals);
     if (summaryData?.totalBreakTime) {
       setTotalBreakTime(
-        moment(summaryData.totalBreakTime, "HH:mm:ss").format("HH[h]:mm[m]")
+        moment(summaryData.totalBreakTime, "HH:mm:ss").format(
+          "HH[h]:mm[m]:ss[s]"
+        )
       );
     } else {
       setTotalBreakTime("00h:00m");
     }
     if (summaryData?.totalWorkingTime) {
       setTotalWorkingtime(
-        moment(summaryData.totalWorkingTime, "HH:mm:ss").format("HH[h]:mm[m]")
+        moment(summaryData.totalWorkingTime, "HH:mm:ss").format(
+          "HH[h]:mm[m]:ss[s]"
+        )
       );
     } else {
       setTotalWorkingtime("-");
@@ -320,12 +354,18 @@ const Summary = ({ loading }) => {
             ) : (
               <>
                 <p className="devices_chartheading">Break Trends</p>
-                <ReactApexChart
-                  options={datas.options}
-                  series={datas.series}
-                  type="line"
-                  height={300}
-                />
+                {attendanceBreakTrendsData.length >= 1 ? (
+                  <ReactApexChart
+                    options={breakTrendsChart.options}
+                    series={breakTrendsChart.series}
+                    type="line"
+                    height={300}
+                  />
+                ) : (
+                  <div style={{ height: "100%" }}>
+                    <CommonNodatafound />
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -359,17 +399,6 @@ const Summary = ({ loading }) => {
           </div>
         </Col>
       </Row>
-      {/* <div style={{ marginTop: "25px" }}>
-        <div className="devices_chartsContainer">
-          <p className="devices_chartheading">Team Wise Utilization</p>
-          <CommonBarChart
-            xasis={xasis}
-            series={series}
-            colors={barchartColors}
-            timebased="true"
-          />
-        </div>
-      </div> */}
     </div>
   );
 };

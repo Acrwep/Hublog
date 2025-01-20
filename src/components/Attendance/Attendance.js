@@ -11,6 +11,7 @@ import { CommonToaster } from "../Common/CommonToaster";
 import Loader from "../Common/Loader";
 import {
   getActivityEmployeeslist,
+  getAttendanceBreakTrends,
   getAttendanceSummary,
   getAttendanceTrends,
   getLateArrivals,
@@ -32,6 +33,7 @@ import {
   storeDatewiseAttendanceUsersData,
   storeDatewiseAttendanceUserValue,
   storeTodayAttendance,
+  storeAttendanceBreakTrends,
 } from "../Redux/slice";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import moment from "moment";
@@ -303,16 +305,7 @@ const Attendance = () => {
       const response = await getAttendanceTrends(payload);
       console.log("summary attendance trends", response);
       const details = response?.data;
-
-      const addFullNameProperty = details.map((item) => {
-        return { ...item, full_Name: item.first_Name + " " + item.last_Name };
-      });
-      const reverseData = addFullNameProperty.reverse();
-
-      const removeNullDate = reverseData.filter(
-        (f) => f.attendanceDate != "0001-01-01T00:00:00"
-      );
-      dispatch(storeSummaryAttendanceTrends(removeNullDate));
+      dispatch(storeSummaryAttendanceTrends(details));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
@@ -343,6 +336,34 @@ const Attendance = () => {
       dispatch(storeLateArrival(details));
     } finally {
       setTimeout(() => {
+        getAttendanceBreakTrendaData(teamid, orgId, startdate, enddate);
+      }, 350);
+    }
+  };
+
+  const getAttendanceBreakTrendaData = async (
+    teamid,
+    orgId,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      ...(teamid && { teamId: teamid }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getAttendanceBreakTrends(payload);
+      console.log("attendance breaktrends response", response);
+      const details = response?.data?.data;
+      dispatch(storeAttendanceBreakTrends(details));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = [];
+      dispatch(storeAttendanceBreakTrends(details));
+    } finally {
+      setTimeout(() => {
         setLoading(false);
         setSummaryLoading(false);
       }, 350);
@@ -367,11 +388,7 @@ const Attendance = () => {
       const response = await getAttendanceTrends(payload);
       console.log("attendance trends", response);
       const details = response?.data;
-
-      const reverseData = details.reverse();
-
-      console.log("attendanceeeeeeeee", reverseData);
-      dispatch(storeAttendanceTrends(reverseData));
+      dispatch(storeAttendanceTrends(details));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];

@@ -159,6 +159,16 @@ export const getLateArrivals = async (payload) => {
     throw error;
   }
 };
+export const getAttendanceBreakTrends = async (payload) => {
+  try {
+    const response = await api.get(`/api/AttendanceDashboard/BreakTrends`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //analytics
 //screenshot
 export const getScreenShots = async (userId, organizationId, date) => {

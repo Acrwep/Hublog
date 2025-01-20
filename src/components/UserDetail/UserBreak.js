@@ -103,8 +103,15 @@ export default function UserBreak({ loading, filterLoading }) {
           text: "Break Date",
         },
         labels: {
-          rotate: -45,
+          show: true,
+          rotateAlways: userTotalBreakData.length >= 7 ? true : false, // Ensure rotation is applied
+          rotate: -45, // Rotate labels by -40 degrees
+          color: ["#ffffff"],
+          style: {
+            fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+          },
         },
+        trim: true,
       },
       yaxis: {
         title: {
@@ -124,6 +131,9 @@ export default function UserBreak({ loading, filterLoading }) {
             const minutes = Math.round((val - hours) * 60);
             return `${hours}h:${minutes}m`; // Format as "0h:1m"
           },
+        },
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
         },
       },
       colors: ["#25a17d"], // Customize color if needed

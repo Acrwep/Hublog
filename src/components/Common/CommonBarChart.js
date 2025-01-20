@@ -93,6 +93,9 @@ const CommonBarChart = ({
       x: {
         show: false,
       },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     legend: {
       show: legend === "false" ? false : true, // Hide legends

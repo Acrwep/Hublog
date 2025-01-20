@@ -65,11 +65,16 @@ const WellnessSummary = ({
     const processData = (teams, key) => {
       const labels = [];
       const counts = [];
+      const labelStyles = []; // To store styles for each label
+
       teams.forEach((item) => {
         labels.push(item.teamName);
         counts.push(item[key]);
+
+        // Add dynamic font size based on label length
+        labelStyles.push(item.teamName.length > 10 ? "14px" : "16px");
       });
-      return { labels, counts };
+      return { labels, counts, labelStyles };
     };
 
     setChartData({
@@ -96,7 +101,13 @@ const WellnessSummary = ({
             ) : (
               <>
                 <p>Healthy employees</p>
-                <p className="userproductivity_contents">{healthyPercentage}</p>
+                <p className="userproductivity_contents">
+                  {healthyPercentage === "-"
+                    ? "-"
+                    : healthyPercentage === 0
+                    ? "0%"
+                    : healthyPercentage.toFixed(2) + "%"}
+                </p>
                 <p className="userproductivity_hours">
                   <span
                     style={{
@@ -108,7 +119,9 @@ const WellnessSummary = ({
                   >
                     {healthyComparison === "No Variation"
                       ? ""
-                      : previousHealthyPercentage.toFixed(0) + "%"}
+                      : previousHealthyPercentage === "-"
+                      ? ""
+                      : Math.abs(previousHealthyPercentage).toFixed(0) + "%"}
                   </span>{" "}
                   {healthyComparison.includes("Less Than")
                     ? "Less than previous day"
@@ -146,7 +159,10 @@ const WellnessSummary = ({
                   >
                     {workingTimeComparison === "No Variation"
                       ? ""
-                      : previousWorkingtimePercentage.toFixed(0) + "%"}
+                      : previousWorkingtimePercentage === "-"
+                      ? ""
+                      : Math.abs(previousWorkingtimePercentage).toFixed(0) +
+                        "%"}
                   </span>{" "}
                   {workingTimeComparison.includes("Less Than")
                     ? "Less than previous day"
@@ -268,7 +284,7 @@ const WellnessSummary = ({
                       labels={chartData.topHealthy.labels}
                       colors={["#25a17d", "#1abc9c", "#20c997"]}
                       series={chartData.topHealthy.counts}
-                      labelsfontSize="16px"
+                      labelsfontSize={chartData.topHealthy.labelStyles} // Pass dynamic font sizes
                       height={300}
                     />
                   ) : (
@@ -306,7 +322,7 @@ const WellnessSummary = ({
                         "#7986cb",
                       ]}
                       series={chartData.topOverburdened.counts}
-                      labelsfontSize="16px"
+                      labelsfontSize={chartData.topOverburdened.labelStyles} // Pass dynamic font sizes
                       height={300}
                     />
                   ) : (
@@ -338,9 +354,11 @@ const WellnessSummary = ({
                   {TopUnderutilizedTeams.length >= 1 ? (
                     <CommonDonutChart
                       labels={chartData.topUnderutilized.labels}
-                      colors={["#ABB3B3", "#F5BD7D", "#F5BD7D"]}
+                      // labels={["Branch Operation", "SEO", "jkgjk"]}
+                      colors={["#ABB3B3", "#F5BD7D", "#90a4ae"]}
+                      // series={[1, 3, 4]}
                       series={chartData.topUnderutilized.counts}
-                      labelsfontSize="16px"
+                      labelsfontSize={chartData.topUnderutilized.labelStyles} // Pass dynamic font sizes
                       height={300}
                     />
                   ) : (

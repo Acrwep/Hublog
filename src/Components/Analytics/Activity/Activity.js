@@ -155,9 +155,7 @@ const Activity = () => {
         const teamwiseActivityData = response?.data?.teams;
         const mostActivityteamsData = response?.data?.top;
         const leastActivityTeamsData = response?.data?.bottom;
-        setTotalActivity(
-          activityBreakdowndata?.total_active_time_per.toFixed(2) + "%"
-        );
+        setTotalActivity(activityBreakdowndata?.total_active_time_per);
         const [hours, minutes] =
           activityBreakdowndata?.total_active_time.split(":");
         setTotalActivityTime(`${hours}h:${minutes}m`);

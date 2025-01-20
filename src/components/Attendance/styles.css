@@ -40,8 +40,8 @@
 }
 .attendancesummary_percentage {
   font-weight: 700;
-  font-size: 24px;
-  margin-top: 16px;
+  font-size: 22px;
+  margin-top: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

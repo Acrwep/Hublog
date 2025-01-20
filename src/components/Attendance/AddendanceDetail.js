@@ -28,28 +28,6 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
   const [calendarDate, setCalendarDate] = useState(dayJs());
   const [drawerTableLoading, setDrawerTableLoading] = useState(false);
 
-  const attendanceTrendsXaxis = attendanceTrendsData.map((a) =>
-    moment(a.attendanceDate).format("DD/MM/YYYY")
-  );
-  const attendanceTrendsSeries = [
-    {
-      name: "Present",
-      data: attendanceTrendsData.map((item) => {
-        return item?.presentCount || 0;
-      }),
-    },
-    {
-      name: "Absent",
-      data: attendanceTrendsData.map((item) => {
-        if (selectUser === true && item.presentCount >= 1) {
-          return 0;
-        } else {
-          return item?.absentCount || 0;
-        }
-      }),
-    },
-  ];
-
   const columns = [
     {
       title: "Employee",

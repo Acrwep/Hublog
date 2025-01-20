@@ -375,8 +375,7 @@ const UserDetail = () => {
       const response = await getUserTotalBreak(payload);
       console.log("user total break response", response.data);
       const details = response.data;
-      const reverseData = details.reverse();
-      const removeNull = reverseData.filter((f) => f.totalBreakHours != null);
+      const removeNull = details.filter((f) => f.totalBreakHours != null);
       dispatch(storeUserTotalBreak(removeNull));
     } catch (error) {
       CommonToaster(error.response?.data, "error");

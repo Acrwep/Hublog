@@ -45,7 +45,7 @@ const Wellness = () => {
   const [teamId, setTeamId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [teamList, setTeamList] = useState([]);
-  const [healthyPercentage, setHealthyPercentage] = useState("");
+  const [healthyPercentage, setHealthyPercentage] = useState(null);
   const [previousHealthyPercentage, setPreviousHealthyPercentage] = useState();
   const [healthyComparison, setHealthyComparison] = useState("");
   const [workingTime, setWorkingTime] = useState("");
@@ -162,7 +162,7 @@ const Wellness = () => {
         setHealthyPercentage(
           response?.data?.healthyemployees?.healthyemployeesPercentage !==
             undefined
-            ? response.data.healthyemployees.healthyemployeesPercentage + "%"
+            ? response.data.healthyemployees.healthyemployeesPercentage
             : "-"
         );
 
@@ -302,7 +302,11 @@ const Wellness = () => {
         console.log("errr", error);
         CommonToaster(error?.response?.data, "error");
         setHealthyPercentage("-");
+        setPreviousHealthyPercentage("-");
+        setHealthyComparison("-");
         setWorkingTime("-");
+        setWorkingTimeComparison("-");
+        setPreviousWorkingtimePercentage("-");
         setHealthyEmployeeName("-");
         setHealthyEmployeeWorkingtime("-");
         setOverburdenedEmployeeName("-");

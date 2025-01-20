@@ -5,15 +5,15 @@ import ReactApexChart from "react-apexcharts";
 const DashboardChart = ({ data }) => {
   // Function to convert time in HH:MM:SS format to minutes
   const convertTimeToMinutes = (time) => {
+    if (time === null) return "0h:0m:0s";
     const [hours, minutes, seconds] = time.split(":").map(Number);
     return hours * 60 + minutes + seconds / 60;
   };
 
   // Extracting data for the chart
-  const attendanceDates = data.map(
-    (item) =>
-      // new Date(item.attendanceDate).toLocaleDateString()
-      item.attendanceDate
+  const attendanceDates = data.map((item) =>
+    // new Date(item.attendanceDate).toLocaleDateString()
+    moment(item.attendanceDate).format("DD/MM/YYYY")
   );
   const presentCount = data.map((item) => item.presentCount);
   const absentCount = data.map((item) => item.absentCount);
@@ -25,6 +25,7 @@ const DashboardChart = ({ data }) => {
   );
 
   const formatAverageWorkingTime = (time) => {
+    // if (time === null) return "0h:0m:0s";
     const [hours, minutes] = time.split(":").map(Number);
     return `${hours}h:${minutes}m`;
   };
@@ -50,8 +51,21 @@ const DashboardChart = ({ data }) => {
       enabled: false,
     },
     labels: attendanceDates,
+    // xaxis: {
+    //   type: "datetime",
+    // },
     xaxis: {
-      type: "datetime",
+      categories: attendanceDates,
+      labels: {
+        show: true,
+        rotateAlways: data.length >= 9 ? true : false, // Ensure rotation is applied
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
     },
     yaxis: [
       {
@@ -98,9 +112,9 @@ const DashboardChart = ({ data }) => {
     tooltip: {
       shared: true,
       intersect: false,
-      x: {
-        formatter: (val) => `Date: ${moment(val).format("DD-MM-YYYY")}`, // Customize date format if needed
-      },
+      // x: {
+      //   formatter: (val) => `Date: ${val}}`, // Customize date format if needed
+      // },
       y: {
         formatter: (value, { seriesIndex, dataPointIndex }) => {
           if (seriesIndex === 3) {
@@ -110,6 +124,9 @@ const DashboardChart = ({ data }) => {
           }
           return value;
         },
+      },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
       },
     },
     colors: ["#25a17d", "#ABB3B3", "#FEB019", "#00E396"],

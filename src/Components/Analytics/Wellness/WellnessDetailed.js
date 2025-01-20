@@ -86,7 +86,11 @@ const WellnessDetailed = ({ loading }) => {
       key: "healthyPercentage",
       width: 170,
       render: (text, record) => {
-        return <p>{text + "%"}</p>;
+        if (text === 0) {
+          return "0%";
+        } else {
+          return <p>{text.toFixed(2) + "%"}</p>;
+        }
       },
     },
     {
@@ -95,7 +99,11 @@ const WellnessDetailed = ({ loading }) => {
       key: "overburdenedPercentage",
       width: 170,
       render: (text, record) => {
-        return <p>{text + "%"}</p>;
+        if (text === 0) {
+          return "0%";
+        } else {
+          return <p>{text.toFixed(2) + "%"}</p>;
+        }
       },
     },
     {
@@ -104,7 +112,11 @@ const WellnessDetailed = ({ loading }) => {
       key: "underutilizedPercentage",
       width: 170,
       render: (text, record) => {
-        return <p>{text + "%"}</p>;
+        if (text === 0) {
+          return "0%";
+        } else {
+          return <p>{text.toFixed(2) + "%"}</p>;
+        }
       },
     },
   ];
