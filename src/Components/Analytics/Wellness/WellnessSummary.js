@@ -2,13 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Skeleton } from "antd";
 import CommonDonutChart from "../../../Components/Common/CommonDonutChart";
 import CommonBarChart from "../../../Components/Common/CommonBarChart";
+import { IoMdTrendingUp, IoMdTrendingDown } from "react-icons/io";
 import "../styles.css";
 import { useSelector } from "react-redux";
 import CommonNodatafound from "../../Common/CommonNodatafound";
 
 const WellnessSummary = ({
   healthyPercentage,
+  healthyComparison,
+  previousHealthyPercentage,
   workingTime,
+  workingTimeComparison,
+  previousWorkingtimePercentage,
   healthyEmployeeName,
   healthyEmployeeWorkingtime,
   overburdenedEmployeeName,
@@ -92,12 +97,25 @@ const WellnessSummary = ({
               <>
                 <p>Healthy employees</p>
                 <p className="userproductivity_contents">{healthyPercentage}</p>
-                {/* <p className="userproductivity_hours">
-              <span style={{ color: "#25a17d", fontWeight: "bold" }}>
-                16.66%
-              </span>{" "}
-              Less than previous day
-            </p> */}
+                <p className="userproductivity_hours">
+                  <span
+                    style={{
+                      color: healthyComparison.includes("Less Than")
+                        ? "rgba(244, 67, 54, 0.82)"
+                        : "#25a17d",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {healthyComparison === "No Variation"
+                      ? ""
+                      : previousHealthyPercentage.toFixed(0) + "%"}
+                  </span>{" "}
+                  {healthyComparison.includes("Less Than")
+                    ? "Less than previous day"
+                    : healthyComparison.includes("Greater Than")
+                    ? "Greater than previous day"
+                    : "Same as previous day"}
+                </p>
               </>
             )}
           </div>
@@ -117,12 +135,25 @@ const WellnessSummary = ({
               <>
                 <p>Working time</p>
                 <p className="userproductivity_contents">{workingTime}</p>
-                {/* <p className="userproductivity_hours">
-              <span style={{ color: "#25a17d", fontWeight: "bold" }}>
-                16.66%
-              </span>{" "}
-              Less than previous day
-            </p> */}
+                <p className="userproductivity_hours">
+                  <span
+                    style={{
+                      color: workingTimeComparison.includes("Less Than")
+                        ? "rgba(244, 67, 54, 0.82)"
+                        : "#25a17d",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {workingTimeComparison === "No Variation"
+                      ? ""
+                      : previousWorkingtimePercentage.toFixed(0) + "%"}
+                  </span>{" "}
+                  {workingTimeComparison.includes("Less Than")
+                    ? "Less than previous day"
+                    : workingTimeComparison.includes("Greater Than")
+                    ? "Greater than previous day"
+                    : "Same as previous day"}
+                </p>
               </>
             )}
           </div>
@@ -196,7 +227,7 @@ const WellnessSummary = ({
                 <>
                   <p className="devices_chartheading">Overall Wellness</p>
                   <p className="devices_chartsubheading">
-                    Distribution between offline and online devices.
+                    Overall Employee count based on their working hours
                   </p>
                   {OverallWellness.length >= 1 ? (
                     <CommonDonutChart
@@ -230,12 +261,12 @@ const WellnessSummary = ({
                 <>
                   <p className="devices_chartheading">Top Healthy</p>
                   <p className="devices_chartsubheading">
-                    Distribution between offline and online devices.
+                    Employee count for teams based on their working hours
                   </p>
                   {TopHealthyTeams.length >= 1 ? (
                     <CommonDonutChart
                       labels={chartData.topHealthy.labels}
-                      colors={["#258ea1", "#5976B3", "#25a17d"]}
+                      colors={["#25a17d", "#1abc9c", "#20c997"]}
                       series={chartData.topHealthy.counts}
                       labelsfontSize="16px"
                       height={300}
@@ -264,12 +295,16 @@ const WellnessSummary = ({
                 <>
                   <p className="devices_chartheading">Top Overburdened</p>
                   <p className="devices_chartsubheading">
-                    Distribution between offline and online devices.
+                    Employee count for teams based on their working hours
                   </p>
                   {TopOverburdenedTeams.length >= 1 ? (
                     <CommonDonutChart
                       labels={chartData.topOverburdened.labels}
-                      colors={["#258ea1", "#EA87C0", "#25a17d"]}
+                      colors={[
+                        "rgba(37,143,161,0.90)",
+                        " rgba(64,224,208,0.90)",
+                        "#7986cb",
+                      ]}
                       series={chartData.topOverburdened.counts}
                       labelsfontSize="16px"
                       height={300}
@@ -298,12 +333,12 @@ const WellnessSummary = ({
                 <>
                   <p className="devices_chartheading">Top Underutilized</p>
                   <p className="devices_chartsubheading">
-                    Distribution between offline and online devices.
+                    Employee count for teams based on their working hours
                   </p>
                   {TopUnderutilizedTeams.length >= 1 ? (
                     <CommonDonutChart
                       labels={chartData.topUnderutilized.labels}
-                      colors={["#5976B3", "#25a17d", "#F5BD7D"]}
+                      colors={["#ABB3B3", "#F5BD7D", "#F5BD7D"]}
                       series={chartData.topUnderutilized.counts}
                       labelsfontSize="16px"
                       height={300}

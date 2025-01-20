@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FiCoffee } from "react-icons/fi";
-import { MdAccessTime } from "react-icons/md";
 import { IoRocketOutline } from "react-icons/io5";
 import { FiActivity } from "react-icons/fi";
 import { MdCalendarMonth } from "react-icons/md";
 import { FaUserLarge } from "react-icons/fa6";
+import { GiLotus } from "react-icons/gi";
+import { PiMonitor, PiFlowerLotus } from "react-icons/pi";
 import { Row, Col, Avatar, Tooltip, Button } from "antd";
 import { UserOutlined, RedoOutlined } from "@ant-design/icons";
 import UserAttendance from "./UserAttendance";
@@ -29,6 +30,8 @@ import {
   getProductivityEmployeesList,
   getActivityBreakdown,
   getActivityEmployeeslist,
+  getWellnessEmployeeDetails,
+  getWellnessWorktimeTrends,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -55,10 +58,10 @@ const UserDetail = () => {
       icon: <MdCalendarMonth size={21} />,
     },
     { id: 2, name: "Breaks", icon: <FiCoffee size={21} /> },
-    { id: 3, name: "Wellness", icon: <MdAccessTime size={21} /> },
-    { id: 4, name: "Productivity", icon: <MdAccessTime size={21} /> },
+    { id: 3, name: "Wellness", icon: <PiFlowerLotus size={23} /> },
+    { id: 4, name: "Productivity", icon: <IoRocketOutline size={21} /> },
     { id: 5, name: "Activity", icon: <FiActivity size={21} /> },
-    { id: 6, name: "Apps & URLs", icon: <IoRocketOutline size={21} /> },
+    { id: 6, name: "Apps & URLs", icon: <PiMonitor size={21} /> },
   ];
   const [activePage, setActivePage] = useState(1);
   const [organizationId, setOrganizationId] = useState(null);
@@ -86,11 +89,15 @@ const UserDetail = () => {
   const [activityEmployeesData, setActivityEmployeesData] = useState([]);
   const [isActivityBreakdownEmpty, setIsActivityBreakdownEmpty] =
     useState(false);
+  const [wellnessEmployeeList, setWellnessEmployeeList] = useState([]);
+  const [wellnessTrendsData, setWellnessTrendsData] = useState([]);
   //loadings
   const [initialLoading, setInitialLoading] = useState(true);
   const [attendanceFilterLoading, setAttendanceFilterLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
   const [breakFilterLoading, setBreakFilterLoading] = useState(true);
+  const [wellnessLoading, setWellnessLoading] = useState(true);
+  const [wellnessFilterLoading, setWellnessFilterLoading] = useState(true);
   const [appsLoading, setAppsLoading] = useState(true);
   const [appsFilterLoading, setAppsFilterLoading] = useState(true);
   const [attendanceSummary, setAttendanceSummary] = useState("");
@@ -102,9 +109,9 @@ const UserDetail = () => {
   const [activityFilterLoading, setActivityFilterLoading] = useState(true);
 
   const handlePageChange = (id) => {
-    if (id === 3) {
-      return;
-    }
+    // if (id === 3) {
+    //   return;
+    // }
     setActivePage(id === activePage ? activePage : id);
   };
 
@@ -114,6 +121,7 @@ const UserDetail = () => {
   useEffect(() => {
     setAttendanceFilterLoading(true);
     setBreakFilterLoading(true);
+    setWellnessFilterLoading(true);
     setAppsFilterLoading(true);
     setProductivityFilterLoading(true);
     setActivityFilterLoading(true);
@@ -179,6 +187,7 @@ const UserDetail = () => {
   const getuserDetailsData = async (userId, orgId, startdate, enddate) => {
     setAttendanceFilterLoading(true);
     setBreakFilterLoading(true);
+    setWellnessFilterLoading(true);
     setAppsFilterLoading(true);
     setActivityFilterLoading(true);
     setProductivityFilterLoading(true);
@@ -224,6 +233,27 @@ const UserDetail = () => {
         setTimeout(() => {
           getUserTotalBreakData(userId, orgId, startdate, enddate);
         }, 350);
+      }
+    }
+    if (activePage === 3) {
+      const payload = {
+        organizationId: orgId,
+        ...(userId && { userId: userId }),
+        startDate: startdate,
+        endDate: enddate,
+      };
+      try {
+        const response = await getWellnessEmployeeDetails(payload);
+        const wellnessEmployeesData = response?.data?.employees;
+        console.log("wellness response", wellnessEmployeesData);
+        setWellnessEmployeeList(wellnessEmployeesData);
+      } catch (error) {
+        CommonToaster(error?.response?.data?.message);
+        setWellnessEmployeeList([]);
+      } finally {
+        setTimeout(() => {
+          getWellnessTrendData(userId, orgId, startdate, enddate);
+        }, 300);
       }
     }
     if (activePage === 4) {
@@ -357,6 +387,29 @@ const UserDetail = () => {
         setBreakLoading(false);
         setBreakFilterLoading(false);
       }, 350);
+    }
+  };
+
+  const getWellnessTrendData = async (userid, orgId, startdate, enddate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(userid && { userId: userid }),
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getWellnessWorktimeTrends(payload);
+      console.log("wellness detailed response", response);
+      const wellnessTrends = response?.data?.datewiseWellnessCount;
+      setWellnessTrendsData(wellnessTrends);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setWellnessTrendsData([]);
+    } finally {
+      setTimeout(() => {
+        setWellnessLoading(false);
+        setWellnessFilterLoading(false);
+      }, 150);
     }
   };
 
@@ -719,9 +772,7 @@ const UserDetail = () => {
               <React.Fragment key={index}>
                 <div
                   className={
-                    index === 2
-                      ? "settings_disabledlistContainer"
-                      : item.id === activePage
+                    item.id === activePage
                       ? "settings_activelistContainer"
                       : item.id != activePage
                       ? "settings_inactivelistContainer"
@@ -772,7 +823,12 @@ const UserDetail = () => {
           )}
           {activePage === 3 && (
             <div>
-              <UserWellness />
+              <UserWellness
+                loading={wellnessLoading}
+                filterLoading={wellnessFilterLoading}
+                wellnessEmployeeList={wellnessEmployeeList}
+                wellnessTrendsData={wellnessTrendsData}
+              />
             </div>
           )}
           {activePage === 4 && (

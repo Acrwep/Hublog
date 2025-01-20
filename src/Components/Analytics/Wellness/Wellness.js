@@ -46,7 +46,12 @@ const Wellness = () => {
   const [userId, setUserId] = useState(null);
   const [teamList, setTeamList] = useState([]);
   const [healthyPercentage, setHealthyPercentage] = useState("");
+  const [previousHealthyPercentage, setPreviousHealthyPercentage] = useState();
+  const [healthyComparison, setHealthyComparison] = useState("");
   const [workingTime, setWorkingTime] = useState("");
+  const [workingTimeComparison, setWorkingTimeComparison] = useState("");
+  const [previousWorkingtimePercentage, setPreviousWorkingtimePercentage] =
+    useState();
   const [healthyEmployeeName, setHealthyEmployeeName] = useState("");
   const [healthyEmployeeWorkingtime, setHealthyEmployeeWorkingtime] =
     useState("");
@@ -155,18 +160,47 @@ const Wellness = () => {
         console.log("wellness summary response", response);
         //healthy percentage handling
         setHealthyPercentage(
-          response?.data?.healthyemployeesPercentage !== undefined
-            ? response.data.healthyemployeesPercentage + "%"
+          response?.data?.healthyemployees?.healthyemployeesPercentage !==
+            undefined
+            ? response.data.healthyemployees.healthyemployeesPercentage + "%"
+            : "-"
+        );
+
+        setHealthyComparison(
+          response?.data?.healthyemployees?.comparison !== undefined
+            ? response.data.healthyemployees.comparison
+            : "-"
+        );
+
+        setPreviousHealthyPercentage(
+          response?.data?.healthyemployees
+            ?.previousHealthyemployeesPercentage !== undefined
+            ? parseInt(
+                response.data.healthyemployees
+                  .previousHealthyemployeesPercentage
+              )
             : "-"
         );
         //workingtime handling
-        if (response?.data?.workingtime !== undefined) {
+        if (response?.data?.workingtime?.totalWorkingtime !== undefined) {
           const [hours, minutes, seconds] =
-            response?.data?.workingtime.split(":");
+            response?.data?.workingtime?.totalWorkingtime.split(":");
           setWorkingTime(hours + "h:" + minutes + "m:" + seconds + "s");
         } else {
           setWorkingTime("-");
         }
+
+        setWorkingTimeComparison(
+          response?.data?.workingtime?.comparison !== undefined
+            ? response.data.workingtime.comparison
+            : "-"
+        );
+
+        setPreviousWorkingtimePercentage(
+          response?.data?.workingtime?.totalWorkingtimePercentage !== undefined
+            ? parseInt(response.data.workingtime.totalWorkingtimePercentage)
+            : "-"
+        );
         //healthy employee handling
         setHealthyEmployeeName(
           response?.data?.topHealthyemployee?.fullName !== undefined
@@ -449,7 +483,17 @@ const Wellness = () => {
       setMonthName(currentMonthName);
       setYear(currentYear);
       setUserList(nonChangeUserList);
-      getWellnessSummaryData(organizationId, null, currentDate, activePage);
+      const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+      setSelectedDates(PreviousAndCurrentDate);
+      getWellnessSummaryData(
+        organizationId,
+        null,
+        null,
+        currentDate,
+        PreviousAndCurrentDate[0],
+        PreviousAndCurrentDate[1],
+        activePage
+      );
     }
   };
   return (
@@ -546,7 +590,11 @@ const Wellness = () => {
         <div>
           <WellnessSummary
             healthyPercentage={healthyPercentage}
+            healthyComparison={healthyComparison}
+            previousHealthyPercentage={previousHealthyPercentage}
             workingTime={workingTime}
+            workingTimeComparison={workingTimeComparison}
+            previousWorkingtimePercentage={previousWorkingtimePercentage}
             healthyEmployeeName={healthyEmployeeName}
             healthyEmployeeWorkingtime={healthyEmployeeWorkingtime}
             overburdenedEmployeeName={overburdenedEmployeeName}

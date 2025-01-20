@@ -10,6 +10,10 @@
 .wellness_employeeactivetime {
   margin-top: 10px;
 }
+.wellness_cardupicon {
+  margin-top: 10px;
+  margin-right: 6px;
+}
 /* productivity styles */
 .mostproductive_heading {
   font-weight: 600;
