@@ -449,13 +449,17 @@ const Wellness = () => {
   };
 
   const handleRefresh = () => {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+
     const today = new Date();
     const givenDate = new Date(date);
-    const currentMonthName = moment().format("MMMM");
-    const currentYear = moment().year();
-    let isDateChange = false;
-    let isMonthChange = false;
+    const detailedCurrentDate = new Date(selectedDates[1]);
 
+    let isDateChange = false;
+    let summaryCurrentDateChange = false;
+    let isPreviousChange = false;
+
+    //summary date check
     if (
       today.getFullYear() === givenDate.getFullYear() &&
       today.getMonth() === givenDate.getMonth() &&
@@ -465,15 +469,28 @@ const Wellness = () => {
     } else {
       isDateChange = true;
     }
-    if (currentMonthName === monthName && currentYear === year) {
-      isMonthChange = false;
+    //detailed date check
+    if (
+      givenDate.getFullYear() === today.getFullYear() &&
+      givenDate.getMonth() === today.getMonth() &&
+      givenDate.getDate() === today.getDate()
+    ) {
+      summaryCurrentDateChange = false;
     } else {
-      isMonthChange = true;
+      summaryCurrentDateChange = true;
     }
 
+    if (PreviousandCurrentDate[0] === selectedDates[0]) {
+      isPreviousChange = false;
+    } else {
+      isPreviousChange = true;
+    }
+
+    //check changes found or not
     if (
       isDateChange === false &&
-      isMonthChange === false &&
+      summaryCurrentDateChange === false &&
+      isPreviousChange === false &&
       teamId === null &&
       userId === null
     ) {
@@ -483,9 +500,6 @@ const Wellness = () => {
       setUserId(null);
       const currentDate = new Date();
       setDate(currentDate);
-      setMonth(dayJs());
-      setMonthName(currentMonthName);
-      setYear(currentYear);
       setUserList(nonChangeUserList);
       const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
       setSelectedDates(PreviousAndCurrentDate);

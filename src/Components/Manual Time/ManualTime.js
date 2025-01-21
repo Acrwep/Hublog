@@ -380,7 +380,7 @@ export default function ManualTime() {
         }
       );
       formRestart();
-      CommonToaster("Manual Time Created Successfully", "success");
+      CommonToaster("Success! Data added to the Attendance table.", "success");
     } catch (error) {
       console.error("Error posting data:", error);
       CommonToaster(error?.response?.data?.message, "error");

@@ -90,7 +90,7 @@ const Workplace = ({ mainloader }) => {
     };
     try {
       const response = await updateWellnessRules(orgId, payload);
-      CommonToaster("Updated", "success");
+      CommonToaster("Wellness rules updated", "success");
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
     } finally {

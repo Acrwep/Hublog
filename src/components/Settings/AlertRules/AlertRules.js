@@ -127,7 +127,7 @@ export default function AlertRules({ loading }) {
     try {
       const response = await updateAlertRules(request);
       console.log("alertrules update response", response);
-      CommonToaster("Alert rule updated", "success");
+      CommonToaster("Alert rules updated", "success");
       getAlertRulesData();
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
