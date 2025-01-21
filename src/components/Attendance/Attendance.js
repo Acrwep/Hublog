@@ -21,9 +21,7 @@ import {
 } from "../APIservice.js/action";
 import { useDispatch } from "react-redux";
 import {
-  storeAttendanceSummary,
   storeAttendanceAndBreakSummary,
-  storeLateArrival,
   storeAttendanceTrends,
   storeDatewiseAttendancePresentData,
   storeDatewiseAttendanceAbsentData,
@@ -50,6 +48,9 @@ const Attendance = () => {
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [selectUser, setSelectUser] = useState(false);
+  const [attendancePercentage, setAttendancePercentage] = useState();
+  const [totalBreakDuration, setTotalBreakDuration] = useState("");
+  const [totalWorkingtime, setTotalWorkingtime] = useState();
   const [attendancedetailLoading, setAttendancedetailLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -229,18 +230,43 @@ const Attendance = () => {
         console.log("attendance summary response", response);
         const details = response?.data;
 
-        dispatch(storeAttendanceSummary(details));
+        //top cards handling
+        setAttendancePercentage(
+          details.overallAttendancePercentage !== undefined
+            ? parseInt(details.overallAttendancePercentage)
+            : "-"
+        );
+        if (details?.overallTotalTime) {
+          setTotalWorkingtime(
+            moment(details.overallTotalTime, "HH:mm:ss").format(
+              "HH[h]:mm[m]:ss[s]"
+            )
+          );
+        } else {
+          setTotalWorkingtime("-");
+        }
+
+        //activity level chart handling
+        if (details.attendanceSummaries) {
+          dispatch(storeAttendanceActivityLevel(details.attendanceSummaries));
+        } else {
+          dispatch(storeAttendanceActivityLevel([]));
+        }
       } catch (error) {
         CommonToaster(error.response?.data?.message, "error");
-        const details = null;
-        dispatch(storeAttendanceSummary(details));
+        const details = [];
+        dispatch(storeAttendanceActivityLevel(details));
       } finally {
         setTimeout(() => {
-          getSummaryAttendanceTrendsData(
+          getAttendanceBreakTrendaData(
             teamid,
             orgId,
-            startdate ? startdate : PreviousandCurrentDate[0],
-            enddate ? enddate : PreviousandCurrentDate[1]
+            startdate === undefined || startdate === null
+              ? PreviousandCurrentDate[0]
+              : startdate,
+            enddate === undefined || enddate === null
+              ? PreviousandCurrentDate[1]
+              : enddate
           );
         }, 350);
       }
@@ -289,58 +315,6 @@ const Attendance = () => {
     }
   };
 
-  const getSummaryAttendanceTrendsData = async (
-    teamid,
-    orgId,
-    startdate,
-    enddate
-  ) => {
-    const payload = {
-      ...(teamid && { teamId: teamid }),
-      organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getAttendanceTrends(payload);
-      console.log("attendance activitylevel", response);
-      const details = response?.data;
-      dispatch(storeAttendanceActivityLevel(details));
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      const details = [];
-      dispatch(storeAttendanceActivityLevel(details));
-    } finally {
-      setTimeout(() => {
-        getLateArrivalData(teamid, orgId, startdate, enddate);
-      }, 350);
-    }
-  };
-
-  const getLateArrivalData = async (teamid, orgId, startdate, enddate) => {
-    const payload = {
-      ...(teamid && { teamId: teamid }),
-      organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getLateArrivals(payload);
-      console.log("latearrival response", response);
-      const details = response?.data;
-      details.reverse();
-      dispatch(storeLateArrival(details));
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      const details = [];
-      dispatch(storeLateArrival(details));
-    } finally {
-      setTimeout(() => {
-        getAttendanceBreakTrendaData(teamid, orgId, startdate, enddate);
-      }, 350);
-    }
-  };
-
   const getAttendanceBreakTrendaData = async (
     teamid,
     orgId,
@@ -358,6 +332,13 @@ const Attendance = () => {
       console.log("attendance breaktrends response", response);
       const details = response?.data?.data;
       dispatch(storeAttendanceBreakTrends(details));
+      if (response?.data?.totalBreakDuration !== undefined) {
+        const [hours, minutes, seconds] =
+          response?.data?.totalBreakDuration.split(":");
+        setTotalBreakDuration(hours + "h:" + minutes + "m:" + seconds + "s");
+      } else {
+        setTotalBreakDuration("-");
+      }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
@@ -387,7 +368,7 @@ const Attendance = () => {
     try {
       const response = await getAttendanceTrends(payload);
       console.log("attendance trends", response);
-      const details = response?.data;
+      const details = response?.data?.attendanceSummaries;
       dispatch(storeAttendanceTrends(details));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
@@ -491,6 +472,11 @@ const Attendance = () => {
       isPreviousChange === false
     ) {
       return;
+    }
+    if (activePage === 1) {
+      setSummaryLoading(true);
+    } else {
+      setAttendancedetailLoading(true);
     }
     setAttendancedetailLoading(true);
     setUserList(nonChangeUserList);
@@ -609,7 +595,12 @@ const Attendance = () => {
           <div>
             {activePage === 1 && (
               <div>
-                <AttendanceSummary loading={summaryLoading} />
+                <AttendanceSummary
+                  attendancePercentage={attendancePercentage}
+                  totalWorkingtime={totalWorkingtime}
+                  totalBreakDuration={totalBreakDuration}
+                  loading={summaryLoading}
+                />
                 {/* Add your content for page 1 here */}
               </div>
             )}

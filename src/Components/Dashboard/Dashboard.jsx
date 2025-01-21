@@ -40,7 +40,6 @@ import { parseTimeToDecimal } from "../Common/Validation";
 
 const Dashboard = () => {
   //usestates
-  const [todatAttendanceData, setTodatAttendanceData] = useState(null);
   const [todayAttendanceSeries, setTodayAttendanceSeries] = useState([]);
   const [teamList, setTeamList] = useState([]);
   const [teamId, setTeamId] = useState(null);
@@ -246,30 +245,15 @@ const Dashboard = () => {
     try {
       const response = await getAttendanceSummary(payload);
       console.log("today dashboard response", response);
-      const details = response?.data;
-      setTodatAttendanceData(details);
+      const details = response?.data?.attendanceSummaries[0];
       let todaySeries = [];
-      todaySeries.push(
-        response?.data.presentCount || 0,
-        response?.data.absentCount || 0
-      );
+      todaySeries.push(details?.presentCount || 0, details?.absentCount || 0);
       setTodayAttendanceSeries(todaySeries);
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
-      const details = null;
-      setTodatAttendanceData(details);
+      setTodayAttendanceSeries([]);
     } finally {
       setTimeout(() => {
-        // getTopProductivityData(
-        //   teamid ? teamid : null,
-        //   orgId,
-        //   startdate != undefined || startdate != null
-        //     ? startdate
-        //     : PreviousandCurrentDate[0],
-        //   enddate != undefined || enddate != null
-        //     ? enddate
-        //     : PreviousandCurrentDate[1]
-        // );
         getProductivityOutliersData(
           orgId,
           teamid ? teamid : null,
@@ -371,7 +355,8 @@ const Dashboard = () => {
       ) {
         setDashboardData([]);
       } else {
-        setDashboardData(details);
+        //dashboard chart handling
+        setDashboardData(details?.attendanceSummaries || []);
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
@@ -561,7 +546,7 @@ const Dashboard = () => {
                 <>
                   <p className="devices_chartheading">Today's Attendance</p>
 
-                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                  {/* <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
                     <Col xs={24} sm={24} md={12} lg={12}>
                       <p className="totalactive_timeheading">
                         On time arrivals
@@ -576,35 +561,40 @@ const Dashboard = () => {
                         {todatAttendanceData?.lateArrivals || 0}
                       </p>
                     </Col>
-                  </Row>
-                  {todayAttendanceSeries.length >= 1 ? (
-                    <CommonDonutChart
-                      labels={["Present", "Absent"]}
-                      colors={["#25a17d", "#ABB3B3"]}
-                      series={todayAttendanceSeries}
-                      labelsfontSize="17px"
-                    />
-                  ) : (
-                    <CommonNodatafound />
-                  )}
+                  </Row> */}
+                  <div className="attendance_todayattendance_chartcontainer">
+                    {todayAttendanceSeries.length >= 1 ? (
+                      <CommonDonutChart
+                        labels={["Present", "Absent"]}
+                        colors={["#25a17d", "#ABB3B3"]}
+                        series={todayAttendanceSeries}
+                        labelsfontSize="17px"
+                        height={300}
+                      />
+                    ) : (
+                      <CommonNodatafound />
+                    )}
+                  </div>
                 </>
               )}
             </div>
           </Col>
           <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
-              {/* <ReactApexChart
-                    options={options}
-                    series={series}
-                    // type="line"
-                    height={350}
-                  /> */}
-              {loading ? (
-                <div style={{ height: "50vh" }}>
-                  <div className="screenshots_spinContainer">
-                    <Spin />
-                  </div>
-                </div>
+              {filterLoading ? (
+                // <div style={{ height: "50vh" }}>
+                //   <div className="screenshots_spinContainer">
+                //     <Spin />
+                //   </div>
+                // </div>
+                <Skeleton
+                  active
+                  style={{ height: "50vh" }}
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
               ) : (
                 <>
                   {dashboardData.length >= 1 ? (

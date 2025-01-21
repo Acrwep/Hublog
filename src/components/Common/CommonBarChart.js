@@ -18,12 +18,14 @@ const CommonBarChart = ({
 
   // Function to format time as "1hr 30min" for tooltips
   const formatTooltipTime = (value) => {
-    if (isNaN(value) || value === null || value === undefined)
+    if (isNaN(value) || value === null || value === undefined) {
       return "0hr 0m 0s";
-    const hours = Math.floor(value);
-    const minutes = Math.floor((value % 1) * 60);
-    const seconds = Math.floor(((value % 1) * 3600) % 60);
-    return `${hours}hr ${minutes}m ${seconds}s`;
+    } else {
+      const hours = Math.floor(value);
+      const minutes = Math.floor((value % 1) * 60);
+      const seconds = Math.floor(((value % 1) * 3600) % 60);
+      return `${hours}hr ${minutes}m ${seconds}s`;
+    }
   };
 
   const options = {

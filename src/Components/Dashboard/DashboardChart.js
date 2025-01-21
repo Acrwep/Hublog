@@ -25,9 +25,12 @@ const DashboardChart = ({ data }) => {
   );
 
   const formatAverageWorkingTime = (time) => {
-    // if (time === null) return "0h:0m:0s";
-    const [hours, minutes] = time.split(":").map(Number);
-    return `${hours}h:${minutes}m`;
+    if (isNaN(time) || time === null || time === undefined) {
+      return "0hr 0m 0s";
+    } else {
+      const [hours, minutes] = time.split(":").map(Number);
+      return `${hours}h:${minutes}m`;
+    }
   };
 
   // Chart options configuration

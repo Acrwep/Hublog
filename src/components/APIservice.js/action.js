@@ -113,7 +113,7 @@ export const LoginApi = async (loginCredential) => {
 export const getAttendanceSummary = async (payload) => {
   try {
     const response = await api.get(
-      `/api/AttendanceDashboard/dashboard-summary`,
+      `/api/AttendanceDashboard/AllAttendanceSummary`,
       {
         params: payload,
       }

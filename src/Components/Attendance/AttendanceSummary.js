@@ -8,29 +8,24 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import CommonNodatafound from "../Common/CommonNodatafound";
 
-const AttendanceSummary = ({ loading }) => {
-  const [date, setDate] = useState(new Date());
-  const summaryData = useSelector((state) => state.attendancesummary);
-  const todayAttendanceData = useSelector((state) => state.todayattendance);
+const AttendanceSummary = ({
+  attendancePercentage,
+  totalWorkingtime,
+  totalBreakDuration,
+  loading,
+}) => {
   const attendanceActivityLevelData = useSelector(
     (state) => state.attendanceactivitylevel
   );
-  const lateArrivalData = useSelector((state) => state.latearrival);
+  const todayAttendanceData = useSelector((state) => state.todayattendance);
+  const lateArrivalData = [];
   const attendanceBreakTrendsData = useSelector(
     (state) => state.attendancebreaktrends
   );
 
-  //usestates
-  const [attendancePercentage, setAttendancePercentage] = useState("");
-  const [lateArrivalPercentage, setLateArrivalPercentage] = useState("");
-  const [totalBreaktime, setTotalBreakTime] = useState("");
-  const [totalWorkingtime, setTotalWorkingtime] = useState("");
-  const [todayOntimeArrival, setTodayOntimeArrival] = useState(null);
-  const [todayLateArrival, setTodayLateArrival] = useState(null);
-
   const todayAttendanceSeries = [
-    parseInt(todayAttendanceData?.presentCount || 0),
-    parseInt(todayAttendanceData?.absentCount || 0),
+    parseInt(todayAttendanceData?.attendanceSummaries[0].presentCount || 0),
+    parseInt(todayAttendanceData?.attendanceSummaries[0].absentCount || 0),
   ];
 
   const attendanceActivityLevelXasis = attendanceActivityLevelData.map((a) =>
@@ -150,31 +145,6 @@ const AttendanceSummary = ({ loading }) => {
     },
   };
 
-  useEffect(() => {
-    setTodayOntimeArrival(todayAttendanceData?.onTimeArrivals);
-    setTodayLateArrival(todayAttendanceData?.lateArrivals);
-    setAttendancePercentage(summaryData?.attendancePercentage);
-    setLateArrivalPercentage(summaryData?.lateArrivals);
-    if (summaryData?.totalBreakTime) {
-      setTotalBreakTime(
-        moment(summaryData.totalBreakTime, "HH:mm:ss").format(
-          "HH[h]:mm[m]:ss[s]"
-        )
-      );
-    } else {
-      setTotalBreakTime("00h:00m");
-    }
-    if (summaryData?.totalWorkingTime) {
-      setTotalWorkingtime(
-        moment(summaryData.totalWorkingTime, "HH:mm:ss").format(
-          "HH[h]:mm[m]:ss[s]"
-        )
-      );
-    } else {
-      setTotalWorkingtime("-");
-    }
-  }, [loading]);
-
   return (
     <div>
       <Row gutter={16}>
@@ -196,7 +166,11 @@ const AttendanceSummary = ({ loading }) => {
                   Attendance %
                 </p>
                 <p className="attendancesummary_percentage">
-                  {attendancePercentage}%
+                  {attendancePercentage === "-"
+                    ? "-"
+                    : attendancePercentage === 0
+                    ? "0%"
+                    : attendancePercentage.toFixed(2) + "%"}
                 </p>
               </>
             )}
@@ -219,9 +193,7 @@ const AttendanceSummary = ({ loading }) => {
                 <p style={{ color: "#e93b3a", fontWeight: "500" }}>
                   Late Arrivals
                 </p>
-                <p className="attendancesummary_percentage">
-                  {lateArrivalPercentage}%
-                </p>
+                <p className="attendancesummary_percentage">-</p>
               </>
             )}
           </div>
@@ -241,7 +213,9 @@ const AttendanceSummary = ({ loading }) => {
             ) : (
               <>
                 <p style={{ fontWeight: "500" }}>Break time</p>
-                <p className="attendancesummary_percentage">{totalBreaktime}</p>
+                <p className="attendancesummary_percentage">
+                  {totalBreakDuration}
+                </p>
               </>
             )}
           </div>
@@ -288,7 +262,7 @@ const AttendanceSummary = ({ loading }) => {
                 <>
                   <p className="devices_chartheading">Today's Attendance</p>
 
-                  <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
+                  {/* <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
                     <Col xs={24} sm={24} md={12} lg={12}>
                       <p className="totalactive_timeheading">
                         On time arrivals
@@ -299,13 +273,16 @@ const AttendanceSummary = ({ loading }) => {
                       <p className="totalactive_timeheading">Late arrivals</p>
                       <p className="totalactive_time">{todayLateArrival}</p>
                     </Col>
-                  </Row>
-                  <CommonDonutChart
-                    labels={["Present", "Absent"]}
-                    colors={["#25a17d", "#ABB3B3"]}
-                    series={todayAttendanceSeries}
-                    labelsfontSize="17px"
-                  />
+                  </Row> */}
+                  <div className="attendance_todayattendance_chartcontainer">
+                    <CommonDonutChart
+                      labels={["Present", "Absent"]}
+                      colors={["#25a17d", "#ABB3B3"]}
+                      series={todayAttendanceSeries}
+                      labelsfontSize="17px"
+                      height={300}
+                    />
+                  </div>
                 </>
               )}
             </div>

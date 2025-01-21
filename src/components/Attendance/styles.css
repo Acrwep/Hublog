@@ -55,6 +55,12 @@
   line-height: 14px !important;
   border-radius: 12px !important;
 }
+.attendance_todayattendance_chartcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
 /* attendance details styles */
 .attendancedetail_employeelistCalender {

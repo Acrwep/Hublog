@@ -229,6 +229,9 @@ export default function UserAttendance({
     } catch (error) {
       console.log("attendance error", error);
       CommonToaster(error.response?.data?.message, "error");
+      setSelectedDateAttendanceData([]);
+      setFisrtName("");
+      setLastName("");
     } finally {
       setTimeout(() => {
         setDrawerLoading(false);
