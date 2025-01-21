@@ -23,7 +23,6 @@ import { useDispatch } from "react-redux";
 import {
   storeAttendanceSummary,
   storeAttendanceAndBreakSummary,
-  storeSummaryAttendanceTrends,
   storeLateArrival,
   storeAttendanceTrends,
   storeDatewiseAttendancePresentData,
@@ -34,6 +33,7 @@ import {
   storeDatewiseAttendanceUserValue,
   storeTodayAttendance,
   storeAttendanceBreakTrends,
+  storeAttendanceActivityLevel,
 } from "../Redux/slice";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import moment from "moment";
@@ -303,13 +303,13 @@ const Attendance = () => {
     };
     try {
       const response = await getAttendanceTrends(payload);
-      console.log("summary attendance trends", response);
+      console.log("attendance activitylevel", response);
       const details = response?.data;
-      dispatch(storeSummaryAttendanceTrends(details));
+      dispatch(storeAttendanceActivityLevel(details));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
-      dispatch(storeSummaryAttendanceTrends(details));
+      dispatch(storeAttendanceActivityLevel(details));
     } finally {
       setTimeout(() => {
         getLateArrivalData(teamid, orgId, startdate, enddate);

@@ -12,8 +12,8 @@ const Summary = ({ loading }) => {
   const [date, setDate] = useState(new Date());
   const summaryData = useSelector((state) => state.attendancesummary);
   const todayAttendanceData = useSelector((state) => state.todayattendance);
-  const attendanceTrendsData = useSelector(
-    (state) => state.summaryattendancetrends
+  const attendanceActivityLevelData = useSelector(
+    (state) => state.attendanceactivitylevel
   );
   const lateArrivalData = useSelector((state) => state.latearrival);
   const attendanceBreakTrendsData = useSelector(
@@ -33,7 +33,7 @@ const Summary = ({ loading }) => {
     parseInt(todayAttendanceData?.absentCount || 0),
   ];
 
-  const attendanceTrendsXasis = attendanceTrendsData.map((a) =>
+  const attendanceTrendsXasis = attendanceActivityLevelData.map((a) =>
     moment(a.attendanceDate).format("DD/MM/YYYY")
   );
 
@@ -44,13 +44,13 @@ const Summary = ({ loading }) => {
   const attendanceTrendsSeries = [
     {
       name: "Present",
-      data: attendanceTrendsData.map((item) => {
+      data: attendanceActivityLevelData.map((item) => {
         return item?.presentCount || 0;
       }),
     },
     {
       name: "Absent",
-      data: attendanceTrendsData.map((item) => {
+      data: attendanceActivityLevelData.map((item) => {
         return item?.absentCount || 0;
       }),
     },

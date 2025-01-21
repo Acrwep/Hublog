@@ -66,11 +66,11 @@ const attendanceTrendsSlice = createSlice({
   },
 });
 
-const summaryAttendanceTrendsSlice = createSlice({
-  name: "summaryattendancetrends",
+const attendanceActivityLevelSlice = createSlice({
+  name: "attendanceactivitylevel",
   initialState,
   reducers: {
-    storeSummaryAttendanceTrends(state, action) {
+    storeAttendanceActivityLevel(state, action) {
       state = action.payload;
       return state;
     },
@@ -717,8 +717,8 @@ export const { storeActiveTeam } = activeTeamSlice.actions;
 export const { storeAttendanceAndBreakSummary } =
   attendanceandbreakSummarySlice.actions;
 export const { storeTodayAttendance } = todayAttendanceSlice.actions;
-export const { storeSummaryAttendanceTrends } =
-  summaryAttendanceTrendsSlice.actions;
+export const { storeAttendanceActivityLevel } =
+  attendanceActivityLevelSlice.actions;
 export const { storeLateArrival } = latearrivalSlice.actions;
 export const { storeAttendanceBreakTrends } =
   attendanceBreakTrendsSlice.actions;
@@ -804,8 +804,8 @@ export const teamMemberReducer = teamMemberSlice.reducer;
 export const activeTeamReducer = activeTeamSlice.reducer;
 export const attendanceSummaryReducer = attendanceSummarySlice.reducer;
 export const attendancetrendsReducer = attendanceTrendsSlice.reducer;
-export const summaryattendancetrendsReducer =
-  summaryAttendanceTrendsSlice.reducer;
+export const attendanceActivityLevelReducer =
+  attendanceActivityLevelSlice.reducer;
 export const latearrivalReducer = latearrivalSlice.reducer;
 export const attendanceBreakTrendsReducer = attendanceBreakTrendsSlice.reducer;
 export const attendanceandbreaksummaryReducer =
