@@ -64,6 +64,9 @@ export default function UserWellness({
     },
     xaxis: {
       categories: wellnessTrendXasis,
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
       labels: {
         show: true,
         rotate: -45, // Rotate labels by -40 degrees
@@ -96,6 +99,9 @@ export default function UserWellness({
             val === 1 ? `You are ${serirsName}` : "-"
           }</span>`;
         },
+      },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
       },
     },
     colors: ["#25a17d", "rgba(37,143,161,0.90)", "#ABB3B3"], // Different colors for the three series

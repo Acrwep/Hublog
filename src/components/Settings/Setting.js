@@ -74,7 +74,7 @@ const Settings = () => {
     },
     { id: 2, name: "Teams", icon: <LuUsers size={21} /> },
     { id: 3, name: "Roles", icon: <MdAccessTime size={21} /> },
-    { id: 4, name: "Workplace", icon: <SiWorkplace size={21} /> },
+    { id: 4, name: "Wellness Rules", icon: <SiWorkplace size={21} /> },
     { id: 5, name: "Shifts", icon: <MdAccessTime size={21} /> },
     { id: 6, name: "Breaks", icon: <FiCoffee size={21} /> },
     { id: 7, name: "Productivity Rules", icon: <IoRocketOutline size={21} /> },
@@ -328,7 +328,7 @@ const Settings = () => {
             : activePage === 3
             ? "> Roles"
             : activePage === 4
-            ? "> Workplace"
+            ? "> Wellness Rules"
             : activePage === 5
             ? "> Shifts"
             : activePage === 6

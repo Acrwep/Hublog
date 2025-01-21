@@ -104,7 +104,7 @@ const Workplace = ({ mainloader }) => {
         <Loader />
       ) : (
         <div>
-          <p className="settings_workplaceheading">Workplace</p>
+          <p className="settings_workplaceheading">Wellness Rules</p>
           <p className="settings_workplacecontent">
             Set your ranges for healthy, underutilized, and overburned levels
           </p>

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Row, Tooltip } from "antd";
 import { TbCirclesFilled } from "react-icons/tb";
 import { RedoOutlined } from "@ant-design/icons";
-import Summary from "./Summary";
-import AttendanceDetail from "./AddendanceDetail";
+import AttendanceSummary from "./AttendanceSummary";
+import AttendanceDetailed from "./AttendanceDetailed";
 import DateWiseAttendance from "./DateWiseAttendance";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
@@ -609,13 +609,13 @@ const Attendance = () => {
           <div>
             {activePage === 1 && (
               <div>
-                <Summary loading={summaryLoading} />
+                <AttendanceSummary loading={summaryLoading} />
                 {/* Add your content for page 1 here */}
               </div>
             )}
             {activePage === 2 && (
               <div>
-                <AttendanceDetail
+                <AttendanceDetailed
                   tList={teamList}
                   uList={userList}
                   selectUser={selectUser}

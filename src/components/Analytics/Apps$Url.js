@@ -92,6 +92,9 @@ const Apps$Url = () => {
           </div>
         `;
       },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     yaxis: {
       labels: {

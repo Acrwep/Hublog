@@ -99,8 +99,8 @@ export default function UserBreak({ loading, filterLoading }) {
       },
       xaxis: {
         categories: xaxisCategories, // Dates from response
-        title: {
-          text: "Break Date",
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
         },
         labels: {
           show: true,

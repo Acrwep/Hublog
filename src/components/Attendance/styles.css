@@ -46,8 +46,8 @@
   text-overflow: ellipsis;
 }
 .attendancesummary_cardskeleton .ant-skeleton-title {
-  height: 14px !important;
-  line-height: 14px !important;
+  height: 12px !important;
+  line-height: 12px !important;
   border-radius: 12px !important;
 }
 .attendancesummary_cardskeleton .ant-skeleton-paragraph > li {

@@ -112,6 +112,9 @@ const ActivityDetailed = ({ loading }) => {
           )}</span>`;
         },
       },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     colors: ["#25a17d", "#8a8c8c"], // Different colors for the three series
   };

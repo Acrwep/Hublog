@@ -8,6 +8,7 @@ const CommonBarChart = ({
   timebased,
   distributed,
   legend,
+  chartArray,
 }) => {
   // Function to format time as "1hr" for y-axis labels
   const formatTimeInHours = (value) => {
@@ -53,6 +54,7 @@ const CommonBarChart = ({
       categories: xasis,
       labels: {
         show: true,
+        rotateAlways: chartArray && chartArray.length >= 10 ? true : false, // Ensure rotation is applied
         rotate: -45, // Rotate labels by -40 degrees
         color: ["#ffffff"],
         style: {

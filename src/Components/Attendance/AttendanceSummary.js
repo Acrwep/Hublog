@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import CommonNodatafound from "../Common/CommonNodatafound";
 
-const Summary = ({ loading }) => {
+const AttendanceSummary = ({ loading }) => {
   const [date, setDate] = useState(new Date());
   const summaryData = useSelector((state) => state.attendancesummary);
   const todayAttendanceData = useSelector((state) => state.todayattendance);
@@ -33,7 +33,7 @@ const Summary = ({ loading }) => {
     parseInt(todayAttendanceData?.absentCount || 0),
   ];
 
-  const attendanceTrendsXasis = attendanceActivityLevelData.map((a) =>
+  const attendanceActivityLevelXasis = attendanceActivityLevelData.map((a) =>
     moment(a.attendanceDate).format("DD/MM/YYYY")
   );
 
@@ -41,7 +41,7 @@ const Summary = ({ loading }) => {
     moment(l.attendanceDate).format("DD/MM/YYYY")
   );
 
-  const attendanceTrendsSeries = [
+  const attendanceActivityLevelSeries = [
     {
       name: "Present",
       data: attendanceActivityLevelData.map((item) => {
@@ -327,9 +327,10 @@ const Summary = ({ loading }) => {
                     Activity Level Breakdown
                   </p>
                   <CommonBarChart
-                    xasis={attendanceTrendsXasis}
-                    series={attendanceTrendsSeries}
+                    xasis={attendanceActivityLevelXasis}
+                    series={attendanceActivityLevelSeries}
                     colors={attendanceTrendsColors}
+                    chartArray={attendanceActivityLevelData}
                   />
                 </>
               )}
@@ -403,4 +404,4 @@ const Summary = ({ loading }) => {
   );
 };
 
-export default Summary;
+export default AttendanceSummary;

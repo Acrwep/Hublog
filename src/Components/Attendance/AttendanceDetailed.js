@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Calendar, Divider } from "antd";
+import { Drawer, Calendar, Skeleton } from "antd";
 import CommonTable from "../Common/CommonTable";
 import CommonAvatar from "../Common/CommonAvatar";
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ import Desktopicon from "../../assets/images/computer.png";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import DashboardChart from "../Dashboard/DashboardChart";
 
-const AddendanceDetail = ({ loading, uList, selectUser }) => {
+const AttendanceDetailed = ({ loading, uList, selectUser }) => {
   const employeeAttendanceList = useSelector(
     (state) => state.attendanceandbreaksummary
   );
@@ -278,37 +278,38 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
         //   height: loading ? "40vh" : "100%",
         // }}
       >
-        {/* {loading ? (
+        {loading ? (
           <Skeleton
             active
+            style={{ height: "50vh" }}
             title={{ width: 140 }}
             paragraph={{
               rows: 0,
             }}
           />
         ) : (
-          <> */}
-        <p className="devices_chartheading">Attendance Trends</p>
-        {attendanceTrendsData.length >= 1 ? (
-          // <AttendanceTrendsChart
-          //   // xasis={attendanceTrendsXaxis}
-          //   series={attendanceTrendsSeries}
-          //   // colors={attendanceTrendsColors}
-          // />
+          <>
+            <p className="devices_chartheading">Attendance Trends</p>
+            {attendanceTrendsData.length >= 1 ? (
+              // <AttendanceTrendsChart
+              //   // xasis={attendanceTrendsXaxis}
+              //   series={attendanceTrendsSeries}
+              //   // colors={attendanceTrendsColors}
+              // />
 
-          // <ReactApexChart
-          //   series={attendanceTrendsSeries}
-          //   colors={attendanceTrendsColors}
-          //   options={options}
-          //   type="bar"
-          //   height={350}
-          // />
-          <DashboardChart data={attendanceTrendsData} />
-        ) : (
-          <CommonNodatafound />
+              // <ReactApexChart
+              //   series={attendanceTrendsSeries}
+              //   colors={attendanceTrendsColors}
+              //   options={options}
+              //   type="bar"
+              //   height={350}
+              // />
+              <DashboardChart data={attendanceTrendsData} />
+            ) : (
+              <CommonNodatafound />
+            )}
+          </>
         )}
-        {/* </>
-        )} */}
       </div>
 
       <div style={{ marginTop: "20px" }}>
@@ -363,4 +364,4 @@ const AddendanceDetail = ({ loading, uList, selectUser }) => {
   );
 };
 
-export default AddendanceDetail;
+export default AttendanceDetailed;

@@ -117,6 +117,9 @@ const ProductivityDetailed = ({ loading }) => {
           )}</span>`;
         },
       },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     colors: ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"], // Different colors for the three series
   };

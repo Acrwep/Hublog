@@ -68,6 +68,9 @@ const CommonTrendsChart = ({ xaxis, series }) => {
           )}</span>`;
         },
       },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     fill: {
       opacity: 0.3,
