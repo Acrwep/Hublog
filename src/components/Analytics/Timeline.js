@@ -120,7 +120,7 @@ export default function Timelines() {
             dot: item.EventType?.toLowerCase().trim().includes("punch in") ? (
               <BiDownArrowCircle size={20} color="#25a17d" />
             ) : item.EventType?.toLowerCase().trim().includes("punch out") ? (
-              <BiUpArrowCircle size={20} color="rgba(1, 87, 155, 0.92)" />
+              <BiUpArrowCircle size={20} color="rgba(2, 136, 209, 0.92)" />
             ) : item.EventType?.toLowerCase().trim().includes("lunch") ? (
               <PiBowlFood size={20} color="rgba(255,111,0,0.90)" />
             ) : item.EventType?.toLowerCase().trim().includes("exceeded") ? (
