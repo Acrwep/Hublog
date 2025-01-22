@@ -8,6 +8,7 @@ import { BiDownArrowCircle, BiUpArrowCircle } from "react-icons/bi";
 import { BsCupHot } from "react-icons/bs";
 import { PiBowlFood } from "react-icons/pi";
 import { LuClock4 } from "react-icons/lu";
+import { BiBell } from "react-icons/bi";
 import { getEmployeeTimeline, getUsers } from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
 import "./styles.css";
@@ -119,9 +120,11 @@ export default function Timelines() {
             dot: item.EventType?.toLowerCase().trim().includes("punch in") ? (
               <BiDownArrowCircle size={20} color="#25a17d" />
             ) : item.EventType?.toLowerCase().trim().includes("punch out") ? (
-              <BiUpArrowCircle size={20} color="rgba(244, 67, 54, 0.94)" />
+              <BiUpArrowCircle size={20} color="rgba(1, 87, 155, 0.92)" />
             ) : item.EventType?.toLowerCase().trim().includes("lunch") ? (
               <PiBowlFood size={20} color="rgba(255,111,0,0.90)" />
+            ) : item.EventType?.toLowerCase().trim().includes("exceeded") ? (
+              <BiBell size={19} color="rgba(244, 67, 54, 0.94)" />
             ) : item.EventType?.toLowerCase().trim().includes("break") ? (
               <BsCupHot size={18} color="#b85f06" />
             ) : (
@@ -214,19 +217,19 @@ export default function Timelines() {
           <Spin />
         </div>
       ) : (
-        <>
+        <div className="timeline_chartcontainer">
           {timelineData.length >= 1 ? (
             <Timeline mode="left" items={timelineData} />
           ) : (
             <div
               style={{
-                marginTop: "60px",
+                marginTop: "90px",
               }}
             >
               <CommonNodatafound />
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
