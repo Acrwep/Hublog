@@ -854,3 +854,14 @@ export const getWellnessEmployeeDetails = async (payload) => {
     throw error;
   }
 };
+//timeline
+export const getEmployeeTimeline = async (payload) => {
+  try {
+    const response = await api.get("/api/Activity/GetEmployeeTimeLine", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

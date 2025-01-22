@@ -35,6 +35,7 @@ export default function CommonSelectField({
   defaultValue,
   allowClear,
   disabled,
+  loading,
 }) {
   return (
     <div style={style} className={className}>
@@ -74,6 +75,7 @@ export default function CommonSelectField({
           option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
         defaultValue={defaultValue}
+        loading={loading}
       />
       <div
         className={

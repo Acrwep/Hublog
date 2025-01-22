@@ -357,3 +357,9 @@
 .no-gap-table .ant-table {
   border-collapse: collapse; /* Optional: Collapse borders for a cleaner look */
 }
+.timeline_loadercontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+}
