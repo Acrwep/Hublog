@@ -44,6 +44,7 @@ const SidebarMenuList = () => {
       pathName === "monthlyinandoutreport" ||
       pathName === "activityreport" ||
       pathName === "productivityreport" ||
+      pathName === "wellnessreport" ||
       pathName === "teamsinsightreport" ||
       pathName === "appsurlsreport" ||
       pathName === "projectreport" ||

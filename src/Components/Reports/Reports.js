@@ -8,6 +8,7 @@ import {
   TbReportSearch,
   TbReport,
 } from "react-icons/tb";
+import { GiLotus } from "react-icons/gi";
 import { BiSolidBell } from "react-icons/bi";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
 import { MdFreeBreakfast, MdCalendarMonth } from "react-icons/md";
@@ -134,6 +135,20 @@ const Reports = () => {
               <p className="reports_cardheading">Productivity Report</p>
               <p className="reports_cardcontent">
                 Download the Productivity report for your organisation
+              </p>
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
+              onClick={() => navigation("/wellnessreport")}
+            >
+              <div className="reports_wellnessiconContainer">
+                <GiLotus size={26} />
+              </div>
+              <p className="reports_cardheading">Wellness Report</p>
+              <p className="reports_cardcontent">
+                Download the Wellness report for your organisation
               </p>
             </div>
           </Col>

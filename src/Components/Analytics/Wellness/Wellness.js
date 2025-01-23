@@ -471,9 +471,9 @@ const Wellness = () => {
     }
     //detailed date check
     if (
-      givenDate.getFullYear() === today.getFullYear() &&
-      givenDate.getMonth() === today.getMonth() &&
-      givenDate.getDate() === today.getDate()
+      detailedCurrentDate.getFullYear() === today.getFullYear() &&
+      detailedCurrentDate.getMonth() === today.getMonth() &&
+      detailedCurrentDate.getDate() === today.getDate()
     ) {
       summaryCurrentDateChange = false;
     } else {

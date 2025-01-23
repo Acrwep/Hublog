@@ -99,7 +99,10 @@ const DownloadTableAsCSV = (data, columns, fileName) => {
         if (
           column.dataIndex === "usagePercentage" ||
           column.dataIndex === "activePercentage" ||
-          column.dataIndex === "PercentageProductiveDuration"
+          column.dataIndex === "PercentageProductiveDuration" ||
+          column.dataIndex === "healthyPercentage" ||
+          column.dataIndex === "overburdenedPercentage" ||
+          column.dataIndex === "underutilizedPercentage"
         ) {
           return row[column.dataIndex].toFixed(0) + "%";
         }

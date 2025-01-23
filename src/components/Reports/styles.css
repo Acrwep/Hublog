@@ -104,6 +104,15 @@
   justify-content: center;
   align-items: center;
 }
+.reports_wellnessiconContainer {
+  background-color: rgba(76, 175, 79, 0.322);
+  color: rgb(76, 175, 79);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .reports_teamsiconContainer {
   background-color: #faddd1;
   color: #795548;
