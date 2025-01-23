@@ -96,7 +96,7 @@ const AppsUrlsReport = () => {
       key: "usagePercentage",
       width: 90,
       render: (text, record) => {
-        return <p>{text.toFixed(2) + "%"}</p>;
+        return <p>{text.toFixed(0) + "%"}</p>;
       },
     },
     {

@@ -580,34 +580,34 @@ const Activity = () => {
         </Col>
       </Row>
 
-      {loading ? (
+      {/* {loading ? (
         <Loader />
       ) : (
-        <>
-          {activePage === 1 ? (
-            <div>
-              <ActivitySummary
-                totalActivity={totalActivity}
-                totalActivityTime={totalActivityTime}
-                totalBreakdownOnlineTime={totalBreakdownOnlineTime}
-                breakdownAverageTime={breakdownAverageTime}
-                topAppName={topAppName}
-                topAppUsageTime={topAppUsageTime}
-                topUrlName={topUrlName}
-                topUrlUsageTime={topUrlUsageTime}
-                topCategoryName={topCategoryName}
-                topCategoryUsageTime={topCategoryUsageTime}
-                isBreakdownEmpty={isBreakdownEmpty}
-                loading={summaryLoading}
-              />
-            </div>
-          ) : (
-            <div>
-              <ActivityDetailed loading={detailedLoading} />
-            </div>
-          )}
-        </>
+        <> */}
+      {activePage === 1 ? (
+        <div>
+          <ActivitySummary
+            totalActivity={totalActivity}
+            totalActivityTime={totalActivityTime}
+            totalBreakdownOnlineTime={totalBreakdownOnlineTime}
+            breakdownAverageTime={breakdownAverageTime}
+            topAppName={topAppName}
+            topAppUsageTime={topAppUsageTime}
+            topUrlName={topUrlName}
+            topUrlUsageTime={topUrlUsageTime}
+            topCategoryName={topCategoryName}
+            topCategoryUsageTime={topCategoryUsageTime}
+            isBreakdownEmpty={isBreakdownEmpty}
+            loading={summaryLoading}
+          />
+        </div>
+      ) : (
+        <div>
+          <ActivityDetailed loading={detailedLoading} />
+        </div>
       )}
+      {/* </>
+      )} */}
     </div>
   );
 };

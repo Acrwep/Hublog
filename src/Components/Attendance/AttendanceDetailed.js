@@ -272,12 +272,7 @@ const AttendanceDetailed = ({ loading, uList, selectUser }) => {
 
   return (
     <div>
-      <div
-        className="devices_chartsContainer"
-        // style={{
-        //   height: loading ? "40vh" : "100%",
-        // }}
-      >
+      <div className="devices_chartsContainer">
         {loading ? (
           <Skeleton
             active
@@ -291,19 +286,6 @@ const AttendanceDetailed = ({ loading, uList, selectUser }) => {
           <>
             <p className="devices_chartheading">Attendance Trends</p>
             {attendanceTrendsData.length >= 1 ? (
-              // <AttendanceTrendsChart
-              //   // xasis={attendanceTrendsXaxis}
-              //   series={attendanceTrendsSeries}
-              //   // colors={attendanceTrendsColors}
-              // />
-
-              // <ReactApexChart
-              //   series={attendanceTrendsSeries}
-              //   colors={attendanceTrendsColors}
-              //   options={options}
-              //   type="bar"
-              //   height={350}
-              // />
               <DashboardChart data={attendanceTrendsData} />
             ) : (
               <CommonNodatafound />

@@ -170,7 +170,7 @@ const AttendanceSummary = ({
                     ? "-"
                     : attendancePercentage === 0
                     ? "0%"
-                    : attendancePercentage.toFixed(2) + "%"}
+                    : attendancePercentage.toFixed(0) + "%"}
                 </p>
               </>
             )}

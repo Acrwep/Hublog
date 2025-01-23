@@ -35,7 +35,7 @@ const Screenshots = () => {
   const [scrnShotDate, setScrnShotDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [filterLoading, setFilterLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(true);
   const [downloadButtonLoader, setDownloadButtonLoader] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0); // New state for the current image index
   const [hidePreviousbutton, setHidePreviousbutton] = useState(false);
@@ -274,126 +274,119 @@ const Screenshots = () => {
         <h2 className="allpage_mainheadings">Screenshots</h2>
       </div>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <div className="screenshot_selectfieldsContainer">
-                <div className="screenshot_selectfields">
-                  <CommonSelectField
-                    options={teamList}
-                    value={teamId}
-                    placeholder="Select Team"
-                    onChange={handleTeam}
-                  />
-                </div>
-                <div className="screenshot_selectfields">
-                  <CommonSelectField
-                    options={userList}
-                    value={userId}
-                    placeholder="Select User"
-                    onChange={handleUser}
-                  />
-                </div>
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <div className="wellness_calendarContainer">
-                <div>
-                  <CommonDatePicker onChange={onDateChange} value={date} />
-                </div>
-                <Tooltip placement="top" title="Download">
-                  <Button
-                    className="dashboard_download_button"
-                    onClick={handleDownloadAllScreenshots}
-                    disabled={downloadButtonLoader ? true : false}
-                  >
-                    <DownloadOutlined className="download_icon" />
-                  </Button>
-                </Tooltip>
-                <Tooltip placement="top" title="Refresh">
-                  <Button
-                    className="dashboard_refresh_button"
-                    onClick={handleRefresh}
-                  >
-                    <RedoOutlined className="refresh_icon" />
-                  </Button>
-                </Tooltip>
-              </div>
-            </Col>
-          </Row>
-
-          <div>
-            <Row
-              gutter={16}
-              className="screenshots_imagesOuterContainer"
-              style={{
-                height: filterLoading ? "24.7vh" : "100%",
-              }}
-            >
-              {filterLoading ? (
-                <div className="screenshots_spinContainer">
-                  <Spin />
-                </div>
-              ) : (
-                <>
-                  {screenshotData.length >= 1 ? (
-                    <>
-                      {screenshotData &&
-                        screenshotData.map((item, index) => {
-                          const base64String = `data:image/jpeg;base64,${item.imageData}`;
-                          return (
-                            <React.Fragment key={index}>
-                              <Col
-                                xs={24}
-                                sm={24}
-                                md={6}
-                                lg={6}
-                                className="screenshot_columnContainer"
-                                key={index}
-                              >
-                                <div className="screenshot_imageandbuttnContainer">
-                                  <img
-                                    src={base64String}
-                                    className="screenshot_images"
-                                    alt="Base64 Image"
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() =>
-                                      handleScreenshot(item, index)
-                                    }
-                                  />
-                                  <div className="screenshot_imageTimeContainer">
-                                    <p>
-                                      {moment(item.screenShotDate).format(
-                                        "hh:mm A"
-                                      )}
-                                    </p>
-                                  </div>
-                                  <div className="screenshotimage_buttonContainer">
-                                    <a
-                                      href={base64String}
-                                      download="Screenshot.png"
-                                    >
-                                      <MdOutlineFileDownload size={24} />
-                                    </a>
-                                  </div>
-                                </div>
-                              </Col>
-                            </React.Fragment>
-                          );
-                        })}
-                    </>
-                  ) : (
-                    <CommonNodatafound />
-                  )}
-                </>
-              )}
-            </Row>
+      <Row style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="screenshot_selectfieldsContainer">
+            <div className="screenshot_selectfields">
+              <CommonSelectField
+                options={teamList}
+                value={teamId}
+                placeholder="Select Team"
+                onChange={handleTeam}
+              />
+            </div>
+            <div className="screenshot_selectfields">
+              <CommonSelectField
+                options={userList}
+                value={userId}
+                placeholder="Select User"
+                onChange={handleUser}
+              />
+            </div>
           </div>
-        </>
-      )}
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <div className="wellness_calendarContainer">
+            <div>
+              <CommonDatePicker onChange={onDateChange} value={date} />
+            </div>
+            <Tooltip placement="top" title="Download">
+              <Button
+                className="dashboard_download_button"
+                onClick={handleDownloadAllScreenshots}
+                disabled={downloadButtonLoader ? true : false}
+              >
+                <DownloadOutlined className="download_icon" />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Refresh">
+              <Button
+                className="dashboard_refresh_button"
+                onClick={handleRefresh}
+              >
+                <RedoOutlined className="refresh_icon" />
+              </Button>
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
+
+      <div>
+        <Row
+          gutter={16}
+          className="screenshots_imagesOuterContainer"
+          style={{
+            height: filterLoading ? "24.7vh" : "100%",
+          }}
+        >
+          {filterLoading ? (
+            <div className="screenshots_spinContainer">
+              <Spin />
+            </div>
+          ) : (
+            <>
+              {screenshotData.length >= 1 ? (
+                <>
+                  {screenshotData &&
+                    screenshotData.map((item, index) => {
+                      const base64String = `data:image/jpeg;base64,${item.imageData}`;
+                      return (
+                        <React.Fragment key={index}>
+                          <Col
+                            xs={24}
+                            sm={24}
+                            md={6}
+                            lg={6}
+                            className="screenshot_columnContainer"
+                            key={index}
+                          >
+                            <div className="screenshot_imageandbuttnContainer">
+                              <img
+                                src={base64String}
+                                className="screenshot_images"
+                                alt="Base64 Image"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleScreenshot(item, index)}
+                              />
+                              <div className="screenshot_imageTimeContainer">
+                                <p>
+                                  {moment(item.screenShotDate).format(
+                                    "hh:mm A"
+                                  )}
+                                </p>
+                              </div>
+                              <div className="screenshotimage_buttonContainer">
+                                <a
+                                  href={base64String}
+                                  download="Screenshot.png"
+                                >
+                                  <MdOutlineFileDownload size={24} />
+                                </a>
+                              </div>
+                            </div>
+                          </Col>
+                        </React.Fragment>
+                      );
+                    })}
+                </>
+              ) : (
+                <CommonNodatafound />
+              )}
+            </>
+          )}
+        </Row>
+      </div>
+
       <Modal
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}

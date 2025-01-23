@@ -72,8 +72,15 @@ const WellnessSummary = ({
         counts.push(item[key]);
 
         // Add dynamic font size based on label length
-        labelStyles.push(item.teamName.length > 10 ? "14px" : "16px");
+        labelStyles.push(
+          item.teamName.length >= 16
+            ? "12px"
+            : item.teamName.length >= 11
+            ? "10px"
+            : "12px"
+        );
       });
+      console.log("eeeeeee", { labels, counts, labelStyles });
       return { labels, counts, labelStyles };
     };
 
@@ -106,7 +113,7 @@ const WellnessSummary = ({
                     ? "-"
                     : healthyPercentage === 0
                     ? "0%"
-                    : healthyPercentage.toFixed(2) + "%"}
+                    : healthyPercentage.toFixed(0) + "%"}
                 </p>
                 <p className="userproductivity_hours">
                   <span
@@ -188,7 +195,13 @@ const WellnessSummary = ({
             ) : (
               <>
                 <p>Healthy employee</p>
-                <p className="wellness_employeename">
+                <p
+                  className={
+                    healthyEmployeeName.length >= 17
+                      ? "wellness_largeemployeename"
+                      : "wellness_employeename"
+                  }
+                >
                   {healthyEmployeeName === "" ? "-" : healthyEmployeeName}
                 </p>
                 <p className="wellness_employeeactivetime">
@@ -212,7 +225,13 @@ const WellnessSummary = ({
             ) : (
               <>
                 <p>Overburdened employee</p>
-                <p className="wellness_employeename">
+                <p
+                  className={
+                    overburdenedEmployeeName.length >= 17
+                      ? "wellness_largeemployeename"
+                      : "wellness_employeename"
+                  }
+                >
                   {overburdenedEmployeeName === ""
                     ? "-"
                     : overburdenedEmployeeName}
@@ -251,7 +270,7 @@ const WellnessSummary = ({
                       colors={["#25a17d", "rgba(37,143,161,0.90)", "#ABB3B3"]}
                       series={OverallWellness}
                       labelsfontSize="16px"
-                      height={300}
+                      height={350}
                     />
                   ) : (
                     <div>
@@ -285,7 +304,7 @@ const WellnessSummary = ({
                       colors={["#25a17d", "#1abc9c", "#20c997"]}
                       series={chartData.topHealthy.counts}
                       labelsfontSize={chartData.topHealthy.labelStyles} // Pass dynamic font sizes
-                      height={300}
+                      height={350}
                     />
                   ) : (
                     <div>
@@ -323,7 +342,7 @@ const WellnessSummary = ({
                       ]}
                       series={chartData.topOverburdened.counts}
                       labelsfontSize={chartData.topOverburdened.labelStyles} // Pass dynamic font sizes
-                      height={300}
+                      height={350}
                     />
                   ) : (
                     <div>
@@ -359,7 +378,7 @@ const WellnessSummary = ({
                       // series={[1, 3, 4]}
                       series={chartData.topUnderutilized.counts}
                       labelsfontSize={chartData.topUnderutilized.labelStyles} // Pass dynamic font sizes
-                      height={300}
+                      height={350}
                     />
                   ) : (
                     <div>

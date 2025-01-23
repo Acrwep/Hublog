@@ -3,33 +3,42 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 const DashboardChart = ({ data }) => {
-  // Function to convert time in HH:MM:SS format to minutes
-  const convertTimeToMinutes = (time) => {
-    if (time === null) return "0h:0m:0s";
-    const [hours, minutes, seconds] = time.split(":").map(Number);
-    return hours * 60 + minutes + seconds / 60;
-  };
+  const presentCount = data.map((item) => item.presentCount);
+
+  const absentCount = data.map((item) => item.absentCount);
 
   // Extracting data for the chart
   const attendanceDates = data.map((item) =>
-    // new Date(item.attendanceDate).toLocaleDateString()
     moment(item.attendanceDate).format("DD/MM/YYYY")
   );
-  const presentCount = data.map((item) => item.presentCount);
-  const absentCount = data.map((item) => item.absentCount);
-  const attendancePercentage = data.map((item) =>
-    item.attendancePercentage.toFixed(2)
+
+  const convertTimeToMinutes = (time) => {
+    if (time === null) {
+      return "0h:0m:0s";
+    } else {
+      const [hours, minutes, seconds] = time.split(":").map(Number);
+      return hours * 60 + minutes + seconds / 60;
+    }
+  };
+
+  const averageWorkingTime = data.map(
+    (item) =>
+      item.averageWorkingTime
+        ? convertTimeToMinutes(item.averageWorkingTime)
+        : 0 // Fallback to 0 if undefined
   );
-  const averageWorkingTime = data.map((item) =>
-    convertTimeToMinutes(item.averageWorkingTime)
+
+  const attendancePercentage = data.map(
+    (item) =>
+      item.attendancePercentage !== undefined ? item.attendancePercentage : 0 // Fallback to 0 if undefined
   );
 
   const formatAverageWorkingTime = (time) => {
-    if (isNaN(time) || time === null || time === undefined) {
-      return "0hr 0m 0s";
+    if (time === null || time === undefined) {
+      return "0h:0m:0s";
     } else {
-      const [hours, minutes] = time.split(":").map(Number);
-      return `${hours}h:${minutes}m`;
+      const [hours, minutes, seonds] = time.split(":");
+      return `${hours}h:${minutes}m:${seonds}s`;
     }
   };
 
@@ -54,9 +63,6 @@ const DashboardChart = ({ data }) => {
       enabled: false,
     },
     labels: attendanceDates,
-    // xaxis: {
-    //   type: "datetime",
-    // },
     xaxis: {
       categories: attendanceDates,
       labels: {
@@ -120,9 +126,15 @@ const DashboardChart = ({ data }) => {
       // },
       y: {
         formatter: (value, { seriesIndex, dataPointIndex }) => {
+          const dataPoint = data[dataPointIndex];
+          if (!dataPoint) return value; // Ensure the dataPoint exists before accessing its properties
+
+          if (seriesIndex === 2) {
+            return dataPoint.attendancePercentage.toFixed(0) + "%";
+          }
           if (seriesIndex === 3) {
             // Assuming Avg Working Hours is the fourth series
-            const averageTime = data[dataPointIndex].averageWorkingTime; // Access the original time
+            const averageTime = dataPoint.averageWorkingTime;
             return formatAverageWorkingTime(averageTime);
           }
           return value;

@@ -52,7 +52,7 @@ const Attendance = () => {
   const [totalBreakDuration, setTotalBreakDuration] = useState("");
   const [totalWorkingtime, setTotalWorkingtime] = useState();
   const [attendancedetailLoading, setAttendancedetailLoading] = useState(true);
-  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const handlePageChange = (pageNumber) => {
@@ -236,12 +236,9 @@ const Attendance = () => {
             ? parseInt(details.overallAttendancePercentage)
             : "-"
         );
-        if (details?.overallTotalTime) {
-          setTotalWorkingtime(
-            moment(details.overallTotalTime, "HH:mm:ss").format(
-              "HH[h]:mm[m]:ss[s]"
-            )
-          );
+        if (details.overallTotalTime) {
+          const [hours, minutes, seonds] = details.overallTotalTime.split(":");
+          setTotalWorkingtime(`${hours}h:${minutes}m:${seonds}s`);
         } else {
           setTotalWorkingtime("-");
         }
@@ -369,7 +366,11 @@ const Attendance = () => {
       const response = await getAttendanceTrends(payload);
       console.log("attendance trends", response);
       const details = response?.data?.attendanceSummaries;
-      dispatch(storeAttendanceTrends(details));
+      if (details) {
+        dispatch(storeAttendanceTrends(details));
+      } else {
+        dispatch(storeAttendanceTrends([]));
+      }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
@@ -588,43 +589,40 @@ const Attendance = () => {
         ""
       )}
 
-      <>
+      {/* <>
         {loading ? (
           <Loader />
-        ) : (
+        ) : ( */}
+      <div>
+        {activePage === 1 && (
           <div>
-            {activePage === 1 && (
-              <div>
-                <AttendanceSummary
-                  attendancePercentage={attendancePercentage}
-                  totalWorkingtime={totalWorkingtime}
-                  totalBreakDuration={totalBreakDuration}
-                  loading={summaryLoading}
-                />
-                {/* Add your content for page 1 here */}
-              </div>
-            )}
-            {activePage === 2 && (
-              <div>
-                <AttendanceDetailed
-                  tList={teamList}
-                  uList={userList}
-                  selectUser={selectUser}
-                  loading={attendancedetailLoading}
-                />
-              </div>
-            )}
-            {activePage === 3 && (
-              <div>
-                <DateWiseAttendance
-                  tList={teamList}
-                  uList={nonChangeUserList}
-                />
-              </div>
-            )}
+            <AttendanceSummary
+              attendancePercentage={attendancePercentage}
+              totalWorkingtime={totalWorkingtime}
+              totalBreakDuration={totalBreakDuration}
+              loading={summaryLoading}
+            />
+            {/* Add your content for page 1 here */}
           </div>
         )}
-      </>
+        {activePage === 2 && (
+          <div>
+            <AttendanceDetailed
+              tList={teamList}
+              uList={userList}
+              selectUser={selectUser}
+              loading={attendancedetailLoading}
+            />
+          </div>
+        )}
+        {activePage === 3 && (
+          <div>
+            <DateWiseAttendance tList={teamList} uList={nonChangeUserList} />
+          </div>
+        )}
+      </div>
+      {/* )}
+      </> */}
     </div>
   );
 };

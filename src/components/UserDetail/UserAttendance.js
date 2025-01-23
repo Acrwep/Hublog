@@ -161,7 +161,7 @@ export default function UserAttendance({
       key: "end_Time",
       width: 90,
       render: (text, record) => {
-        if (text === "0001-01-01T00:00:00") {
+        if (text === "0001-01-01T00:00:00" || text === null) {
           return null;
         } else {
           return (

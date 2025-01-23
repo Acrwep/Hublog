@@ -89,7 +89,7 @@ const WellnessDetailed = ({ loading }) => {
         if (text === 0) {
           return "0%";
         } else {
-          return <p>{text.toFixed(2) + "%"}</p>;
+          return <p>{text.toFixed(0) + "%"}</p>;
         }
       },
     },
@@ -102,7 +102,7 @@ const WellnessDetailed = ({ loading }) => {
         if (text === 0) {
           return "0%";
         } else {
-          return <p>{text.toFixed(2) + "%"}</p>;
+          return <p>{text.toFixed(0) + "%"}</p>;
         }
       },
     },
@@ -115,7 +115,7 @@ const WellnessDetailed = ({ loading }) => {
         if (text === 0) {
           return "0%";
         } else {
-          return <p>{text.toFixed(2) + "%"}</p>;
+          return <p>{text.toFixed(0) + "%"}</p>;
         }
       },
     },

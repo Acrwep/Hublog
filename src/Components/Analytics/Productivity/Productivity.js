@@ -618,34 +618,34 @@ const Productivity = () => {
         </Col>
       </Row>
 
-      {loading ? (
+      {/* {loading ? (
         <Loader />
       ) : (
-        <>
-          {activePage === 1 ? (
-            <div>
-              <ProductivitySummary
-                totalProductivityTime={totalProductivityTime}
-                breakdownTotalDuration={breakdownTotalDuration}
-                breakdownAverageTime={breakdownAverageTime}
-                totalProductivity={totalProductivity}
-                topAppName={topAppName}
-                topAppUsageTime={topAppUsageTime}
-                topUrlName={topUrlName}
-                topUrlUsageTime={topUrlUsageTime}
-                topCategoryName={topCategoryName}
-                topCategoryUsageTime={topCategoryUsageTime}
-                isBreakdownEmpty={isBreakdownEmpty}
-                loading={summaryLoading}
-              />
-            </div>
-          ) : (
-            <div>
-              <ProductivityDetailed loading={detailedLoading} />
-            </div>
-          )}
-        </>
+        <> */}
+      {activePage === 1 ? (
+        <div>
+          <ProductivitySummary
+            totalProductivityTime={totalProductivityTime}
+            breakdownTotalDuration={breakdownTotalDuration}
+            breakdownAverageTime={breakdownAverageTime}
+            totalProductivity={totalProductivity}
+            topAppName={topAppName}
+            topAppUsageTime={topAppUsageTime}
+            topUrlName={topUrlName}
+            topUrlUsageTime={topUrlUsageTime}
+            topCategoryName={topCategoryName}
+            topCategoryUsageTime={topCategoryUsageTime}
+            isBreakdownEmpty={isBreakdownEmpty}
+            loading={summaryLoading}
+          />
+        </div>
+      ) : (
+        <div>
+          <ProductivityDetailed loading={detailedLoading} />
+        </div>
       )}
+      {/* </>
+      )} */}
     </div>
   );
 };

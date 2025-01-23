@@ -101,7 +101,7 @@ const DownloadTableAsCSV = (data, columns, fileName) => {
           column.dataIndex === "activePercentage" ||
           column.dataIndex === "PercentageProductiveDuration"
         ) {
-          return row[column.dataIndex].toFixed(2) + "%";
+          return row[column.dataIndex].toFixed(0) + "%";
         }
 
         if (column.dataIndex === "onlineTime") {

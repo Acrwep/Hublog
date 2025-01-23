@@ -79,7 +79,7 @@ const ActivitySummary = ({
                     ? "-"
                     : totalActivity === 0
                     ? "0%"
-                    : totalActivity.toFixed(2) + "%"}
+                    : totalActivity.toFixed(0) + "%"}
                 </p>
                 <p className="userproductivity_hours">{totalActivityTime}</p>
               </>
