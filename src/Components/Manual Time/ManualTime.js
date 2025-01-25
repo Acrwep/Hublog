@@ -12,6 +12,7 @@ import {
   selectValidator,
   descriptionValidator,
   endTimeValidator,
+  getCurrentandPreviousweekDate,
 } from "../Common/Validation";
 import CommonImageUpload from "../Common/CommonImageUpload";
 import PrismaZoom from "react-prismazoom";
@@ -28,9 +29,11 @@ import { FaRegUser } from "react-icons/fa6";
 import { SlEye } from "react-icons/sl";
 import axios from "axios";
 import moment from "moment";
+import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 
 export default function ManualTime() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDates, setSelectedDates] = useState([]);
   const [teamList, setTeamList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
@@ -182,6 +185,8 @@ export default function ManualTime() {
 
   const getUsersData = async () => {
     const orgId = localStorage.getItem("organizationId");
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
     try {
       const response = await getUsers(orgId);
       const users = response?.data;
@@ -194,17 +199,31 @@ export default function ManualTime() {
       setUserList([]);
     } finally {
       setTimeout(() => {
-        getManualtimeData(orgId, null, null);
+        getManualtimeData(
+          orgId,
+          null,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1]
+        );
       }, 500);
     }
   };
 
-  const getManualtimeData = async (orgId, teamid, userid) => {
+  const getManualtimeData = async (
+    orgId,
+    teamid,
+    userid,
+    startdate,
+    enddate
+  ) => {
     setLoading(true);
     const payload = {
       organizationId: orgId,
       ...(teamid && { teamId: teamid }),
       ...(userid && { userId: userid }),
+      startDate: startdate,
+      endDate: enddate,
     };
     try {
       const response = await getManualtime(payload);
@@ -224,6 +243,21 @@ export default function ManualTime() {
     }
   };
   //onchange function
+  const onDoubleDateChange = (date, dateString) => {
+    console.log(date, dateString);
+    setSelectedDates(dateString); // Update the state when the date changes
+    if (dateString[0] != "" && dateString[1] != "") {
+      setLoading(true);
+      getManualtimeData(
+        organizationId,
+        teamId,
+        userId,
+        dateString[0],
+        dateString[1]
+      );
+    }
+  };
+
   const handleTeam = async (value) => {
     setTeamId(value);
     try {
@@ -238,7 +272,13 @@ export default function ManualTime() {
       setUserList(teamMembersList);
       const userIdd = null;
       setUserId(userIdd);
-      getManualtimeData(organizationId, value, null);
+      getManualtimeData(
+        organizationId,
+        value,
+        userIdd,
+        selectedDates[0],
+        selectedDates[1]
+      );
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
       setUserList([]);
@@ -247,7 +287,13 @@ export default function ManualTime() {
 
   const handleUser = (value) => {
     setUserId(value);
-    getManualtimeData(organizationId, teamId, value);
+    getManualtimeData(
+      organizationId,
+      teamId,
+      value,
+      selectedDates[0],
+      selectedDates[1]
+    );
   };
 
   const onDateChange = (date, dateString) => {
@@ -306,13 +352,49 @@ export default function ManualTime() {
   };
 
   const handleRefresh = () => {
-    if (teamId === null && userId === null) {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+
+    const today = new Date();
+    const givenDate = new Date(selectedDates[1]);
+    let isCurrentDate = false;
+    let isPreviousChange = false;
+
+    if (
+      givenDate.getFullYear() === today.getFullYear() &&
+      givenDate.getMonth() === today.getMonth() &&
+      givenDate.getDate() === today.getDate()
+    ) {
+      isCurrentDate = true;
+    } else {
+      isCurrentDate = false;
+    }
+
+    if (PreviousandCurrentDate[0] === selectedDates[0]) {
+      isPreviousChange = false;
+    } else {
+      isPreviousChange = true;
+    }
+
+    if (
+      teamId === null &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
       return;
     } else {
+      setLoading(true);
       setTeamId(null);
       setUserId(null);
       setUserList(nonChangeUserList);
-      getManualtimeData(organizationId, null, null);
+      setSelectedDates(PreviousandCurrentDate);
+      getManualtimeData(
+        organizationId,
+        null,
+        null,
+        PreviousandCurrentDate[0],
+        PreviousandCurrentDate[1]
+      );
     }
   };
   const handleCancel = () => {
@@ -437,9 +519,13 @@ export default function ManualTime() {
           lg={12}
           className="breakreports_calendarContainer"
         >
-          <CommonAddButton
+          {/* <CommonAddButton
             name="Add Manual Time"
             onClick={() => setIsModalOpen(true)}
+          /> */}
+          <CommonDoubleDatePicker
+            onChange={onDoubleDateChange}
+            value={selectedDates}
           />
           <Tooltip placement="top" title="Refresh">
             <Button
