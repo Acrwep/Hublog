@@ -95,6 +95,9 @@ const AttendanceSummary = ({
         zoom: {
           enabled: false,
         },
+        toolbar: {
+          show: false, // Show toolbar (can be set to false to hide all)
+        },
       },
       stroke: {
         curve: "smooth",

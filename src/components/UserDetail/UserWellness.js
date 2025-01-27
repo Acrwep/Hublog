@@ -45,6 +45,9 @@ export default function UserWellness({
       height: 350,
       stacked: true,
       width: "100%", // Ensure full width
+      toolbar: {
+        show: false, // Show toolbar (can be set to false to hide all)
+      },
     },
     plotOptions: {
       bar: {

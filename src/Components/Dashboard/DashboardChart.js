@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment, { max } from "moment";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
@@ -48,6 +48,9 @@ const DashboardChart = ({ data }) => {
       type: "line",
       height: 350,
       stacked: false,
+      toolbar: {
+        show: false, // Show toolbar (can be set to false to hide all)
+      },
     },
     stroke: {
       width: 2,
@@ -80,7 +83,8 @@ const DashboardChart = ({ data }) => {
       {
         title: { text: "Attendance Count" },
         min: 0,
-        max: Math.max(...presentCount, ...absentCount) + 1,
+        // max: Math.max(...presentCount, ...absentCount) + 10,
+        max: 100,
         labels: {
           formatter: (value) => Math.round(value), // Remove decimals
           style: {
@@ -115,7 +119,7 @@ const DashboardChart = ({ data }) => {
           show: true,
           color: "#FEB019",
         },
-        offsetX: 10, // Adjust the position to prevent overlap
+        offsetX: 10, // Further offset to prevent overlap
       },
     ],
     tooltip: {

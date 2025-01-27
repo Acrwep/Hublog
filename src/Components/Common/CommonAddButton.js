@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "antd";
 import "./commonstyles.css";
-import { MdAdd } from "react-icons/md";
+import { MdOutlineAdd } from "react-icons/md";
 
 const CommonAddButton = ({ name, onClick, iconVisible }) => {
   return (
@@ -9,9 +9,9 @@ const CommonAddButton = ({ name, onClick, iconVisible }) => {
       {iconVisible === "false" ? (
         ""
       ) : (
-        <MdAdd
+        <MdOutlineAdd
           className="common_buttonaddIcon"
-          style={{ marginRight: "6px" }}
+          style={{ marginRight: "0px" }}
         />
       )}
       {name}

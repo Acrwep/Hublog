@@ -20,6 +20,9 @@ const CommonTrendsChart = ({ xaxis, series }) => {
     chart: {
       type: "area",
       height: 350,
+      toolbar: {
+        show: false, // Show toolbar (can be set to false to hide all)
+      },
     },
     dataLabels: {
       enabled: false,

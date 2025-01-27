@@ -79,6 +79,9 @@ const ProductivityDetailed = ({ loading }) => {
     chart: {
       type: "line",
       height: 350,
+      toolbar: {
+        show: false, // Show toolbar (can be set to false to hide all)
+      },
     },
     stroke: {
       curve: "smooth", // Keeps the line straight for the line chart

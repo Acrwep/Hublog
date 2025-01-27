@@ -19,6 +19,10 @@
   margin-top: 10px;
   margin-right: 6px;
 }
+.wellness_workingpercentage {
+  font-size: 13px;
+  margin-top: 10px;
+}
 /* productivity styles */
 .mostproductive_heading {
   font-weight: 600;

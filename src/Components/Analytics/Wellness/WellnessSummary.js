@@ -155,7 +155,14 @@ const WellnessSummary = ({
               <>
                 <p>Working time</p>
                 <p className="userproductivity_contents">{workingTime}</p>
-                <p className="userproductivity_hours">
+                <p
+                  className={
+                    Math.abs(previousWorkingtimePercentage).toFixed(0).length >=
+                    4
+                      ? "wellness_workingpercentage"
+                      : "userproductivity_hours"
+                  }
+                >
                   <span
                     style={{
                       color: workingTimeComparison.includes("Less Than")

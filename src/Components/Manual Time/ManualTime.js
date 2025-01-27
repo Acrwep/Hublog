@@ -467,7 +467,13 @@ export default function ManualTime() {
       console.error("Error posting data:", error);
       CommonToaster(error?.response?.data?.message, "error");
     } finally {
-      getManualtimeData(organizationId, teamId, userId);
+      getManualtimeData(
+        organizationId,
+        teamId,
+        userId,
+        selectedDates[0],
+        selectedDates[1]
+      );
     }
   };
 
@@ -527,6 +533,9 @@ export default function ManualTime() {
             onChange={onDoubleDateChange}
             value={selectedDates}
           />
+          <div style={{ marginLeft: "12px" }}>
+            <CommonAddButton onClick={() => setIsModalOpen(true)} name="Add" />
+          </div>
           <Tooltip placement="top" title="Refresh">
             <Button
               className="dashboard_refresh_button"

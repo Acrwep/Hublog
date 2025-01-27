@@ -282,11 +282,12 @@
 }
 .teammember_card {
   box-shadow: rgba(149, 157, 165, 0.2) 0px 2px 14px;
+  /* box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
   padding: 12px;
   border-radius: 7px;
   width: 100%;
   height: 150px;
-  background-color: rgb(255, 255, 255);
+  /* background-color: rgb(255, 255, 255); */
   position: relative;
 }
 .teammember_name {
@@ -342,10 +343,8 @@
   border: 1px solid rgb(226 223 239/ 1) !important;
 }
 .teammembers_container {
-  margin-top: 12px;
+  padding: 12px 0px;
   overflow-y: auto;
-}
-.teammembers_container {
   scrollbar-width: thin; /* "auto", "thin", or "none" */
   scrollbar-color: #c1c1c1 #f1f1f1; /* thumb color, track color */
 }
