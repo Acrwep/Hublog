@@ -865,3 +865,46 @@ export const getEmployeeTimeline = async (payload) => {
     throw error;
   }
 };
+//projects
+export const createProject = async (projectpayload) => {
+  try {
+    const response = await api.post(
+      "/api/Project/InsertProject",
+      projectpayload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateProject = async (projectpayload) => {
+  try {
+    const response = await api.put(
+      "/api/Project/UpdateProject",
+      projectpayload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getProjects = async (projectpayload) => {
+  try {
+    const response = await api.get("/api/Project/GetProjects", {
+      params: projectpayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteProject = async (deletepayload) => {
+  try {
+    const response = await api.delete("/api/Project/DeleteProject", {
+      params: deletepayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

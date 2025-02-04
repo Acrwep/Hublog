@@ -379,7 +379,7 @@ const Devices = () => {
                       labels={["Online Devices", "Offline Devices"]}
                       colors={["#25a17d", "#ABB3B3"]}
                       series={statusOfDeviceSeries}
-                      labelsfontSize="17px"
+                      labelsfontSize="16px"
                     />
                   ) : (
                     <CommonNodatafound />
@@ -410,7 +410,7 @@ const Devices = () => {
                       labels={["Windows", "Mac", "Linux"]}
                       colors={["#0078d7", "#ABB3B3", "rgba(255,185,0,0.70"]}
                       series={platformSeries}
-                      labelsfontSize="17px"
+                      labelsfontSize="16px"
                     />
                   ) : (
                     <CommonNodatafound />

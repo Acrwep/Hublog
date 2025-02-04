@@ -282,7 +282,7 @@ const AttendanceSummary = ({
                       labels={["Present", "Absent"]}
                       colors={["#25a17d", "#ABB3B3"]}
                       series={todayAttendanceSeries}
-                      labelsfontSize="17px"
+                      labelsfontSize="16px"
                       height={300}
                     />
                   </div>

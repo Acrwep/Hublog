@@ -268,7 +268,7 @@ export default function UserAttendance({
                       attendanceSummary.daysPresent,
                       attendanceSummary.daysLeave,
                     ]}
-                    labelsfontSize="19px"
+                    labelsfontSize="16px"
                   />
                 )}
               </div>

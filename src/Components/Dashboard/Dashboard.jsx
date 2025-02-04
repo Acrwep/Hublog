@@ -160,6 +160,9 @@ const Dashboard = () => {
           )}</span>`;
         },
       },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
     },
     colors: ["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"], // Different colors for the three series
   };
@@ -209,6 +212,9 @@ const Dashboard = () => {
             val
           )}</span>`;
         },
+      },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
       },
     },
     colors: ["#25a17d", "#8a8c8c"], // Different colors for the three series
@@ -574,7 +580,7 @@ const Dashboard = () => {
                         labels={["Present", "Absent"]}
                         colors={["#25a17d", "#ABB3B3"]}
                         series={todayAttendanceSeries}
-                        labelsfontSize="17px"
+                        labelsfontSize="16px"
                         height={300}
                       />
                     ) : (

@@ -1,163 +1,140 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbReport } from "react-icons/tb";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Row, Col, Button, Tooltip } from "antd";
-import CommonDatePicker from "../Common/CommonDatePicker";
-import {
-  DownloadOutlined,
-  RedoOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
-import CommonAvatar from "../Common/CommonAvatar";
-import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
-import CommonInputField from "../Common/CommonInputField";
+import { getProjects } from "../APIservice.js/action";
+import moment from "moment";
+import { CommonToaster } from "../Common/CommonToaster";
+import CommonSearchField from "../Common/CommonSearchbar";
+import DownloadTableAsCSV from "../Common/DownloadTableAsCSV";
 
 const ProjectReport = () => {
   const navigation = useNavigate();
-  const [date, setDate] = useState(new Date());
-  const assigneeList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Rubi" },
+  const [organizationId, setOrganizationId] = useState(null);
+  const [projectData, setProjectData] = useState([]);
+  const [search, setSearch] = useState("");
+  const statusList = [
+    { id: 1, name: "Active" },
+    { id: 2, name: "Inactive" },
+    { id: 3, name: "Closed" },
   ];
-  const userList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Karthick" },
-  ];
-  const data = [
-    {
-      key: "1",
-      project: "Hublog",
-      summary: "hello",
-      description: "aijinin",
-      owner: "",
-      assignee: "balaji",
-      reporter: "",
-      createddate: "07/06/2024",
-      startdate: "14/06/2024",
-      duedate: "25/10/2024",
-      timelogged: "",
-      status: "In progress",
-    },
-    {
-      key: "2",
-      project: "E-commerce",
-      summary: "hello",
-      description: "aijinin",
-      owner: "",
-      assignee: "balaji",
-      reporter: "",
-      createddate: "07/06/2024",
-      startdate: "14/06/2024",
-      duedate: "25/10/2024",
-      timelogged: "",
-      status: "In progress",
-    },
-    {
-      key: "3",
-      project: "AWS",
-      summary: "hello",
-      description: "aijinin",
-      owner: "",
-      assignee: "balaji",
-      reporter: "",
-      createddate: "07/06/2024",
-      startdate: "14/06/2024",
-      duedate: "25/10/2024",
-      timelogged: "",
-      status: "In progress",
-    },
-    {
-      key: "4",
-      project: "Help center",
-      summary: "hello",
-      description: "aijinin",
-      owner: "",
-      assignee: "balaji",
-      reporter: "",
-      createddate: "07/06/2024",
-      startdate: "14/06/2024",
-      duedate: "25/10/2024",
-      timelogged: "",
-      status: "In progress",
-    },
-  ];
+  const [statusFilter, setStatusFilter] = useState();
+  const [loading, setLoading] = useState(true);
 
   const columns = [
-    {
-      title: "Project",
-      dataIndex: "project",
-      key: "project",
-      width: "170px",
-    },
-    {
-      title: "Summary",
-      dataIndex: "summary",
-      key: "summary",
-      width: "120px",
-    },
+    { title: "Name", dataIndex: "name", key: "name" },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
-      width: "150px",
-    },
-    {
-      title: "Owner",
-      dataIndex: "owner",
-      key: "owner",
-      width: "150px",
-    },
-    {
-      title: "Assignee",
-      dataIndex: "assignee",
-      key: "assignee",
-      width: "150px",
-    },
-    {
-      title: "Reporter",
-      dataIndex: "reporter",
-      key: "reporter",
-      width: "150px",
-    },
-    {
-      title: "Created Date",
-      dataIndex: "createddate",
-      key: "createddate",
-      width: "150px",
+      width: 240,
     },
     {
       title: "Start Date",
-      dataIndex: "startdate",
-      key: "startdate",
-      width: "150px",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (text, record) => {
+        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+      },
     },
     {
-      title: "Due Date",
-      dataIndex: "duedate",
-      key: "duedate",
-      width: "150px",
+      title: "End Date",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (text, record) => {
+        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+      },
     },
-    {
-      title: "Time Logged",
-      dataIndex: "timelogged",
-      key: "timelogged",
-      width: "150px",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      width: "150px",
-    },
+    { title: "Status", dataIndex: "status", key: "status" },
   ];
 
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
+  useEffect(() => {
+    getProjectsData(null, null);
+  }, []);
+
+  const getProjectsData = async (sta, searchquery) => {
+    setLoading(true);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
+    const orgId = localStorage.getItem("organizationId");
+    setOrganizationId(orgId);
+    setOrganizationId(orgId);
+    const payload = {
+      organizationId: orgId,
+      searchQuery: searchquery,
+      status:
+        sta === 1
+          ? "Active"
+          : sta === 2
+          ? "Inactive"
+          : sta === 3
+          ? "Closed"
+          : "",
+    };
+    try {
+      const response = await getProjects(payload);
+      console.log("project response", response);
+      const datas = response?.data;
+      // const reverse = datas.reverse();
+      setProjectData(datas);
+    } catch (error) {
+      setProjectData([]);
+      const Error = error?.response?.data?.message;
+      CommonToaster(Error, "error");
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 350);
+    }
+  };
+
+  const handleStatusFilter = (value) => {
+    setStatusFilter(value);
+    getProjectsData(value, search);
+  };
+
+  const handleSearch = async (event) => {
+    const value = event.target.value;
+    setSearch(value);
+    setLoading(true);
+    const payload = {
+      organizationId: organizationId,
+      searchQuery: value,
+      status:
+        statusFilter === 1
+          ? "Active"
+          : statusFilter === 2
+          ? "Inactive"
+          : statusFilter === 3
+          ? "Closed"
+          : "",
+    };
+    try {
+      const response = await getProjects(payload);
+      setProjectData(response?.data);
+    } catch (error) {
+      setProjectData([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 350);
+    }
+  };
+
+  const handleRefresh = () => {
+    if (!statusFilter && !search) {
+      return;
+    } else {
+      setLoading(true);
+      setSearch("");
+      setStatusFilter();
+      getProjectsData(null, null);
+    }
   };
 
   return (
@@ -178,19 +155,21 @@ const ProjectReport = () => {
       </div>
       <Row className="breakreports_calendarrowContainer">
         <Col xs={24} sm={24} md={12} lg={12}>
-          <div
-            className="field_selectfielsContainer"
-            style={{ display: "flex" }}
-          >
-            <div className="field_teamselectfieldContainer">
-              <CommonInputField prefix={<SearchOutlined />} />
-            </div>
-            <div style={{ width: "170px" }}>
-              <CommonSelectField
-                options={assigneeList}
-                placeholder="Search Assignee..."
+          <div style={{ display: "flex" }}>
+            <div style={{ marginRight: "12px" }}>
+              <CommonSearchField
+                placeholder="Search project..."
+                onChange={handleSearch}
+                value={search}
               />
             </div>
+            <CommonSelectField
+              options={statusList}
+              placeholder="Select status"
+              onChange={handleStatusFilter}
+              value={statusFilter}
+              style={{ width: "29%" }}
+            />
           </div>
         </Col>
         <Col
@@ -200,14 +179,22 @@ const ProjectReport = () => {
           lg={12}
           className="breakreports_calendarContainer"
         >
-          <CommonDoubleDatePicker onChange={onDateChange} value={date} />
           <Tooltip placement="top" title="Download">
-            <Button className="dashboard_download_button">
+            <Button
+              className="dashboard_download_button"
+              onClick={() => {
+                DownloadTableAsCSV(projectData, columns, `Project Report.csv`);
+              }}
+              disabled={loading ? true : false}
+            >
               <DownloadOutlined className="download_icon" />
             </Button>
           </Tooltip>
           <Tooltip placement="top" title="Refresh">
-            <Button className="dashboard_refresh_button">
+            <Button
+              className="dashboard_refresh_button"
+              onClick={handleRefresh}
+            >
               <RedoOutlined className="refresh_icon" />
             </Button>
           </Tooltip>
@@ -216,11 +203,13 @@ const ProjectReport = () => {
       <div className="breakreport_tableContainer">
         <CommonTable
           columns={columns}
-          dataSource={data}
-          scroll={{ x: 1200 }}
-          dataPerPage={4}
-          bordered="true"
+          dataSource={projectData}
+          scroll={{ x: 600 }}
+          dataPerPage={10}
           checkBox="false"
+          bordered="true"
+          size="small"
+          loading={loading}
         />
       </div>
     </div>

@@ -32,7 +32,7 @@
   border-radius: 6px;
   width: 100%;
   position: relative;
-  height: 175px;
+  height: 150px;
   overflow: hidden; /* Ensure download icon stays within card bounds */
   transition: all 0.3s ease;
   cursor: pointer;
@@ -43,6 +43,19 @@
 }
 .livestream_cards:hover .livestreamcard_contentContainer {
   opacity: 0.5;
+}
+.livestream_offlinecards {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 12px;
+  border-radius: 6px;
+  width: 100%;
+  position: relative;
+  height: 150px;
+  overflow: hidden; /* Ensure download icon stays within card bounds */
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background-color: rgba(20, 184, 166, 0.1);
+  /* opacity: 0.5; */
 }
 .livestream_username {
   font-size: 16px;
@@ -83,6 +96,60 @@
   transition: right 0.3s ease; /* Transition for sliding effect */
 }
 
+.livestream_offlineviewContainer {
+  padding: 16px;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  right: 40%; /* Initially off-screen */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px; /* Adjust size as needed */
+  transition: right 0.3s ease; /* Transition for sliding effect */
+  opacity: 0.8;
+}
+
 .livestream_cards:hover .livestream_viewContainer {
   right: 40%; /* Position it inside the card on hover */
+}
+.liveStream_spinContainer {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  z-index: 99;
+}
+.livestream_cardsmainContainer {
+  position: relative;
+}
+.liveStream_filterspinContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 99;
+}
+.livestreamModal_username {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  -webkit-tap-highlight-color: none;
+  outline: none !important;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.livestream_prismazoom {
+  max-width: 100%;
+  max-height: 80vh; /* Adjust as needed to fit within your modal */
+  overflow: hidden;
+  position: relative;
+  -webkit-tap-highlight-color: none;
+  outline: none !important;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }

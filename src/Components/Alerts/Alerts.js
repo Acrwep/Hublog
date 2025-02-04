@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BiSolidBell } from "react-icons/bi";
 import { Row, Col, Button, Tooltip } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
-import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
+import { RedoOutlined } from "@ant-design/icons";
 import CommonTable from "../Common/CommonTable";
 import "./styles.css";
 import { CommonToaster } from "../Common/CommonToaster";
@@ -194,17 +194,18 @@ const Alerts = () => {
           </Tooltip>
         </Col>
       </Row>
-      <div className="breakreport_tableContainer">
-        <CommonTable
-          columns={columns}
-          dataSource={alertData}
-          loading={loading}
-          scroll={{ x: 600 }}
-          dataPerPage={10}
-          checkBox="false"
-          size="small"
-        />
-      </div>
+      {/* <div className="breakreport_tableContainer"> */}
+      <CommonTable
+        columns={columns}
+        dataSource={alertData}
+        loading={loading}
+        scroll={{ x: 600 }}
+        dataPerPage={10}
+        checkBox="false"
+        bordered="true"
+        size="small"
+      />
+      {/* </div> */}
     </div>
   );
 };

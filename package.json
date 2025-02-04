@@ -7,6 +7,7 @@
     "@ant-design/icons": "^5.3.7",
     "@ant-design/plots": "^2.1.13",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@microsoft/signalr": "^8.0.7",
     "@reduxjs/toolkit": "^2.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

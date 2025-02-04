@@ -261,7 +261,7 @@ export default function UserActivity({
                       colors={["#25a17d", "#ABB3B3"]}
                       series={activityBreakdownData}
                       timebased="true"
-                      labelsfontSize="15px"
+                      labelsfontSize="16px"
                       height={280}
                     />
                   </>

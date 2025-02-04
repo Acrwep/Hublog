@@ -69,8 +69,17 @@
   align-items: center;
 }
 .reports_projecticonContainer {
-  background-color: #fcccc0;
+  background-color: #fa6c494b;
   color: #fa6d49;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reports_deviceiconContainer {
+  background-color: #ff99003a;
+  color: #ff9800;
   border-radius: 10px;
   padding: 12px;
   display: flex;
@@ -123,7 +132,7 @@
   align-items: center;
 }
 .reports_alerticonContainer {
-  background-color: #ffb9c1;
+  background-color: #d4233848;
   color: #d42338;
   border-radius: 10px;
   padding: 12px;
@@ -132,7 +141,7 @@
   align-items: center;
 }
 .reports_dynamiciconContainer {
-  background-color: #ccf5f8ea;
+  background-color: #29c9ce2f;
   color: #29c8ceea;
   border-radius: 10px;
   padding: 12px;

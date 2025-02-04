@@ -80,7 +80,7 @@ const SidebarMenuList = () => {
             key={key}
             icon={item.icon}
             title={item.title}
-            disabled={["Real Time"].includes(item.title) ? true : false}
+            // disabled={["Real Time"].includes(item.title) ? true : false}
             style={{
               marginBottom: "12px",
               display:
@@ -93,9 +93,9 @@ const SidebarMenuList = () => {
               <Menu.Item
                 key={subItem.path}
                 icon={subItem.icon}
-                // disabled={["Timeline"].includes(subItem.title) ? true : false}
+                disabled={["Field"].includes(subItem.title) ? true : false}
               >
-                {[""].includes(subItem.title) ? (
+                {["Field"].includes(subItem.title) ? (
                   <Link style={{ cursor: "default" }}>{subItem.title}</Link>
                 ) : (
                   <Link to={`/${subItem.path}`}>{subItem.title}</Link>
@@ -117,6 +117,7 @@ const SidebarMenuList = () => {
               "Alerts",
               "Manual Time",
               "Notebook",
+              "Projects",
               "User Detail",
               "Settings",
               "Reports",
@@ -145,7 +146,7 @@ const SidebarMenuList = () => {
                 : "block",
           }}
         >
-          {["Projects"].includes(item.title) ? (
+          {[""].includes(item.title) ? (
             <Link style={{ cursor: "default" }}>{item.title}</Link>
           ) : (
             <Link to={`/${item.path}`}>

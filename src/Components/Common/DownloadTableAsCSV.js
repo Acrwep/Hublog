@@ -38,6 +38,15 @@ const DownloadTableAsCSV = (data, columns, fileName) => {
         }
 
         if (
+          column.dataIndex === "start_date" ||
+          column.dataIndex === "end_date"
+        ) {
+          return row[column.dataIndex]
+            ? moment(row[column.dataIndex]).format("DD/MM/YYYY")
+            : null;
+        }
+
+        if (
           column.dataIndex === "start_Time" ||
           column.dataIndex === "end_Time"
         ) {

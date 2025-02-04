@@ -276,7 +276,7 @@ export default function UserProductivity({
                       colors={["#25a17d", "#8a8c8c", "rgba(244, 67, 54, 0.82)"]}
                       series={breakdownData}
                       timebased="true"
-                      labelsfontSize="14px"
+                      labelsfontSize="16px"
                     />
                   </>
                 ) : (

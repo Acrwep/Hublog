@@ -173,23 +173,6 @@ const Reports = () => {
           {/* <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/projectreport")}
-            >
-              <div className="reports_projecticonContainer">
-                <FaBusinessTime size={26} />
-              </div>
-              <p className="reports_cardheading">Project Report</p>
-              <p className="reports_cardcontent">
-                View and download the projects report for comprehensive insights
-                into tasks, progress status, and duration spent by each assignee
-                on tasks.
-              </p>
-            </div>
-          </Col> */}
-
-          {/* <Col xs={24} sm={24} md={12} lg={6}>
-            <div
-              className="reports_card"
               onClick={() => navigation("/logsreport")}
             >
               <div className="reports_logsiconContainer">
@@ -224,9 +207,23 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
+              onClick={() => navigation("/projectreport")}
+            >
+              <div className="reports_projecticonContainer">
+                <FaBusinessTime size={26} />
+              </div>
+              <p className="reports_cardheading">Project Report</p>
+              <p className="reports_cardcontent">
+                View and download reports of all projects for your organisation.
+              </p>
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
               onClick={() => navigation("/devicereport")}
             >
-              <div className="reports_producticonContainer">
+              <div className="reports_deviceiconContainer">
                 <TbDeviceDesktopMinus size={26} />
               </div>
               <p className="reports_cardheading">Device Report</p>
