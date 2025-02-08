@@ -74,7 +74,7 @@ export default function CommonDonutChart({
             },
             value: {
               show: true,
-              fontSize: mobileView ? "12px" : "15px",
+              fontSize: mobileView ? "12px" : "17px",
               color: "#2d2d2d",
               fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
               fontWeight: 700, // Increase font weight

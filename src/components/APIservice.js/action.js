@@ -342,10 +342,22 @@ export const updateRole = async (teamID, rolepayload) => {
   }
 };
 //users
-export const getUsers = async (organizationId, name) => {
+export const getAllUsers = async (organizationId, name) => {
   try {
     const response = await api.get(
       `api/Users/GetAllUsers?organizationId=${organizationId}&searchQuery=${
+        name ? name : ""
+      }`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getUsers = async (organizationId, name) => {
+  try {
+    const response = await api.get(
+      `api/Users/GetActiveUsers?organizationId=${organizationId}&searchQuery=${
         name ? name : ""
       }`
     );

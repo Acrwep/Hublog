@@ -16,18 +16,17 @@ import Workplace from "./Workplace";
 import Goals from "./Goals/Goals";
 import Compliance from "./Compliance/Compliance";
 import "./styles.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Break from "./Break/Break";
 import {
   getAlertRules,
+  getAllUsers,
   getBreak,
   getCategories,
   getDesignation,
   getImbuildAppsandUrls,
   getRole,
   getTeams,
-  getUsers,
-  getUsersByTeamId,
   getWellnessRules,
 } from "../APIservice.js/action";
 import AlertRules from "./AlertRules/AlertRules";
@@ -138,7 +137,7 @@ const Settings = () => {
     const orgId = localStorage.getItem("organizationId");
     localStorage.removeItem("rolesearchvalue");
     try {
-      const response = await getUsers(orgId);
+      const response = await getAllUsers(orgId);
       const usersList = response.data;
       dispatch(storeUsersCount(usersList.length));
       dispatch(storeUsers(usersList));

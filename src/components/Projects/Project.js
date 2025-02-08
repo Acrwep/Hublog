@@ -111,7 +111,7 @@ const Projects = () => {
               >
                 <RiDeleteBin7Line
                   size={19}
-                  className="users_tabledeletebutton"
+                  className="users_tableinactivebutton"
                 />
                 <button onClick={() => console.log(record)}>Delete</button>
               </div>

@@ -211,18 +211,17 @@ const LiveStream = () => {
   };
 
   const handleScreenShot = (item) => {
-    if (item.liveStreamStatus === false) {
-      return;
+    if (item.liveStreamStatus === true) {
+      let clickedItem = [];
+      clickedItem.push(item);
+      setClickedUserList(clickedItem);
+      setScreenShot(item.activeScreenshot);
+      const clickedUser = nonChangeUserList.find((f) => f.id === item.id);
+      console.log(clickedUser);
+      setModalUserName(clickedUser?.full_Name || "Unknown");
+      setModalTeamName(clickedUser?.teamName || "Unknown");
+      setIsModalOpen(true);
     }
-    let clickedItem = [];
-    clickedItem.push(item);
-    setClickedUserList(clickedItem);
-    setScreenShot(item.activeScreenshot);
-    const clickedUser = nonChangeUserList.find((f) => f.id === item.id);
-    console.log(clickedUser);
-    setModalUserName(clickedUser?.full_Name || "Unknown");
-    setModalTeamName(clickedUser?.teamName || "Unknown");
-    setIsModalOpen(true);
   };
 
   return (

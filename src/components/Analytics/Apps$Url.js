@@ -82,9 +82,6 @@ const Apps$Url = () => {
         const yValue = series[seriesIndex][dataPointIndex];
         const color = w.config.colors[seriesIndex]; // Get the color of the series
 
-        // Convert yValue back to hours and minutes
-        const hours = Math.floor(yValue); // Get the whole number of hours
-        const minutes = Math.round((yValue - hours) * 60); // Get the remaining minutes
         return `
           <div style="padding: 5px 9px;">
             <span style="display:inline-block; width: 10px; height: 10px; background-color: ${color}; border-radius: 50%; margin-right: 5px;"></span>

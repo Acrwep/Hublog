@@ -237,7 +237,7 @@ const Team = ({ loading }) => {
     const orgId = localStorage.getItem("organizationId");
     const others = allUsersforteamsTab.filter((f) => {
       // Return true if the user's teamId is different from currentTeamId
-      return f.teamId !== teamid;
+      return f.teamId !== teamid && f.active === true;
     });
     setOtherUsers(others);
 
@@ -254,7 +254,7 @@ const Team = ({ loading }) => {
         //take other teammembers
         const others = allUsers.filter((f) => {
           // Return true if the user's teamId is different from currentTeamId
-          return f.teamId !== teamid;
+          return f.teamId !== teamid && f.active === true;
         });
         console.log("other team users", others);
         setOtherUsers(others);
@@ -321,7 +321,7 @@ const Team = ({ loading }) => {
             });
           }}
         >
-          <RiDeleteBin7Line size={19} className="users_tabledeletebutton" />
+          <RiDeleteBin7Line size={19} className="users_tableinactivebutton" />
           <button>Delete</button>
         </div>
       ),

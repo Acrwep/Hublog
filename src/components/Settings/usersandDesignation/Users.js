@@ -17,12 +17,17 @@ import moment from "moment";
 import CommonSearchField from "../../../Components/Common/CommonSearchbar";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
+import { IoMdCheckmark } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Loader from "../../../Components/Common/Loader";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { CommonToaster } from "../../Common/CommonToaster";
 import { MdOutlineFileDownload } from "react-icons/md";
-import { createUser, getUsers, updateUser } from "../../APIservice.js/action";
+import {
+  createUser,
+  getAllUsers,
+  updateUser,
+} from "../../APIservice.js/action";
 import { useDispatch, useSelector } from "react-redux";
 import {
   storeUsers,
@@ -30,6 +35,7 @@ import {
   storeUserSearchValue,
   storeUsersForTeamsTab,
 } from "../../Redux/slice";
+import CommonWarningModal from "../../Common/CommonWarningModal";
 
 const Users = ({ loading }) => {
   const dispatch = useDispatch();
@@ -186,9 +192,35 @@ const Users = ({ loading }) => {
           {
             key: "2",
             label: (
-              <div style={{ display: "flex" }}>
-                <RxCross2 size={19} className="users_tabledeletebutton" />
-                <button onClick={() => console.log(record)}>Deactivate</button>
+              <div
+                style={{ display: "flex" }}
+                onClick={() => {
+                  CommonWarningModal({
+                    title: (
+                      <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                        {`Do you want to ${
+                          record.active === false ? "active" : "Inactive"
+                        }`}
+                        <span style={{ fontWeight: "700", fontSize: "16px" }}>
+                          {" " + record.full_Name}
+                        </span>
+                      </p>
+                    ),
+                    onDelete: () => handleDeactivate(record),
+                  });
+                }}
+              >
+                {record.active === false ? (
+                  <IoMdCheckmark
+                    size={19}
+                    className="users_tableactivebutton"
+                  />
+                ) : (
+                  <RxCross2 size={19} className="users_tableinactivebutton" />
+                )}
+                <button>
+                  {record.active === true ? "Inactive" : "Active"}
+                </button>
               </div>
             ),
           },
@@ -240,7 +272,7 @@ const Users = ({ loading }) => {
     setTableLoading(true);
     const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers(orgId);
+      const response = await getAllUsers(orgId);
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsersCount(allUsers.length));
@@ -320,7 +352,7 @@ const Users = ({ loading }) => {
   const handleSearchfromUseEffect = async (value) => {
     const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers(orgId, value);
+      const response = await getAllUsers(orgId, value);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
     } catch (error) {
@@ -337,7 +369,7 @@ const Users = ({ loading }) => {
 
     const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getUsers(orgId, value);
+      const response = await getAllUsers(orgId, value);
       const allUsers = response?.data;
       dispatch(storeUsers(allUsers));
     } catch (error) {
@@ -483,6 +515,42 @@ const Users = ({ loading }) => {
           setTableLoading(false);
         }, 350);
       }
+    }
+  };
+
+  const handleDeactivate = async (record) => {
+    console.log("deactiveee", record);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    setTableLoading(true);
+    const request = {
+      id: record.id,
+      first_Name: record.first_Name,
+      last_Name: record.last_Name,
+      email: record.email,
+      dob: moment(record.dob).format("YYYY-MM-DD"),
+      doj: moment(record.doj).format("YYYY-MM-DD"),
+      phone: record.phone,
+      usersName: record.first_Name + record.last_Name,
+      password: record.password,
+      gender: record.gender,
+      organizationId: parseInt(orgId),
+      roleId: record.roleId,
+      designationId: record.designationId,
+      teamId: record.teamId,
+      employeeID: record.employeeID,
+      active: record.active === true ? false : true,
+    };
+    try {
+      await updateUser(request);
+      CommonToaster("User updated", "success");
+      getUsersData();
+      formReset();
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
     }
   };
 

@@ -195,7 +195,13 @@
   transition: all 0.3s ease-in;
   margin-right: 6px;
 }
-.users_tabledeletebutton {
+.users_tableactivebutton {
+  cursor: pointer;
+  color: #25a17d;
+  margin-right: 6px;
+  transition: all 0.3s ease-in;
+}
+.users_tableinactivebutton {
   cursor: pointer;
   color: #ff4d4f;
   margin-right: 6px;
