@@ -92,6 +92,7 @@ import AlertReport from "../Components/Reports/AlertReport";
 import ManualTime from "../Components/Manual Time/ManualTime";
 import { SideMenuConfig } from "./SideMenuConfig";
 import Downloads from "../Components/Login/downloads";
+import Productdemo from "../Components/Freetrial/Productdemo.js";
 import Demo from "../Components/Typescript/demo.tsx";
 //licence
 import Billing from "../Components/Licence/Billing.js";
@@ -312,6 +313,9 @@ function SidebarMenu() {
         setShowPages(false);
         navigation("/downloads");
         return;
+      } else if (location.pathname === "/productdemo") {
+        setShowPages(false);
+        navigation("/productdemo");
       } else {
         setShowPages(false);
         navigation("/login");
@@ -444,6 +448,12 @@ function SidebarMenu() {
         <div>
           <Routes>
             <Route path="/downloads" element={<Downloads />} />
+          </Routes>
+        </div>
+      ) : location.pathname === "/productdemo" ? (
+        <div>
+          <Routes>
+            <Route path="/productdemo" element={<Productdemo />} />
           </Routes>
         </div>
       ) : location.pathname === "/typescript" ? (

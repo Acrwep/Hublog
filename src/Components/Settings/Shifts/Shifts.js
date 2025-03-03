@@ -6,27 +6,31 @@ import CommonInputField from "../../../Components/Common/CommonInputField";
 import {
   breakTimeValidator,
   descriptionValidator,
+  endTimeValidator,
+  selectValidator,
 } from "../../../Components/Common/Validation";
 import { CommonToaster } from "../../Common/CommonToaster";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonAddButton from "../../Common/CommonAddButton";
-import { createBreak, getBreak, updateBreak } from "../../APIservice.js/action";
 import { AiOutlineEdit } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
-import { storeBreakSearchValue, storesettingsBreak } from "../../Redux/slice";
 import Loader from "../../Common/Loader";
 import CommonSelectField from "../../Common/CommonSelectField";
+import CommonTimePicker from "../../Common/CommonTimePicker";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { dayJs } from "../../Utils";
 
-export default function Break({ loading }) {
-  const dispatch = useDispatch();
-  const breakList = useSelector((state) => state.settingsBreak);
-  const breakSearchValue = useSelector((state) => state.breaksearchvalue);
+export default function Shifts({ loading }) {
+  const shiftsList = useSelector((state) => state.settingsshift);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [breakId, setBreakId] = useState(null);
+  const [shiftId, setShiftId] = useState(null);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
-  const [breaktime, setBreakTime] = useState("");
-  const [breaktimeError, setBreakTimeError] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [startTimeError, setStartTimeError] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [endTimeError, setEndTimeError] = useState("");
   const statusOptions = [
     { id: 1, name: "Active" },
     { id: 0, name: "In Active" },
@@ -36,21 +40,30 @@ export default function Break({ loading }) {
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const columns = [
-    { title: "Break Name", dataIndex: "name", key: "name", width: 260 },
+    { title: "Shift Name", dataIndex: "name", key: "name", width: 200 },
     {
-      title: "Max Break Time",
-      dataIndex: "max_Break_Time",
-      key: "max_Break_Time",
-      width: 260,
+      title: "Start time",
+      dataIndex: "start_time",
+      key: "start_time",
+      width: 150,
       render: (text) => {
-        return <p>{text} mins</p>;
+        return <p>{moment(text, "HH:mm:ss").format("hh:mm A")}</p>;
+      },
+    },
+    {
+      title: "End time",
+      dataIndex: "end_time",
+      key: "end_time",
+      width: 150,
+      render: (text) => {
+        return <p>{moment(text, "HH:mm:ss").format("hh:mm A")}</p>;
       },
     },
     {
       title: "Status",
-      dataIndex: "active",
-      key: "active",
-      width: 110,
+      dataIndex: "status",
+      key: "status",
+      width: 100,
       render: (text, record) => {
         if (text === true) {
           return (
@@ -83,99 +96,54 @@ export default function Break({ loading }) {
 
   useEffect(() => {
     if (loading === false) {
-      setSearch(breakSearchValue);
+      setSearch("");
     }
   }, []);
-
-  const getBreakData = async () => {
-    setTableLoading(true);
-    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const payload = {
-      organizationId: orgId,
-    };
-    try {
-      const response = await getBreak(payload);
-      console.log("break response", response.data);
-      const allbreakDetails = response.data;
-      dispatch(storesettingsBreak(allbreakDetails));
-    } catch (error) {
-      CommonToaster(error?.response?.data?.message, "error");
-    } finally {
-      setTimeout(() => {
-        setTableLoading(false);
-      }, 1000);
-    }
-  };
 
   const formReset = () => {
     setName("");
     setNameError("");
-    setBreakTime("");
-    setBreakTimeError("");
+    setStartTime();
+    setStartTimeError("");
+    setEndTime();
+    setEndTimeError("");
     setStatus(1);
     setIsModalOpen(false);
     setEdit(false);
   };
 
   const handleEdit = (record) => {
-    setBreakId(record.id);
+    setShiftId(record.id);
     setName(record.name);
-    setBreakTime(record.max_Break_Time);
+    setStartTime(dayJs(record.start_time, "HH:mm:ss"));
+    setEndTime(dayJs(record.end_time, "HH:mm:ss"));
     setStatus(record.active === true ? 1 : 0);
     setIsModalOpen(true);
     setEdit(true);
   };
-  const handleCreateBreak = async () => {
+
+  const handleCreateShift = async () => {
+    console.log(startTime);
+    console.log(moment(startTime.$d).format("HH:mm:ss"));
     const nameValidate = descriptionValidator(name);
-    const breaktimeValidate = breakTimeValidator(breaktime);
+    const starttimeValidate = selectValidator(startTime);
+    const endtimeValidate = endTimeValidator(endTime, startTime);
 
     setNameError(nameValidate);
-    setBreakTimeError(breaktimeValidate);
+    setStartTimeError(starttimeValidate);
+    setEndTimeError(endtimeValidate);
 
-    if (nameValidate || breaktimeValidate) return;
+    if (nameValidate || starttimeValidate || endtimeValidate) return;
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const request = {
-      name: name,
-      max_Break_Time: parseInt(breaktime),
-      active: status === 1 ? true : false,
-      organizationId: orgId,
-      ...(edit && { id: breakId }),
-    };
 
-    if (edit) {
-      setTableLoading(true);
-      try {
-        const response = await updateBreak(request);
-        console.log("break update response", response);
-        CommonToaster("Break updated", "success");
-        formReset();
-        getBreakData();
-      } catch (error) {
-        console.log("update designation error", error);
-        CommonToaster(error.response.data.message, "error");
-      } finally {
-        setTimeout(() => {
-          setTableLoading(false);
-        }, 1000);
-      }
-    } else {
-      setTableLoading(true);
-      try {
-        const response = await createBreak(request);
-        console.log("break response", response);
-        CommonToaster("Break created", "success");
-        formReset();
-        getBreakData();
-      } catch (error) {
-        console.log("create break error", error);
-        CommonToaster(error.response.data.message, "error");
-      } finally {
-        setTimeout(() => {
-          setTableLoading(false);
-        }, 1000);
-      }
-    }
+    const payload = {
+      OrganizationId: orgId,
+      name: name,
+      start_time: moment(startTime.$d).format("HH:mm:ss"),
+      end_time: moment(endTime.$d).format("HH:mm:ss"),
+      status: status === 1 ? true : false,
+    };
   };
 
   const handleCancel = () => {
@@ -186,31 +154,17 @@ export default function Break({ loading }) {
   const handleSearch = async (event) => {
     const value = event.target.value;
     setSearch(value);
-    dispatch(storeBreakSearchValue(value));
+  };
 
-    setTableLoading(true);
-    const orgId = localStorage.getItem("organizationId");
-    const payload = {
-      organizationId: orgId,
-      seachQuery: value,
-    };
-    try {
-      const response = await getBreak(payload);
-      const allbreakDetails = response.data;
-      dispatch(storesettingsBreak(allbreakDetails));
-    } catch (error) {
-      if (error) {
-        const allbreakDetails = [];
-        dispatch(storesettingsBreak(allbreakDetails));
-        setTimeout(() => {
-          setTableLoading(false);
-        }, 350);
-      }
-    } finally {
-      setTimeout(() => {
-        setTableLoading(false);
-      }, 350);
-    }
+  const handleStartTime = (time, timeString) => {
+    console.log(time);
+    setStartTime(time);
+    setStartTimeError(selectValidator(time));
+  };
+
+  const handleEndTime = (time, timeString) => {
+    setEndTime(time);
+    setEndTimeError(endTimeValidator(time, startTime));
   };
 
   return (
@@ -222,7 +176,7 @@ export default function Break({ loading }) {
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField
-                placeholder="Search break..."
+                placeholder="Search shift..."
                 onChange={handleSearch}
                 value={search}
               />
@@ -235,7 +189,7 @@ export default function Break({ loading }) {
               className="users_adduserbuttonContainer"
             >
               <CommonAddButton
-                name="Add Break"
+                name="Add Shift"
                 onClick={() => setIsModalOpen(true)}
               />
             </Col>
@@ -243,7 +197,7 @@ export default function Break({ loading }) {
 
           <CommonTable
             columns={columns}
-            dataSource={breakList}
+            dataSource={shiftsList}
             scroll={{ x: 600 }}
             dataPerPage={10}
             loading={tableLoading}
@@ -254,14 +208,14 @@ export default function Break({ loading }) {
 
           {/* addrole modal */}
           <Modal
-            title={edit ? "Update Break" : "Add Break"}
+            title={edit ? "Update Shift" : "Add Shift"}
             open={isModalOpen}
-            onOk={handleCreateBreak}
+            onOk={handleCreateShift}
             onCancel={handleCancel}
             footer={[
               <button
                 className="designation_submitbutton"
-                onClick={handleCreateBreak}
+                onClick={handleCreateShift}
               >
                 Submit
               </button>,
@@ -278,18 +232,21 @@ export default function Break({ loading }) {
               style={{ marginTop: "22px" }}
               mandatory
             />
-            <CommonInputField
-              label="Max Break Time"
-              onChange={(e) => {
-                setBreakTime(e.target.value);
-                setBreakTimeError(breakTimeValidator(e.target.value));
-              }}
-              value={breaktime}
-              error={breaktimeError}
-              suffix="min"
-              type="number"
-              style={{ marginTop: "22px" }}
+            <CommonTimePicker
+              label="Start Time"
+              onChange={handleStartTime}
+              value={startTime}
+              error={startTimeError}
               mandatory
+              style={{ marginTop: "22px" }}
+            />
+            <CommonTimePicker
+              label="End Time"
+              onChange={handleEndTime}
+              value={endTime}
+              error={endTimeError}
+              mandatory
+              style={{ marginTop: "22px" }}
             />
             <CommonSelectField
               label="Status"

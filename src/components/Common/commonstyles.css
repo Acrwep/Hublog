@@ -210,7 +210,6 @@
   width: 20px;
   height: 20px;
 }
-
 .commonadd_button:active {
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);

@@ -92,7 +92,9 @@ const LiveStream = () => {
     const API_URL = process.env.REACT_APP_API_URL;
 
     const connection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/livestreamHub`)
+      .withUrl(`${API_URL}/livestreamHub`, {
+        withCredentials: true,
+      })
       .withAutomaticReconnect([0, 2000, 5000, 10000])
       .build();
 

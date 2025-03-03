@@ -263,28 +263,26 @@
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   padding: 12px 12px;
   border-radius: 7px;
-  /* height: 60vh;
-  overflow-y: auto; */
 }
 .appsandurlchart_Containers {
-  scrollbar-width: thin; /* "auto", "thin", or "none" */
-  scrollbar-color: #c1c1c1 #f1f1f1; /* thumb color, track color */
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
 }
 .appsandurlchart_Containers::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 12px;
 }
 
 .appsandurlchart_Containers::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Background of the track */
+  background: #f1f1f1;
 }
 
 .appsandurlchart_Containers::-webkit-scrollbar-thumb {
-  background: #888; /* Color of the scroll thumb */
-  border-radius: 10px; /* Rounded corners for the scroll thumb */
+  background: #888;
+  border-radius: 10px;
 }
 
 .appsandurlchart_Containers::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color of the scroll thumb on hover */
+  background: #555;
 }
 /* productivity styles */
 .productivity_tabbuttonContainer {

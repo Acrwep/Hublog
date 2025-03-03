@@ -11,6 +11,7 @@ const CommonTextArea = ({
   error,
   maxLength,
   mandatory,
+  className,
   style,
 }) => {
   return (
@@ -27,11 +28,11 @@ const CommonTextArea = ({
         error={error}
         status={error ? "error" : ""}
         maxLength={maxLength}
-        className={
+        className={`${
           error === "" || error === null || error === undefined
             ? "commontextarea"
             : "commontextarea_error"
-        }
+        } ${className}`}
       />
       <div
         className={

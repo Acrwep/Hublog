@@ -26,6 +26,7 @@ import {
   getDesignation,
   getImbuildAppsandUrls,
   getRole,
+  getShifts,
   getTeams,
   getWellnessRules,
 } from "../APIservice.js/action";
@@ -48,6 +49,7 @@ import {
   storeRole,
   storeRoleSearchValue,
   storesettingsBreak,
+  storeSettingsShifts,
   storeTeams,
   storeUsers,
   storeUsersCount,
@@ -57,11 +59,13 @@ import {
 } from "../Redux/slice";
 import { CommonToaster } from "../Common/CommonToaster";
 import ProductivityRules from "./ProductivityRules/ProductivityRules";
+import Shifts from "./Shifts/Shifts";
 
 const Settings = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [breakLoading, setBreakLoading] = useState(true);
+  const [shiftLoading, setShiftsLoading] = useState(true);
   const [workplaceLoading, setWorkplaceLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
   const [alertRulesLoading, setAlertRulesLoading] = useState(true);
@@ -91,9 +95,10 @@ const Settings = () => {
     useState(false);
   const [alertRulesPageVisited, setAlertRulesPageVisited] = useState(false);
   const [workplacePageVisited, setWorkplacePageVisited] = useState(false);
+  const [shiftsPageVisited, setShitsPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
-    if (id === 5 || id > 8) {
+    if (id > 8) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -106,6 +111,9 @@ const Settings = () => {
     }
     if (id === 4 && workplacePageVisited === false) {
       getWellnessData();
+    }
+    if (id === 5 && shiftsPageVisited === false) {
+      getShiftData();
     }
     if (id === 6 && breakPageVisited === false) {
       getBreakData();
@@ -212,6 +220,28 @@ const Settings = () => {
       setTimeout(() => {
         setBreakLoading(false);
         setBreakPageVisited(true);
+      }, 350);
+    }
+  };
+
+  const getShiftData = async () => {
+    setShiftsLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const payload = {
+      organizationId: orgId,
+    };
+    try {
+      const response = await getShifts(payload);
+      const allShiftDetails = response.data;
+      dispatch(storeSettingsShifts(allShiftDetails));
+    } catch (error) {
+      const allShiftDetails = [];
+      dispatch(storeSettingsShifts(allShiftDetails));
+      CommonToaster(error?.response?.data.message, "error");
+    } finally {
+      setTimeout(() => {
+        setShiftsLoading(false);
+        setShitsPageVisited(true);
       }, 350);
     }
   };
@@ -358,7 +388,7 @@ const Settings = () => {
               <div
                 key={index}
                 className={
-                  index === 4 || index > 7
+                  index > 7
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"
@@ -401,6 +431,11 @@ const Settings = () => {
           {activePage === 3 && (
             <div>
               <Role loading={roleLoading} />
+            </div>
+          )}
+          {activePage === 5 && (
+            <div>
+              <Shifts loader={shiftLoading} />
             </div>
           )}
           {activePage === 4 && (

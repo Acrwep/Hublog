@@ -38,6 +38,7 @@ const CommonInputField = ({
   className,
   type,
   suffix,
+  disabled,
 }) => {
   return (
     <div style={style} className="commonInputfield_container">
@@ -71,6 +72,7 @@ const CommonInputField = ({
         prefix={prefix}
         type={type}
         suffix={suffix}
+        disabled={disabled}
       />
       <div
         className={

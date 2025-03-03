@@ -104,6 +104,7 @@ export const LoginApi = async (loginCredential) => {
     const response = await api.post("/api/Login/login", loginCredential);
     return response;
   } catch (error) {
+    console.log("crossss", error);
     throw error;
   }
 };
@@ -469,6 +470,19 @@ export const updateBreak = async (breakpayload) => {
     throw error;
   }
 };
+
+//settings shifts
+export const getShifts = async (payload) => {
+  try {
+    const response = await api.get("/api/Admin/GetShiftMaster", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //settings alertrules
 export const getAlertRules = async (organizationId) => {
   try {

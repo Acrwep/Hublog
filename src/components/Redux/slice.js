@@ -283,6 +283,31 @@ const breakSearchValueSlice = createSlice({
     },
   },
 });
+
+//settings shifts
+const SettingsShiftSlice = createSlice({
+  name: "settingsshift",
+  initialState,
+  reducers: {
+    storeSettingsShifts(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
+const shiftSearchValue = null;
+const shiftSearchValueSlice = createSlice({
+  name: "shiftsearchvalue",
+  initialState: shiftSearchValue,
+  reducers: {
+    storeShiftSearchValue(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 //role
 const roleSlice = createSlice({
   name: "role",
@@ -717,6 +742,8 @@ export const { storeDesignationSearchValue } =
 export const { storeTeams } = teamsSlice.actions;
 export const { storesettingsBreak } = SettingsBreakSlice.actions;
 export const { storeBreakSearchValue } = breakSearchValueSlice.actions;
+export const { storeSettingsShifts } = SettingsShiftSlice.actions;
+export const { storeShiftSearchValue } = shiftSearchValueSlice.actions;
 export const { storeRole } = roleSlice.actions;
 export const { storeCategories } = CategoriesSlice.actions;
 export const { storeImbuildAppsandUrls } = ImbuildAppsandUrlsSlice.actions;
@@ -801,6 +828,8 @@ export const designationSearchValueReducer =
 export const teamsReducer = teamsSlice.reducer;
 export const settingsBreakReducer = SettingsBreakSlice.reducer;
 export const breakSearchValueReducer = breakSearchValueSlice.reducer;
+export const settingsShiftReducer = SettingsShiftSlice.reducer;
+export const shiftSearchValueReducer = shiftSearchValueSlice.reducer;
 export const roleReducer = roleSlice.reducer;
 export const categoriesReducer = CategoriesSlice.reducer;
 export const imbuildAppsandUrlsReducer = ImbuildAppsandUrlsSlice.reducer;
