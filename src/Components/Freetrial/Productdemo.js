@@ -172,7 +172,12 @@ export default function Productdemo() {
 
             <div className="productdemo_cardleftContentContainer">
               <p className="productdemo_hublogtext">Hublog</p>
-              <p className="productdemo_headingtext">Product Demo</p>
+              <p
+                className="productdemo_headingtext"
+                onClick={() => console.log(date)}
+              >
+                Product Demo
+              </p>
 
               <div className="productdemo_minutediv">
                 <FaRegClock size={18} style={{ marginRight: "10px" }} />
@@ -269,7 +274,7 @@ export default function Productdemo() {
                     <CommonInputField
                       label="Schedule date"
                       className="productdemo_formfields"
-                      value={moment(date).format("DD-MM-YYYY") + ` ${time}`}
+                      value={moment(date.$d).format("DD-MM-YYYY") + ` ${time}`}
                       disabled={true}
                     />
                   </div>
@@ -320,65 +325,80 @@ export default function Productdemo() {
                   </p>
 
                   <Row gutter={16} style={{ width: "100%" }}>
-                    <Col span={isTimeOpen ? 15 : 24}>
-                      <Calendar
-                        fullscreen={false}
-                        showWeek
-                        mode="month"
-                        disabledDate={disabledDate}
-                        onChange={(value) => {
-                          console.log("daeee", value.$d);
-                          setIsTimeOpen(true);
-                          setDate(value);
-                        }}
-                        onSelect={() => {
-                          if (isTimeOpen === false) {
-                            setIsTimeOpen(true);
-                          }
-                        }}
-                        className="productdemo_calendar"
-                        headerRender={customHeaderRender}
-                        value={dayJs(date)}
-                      />
-                    </Col>
-                    <Col
-                      span={isTimeOpen ? 9 : 0}
-                      className="productdemo_timinigcolcontainer"
-                    >
-                      {timingOptions.map((item, index) => {
-                        return (
-                          <React.Fragment key={index}>
-                            <Row gutter={12} style={{ marginBottom: "20px" }}>
-                              <Col
-                                span={24}
-                                className="productdemo_buttoncontainer"
-                              >
-                                <button
-                                  className={`productdemo_timingbutton ${
-                                    item.id === selectedTimeId ? "expanded" : ""
-                                  }`}
-                                  onClick={() => {
-                                    setSelectedTimeId(item.id);
-                                  }}
+                    <Col span={24}>
+                      <div className="productdemo_calendarmainContainer">
+                        <div
+                          className={`productdemo_calendarContainer ${
+                            isTimeOpen === true ? "expanded" : ""
+                          }`}
+                        >
+                          <Calendar
+                            fullscreen={false}
+                            showWeek
+                            mode="month"
+                            disabledDate={disabledDate}
+                            onChange={(value) => {
+                              console.log("daeee", value.$d);
+                              setIsTimeOpen(true);
+                              setDate(value);
+                            }}
+                            onSelect={() => {
+                              if (isTimeOpen === false) {
+                                setIsTimeOpen(true);
+                              }
+                            }}
+                            className="productdemo_calendar"
+                            headerRender={customHeaderRender}
+                            value={dayJs(date)}
+                          />
+                        </div>
+
+                        <div
+                          className={`productdemo_timinigcolcontainer ${
+                            isTimeOpen === true ? "show" : ""
+                          }`}
+                        >
+                          {timingOptions.map((item, index) => {
+                            return (
+                              <React.Fragment key={index}>
+                                <Row
+                                  gutter={12}
+                                  style={{ marginBottom: "20px" }}
                                 >
-                                  <p>{item.name}</p>
-                                </button>
-                                <button
-                                  className={`productdemo_nextbutton ${
-                                    item.id === selectedTimeId ? "show" : ""
-                                  }`}
-                                  onClick={() => {
-                                    setFormOpen(true);
-                                    setTime(item.name);
-                                  }}
-                                >
-                                  <p>Next</p>
-                                </button>
-                              </Col>
-                            </Row>
-                          </React.Fragment>
-                        );
-                      })}
+                                  <Col
+                                    span={24}
+                                    className="productdemo_buttoncontainer"
+                                  >
+                                    <button
+                                      className={`productdemo_timingbutton ${
+                                        item.id === selectedTimeId
+                                          ? "expanded"
+                                          : ""
+                                      }`}
+                                      onClick={() => {
+                                        setSelectedTimeId(item.id);
+                                      }}
+                                    >
+                                      <p>{item.name}</p>
+                                    </button>
+                                    <button
+                                      className={`productdemo_nextbutton ${
+                                        item.id === selectedTimeId ? "show" : ""
+                                      }`}
+                                      onClick={() => {
+                                        setFormOpen(true);
+                                        setTime(item.name);
+                                      }}
+                                    >
+                                      <p>Next</p>
+                                    </button>
+                                  </Col>
+                                </Row>
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </Col>
                   </Row>
                 </>
