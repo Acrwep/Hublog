@@ -52,7 +52,7 @@ select:focus {
   top: 0;
   overflow-y: auto;
   width: inherit;
-  padding: 16px 4px;
+  padding: 16px 2px;
 }
 .ant-menu-dark .ant-menu-item-selected {
   background: linear-gradient(

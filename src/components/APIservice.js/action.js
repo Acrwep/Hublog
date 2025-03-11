@@ -472,6 +472,24 @@ export const updateBreak = async (breakpayload) => {
 };
 
 //settings shifts
+export const createShift = async (payload) => {
+  try {
+    const response = await api.post("/api/Admin/InsertShiftMaster", payload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateShift = async (payload) => {
+  try {
+    const response = await api.put("/api/Admin/InsertShiftMaster", payload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getShifts = async (payload) => {
   try {
     const response = await api.get("/api/Admin/GetShiftMaster", {

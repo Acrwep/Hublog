@@ -28,6 +28,7 @@ const Team = ({ loading }) => {
   const dispatch = useDispatch();
   const teamList = useSelector((state) => state.teams);
   const allUsersforteamsTab = useSelector((state) => state.usersforteamstabs);
+  const shiftsList = useSelector((state) => state.settingsshift);
   //usestates
   const [teamId, setTeamId] = useState("");
   const [otherUsers, setOtherUsers] = useState([]);
@@ -40,6 +41,8 @@ const Team = ({ loading }) => {
   const [nameError, setNameError] = useState("");
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [shiftId, setShiftId] = useState(null);
+  const [shiftIdError, setShiftIdError] = useState(null);
   const [status, setStatus] = useState(true);
   const statusList = [
     { id: true, name: "Active" },
@@ -135,11 +138,13 @@ const Team = ({ loading }) => {
   const handleOk = async () => {
     const nameValidate = descriptionValidator(name);
     const descriptionValidate = descriptionValidator(description);
+    const shiftValidate = selectValidator(shiftId);
 
     setNameError(nameValidate);
     setDescriptionError(descriptionValidate);
+    setShiftIdError(shiftValidate);
 
-    if (nameValidate || descriptionValidate) return;
+    if (nameValidate || descriptionValidate || shiftValidate) return;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
@@ -147,6 +152,7 @@ const Team = ({ loading }) => {
       description: description,
       active: status,
       organizationId: parseInt(orgId),
+      shiftId: shiftId,
       parentid: 1,
     };
     console.log("payload", request);
@@ -182,6 +188,7 @@ const Team = ({ loading }) => {
 
   //handle team change function
   const handleChangeTeamSubmit = async () => {
+    console.log(userDetails);
     if (addTeamModal === false) {
       const changeteamValidate = selectValidator(changeTeamId);
       setChangeTeamError(changeteamValidate);
@@ -191,7 +198,7 @@ const Team = ({ loading }) => {
     setChangeTeamModal(false);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     const request = {
-      id: addTeamModal ? userDetails.id : userDetails.userId,
+      id: userDetails.id,
       first_Name: userDetails.first_Name,
       last_Name: userDetails.last_Name,
       email: userDetails.email,
@@ -211,7 +218,7 @@ const Team = ({ loading }) => {
       employeeID: userDetails.employeeID,
       active: userDetails.active,
     };
-
+    console.log("payloaddd", request);
     setTeamMemberLoading(true);
     try {
       const response = await updateUser(request);
@@ -622,6 +629,18 @@ const Team = ({ loading }) => {
           }}
           value={description}
           error={descriptionError}
+          mandatory
+          style={{ marginTop: "22px" }}
+        />
+        <CommonSelectField
+          label="Shift"
+          options={shiftsList}
+          onChange={(value) => {
+            setShiftId(value);
+            setShiftIdError(selectValidator(value));
+          }}
+          value={shiftId}
+          error={shiftIdError}
           mandatory
           style={{ marginTop: "22px", marginBottom: "22px" }}
         />

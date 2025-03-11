@@ -18,10 +18,14 @@ import CommonSelectField from "../../Common/CommonSelectField";
 import CommonTimePicker from "../../Common/CommonTimePicker";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { useDispatch } from "react-redux";
 import { dayJs } from "../../Utils";
+import { createShift, getShifts } from "../../APIservice.js/action";
+import { storeSettingsShifts } from "../../Redux/slice";
 
 export default function Shifts({ loading }) {
   const shiftsList = useSelector((state) => state.settingsshift);
+  const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shiftId, setShiftId] = useState(null);
@@ -113,11 +117,12 @@ export default function Shifts({ loading }) {
   };
 
   const handleEdit = (record) => {
+    console.log(record);
     setShiftId(record.id);
     setName(record.name);
     setStartTime(dayJs(record.start_time, "HH:mm:ss"));
     setEndTime(dayJs(record.end_time, "HH:mm:ss"));
-    setStatus(record.active === true ? 1 : 0);
+    setStatus(record.status === true ? 1 : 0);
     setIsModalOpen(true);
     setEdit(true);
   };
@@ -144,6 +149,34 @@ export default function Shifts({ loading }) {
       end_time: moment(endTime.$d).format("HH:mm:ss"),
       status: status === 1 ? true : false,
     };
+
+    try {
+      const response = await createShift(payload);
+      console.log(response);
+      setIsModalOpen(false);
+      getShiftData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getShiftData = async () => {
+    setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const payload = {
+      organizationId: orgId,
+    };
+    try {
+      const response = await getShifts(payload);
+      const allShiftDetails = response.data;
+      dispatch(storeSettingsShifts(allShiftDetails));
+    } catch (error) {
+      const allShiftDetails = [];
+      dispatch(storeSettingsShifts(allShiftDetails));
+      CommonToaster(error?.response?.data.message, "error");
+    } finally {
+      setTableLoading(false);
+    }
   };
 
   const handleCancel = () => {
