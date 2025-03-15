@@ -16,6 +16,7 @@ import {
   updateUser,
   getUsers,
   deleteTeam,
+  getShifts,
 } from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
 import { AiOutlineEdit } from "react-icons/ai";
@@ -28,7 +29,7 @@ const Team = ({ loading }) => {
   const dispatch = useDispatch();
   const teamList = useSelector((state) => state.teams);
   const allUsersforteamsTab = useSelector((state) => state.usersforteamstabs);
-  const shiftsList = useSelector((state) => state.settingsshift);
+  const [shiftsList, setShiftList] = useState([]);
   //usestates
   const [teamId, setTeamId] = useState("");
   const [otherUsers, setOtherUsers] = useState([]);
@@ -53,6 +54,7 @@ const Team = ({ loading }) => {
   const [edit, setEdit] = useState(false);
   const [userDetails, setuserDetails] = useState("");
   const [teamMemberLoading, setTeamMemberLoading] = useState(true);
+  const [triggerShiftApi, setTriggerShiftApi] = useState(true);
 
   useEffect(() => {
     if (loading === false) {
@@ -75,10 +77,33 @@ const Team = ({ loading }) => {
       setTeamMembersList(teamMembersList);
     } finally {
       setTimeout(() => {
-        setTeamMemberLoading(false);
-        //call get user api function for get other team members list
-        getUsersData(teamid, "nodispatch");
+        if (triggerShiftApi === true) {
+          getShiftData();
+        } else {
+          setTeamMemberLoading(false);
+          //call get user api function for get other team members list
+          getUsersData(teamid, "nodispatch");
+        }
       }, 350);
+    }
+  };
+
+  //get shift
+  const getShiftData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const payload = {
+      organizationId: orgId,
+    };
+    try {
+      const response = await getShifts(payload);
+      const allShiftDetails = response.data;
+      setShiftList(allShiftDetails);
+    } catch (error) {
+      setShiftList([]);
+      CommonToaster(error?.response?.data.message, "error");
+    } finally {
+      setTriggerShiftApi(false);
+      setTeamMemberLoading(false);
     }
   };
 

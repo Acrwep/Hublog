@@ -483,7 +483,7 @@ export const createShift = async (payload) => {
 
 export const updateShift = async (payload) => {
   try {
-    const response = await api.put("/api/Admin/InsertShiftMaster", payload);
+    const response = await api.put("/api/Admin/UpdateShiftMaster", payload);
     return response;
   } catch (error) {
     throw error;
@@ -501,6 +501,16 @@ export const getShifts = async (payload) => {
   }
 };
 
+export const deleteShift = async (orgId, shiftId) => {
+  try {
+    const response = await api.delete(
+      `/api/Admin/DeleteShiftMaster?organizationId=${orgId}&shiftId=${shiftId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //settings alertrules
 export const getAlertRules = async (organizationId) => {
   try {
@@ -562,6 +572,35 @@ export const updateWellnessRules = async (organizationId, wellnesspayload) => {
   }
 };
 
+//settings goals
+export const createGoals = async (payload) => {
+  try {
+    const response = await api.post("/api/Goal/InsertGoals", payload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateGoals = async (payload) => {
+  try {
+    const response = await api.put("/api/Goal/UpdateGoals", payload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getGoals = async (organizationId) => {
+  try {
+    const response = await api.get(
+      `/api/Goal/GetGoals?organizationId=${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //reports
 //daily attendance report
 export const getDailyAttendanceReport = async (reportPayload) => {
@@ -946,6 +985,17 @@ export const deleteProject = async (deletepayload) => {
   try {
     const response = await api.delete("/api/Project/DeleteProject", {
       params: deletepayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//goals
+export const getGoalsDetails = async (goalspayload) => {
+  try {
+    const response = await api.get("/api/Goal/GetGoalsDetails", {
+      params: goalspayload,
     });
     return response;
   } catch (error) {

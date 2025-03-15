@@ -50,3 +50,16 @@
 .dashboard_refresh_button:hover .refresh_icon {
   color: #009737 !important;
 }
+.dashboard_trophydiv {
+  background-color: rgba(20, 184, 166, 0.1);
+  color: #25a17d;
+  padding: 5px;
+  border-radius: 6px;
+  margin-left: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ant-divider-horizontal.goals_outliersDivider {
+  margin: 2 !important;
+}

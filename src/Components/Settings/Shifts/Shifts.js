@@ -13,6 +13,8 @@ import { CommonToaster } from "../../Common/CommonToaster";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonAddButton from "../../Common/CommonAddButton";
 import { AiOutlineEdit } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { RiDeleteBin7Line } from "react-icons/ri";
 import Loader from "../../Common/Loader";
 import CommonSelectField from "../../Common/CommonSelectField";
 import CommonTimePicker from "../../Common/CommonTimePicker";
@@ -20,8 +22,14 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { dayJs } from "../../Utils";
-import { createShift, getShifts } from "../../APIservice.js/action";
+import {
+  createShift,
+  deleteShift,
+  getShifts,
+  updateShift,
+} from "../../APIservice.js/action";
 import { storeSettingsShifts } from "../../Redux/slice";
+import CommonWarningModal from "../../Common/CommonWarningModal";
 
 export default function Shifts({ loading }) {
   const shiftsList = useSelector((state) => state.settingsshift);
@@ -37,7 +45,7 @@ export default function Shifts({ loading }) {
   const [endTimeError, setEndTimeError] = useState("");
   const statusOptions = [
     { id: 1, name: "Active" },
-    { id: 0, name: "In Active" },
+    { id: 2, name: "In Active" },
   ];
   const [status, setStatus] = useState(1);
   const [search, setSearch] = useState("");
@@ -84,15 +92,83 @@ export default function Shifts({ loading }) {
         }
       },
     },
+    // {
+    //   title: "Action",
+    //   align: "center",
+    //   width: 100,
+    //   render: (text, record) => {
+    //     return (
+    //       <button onClick={() => handleEdit(record)}>
+    //         <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
+    //       </button>
+    //     );
+    //   },
+    // },
     {
       title: "Action",
+      dataIndex: "active",
+      key: "active",
       align: "center",
       width: 100,
+      fixed: "right",
       render: (text, record) => {
+        const items = [
+          {
+            key: "1",
+            label: (
+              <div
+                style={{ display: "flex" }}
+                onClick={() => handleEdit(record)}
+              >
+                <AiOutlineEdit size={19} className="users_tableeditbutton" />
+                <button>Edit</button>
+              </div>
+            ),
+          },
+          {
+            key: "2",
+            label: (
+              <div
+                style={{ display: "flex" }}
+                onClick={() => {
+                  CommonWarningModal({
+                    title: (
+                      <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                        {"Do you want to delete "}
+                        <span style={{ fontWeight: "700", fontSize: "16px" }}>
+                          {record.name}
+                        </span>
+                      </p>
+                    ),
+                    onDelete: () => handleDeleteShift(record.id),
+                  });
+                }}
+              >
+                <RiDeleteBin7Line
+                  size={19}
+                  className="users_tableinactivebutton"
+                />
+                <button onClick={() => console.log(record)}>Delete</button>
+              </div>
+            ),
+          },
+        ];
         return (
-          <button onClick={() => handleEdit(record)}>
-            <AiOutlineEdit size={20} className="alertrules_tableeditbutton" />
-          </button>
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <button className="usertable_actionbutton">
+                  <BsThreeDotsVertical />
+                </button>
+              </Dropdown>
+            </Space>
+          </Space>
         );
       },
     },
@@ -122,9 +198,30 @@ export default function Shifts({ loading }) {
     setName(record.name);
     setStartTime(dayJs(record.start_time, "HH:mm:ss"));
     setEndTime(dayJs(record.end_time, "HH:mm:ss"));
-    setStatus(record.status === true ? 1 : 0);
+    setStatus(record.status === true ? 1 : 2);
     setIsModalOpen(true);
     setEdit(true);
+  };
+
+  const handleDeleteShift = async (id) => {
+    setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    try {
+      const response = await deleteShift(orgId, id);
+      getShiftData();
+      CommonToaster("Shift deleted", "success");
+    } catch (error) {
+      const deleteError = error?.response?.data;
+      if (deleteError === "Error deleting Shift") {
+        CommonToaster("Unable to delete. Mapped to team", "error");
+        return;
+      }
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
+    }
   };
 
   const handleCreateShift = async () => {
@@ -143,6 +240,7 @@ export default function Shifts({ loading }) {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const payload = {
+      ...(edit && { id: shiftId }),
       OrganizationId: orgId,
       name: name,
       start_time: moment(startTime.$d).format("HH:mm:ss"),
@@ -150,13 +248,25 @@ export default function Shifts({ loading }) {
       status: status === 1 ? true : false,
     };
 
-    try {
-      const response = await createShift(payload);
-      console.log(response);
-      setIsModalOpen(false);
-      getShiftData();
-    } catch (error) {
-      console.log(error);
+    if (edit) {
+      try {
+        const response = await updateShift(payload);
+        console.log(response);
+        setIsModalOpen(false);
+        getShiftData();
+        CommonToaster("Shift updated", "success");
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+      }
+    } else {
+      try {
+        const response = await createShift(payload);
+        console.log(response);
+        setIsModalOpen(false);
+        getShiftData();
+      } catch (error) {
+        CommonToaster(error?.response?.data, "error");
+      }
     }
   };
 
@@ -175,7 +285,9 @@ export default function Shifts({ loading }) {
       dispatch(storeSettingsShifts(allShiftDetails));
       CommonToaster(error?.response?.data.message, "error");
     } finally {
-      setTableLoading(false);
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
     }
   };
 
@@ -201,97 +313,91 @@ export default function Shifts({ loading }) {
   };
 
   return (
-    <>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
-          <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <CommonSearchField
-                placeholder="Search shift..."
-                onChange={handleSearch}
-                value={search}
-              />
-            </Col>
-            <Col
-              xs={24}
-              sm={24}
-              md={12}
-              lg={12}
-              className="users_adduserbuttonContainer"
-            >
-              <CommonAddButton
-                name="Add Shift"
-                onClick={() => setIsModalOpen(true)}
-              />
-            </Col>
-          </Row>
-
-          <CommonTable
-            columns={columns}
-            dataSource={shiftsList}
-            scroll={{ x: 600 }}
-            dataPerPage={10}
-            loading={tableLoading}
-            bordered="false"
-            checkBox="false"
-            size="middle"
+    <div>
+      <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <CommonSearchField
+            placeholder="Search shift..."
+            onChange={handleSearch}
+            value={search}
           />
+        </Col>
+        <Col
+          xs={24}
+          sm={24}
+          md={12}
+          lg={12}
+          className="users_adduserbuttonContainer"
+        >
+          <CommonAddButton
+            name="Add Shift"
+            onClick={() => setIsModalOpen(true)}
+          />
+        </Col>
+      </Row>
 
-          {/* addrole modal */}
-          <Modal
-            title={edit ? "Update Shift" : "Add Shift"}
-            open={isModalOpen}
-            onOk={handleCreateShift}
-            onCancel={handleCancel}
-            footer={[
-              <button
-                className="designation_submitbutton"
-                onClick={handleCreateShift}
-              >
-                Submit
-              </button>,
-            ]}
+      <CommonTable
+        columns={columns}
+        dataSource={shiftsList}
+        scroll={{ x: 600 }}
+        dataPerPage={10}
+        loading={loading === true ? loading : tableLoading}
+        bordered="false"
+        checkBox="false"
+        size="middle"
+      />
+
+      {/* addrole modal */}
+      <Modal
+        title={edit ? "Update Shift" : "Add Shift"}
+        open={isModalOpen}
+        onOk={handleCreateShift}
+        onCancel={handleCancel}
+        footer={[
+          <button
+            className="designation_submitbutton"
+            onClick={handleCreateShift}
           >
-            <CommonInputField
-              label="Name"
-              onChange={(e) => {
-                setName(e.target.value);
-                setNameError(descriptionValidator(e.target.value));
-              }}
-              value={name}
-              error={nameError}
-              style={{ marginTop: "22px" }}
-              mandatory
-            />
-            <CommonTimePicker
-              label="Start Time"
-              onChange={handleStartTime}
-              value={startTime}
-              error={startTimeError}
-              mandatory
-              style={{ marginTop: "22px" }}
-            />
-            <CommonTimePicker
-              label="End Time"
-              onChange={handleEndTime}
-              value={endTime}
-              error={endTimeError}
-              mandatory
-              style={{ marginTop: "22px" }}
-            />
-            <CommonSelectField
-              label="Status"
-              options={statusOptions}
-              mandatory={true}
-              onChange={(value) => setStatus(value)}
-              value={status}
-              style={{ marginTop: "22px" }}
-            />
-          </Modal>
-        </div>
-      )}
-    </>
+            Submit
+          </button>,
+        ]}
+      >
+        <CommonInputField
+          label="Name"
+          onChange={(e) => {
+            setName(e.target.value);
+            setNameError(descriptionValidator(e.target.value));
+          }}
+          value={name}
+          error={nameError}
+          style={{ marginTop: "22px" }}
+          mandatory
+        />
+        <CommonTimePicker
+          label="Start Time"
+          onChange={handleStartTime}
+          value={startTime}
+          error={startTimeError}
+          mandatory
+          style={{ marginTop: "22px" }}
+        />
+        <CommonTimePicker
+          label="End Time"
+          onChange={handleEndTime}
+          value={endTime}
+          error={endTimeError}
+          mandatory
+          style={{ marginTop: "22px" }}
+        />
+        <CommonSelectField
+          label="Status"
+          options={statusOptions}
+          mandatory={true}
+          onChange={(value) => setStatus(value)}
+          value={status}
+          style={{ marginTop: "22px" }}
+        />
+      </Modal>
+    </div>
   );
 }

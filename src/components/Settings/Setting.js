@@ -24,6 +24,7 @@ import {
   getBreak,
   getCategories,
   getDesignation,
+  getGoals,
   getImbuildAppsandUrls,
   getRole,
   getShifts,
@@ -41,6 +42,7 @@ import {
   storeDesignation,
   storeDesignationCount,
   storeDesignationSearchValue,
+  storeGoalRules,
   storeImbuildAppsandUrls,
   storeImbuildappsandurlsCount,
   storeMappingSearchValue,
@@ -69,6 +71,7 @@ const Settings = () => {
   const [workplaceLoading, setWorkplaceLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(true);
   const [alertRulesLoading, setAlertRulesLoading] = useState(true);
+  const [goalsLoading, setGoalsLoading] = useState(true);
   const settingsList = [
     {
       id: 1,
@@ -96,9 +99,10 @@ const Settings = () => {
   const [alertRulesPageVisited, setAlertRulesPageVisited] = useState(false);
   const [workplacePageVisited, setWorkplacePageVisited] = useState(false);
   const [shiftsPageVisited, setShitsPageVisited] = useState(false);
+  const [goalsPageVisited, setGolasPageVisited] = useState(false);
 
   const handlePageChange = (id) => {
-    if (id > 8) {
+    if (id === 9 || id === 11) {
       return;
     }
     setActivePage(id === activePage ? activePage : id);
@@ -123,6 +127,9 @@ const Settings = () => {
     }
     if (id === 8 && alertRulesPageVisited === false) {
       getAlertRulesData();
+    }
+    if (id === 10 && goalsPageVisited === false) {
+      getGoalsData();
     }
   };
 
@@ -301,6 +308,24 @@ const Settings = () => {
     }
   };
 
+  const getGoalsData = async () => {
+    setGoalsLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    try {
+      const response = await getGoals(orgId);
+      const golasList = response?.data;
+      console.log("goals response", golasList);
+      dispatch(storeGoalRules(golasList));
+    } catch (error) {
+      dispatch(storeGoalRules([]));
+    } finally {
+      setTimeout(() => {
+        setGolasPageVisited(true);
+        setGoalsLoading(false);
+      }, 350);
+    }
+  };
+
   const getWellnessData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
@@ -388,7 +413,7 @@ const Settings = () => {
               <div
                 key={index}
                 className={
-                  index > 7
+                  index === 8 || index === 10
                     ? "settings_disabledlistContainer"
                     : item.id === activePage
                     ? "settings_activelistContainer"
@@ -435,7 +460,7 @@ const Settings = () => {
           )}
           {activePage === 5 && (
             <div>
-              <Shifts loader={shiftLoading} />
+              <Shifts loading={shiftLoading} />
             </div>
           )}
           {activePage === 4 && (

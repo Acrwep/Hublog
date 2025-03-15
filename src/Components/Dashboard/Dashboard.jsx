@@ -22,11 +22,14 @@ import {
   getActivityTrend,
   getAttendanceSummary,
   getAttendanceTrends,
+  getGoalsDetails,
   getProductivityOutliers,
   getProductivityTrend,
   getTeams,
 } from "../APIservice.js/action";
 import Loader from "../Common/Loader";
+import { IoIosTrophy } from "react-icons/io";
+import { FaTrophy } from "react-icons/fa6";
 import { CommonToaster } from "../Common/CommonToaster";
 import moment from "moment";
 import CommonSelectField from "../Common/CommonSelectField";
@@ -52,6 +55,8 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState([]);
   const [productivityTrendData, setProductivityTrendData] = useState([]);
   const [activityTrendsData, setActivityTrendsData] = useState([]);
+  const [goalsAchieversData, setGoalsAchieversData] = useState([]);
+  const [notGoalsAchieversData, setNotGoalsAchieversData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterLoading, setFilterLoading] = useState(true);
   // Sample data for charts
@@ -421,6 +426,31 @@ const Dashboard = () => {
       setActivityTrendsData([]);
     } finally {
       setTimeout(() => {
+        getGoalsData(orgId, teamid, startDate, endDate);
+      }, 300);
+    }
+  };
+
+  const getGoalsData = async (orgId, teamid, startDate, endDate) => {
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      fromDate: startDate,
+      toDate: endDate,
+    };
+
+    try {
+      const response = await getGoalsDetails(payload);
+      const golasData = response?.data;
+      console.log("goals response", golasData);
+      setGoalsAchieversData(golasData?.top);
+      setNotGoalsAchieversData(golasData?.least);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setGoalsAchieversData([]);
+      setNotGoalsAchieversData([]);
+    } finally {
+      setTimeout(() => {
         setLoading(false);
         setFilterLoading(false);
       }, 300);
@@ -623,22 +653,114 @@ const Dashboard = () => {
 
       <div style={{ marginTop: "25px" }}>
         <Row gutter={16}>
-          <Col xs={24} sm={24} md={7} lg={7}>
+          <Col xs={24} sm={24} md={24} lg={7}>
             <div className="devices_chartsContainer">
-              <p className="devices_chartheading">Achieved goals</p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <CommonNodatafound />
-              </div>
+              {filterLoading ? (
+                <Skeleton
+                  active
+                  style={{ height: "45vh" }}
+                  title={{ width: 140 }}
+                  paragraph={{
+                    rows: 0,
+                  }}
+                />
+              ) : (
+                <>
+                  <p className="devices_chartheading">Goals outliers</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <FaTrophy
+                      color="#25a17d"
+                      size={22}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">Goal Acheiver(s)</p>
+                  </div>
+
+                  <div style={{ marginTop: "10px" }}>
+                    {goalsAchieversData.length >= 1 ? (
+                      <>
+                        {goalsAchieversData.map((item, index) => (
+                          <Row>
+                            <Col span={24}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    fontWeight: 500,
+                                    marginBottom: "5px",
+                                  }}
+                                >
+                                  {index + 1 + ")" + " " + item.full_Name}
+                                </p>
+
+                                {index === 0 && (
+                                  <div className="dashboard_trophydiv">
+                                    <IoIosTrophy size={16} />
+                                  </div>
+                                )}
+                              </div>
+                            </Col>
+                          </Row>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
+
+                  <Divider style={{ margin: "14px 0" }} />
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "4px",
+                    }}
+                  >
+                    <FaTrophy
+                      color="#e93b3a"
+                      size={23}
+                      style={{ marginRight: "12px" }}
+                    />
+                    <p className="mostproductive_heading">
+                      Goal not Acheiver(s)
+                    </p>
+                  </div>
+                  <div style={{ marginTop: "10px" }}>
+                    {notGoalsAchieversData.length >= 1 ? (
+                      <>
+                        {notGoalsAchieversData.map((item, index) => (
+                          <Row>
+                            <Col span={24}>
+                              <p
+                                style={{ fontWeight: 500, marginBottom: "4px" }}
+                              >
+                                {index + 1 + ")" + " " + item.full_Name}
+                              </p>
+                            </Col>
+                          </Row>
+                        ))}
+                      </>
+                    ) : (
+                      <div style={{ height: "100px" }}>
+                        <CommonNodatafound />
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </Col>
-          <Col xs={24} sm={24} md={9} lg={9}>
+          <Col xs={24} sm={24} md={24} lg={9}>
             <div className="devices_chartsContainer">
               {filterLoading ? (
                 <Skeleton
@@ -753,7 +875,7 @@ const Dashboard = () => {
               )}
             </div>
           </Col>
-          <Col xs={24} sm={24} md={9} lg={8}>
+          <Col xs={24} sm={24} md={24} lg={8}>
             <div className="devices_chartsContainer">
               {filterLoading ? (
                 <Skeleton
