@@ -51,7 +51,7 @@ export default function UserAttendance({
       width: 120,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
-          return null;
+          return <p style={{ marginLeft: "24px" }}>-</p>;
         } else {
           return (
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -73,7 +73,7 @@ export default function UserAttendance({
       width: 120,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00") {
-          return null;
+          return <p style={{ marginLeft: "24px" }}>-</p>;
         } else {
           return (
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -106,7 +106,7 @@ export default function UserAttendance({
       width: 120,
       render: (text, record) => {
         if (text === "0001-01-01T00:00:00" || text === null) {
-          return null;
+          return <p style={{ marginLeft: "16px" }}>-</p>;
         } else {
           const [hours, minutes] = text.split(":");
           const formattedDuration = `${parseInt(hours)}h:${parseInt(minutes)}m`;

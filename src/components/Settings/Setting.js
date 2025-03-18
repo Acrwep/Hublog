@@ -234,11 +234,8 @@ const Settings = () => {
   const getShiftData = async () => {
     setShiftsLoading(true);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const payload = {
-      organizationId: orgId,
-    };
     try {
-      const response = await getShifts(payload);
+      const response = await getShifts(orgId);
       const allShiftDetails = response.data;
       dispatch(storeSettingsShifts(allShiftDetails));
     } catch (error) {

@@ -200,7 +200,14 @@ const Login = () => {
                   </div>
                 </div>
 
-                <p className="fotgotpassword_text">Forgot Password?</p>
+                <div className="login_fotgotpassworddiv">
+                  <p
+                    className="fotgotpassword_text"
+                    onClick={() => navigate("/forgotpassword")}
+                  >
+                    Forgot Password?
+                  </p>
+                </div>
 
                 <button
                   className={

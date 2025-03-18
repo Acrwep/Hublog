@@ -490,11 +490,13 @@ export const updateShift = async (payload) => {
   }
 };
 
-export const getShifts = async (payload) => {
+export const getShifts = async (organizationId, name) => {
   try {
-    const response = await api.get("/api/Admin/GetShiftMaster", {
-      params: payload,
-    });
+    const response = await api.get(
+      `/api/Admin/GetShiftMaster?organizationId=${organizationId}&searchQuery=${
+        name ? name : ""
+      }`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -997,6 +999,29 @@ export const getGoalsDetails = async (goalspayload) => {
     const response = await api.get("/api/Goal/GetGoalsDetails", {
       params: goalspayload,
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//forgot password
+export const userEmailValidate = async (email) => {
+  try {
+    const response = await api.get(
+      `/api/ForgotPassword/CheckEmailExists?email=${email}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updatePassword = async (payload) => {
+  try {
+    const response = await api.put(
+      "/api/ForgotPassword/update-password",
+      payload
+    );
     return response;
   } catch (error) {
     throw error;

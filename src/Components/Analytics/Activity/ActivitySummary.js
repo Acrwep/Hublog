@@ -75,7 +75,9 @@ const ActivitySummary = ({
               <>
                 <p>Activity</p>
                 <p className="userproductivity_contents">
-                  {totalActivity === "-"
+                  {!totalActivity
+                    ? "-"
+                    : totalActivity === "-" || totalActivity === ""
                     ? "-"
                     : totalActivity === 0
                     ? "0%"
@@ -231,15 +233,19 @@ const ActivitySummary = ({
                   <p className="devices_chartheading">
                     Team Level Activity Breakdown
                   </p>
-                  <CommonDonutChart
-                    labels={["75-100%", "50-75%", "<50%"]}
-                    colors={["#25a17d", "rgba(20,94,240,0.70)", "#ABB3B3"]}
-                    series={teamLevelbreakdownData}
-                    labelsfontSize="16px"
-                    style={{
-                      marginTop: "97px",
-                    }}
-                  />
+                  {teamLevelbreakdownData.length >= 1 ? (
+                    <CommonDonutChart
+                      labels={["75-100%", "50-75%", "<50%"]}
+                      colors={["#25a17d", "rgba(20,94,240,0.70)", "#ABB3B3"]}
+                      series={teamLevelbreakdownData}
+                      labelsfontSize="16px"
+                      style={{
+                        marginTop: "97px",
+                      }}
+                    />
+                  ) : (
+                    <CommonNodatafound />
+                  )}
                 </>
               )}
             </div>

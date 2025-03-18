@@ -91,11 +91,8 @@ const Team = ({ loading }) => {
   //get shift
   const getShiftData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const payload = {
-      organizationId: orgId,
-    };
     try {
-      const response = await getShifts(payload);
+      const response = await getShifts(orgId);
       const allShiftDetails = response.data;
       setShiftList(allShiftDetails);
     } catch (error) {
@@ -305,6 +302,7 @@ const Team = ({ loading }) => {
     const selectedTeam = teamList.find((f) => f.id === teamId);
     setName(selectedTeam.name);
     setDescription(selectedTeam.description);
+    setShiftId(selectedTeam.shiftId === 0 ? "" : selectedTeam.shiftId);
     setIsModalOpen(true);
     setEdit(true);
   };

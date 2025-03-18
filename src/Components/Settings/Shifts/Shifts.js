@@ -28,12 +28,13 @@ import {
   getShifts,
   updateShift,
 } from "../../APIservice.js/action";
-import { storeSettingsShifts } from "../../Redux/slice";
+import { storeSettingsShifts, storeShiftSearchValue } from "../../Redux/slice";
 import CommonWarningModal from "../../Common/CommonWarningModal";
 
 export default function Shifts({ loading }) {
-  const shiftsList = useSelector((state) => state.settingsshift);
   const dispatch = useDispatch();
+  const shiftsList = useSelector((state) => state.settingsshift);
+  const shiftSearchValue = useSelector((state) => state.shiftsearchvalue);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [shiftId, setShiftId] = useState(null);
@@ -176,7 +177,7 @@ export default function Shifts({ loading }) {
 
   useEffect(() => {
     if (loading === false) {
-      setSearch("");
+      setSearch(shiftSearchValue);
     }
   }, []);
 
@@ -273,11 +274,8 @@ export default function Shifts({ loading }) {
   const getShiftData = async () => {
     setTableLoading(true);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    const payload = {
-      organizationId: orgId,
-    };
     try {
-      const response = await getShifts(payload);
+      const response = await getShifts(orgId, search);
       const allShiftDetails = response.data;
       dispatch(storeSettingsShifts(allShiftDetails));
     } catch (error) {
@@ -299,6 +297,28 @@ export default function Shifts({ loading }) {
   const handleSearch = async (event) => {
     const value = event.target.value;
     setSearch(value);
+
+    dispatch(storeShiftSearchValue(value));
+
+    setTableLoading(true);
+    const orgId = localStorage.getItem("organizationId");
+    try {
+      const response = await getShifts(orgId, value);
+      const allShiftDetails = response.data;
+      dispatch(storeSettingsShifts(allShiftDetails));
+    } catch (error) {
+      if (error) {
+        const allShiftDetails = [];
+        dispatch(storeSettingsShifts(allShiftDetails));
+        setTimeout(() => {
+          setTableLoading(false);
+        }, 350);
+      }
+    } finally {
+      setTimeout(() => {
+        setTableLoading(false);
+      }, 350);
+    }
   };
 
   const handleStartTime = (time, timeString) => {

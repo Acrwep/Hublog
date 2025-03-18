@@ -194,7 +194,7 @@ const Activity = () => {
       } catch (error) {
         console.log("errr", error);
         CommonToaster(error?.response?.data, "error");
-        setTotalActivity("0%");
+        setTotalActivity("-");
         setTotalActivityTime("-");
         setIsBreakdownEmpty(true);
         setTotalBreakdownOnlineTime("-");

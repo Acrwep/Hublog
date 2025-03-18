@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import hublogLogo from "../../assets/images/logo-re-3.png";
 import { Input } from "antd";
 import { IoChevronForward } from "react-icons/io5";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import "./styles.css";
+import { updatePassword } from "../APIservice.js/action";
+import { CommonToaster } from "../Common/CommonToaster";
 export default function Setpassword() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState([
     {
@@ -24,7 +30,11 @@ export default function Setpassword() {
   const [isContainSpecial, setIsContainSpecial] = useState(false);
   const [containerVisible, setContainerVisible] = useState(false);
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    setEmail(location?.state?.userEmail);
+  }, []);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setContainerVisible(true);
     console.log("error", passwordError);
@@ -90,7 +100,19 @@ export default function Setpassword() {
     )
       return;
 
-    alert("Success");
+    const payload = {
+      email: email,
+      newPassword: password,
+    };
+    try {
+      const response = await updatePassword(payload);
+      CommonToaster("Password changed", "success");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message);
+    }
   };
 
   return (

@@ -196,11 +196,15 @@
   border-color: #25a17d !important;
   box-shadow: 0 0 0 2px #25a17e17;
 }
+.login_fotgotpassworddiv {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
 .fotgotpassword_text {
-  text-align: end;
   font-weight: 500;
   font-size: 14px;
-  margin-top: 4px;
+  cursor: pointer;
 }
 .login_button {
   color: #fff;

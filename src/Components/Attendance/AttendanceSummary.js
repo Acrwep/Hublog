@@ -169,7 +169,9 @@ const AttendanceSummary = ({
                   Attendance %
                 </p>
                 <p className="attendancesummary_percentage">
-                  {attendancePercentage === "-"
+                  {!attendancePercentage
+                    ? "-"
+                    : attendancePercentage === "-"
                     ? "-"
                     : attendancePercentage === 0
                     ? "0%"
@@ -217,7 +219,7 @@ const AttendanceSummary = ({
               <>
                 <p style={{ fontWeight: "500" }}>Break time</p>
                 <p className="attendancesummary_percentage">
-                  {totalBreakDuration}
+                  {totalBreakDuration ? totalBreakDuration : "-"}
                 </p>
               </>
             )}
@@ -239,7 +241,7 @@ const AttendanceSummary = ({
               <>
                 <p style={{ fontWeight: "500" }}>Working time</p>
                 <p className="attendancesummary_percentage">
-                  {totalWorkingtime}
+                  {totalWorkingtime ? totalWorkingtime : "-"}
                 </p>
               </>
             )}

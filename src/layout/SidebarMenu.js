@@ -101,6 +101,10 @@ import Freetrial from "../Components/Freetrial/Freetrial.js";
 import Demo from "../Components/Typescript/demo.tsx";
 import Setpassword from "../Components/Freetrial/Setpassword.js";
 import Congrats from "../Components/Freetrial/Congrats.js";
+//mail templates
+import UsercreateMail from "../Components/MailTemplates/UsercreateMail.js";
+//forgot password
+import ForgotPassword from "../Components/ForgotPassword/ForgotPassword.js";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -317,6 +321,11 @@ function SidebarMenu() {
         setShowPages(false);
         navigation("/downloads");
         return;
+      }
+      if (location.pathname === "/usercreatemail") {
+        setShowPages(false);
+        navigation("/usercreatemail");
+        return;
       } else if (location.pathname === "/productdemo") {
         setShowPages(false);
         navigation("/productdemo");
@@ -329,6 +338,9 @@ function SidebarMenu() {
       } else if (location.pathname === "/congrats") {
         setShowPages(false);
         navigation("/congrats");
+      } else if (location.pathname === "/forgotpassword") {
+        setShowPages(false);
+        navigation("/forgotpassword");
       } else {
         setShowPages(false);
         navigation("/login");
@@ -463,6 +475,12 @@ function SidebarMenu() {
             <Route path="/downloads" element={<Downloads />} />
           </Routes>
         </div>
+      ) : location.pathname === "/usercreatemail" ? (
+        <div>
+          <Routes>
+            <Route path="/usercreatemail" element={<UsercreateMail />} />
+          </Routes>
+        </div>
       ) : location.pathname === "/productdemo" ? (
         <div>
           <Routes>
@@ -479,6 +497,12 @@ function SidebarMenu() {
         <div>
           <Routes>
             <Route path="/setpassword" element={<Setpassword />} />
+          </Routes>
+        </div>
+      ) : location.pathname === "/forgotpassword" ? (
+        <div>
+          <Routes>
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
           </Routes>
         </div>
       ) : location.pathname === "/typescript" ? (

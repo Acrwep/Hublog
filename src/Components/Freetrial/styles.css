@@ -426,6 +426,11 @@
   bottom: 34px;
   width: 81%;
 }
+@media (min-width: 375px) and (max-width: 999px) {
+  .setpassword_initialsubmitbuttonContainer {
+    width: 66%;
+  }
+}
 @media (min-width: 1000px) and (max-width: 1024px) {
   .setpassword_initialsubmitbuttonContainer {
     width: 75%;
