@@ -7,6 +7,7 @@ import { FaCheck, FaXmark } from "react-icons/fa6";
 import "./styles.css";
 import { updatePassword } from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
+import { emailValidator } from "../Common/Validation";
 export default function Setpassword() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,6 +37,12 @@ export default function Setpassword() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const emailValidate = emailValidator(email);
+
+    if (emailValidate) {
+      navigate("/forgotpassword");
+      return;
+    }
     setContainerVisible(true);
     console.log("error", passwordError);
 

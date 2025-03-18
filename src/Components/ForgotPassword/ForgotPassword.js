@@ -20,35 +20,35 @@ export default function ForgotPassword() {
     setEmail(e.target.value);
     setIconVisible(true);
 
-    try {
-      const response = await userEmailValidate(e.target.value);
-      console.log(response);
-      setIsValidate(true);
-      setEmailError("");
-    } catch (error) {
-      console.log(error);
-      setEmailError(error?.response?.data?.message);
-      setIsValidate(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIconVisible(true);
     setTimeout(async () => {
       try {
-        const response = await userEmailValidate(email);
+        const response = await userEmailValidate(e.target.value);
         console.log(response);
         setIsValidate(true);
         setEmailError("");
-        navigate("/setpassword", {
-          state: { userEmail: email },
-        });
       } catch (error) {
         console.log(error);
         setEmailError(error?.response?.data?.message);
         setIsValidate(false);
       }
-    }, 500);
+    }, 350);
+  };
+
+  const handleSubmit = async () => {
+    setIconVisible(true);
+    try {
+      const response = await userEmailValidate(email);
+      console.log(response);
+      setIsValidate(true);
+      setEmailError("");
+      navigate("/setpassword", {
+        state: { userEmail: email },
+      });
+    } catch (error) {
+      console.log(error);
+      setEmailError(error?.response?.data?.message);
+      setIsValidate(false);
+    }
   };
 
   return (

@@ -42,6 +42,8 @@ export default function Shifts({ loading }) {
   const [nameError, setNameError] = useState("");
   const [startTime, setStartTime] = useState("");
   const [startTimeError, setStartTimeError] = useState("");
+  const [graceTime, setGraceTime] = useState("");
+  const [graceTimeError, setGraceTimeError] = useState("");
   const [endTime, setEndTime] = useState("");
   const [endTimeError, setEndTimeError] = useState("");
   const statusOptions = [
@@ -58,16 +60,25 @@ export default function Shifts({ loading }) {
       title: "Start time",
       dataIndex: "start_time",
       key: "start_time",
-      width: 150,
+      width: 120,
       render: (text) => {
         return <p>{moment(text, "HH:mm:ss").format("hh:mm A")}</p>;
+      },
+    },
+    {
+      title: "Grace time",
+      dataIndex: "graceTime",
+      key: "graceTime",
+      width: 120,
+      render: (text) => {
+        return <p>{text} mins</p>;
       },
     },
     {
       title: "End time",
       dataIndex: "end_time",
       key: "end_time",
-      width: 150,
+      width: 120,
       render: (text) => {
         return <p>{moment(text, "HH:mm:ss").format("hh:mm A")}</p>;
       },
@@ -186,6 +197,8 @@ export default function Shifts({ loading }) {
     setNameError("");
     setStartTime();
     setStartTimeError("");
+    setGraceTime("");
+    setGraceTimeError("");
     setEndTime();
     setEndTimeError("");
     setStatus(1);
@@ -230,13 +243,21 @@ export default function Shifts({ loading }) {
     console.log(moment(startTime.$d).format("HH:mm:ss"));
     const nameValidate = descriptionValidator(name);
     const starttimeValidate = selectValidator(startTime);
+    const gracetimeValidate = breakTimeValidator(graceTime);
     const endtimeValidate = endTimeValidator(endTime, startTime);
 
     setNameError(nameValidate);
     setStartTimeError(starttimeValidate);
+    setGraceTimeError(gracetimeValidate);
     setEndTimeError(endtimeValidate);
 
-    if (nameValidate || starttimeValidate || endtimeValidate) return;
+    if (
+      nameValidate ||
+      starttimeValidate ||
+      endtimeValidate ||
+      gracetimeValidate
+    )
+      return;
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
@@ -245,6 +266,7 @@ export default function Shifts({ loading }) {
       OrganizationId: orgId,
       name: name,
       start_time: moment(startTime.$d).format("HH:mm:ss"),
+      graceTime: graceTime,
       end_time: moment(endTime.$d).format("HH:mm:ss"),
       status: status === 1 ? true : false,
     };
@@ -359,7 +381,7 @@ export default function Shifts({ loading }) {
       <CommonTable
         columns={columns}
         dataSource={shiftsList}
-        scroll={{ x: 600 }}
+        scroll={{ x: 750 }}
         dataPerPage={10}
         loading={loading === true ? loading : tableLoading}
         bordered="false"
@@ -400,6 +422,19 @@ export default function Shifts({ loading }) {
           error={startTimeError}
           mandatory
           style={{ marginTop: "22px" }}
+        />
+        <CommonInputField
+          label="Grace Time"
+          onChange={(e) => {
+            setGraceTime(e.target.value);
+            setGraceTimeError(breakTimeValidator(e.target.value));
+          }}
+          value={graceTime}
+          error={graceTimeError}
+          suffix="min"
+          type="number"
+          style={{ marginTop: "22px" }}
+          mandatory
         />
         <CommonTimePicker
           label="End Time"
