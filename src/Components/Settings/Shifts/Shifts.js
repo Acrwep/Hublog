@@ -211,6 +211,7 @@ export default function Shifts({ loading }) {
     setShiftId(record.id);
     setName(record.name);
     setStartTime(dayJs(record.start_time, "HH:mm:ss"));
+    setGraceTime(record.graceTime);
     setEndTime(dayJs(record.end_time, "HH:mm:ss"));
     setStatus(record.status === true ? 1 : 2);
     setIsModalOpen(true);

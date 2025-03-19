@@ -32,6 +32,7 @@ import {
   storeTodayAttendance,
   storeAttendanceBreakTrends,
   storeAttendanceActivityLevel,
+  storeAttendanceLateTendency,
 } from "../Redux/slice";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import moment from "moment";
@@ -49,6 +50,7 @@ const Attendance = () => {
   const [organizationId, setOrganizationId] = useState(null);
   const [selectUser, setSelectUser] = useState(false);
   const [attendancePercentage, setAttendancePercentage] = useState();
+  const [latePercentage, setLatePercentage] = useState();
   const [totalBreakDuration, setTotalBreakDuration] = useState("");
   const [totalWorkingtime, setTotalWorkingtime] = useState();
   const [attendancedetailLoading, setAttendancedetailLoading] = useState(true);
@@ -342,6 +344,30 @@ const Attendance = () => {
       dispatch(storeAttendanceBreakTrends(details));
     } finally {
       setTimeout(() => {
+        getLateArrivalsData(teamid, orgId, startdate, enddate);
+      }, 350);
+    }
+  };
+
+  const getLateArrivalsData = async (teamid, orgId, startdate, enddate) => {
+    const payload = {
+      ...(teamid && { teamId: teamid }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getLateArrivals(payload);
+      console.log("latearrivals response", response);
+      const details = response?.data?.data;
+      dispatch(storeAttendanceLateTendency(details));
+      setLatePercentage(response?.data?.overallLatePercentage);
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      dispatch(storeAttendanceLateTendency([]));
+      setLatePercentage(null);
+    } finally {
+      setTimeout(() => {
         setLoading(false);
         setSummaryLoading(false);
       }, 350);
@@ -598,6 +624,7 @@ const Attendance = () => {
           <div>
             <AttendanceSummary
               attendancePercentage={attendancePercentage}
+              latePercentage={latePercentage}
               totalWorkingtime={totalWorkingtime}
               totalBreakDuration={totalBreakDuration}
               loading={summaryLoading}

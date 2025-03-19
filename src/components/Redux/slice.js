@@ -76,6 +76,17 @@ const attendanceBreakTrendsSlice = createSlice({
   },
 });
 
+const attendanceLateTendencySlice = createSlice({
+  name: "attendancelatetendency",
+  initialState,
+  reducers: {
+    storeAttendanceLateTendency(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const attendanceandbreakSummarySlice = createSlice({
   name: "attendanceandbreaksummary",
   initialState,
@@ -734,6 +745,8 @@ export const { storeAttendanceAndBreakSummary } =
 export const { storeTodayAttendance } = todayAttendanceSlice.actions;
 export const { storeAttendanceBreakTrends } =
   attendanceBreakTrendsSlice.actions;
+export const { storeAttendanceLateTendency } =
+  attendanceLateTendencySlice.actions;
 export const { storeAttendanceTrends } = attendanceTrendsSlice.actions;
 export const { storeAttendanceActivityLevel } =
   attendanceActivityLevelSlice.actions;
@@ -822,6 +835,8 @@ export const attendanceActivityLevelReducer =
   attendanceActivityLevelSlice.reducer;
 export const attendancetrendsReducer = attendanceTrendsSlice.reducer;
 export const attendanceBreakTrendsReducer = attendanceBreakTrendsSlice.reducer;
+export const attendanceLateTendencyReducer =
+  attendanceLateTendencySlice.reducer;
 export const attendanceandbreaksummaryReducer =
   attendanceandbreakSummarySlice.reducer;
 export const todayattendanceReducer = todayAttendanceSlice.reducer;

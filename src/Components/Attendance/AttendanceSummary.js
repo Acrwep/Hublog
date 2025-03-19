@@ -9,6 +9,7 @@ import moment from "moment";
 import CommonNodatafound from "../Common/CommonNodatafound";
 
 const AttendanceSummary = ({
+  latePercentage,
   attendancePercentage,
   totalWorkingtime,
   totalBreakDuration,
@@ -18,7 +19,7 @@ const AttendanceSummary = ({
     (state) => state.attendanceactivitylevel
   );
   const todayAttendanceData = useSelector((state) => state.todayattendance);
-  const lateArrivalData = [];
+  const lateArrivalData = useSelector((state) => state.attendancelatetendency);
   const attendanceBreakTrendsData = useSelector(
     (state) => state.attendancebreaktrends
   );
@@ -148,6 +149,53 @@ const AttendanceSummary = ({
     },
   };
 
+  const lateTendencyChartOptions = {
+    chart: {
+      type: "line",
+      height: 350,
+      toolbar: {
+        show: false, // Show toolbar (can be set to false to hide all)
+      },
+    },
+    stroke: {
+      curve: "smooth", // Keeps the line straight for the line chart
+    },
+    xaxis: {
+      categories: lateArrivalXasis,
+      labels: {
+        show: true,
+        rotate: -45, // Rotate labels by -40 degrees
+        color: ["#ffffff"],
+        style: {
+          fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+        },
+      },
+      trim: true,
+    },
+    yaxis: {
+      labels: {
+        style: {
+          fontFamily: "Poppins, sans-serif",
+        },
+      },
+      title: {
+        text: "Value",
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val, { seriesIndex, dataPointIndex }) {
+          // Show corresponding x-axis name and y value
+          return `<span style="margin-left: -6px; font-family:Poppins, sans-serif;">${val}</span>`;
+        },
+      },
+      style: {
+        fontFamily: "Poppins, sans-serif", // Change font family of y-axis labels
+      },
+    },
+    colors: ["#25a17d", "#8a8c8c"], // Different colors for the three series
+  };
+
   return (
     <div>
       <Row gutter={16}>
@@ -198,7 +246,9 @@ const AttendanceSummary = ({
                 <p style={{ color: "#e93b3a", fontWeight: "500" }}>
                   Late Arrivals
                 </p>
-                <p className="attendancesummary_percentage">-</p>
+                <p className="attendancesummary_percentage">
+                  {latePercentage ? latePercentage.toFixed(0) + "%" : "-"}
+                </p>
               </>
             )}
           </div>
@@ -367,10 +417,11 @@ const AttendanceSummary = ({
               <>
                 <p className="devices_chartheading">Late Arrival Tendency</p>
                 {lateArrivalData.length >= 1 ? (
-                  <CommonBarChart
-                    xasis={lateArrivalXasis}
+                  <ReactApexChart
+                    options={lateTendencyChartOptions}
                     series={lateArrivalSeries}
-                    colors={["#25a17d", "#ABB3B3"]}
+                    type="line"
+                    height={350}
                   />
                 ) : (
                   <div style={{ height: "100%" }}>
