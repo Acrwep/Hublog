@@ -648,6 +648,17 @@ export const getMonthlyInandOutReport = async (reportPayload) => {
     throw error;
   }
 };
+//monthly InandOut report
+export const getLateAttendanceReport = async (reportPayload) => {
+  try {
+    const response = await api.get(`/api/Report/LateAttendance`, {
+      params: reportPayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const getAppsandUrlsReport = async (reportPayload) => {
   try {
     const response = await api.get(`/api/Report/combined`, {

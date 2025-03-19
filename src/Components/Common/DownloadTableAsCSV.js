@@ -95,7 +95,8 @@ const DownloadTableAsCSV = (data, columns, fileName) => {
           column.dataIndex === "TotalProductiveDuration" ||
           column.dataIndex === "TotalNeutralDuration" ||
           column.dataIndex === "TotalUnproductiveDuration" ||
-          column.dataIndex === "totalUsage"
+          column.dataIndex === "totalUsage" ||
+          column.dataIndex === "LateMinutes"
         ) {
           if (row[column.dataIndex] === "0001-01-01T00:00:00") {
             return null;

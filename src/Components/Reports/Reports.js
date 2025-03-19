@@ -8,6 +8,7 @@ import {
   TbReportSearch,
   TbReport,
 } from "react-icons/tb";
+import { TbClockCancel } from "react-icons/tb";
 import { GiLotus } from "react-icons/gi";
 import { BiSolidBell } from "react-icons/bi";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
@@ -88,6 +89,28 @@ const Reports = () => {
               <p className="reports_cardcontent">
                 Download reports of monthly In out attendance of your
                 organisation including punch-in and punch-out timing
+              </p>
+            </div>
+          </Col>
+        </Row>
+
+        <Row
+          gutter={16}
+          className="reports_rowcontainer"
+          style={{ marginTop: "22px" }}
+        >
+          <Col xs={24} sm={24} md={12} lg={6}>
+            <div
+              className="reports_card"
+              onClick={() => navigation("/lateattendancereport")}
+            >
+              <div className="reports_lateiconContainer">
+                <TbClockCancel size={26} />
+              </div>
+              <p className="reports_cardheading">Late Attendance Report</p>
+              <p className="reports_cardcontent">
+                Download reports of late attendance of your organisation
+                including punch-in and lateby timing
               </p>
             </div>
           </Col>

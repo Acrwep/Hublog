@@ -69,6 +69,7 @@ import Reports from "../Components/Reports/Reports";
 import BreakReports from "../Components/Reports/BreakReports";
 import DailyAttendanceReport from "../Components/Reports/DailyAttendanceReport";
 import MonthlyAttendanceReport from "../Components/Reports/MonthlyAttendanceReport";
+import LateAttendanceReport from "../Components/Reports/LateAttendanceReport.js";
 import ActivityReport from "../Components/Reports/ActivityReport";
 import ProductivityReport from "../Components/Reports/ProductivityReport";
 import WellnessReport from "../Components/Reports/WellnessReport.js";
@@ -667,6 +668,10 @@ function SidebarMenu() {
                 <Route
                   path="/monthlyinandoutreport"
                   element={<MonthlyInandOutReport />}
+                />
+                <Route
+                  path="/lateattendancereport"
+                  element={<LateAttendanceReport />}
                 />
                 <Route path="/alertreport" element={<AlertReport />} />
                 <Route path="/activityreport" element={<ActivityReport />} />
