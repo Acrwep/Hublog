@@ -93,8 +93,10 @@ const Team = ({ loading }) => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     try {
       const response = await getShifts(orgId);
+      console.log("shift response", response);
       const allShiftDetails = response.data;
-      setShiftList(allShiftDetails);
+      const activeShiftDetails = allShiftDetails.filter((f)=> f.status===true);
+      setShiftList(activeShiftDetails);
     } catch (error) {
       setShiftList([]);
       CommonToaster(error?.response?.data.message, "error");

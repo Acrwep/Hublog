@@ -280,7 +280,8 @@ export default function Shifts({ loading }) {
         getShiftData();
         CommonToaster("Shift updated", "success");
       } catch (error) {
-        CommonToaster(error?.response?.data, "error");
+        const updateError = error?.response?.data;
+        CommonToaster(updateError, "error");
       }
     } else {
       try {
