@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Row, Col, Button, Tooltip, Spin, Modal } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 import { CiStreamOn } from "react-icons/ci";
@@ -126,24 +126,18 @@ const LiveStream = () => {
             dataReceived = true;
 
             setLiveData((prevData) =>
-              prevData.map((user) =>
-                user.id === userIdReceived
-                  ? {
-                      ...user,
-                      activeApp,
-                      activeUrl,
-                      liveStreamStatus,
-                      activeAppLogo,
-                      activeScreenshot,
-                    }
-                  : {
-                      ...user,
-                      activeApp: "",
-                      activeUrl: "",
-                      liveStreamStatus: false,
-                      activeAppLogo: "",
-                      activeScreenshot: "",
-                    }
+              prevData.map(
+                (user) =>
+                  user.id === userIdReceived
+                    ? {
+                        ...user,
+                        activeApp,
+                        activeUrl,
+                        liveStreamStatus,
+                        activeAppLogo,
+                        activeScreenshot,
+                      }
+                    : user // Keep other users' data unchanged
               )
             );
 

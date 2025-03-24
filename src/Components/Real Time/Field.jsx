@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Tooltip, Avatar } from "antd";
+import { Row, Col, Button, Tooltip, Empty, Spin } from "antd";
 import CommonDatePicker from "../Common/CommonDatePicker";
 import { DownloadOutlined, RedoOutlined } from "@ant-design/icons";
 import { MdScreenshotMonitor } from "react-icons/md";
@@ -10,74 +10,160 @@ import CommonSelectField from "../Common/CommonSelectField";
 import { MdOutlineFileDownload } from "react-icons/md";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import CommonAvatar from "../Common/CommonAvatar";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { getTeams, getUsers, getUsersByTeamId } from "../APIservice.js/action";
+import { CommonToaster } from "../Common/CommonToaster";
+import { MdLocationOff } from "react-icons/md";
+import CommonNodatafound from "../Common/CommonNodatafound";
+import { getPunchInUsers } from "../APIservice.js/action";
 
 const Field = () => {
   const [date, setDate] = useState(new Date());
+  const [connection, setConnection] = useState(null);
+  const [teamList, setTeamList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [filterLoading, setFilterLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [clickedUserId, setClickedUserId] = useState(null);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
-  const teamList = [
-    {
-      id: 1,
-      name: "Operation",
-    },
-  ];
-  const userList = [
-    { id: 1, name: "Balaji" },
-    { id: 2, name: "Karthick" },
-  ];
-  const data = [
-    {
-      employee: "Balaji R",
-      key: "1",
-    },
-    {
-      employee: "Vignesh T",
-      key: "2",
-    },
-    {
-      employee: "Goutham D",
-      key: "3",
-    },
-    {
-      employee: "Rocky D",
-      key: "4",
-    },
-    {
-      employee: "Velu S",
-      key: "5",
-    },
-    {
-      employee: "Muthu K",
-      key: "6",
-    },
-    {
-      employee: "Nandha B",
-      key: "7",
-    },
-    {
-      employee: "Vijay S",
-      key: "8",
-    },
-    {
-      employee: "Swetha A",
-      key: "9",
-    },
-    {
-      employee: "Kishore W",
-      key: "10",
-    },
-    {
-      employee: "Divya A",
-      key: "11",
-    },
-    {
-      employee: "Abi Q",
-      key: "12",
-    },
-  ];
+  useEffect(() => {
+    getUsersData();
+  }, []);
 
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setDate(date); // Update the state when the date changes
+  const getUsersData = async () => {
+    setLoading(true);
+    setFilterLoading(true);
+    const container = document.getElementById("header_collapesbuttonContainer");
+    container.scrollIntoView({ behavior: "smooth" });
+
+    const orgId = localStorage.getItem("organizationId");
+    const payload = {
+      organizationId: orgId,
+      date: new Date(),
+    };
+    try {
+      const response = await getPunchInUsers(payload);
+      const users = response?.data;
+
+      if (users.length >= 1) {
+        setUserId(users[0].id);
+        setClickedUserId(users[0].id);
+        setUserList(users);
+        setNonChangeUserList(users);
+      } else {
+        setUserId(null);
+        setClickedUserId(null);
+        setUserList([]);
+        setNonChangeUserList([]);
+      }
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+      setUserId(null);
+      setClickedUserId(null);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+
+  useEffect(() => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
+    const connection = new HubConnectionBuilder()
+      .withUrl(`${API_URL}/livestreamHub`, {
+        withCredentials: true,
+      })
+      .withAutomaticReconnect([0, 2000, 5000, 10000])
+      .build();
+
+    let dataReceived = false; // Track if data has been received
+
+    setLatitude("");
+    setLongitude("");
+    setFilterLoading(true);
+    // Start the connection
+    connection
+      .start()
+      .then(() => {
+        console.log("Connected to SignalR");
+        // Now you can listen for events
+        setTimeout(() => {
+          if (!dataReceived) {
+            console.warn("No data received from SignalR within 4 seconds.");
+            setFilterLoading(false);
+            setLatitude("");
+            setLongitude("");
+          }
+        }, 4000);
+        connection.on(
+          "ReceiveLiveData",
+          (
+            userIdReceived,
+            organizationIdReceived,
+            activeApp,
+            activeUrl,
+            liveStreamStatus,
+            activeAppLogo,
+            activeScreenshot,
+            latitudeReceived,
+            longitudeReceived
+          ) => {
+            dataReceived = true;
+
+            console.log(
+              "latttttttttt",
+              latitude,
+              longitude,
+              clickedUserId,
+              userIdReceived
+            );
+            // if (clickedUserId !== userIdReceived) {
+            //   setLatitude("");
+            //   setFilterLoading(false);
+            //   setLongitude("");
+            //   return;
+            // }
+
+            if (clickedUserId === userIdReceived) {
+              dataReceived = true; // Mark that data was received
+
+              if (latitudeReceived && longitudeReceived) {
+                console.log("Updating location for clicked user.");
+                setLatitude(latitudeReceived);
+                setLongitude(longitudeReceived);
+              } else {
+                console.warn("No location data available for this user.");
+                setLatitude(""); // Reset if no lat/lng is available
+                setLongitude("");
+              }
+            }
+
+            setTimeout(() => setFilterLoading(false), 300);
+          }
+        );
+      })
+      .catch((err) => console.error("Error while starting connection: " + err));
+
+    setConnection(connection);
+
+    // Cleanup the connection when the component is unmounted
+    return () => {
+      connection.stop();
+    };
+  }, [userList, clickedUserId]);
+
+  const handleUser = (value) => {
+    setFilterLoading(true);
+    setUserId(value);
+    setClickedUserId(value);
   };
 
   return (
@@ -95,30 +181,22 @@ const Field = () => {
             className="field_selectfielsContainer"
             style={{ display: "flex" }}
           >
-            <div className="field_teamselectfieldContainer">
-              <CommonSelectField options={teamList} placeholder="All Teams" />
-            </div>
+            {/* <div className="field_teamselectfieldContainer">
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+              />{" "}
+            </div> */}
             <div style={{ width: "170px" }}>
-              <CommonSelectField options={userList} placeholder="Select User" />
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />{" "}
             </div>
-          </div>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <div className="field_calendarContainer">
-            <div style={{ marginRight: "12px" }}>
-              <CommonDatePicker onChange={onDateChange} value={date} />
-            </div>
-            <CommonDoubleDatePicker />
-            <Tooltip placement="top" title="Download">
-              <Button className="dashboard_download_button">
-                <DownloadOutlined className="download_icon" />
-              </Button>
-            </Tooltip>
-            <Tooltip placement="top" title="Refresh">
-              <Button className="dashboard_refresh_button">
-                <RedoOutlined className="refresh_icon" />
-              </Button>
-            </Tooltip>
           </div>
         </Col>
       </Row>
@@ -132,31 +210,66 @@ const Field = () => {
 
             <hr className="screenshot_userhrtag" />
             <div className="screenshots_usersnamemainContainer">
-              {data.map((item) => {
-                return (
-                  <>
-                    <div className="screenshots_usersnameContainer">
-                      <CommonAvatar itemName={item.employee} />
-                      <p>{item.employee}</p>
-                    </div>
-                    <hr className="screenshot_users_hrtag" />
-                  </>
-                );
-              })}
+              {userList.length >= 1 ? (
+                <>
+                  {userList.map((item) => {
+                    return (
+                      <>
+                        <div
+                          className={
+                            clickedUserId === item.id
+                              ? "field_activeusersnameContainer"
+                              : "field_usersnameContainer"
+                          }
+                          onClick={() => {
+                            setClickedUserId(item.id);
+                            setFilterLoading(true);
+                          }}
+                        >
+                          <CommonAvatar itemName={item.full_Name} />
+                          <p>{item.full_Name}</p>
+                        </div>
+                        <hr className="screenshot_users_hrtag" />
+                      </>
+                    );
+                  })}
+                </>
+              ) : (
+                <div>
+                  <CommonNodatafound />
+                </div>
+              )}
             </div>
           </div>
         </Col>
         <Col xs={24} sm={24} md={17} lg={17} style={{ height: "auto" }}>
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d64128957.5739181!2d79.44681508403109!3d11.178679955030265!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1708326411006!5m2!1sen!2sin"
-            className="w-full"
-            height="450"
-            style={{ border: "0" }}
-            allowFullScreen=""
-            loading="lazy"
-            title="map"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
+          {filterLoading === false ? (
+            <>
+              {latitude != "" && latitude != "" ? (
+                <iframe
+                  src={`https://www.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`}
+                  className="w-full"
+                  height="450"
+                  style={{ border: "0" }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  title="map"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              ) : (
+                <div className="field_notfounddiv">
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description="Location not found"
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="field_notfounddiv">
+              <Spin />
+            </div>
+          )}
         </Col>
       </Row>
     </div>

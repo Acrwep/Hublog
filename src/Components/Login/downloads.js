@@ -55,7 +55,7 @@ export default function Downloads() {
 
                 <Button
                   className="exedownload_button"
-                  href="https://hublog.org:8087/Hublog-v1.2.1.exe"
+                  href="https://hublog.org:8087/Hublog-v1.2.2.exe"
                   download
                 >
                   <FaWindows color="#ffffff" size={19} />

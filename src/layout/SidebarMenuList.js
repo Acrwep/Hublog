@@ -93,9 +93,9 @@ const SidebarMenuList = () => {
               <Menu.Item
                 key={subItem.path}
                 icon={subItem.icon}
-                disabled={["Field"].includes(subItem.title) ? true : false}
+                disabled={[""].includes(subItem.title) ? true : false}
               >
-                {["Field"].includes(subItem.title) ? (
+                {[""].includes(subItem.title) ? (
                   <Link style={{ cursor: "default" }}>{subItem.title}</Link>
                 ) : (
                   <Link to={`/${subItem.path}`}>{subItem.title}</Link>

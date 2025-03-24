@@ -1038,3 +1038,15 @@ export const updatePassword = async (payload) => {
     throw error;
   }
 };
+
+//punchin users
+export const getPunchInUsers = async (payload) => {
+  try {
+    const response = await api.get("/api/Users/GetPunchIn_Users", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

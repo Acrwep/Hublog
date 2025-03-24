@@ -699,7 +699,7 @@ const Dashboard = () => {
                                     marginBottom: "5px",
                                   }}
                                 >
-                                  {index + 1 + ")" + " " + item.full_Name}
+                                  {index + 1 + ")" + " " + item.fullName}
                                 </p>
 
                                 {index === 0 && (
@@ -744,7 +744,7 @@ const Dashboard = () => {
                               <p
                                 style={{ fontWeight: 500, marginBottom: "4px" }}
                               >
-                                {index + 1 + ")" + " " + item.full_Name}
+                                {index + 1 + ")" + " " + item.fullName}
                               </p>
                             </Col>
                           </Row>

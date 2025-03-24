@@ -25,6 +25,27 @@
     overflow: auto;
   }
 }
+.field_notfounddiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-weight: 600;
+  font-size: 15px;
+}
+.field_usersnameContainer {
+  display: flex;
+  padding: 12px 9px;
+  align-items: center;
+  cursor: pointer;
+}
+.field_activeusersnameContainer {
+  display: flex;
+  padding: 12px 9px;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(20, 184, 166, 0.1);
+}
 /* livestream styles */
 .livestream_cards {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
