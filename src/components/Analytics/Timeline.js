@@ -9,7 +9,11 @@ import { BsCupHot } from "react-icons/bs";
 import { PiBowlFood } from "react-icons/pi";
 import { LuClock4 } from "react-icons/lu";
 import { BiBell } from "react-icons/bi";
-import { getEmployeeTimeline, getUsers } from "../APIservice.js/action";
+import {
+  getEmployeeTimeline,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
 import "./styles.css";
 import CommonNodatafound from "../Common/CommonNodatafound";
@@ -25,51 +29,13 @@ export default function Timelines() {
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // const dummyTimelineData = [
-  //   {
-  //     label: "09:02 AM",
-  //     children: "Punch In",
-  //     dot: <BiDownArrowCircle size={20} color="#25a17d" />,
-  //   },
-  //   {
-  //     label: "11:02 AM",
-  //     children: "Morning Break Start",
-  //     dot: <BsCupHot size={18} color="#b85f06" />,
-  //   },
-  //   {
-  //     label: "11:19 AM",
-  //     children: "Morning Break End",
-  //     dot: <BsCupHot size={18} color="#b85f06" />,
-  //   },
-  //   {
-  //     label: "01:04 PM",
-  //     children: "Lunch Start",
-  //     dot: <PiBowlFood size={20} color="gray" />,
-  //   },
-  //   {
-  //     label: "01:46 PM",
-  //     children: "Lunch End",
-  //     dot: <PiBowlFood size={20} color="gray" />,
-  //   },
-  //   {
-  //     label: "04:32 PM",
-  //     children: "Evening Break Start",
-  //     dot: <BsCupHot size={18} color="#b85f06" />,
-  //   },
-  //   {
-  //     label: "04:47 PM",
-  //     children: "Evening Break End",
-  //     dot: <BsCupHot size={18} color="#b85f06" />,
-  //   },
-  //   {
-  //     label: "06:32 PM",
-  //     children: "Punch Out",
-  //     dot: <BiUpArrowCircle size={20} color="red" />,
-  //   },
-  // ];
-
   useEffect(() => {
-    getUsersData();
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      getUsersDataByTeamId();
+    } else {
+      getUsersData();
+    }
   }, []);
 
   const getUsersData = async () => {
@@ -92,6 +58,38 @@ export default function Timelines() {
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
+    } finally {
+      setTimeout(() => {
+        getTimelineData(orgId, defalutUserId, currentDate);
+      }, 350);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    let defalutUserId = null;
+    const currentDate = new Date();
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+
+      const loginUserData = localStorage.getItem("LoginUserInfo");
+      const convertAsJson = JSON.parse(loginUserData);
+      console.log("loginuser", convertAsJson);
+      const loginUserId = convertAsJson.id;
+
+      if (teamMembersList.length >= 1) {
+        setUserId(loginUserId);
+        defalutUserId = loginUserId;
+        setDefaultUserId(loginUserId);
+      } else {
+        setUserId(null);
+      }
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
     } finally {
       setTimeout(() => {
         getTimelineData(orgId, defalutUserId, currentDate);

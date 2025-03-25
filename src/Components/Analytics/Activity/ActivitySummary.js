@@ -21,6 +21,10 @@ const ActivitySummary = ({
   topCategoryUsageTime,
   isBreakdownEmpty,
   loading,
+  breakdownLoader,
+  appsLoader,
+  urlLoader,
+  categoryLoader,
 }) => {
   const breakdownData = useSelector((state) => state.activitybreakdown);
   const teamLevelbreakdownData = useSelector(
@@ -62,7 +66,7 @@ const ActivitySummary = ({
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {breakdownLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -90,7 +94,7 @@ const ActivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {appsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -110,7 +114,7 @@ const ActivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {urlLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -138,7 +142,7 @@ const ActivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {categoryLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -162,7 +166,7 @@ const ActivitySummary = ({
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {breakdownLoader ? (
                 <Skeleton
                   active
                   title={{ width: 140 }}
@@ -219,7 +223,7 @@ const ActivitySummary = ({
 
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {breakdownLoader ? (
                 <Skeleton
                   active
                   title={{ width: 140 }}
@@ -253,7 +257,7 @@ const ActivitySummary = ({
 
           <Col xs={24} sm={24} md={10} lg={10}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {breakdownLoader ? (
                 <Skeleton
                   active
                   style={{ height: "45vh" }}
@@ -376,7 +380,7 @@ const ActivitySummary = ({
 
       <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
-          {loading ? (
+          {breakdownLoader ? (
             <div style={{ height: "45vh" }}>
               <Skeleton
                 active

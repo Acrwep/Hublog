@@ -30,6 +30,7 @@ const LiveStream = () => {
   const [userId, setUserId] = useState(null);
   const [clickedUserList, setClickedUserList] = useState([]);
   const [teamId, setTeamId] = useState(null);
+  const [isManager, setIsManager] = useState(false);
   const [organizationId, setOrganizationId] = useState(null);
   const [modalUserName, setModalUserName] = useState("");
   const [modalTeamName, setModalTeamName] = useState("");
@@ -38,6 +39,12 @@ const LiveStream = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
@@ -48,19 +55,29 @@ const LiveStream = () => {
     setClickedUserList([]);
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
+    const managerTeamId = localStorage.getItem("managerTeamId");
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
-      }, 500);
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
+      }, 350);
     }
   };
 
@@ -76,6 +93,25 @@ const LiveStream = () => {
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
+      setNonChangeUserList(teamMembersList);
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -195,15 +231,19 @@ const LiveStream = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     if (teamId === null && userId === null) {
       return;
-    } else {
-      setFilterLoading(true);
-      setTeamId(null);
-      setUserId(null);
-      setParticularUserList([]);
-      setUserList(nonChangeUserList);
     }
+    if (managerTeamId && userId === null) {
+      return;
+    }
+    setFilterLoading(true);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setParticularUserList([]);
+    setUserList(nonChangeUserList);
   };
 
   const handleScreenShot = (item) => {
@@ -249,6 +289,7 @@ const LiveStream = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

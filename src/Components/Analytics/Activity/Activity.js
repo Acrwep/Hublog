@@ -57,6 +57,17 @@ const Activity = () => {
   const [topCategoryName, setTopCategoryName] = useState("");
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [isBreakdownEmpty, setIsBreakdownEmpty] = useState(false);
+  const [isManager, setIsManager] = useState(false);
+
+  //loader usestates
+  const [breakdownLoader, setBreakdownLoader] = useState(true);
+  const [appsLoader, setAppsLoader] = useState(true);
+  const [urlLoader, setUrlLoader] = useState(true);
+  const [categoryLoader, setCategoryLoader] = useState(true);
+  const [worktimeLoader, setWorktimeLoader] = useState(true);
+  const [activityTrendLoader, setActivityTrendLoader] = useState(true);
+  const [employeeLoader, setEmployeeLoader] = useState(true);
+
   const [loading, setLoading] = useState(true);
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [detailedLoading, setDetailedLoading] = useState(true);
@@ -81,24 +92,39 @@ const Activity = () => {
   };
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     try {
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       console.log("teams error", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
-      }, 500);
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
+      }, 300);
     }
   };
 
@@ -130,6 +156,35 @@ const Activity = () => {
     }
   };
 
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
+      setNonChangeUserList(teamMembersList);
+    } finally {
+      setTimeout(() => {
+        getActivityBreakdownData(
+          orgId,
+          managerTeamId,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1],
+          activePage
+        );
+      }, 350);
+    }
+  };
+
   const getActivityBreakdownData = async (
     orgId,
     teamid,
@@ -140,6 +195,10 @@ const Activity = () => {
   ) => {
     if (pageNumber === 1) {
       setSummaryLoading(true);
+      setBreakdownLoader(true);
+      setAppsLoader(true);
+      setUrlLoader(true);
+      setCategoryLoader(true);
       const payload = {
         organizationId: orgId,
         ...(teamid && { teamId: teamid }),
@@ -206,11 +265,15 @@ const Activity = () => {
         dispatch(storeLeastActivityTeams([]));
       } finally {
         setTimeout(() => {
+          setBreakdownLoader(false);
           getTopAppUsageData(orgId, teamid, startDate, endDate);
         }, 100);
       }
     } else {
       setDetailedLoading(true);
+      setWorktimeLoader(true);
+      setActivityTrendLoader(true);
+      setEmployeeLoader(true);
       const payload = {
         organizationId: orgId,
         ...(teamid && { teamId: teamid }),
@@ -229,6 +292,7 @@ const Activity = () => {
         dispatch(storeActivityWorktimeTrends([]));
       } finally {
         setTimeout(() => {
+          setWorktimeLoader(false);
           getActivityTrendData(orgId, teamid, userid, startDate, endDate);
         }, 100);
       }
@@ -264,6 +328,7 @@ const Activity = () => {
       setTopAppUsageTime("-");
     } finally {
       setTimeout(() => {
+        setAppsLoader(false);
         getTopUrlUsageData(orgId, teamid, startdate, enddate);
       }, 100);
     }
@@ -295,6 +360,7 @@ const Activity = () => {
       setTopUrlUsageTime("-");
     } finally {
       setTimeout(() => {
+        setUrlLoader(false);
         getTopCategoryUsageData(orgId, teamid, startdate, enddate);
       }, 100);
     }
@@ -329,6 +395,7 @@ const Activity = () => {
       setTimeout(() => {
         setSummaryLoading(false);
         setLoading(false);
+        setCategoryLoader(false);
       }, 100);
     }
   };
@@ -358,6 +425,7 @@ const Activity = () => {
       dispatch(storeActivityTrends([]));
     } finally {
       setTimeout(() => {
+        setActivityTrendLoader(false);
         getActivityEmployeesListData(orgId, teamid, userid, startDate, endDate);
       }, 100);
     }
@@ -388,6 +456,7 @@ const Activity = () => {
       dispatch(storeActivityEmployeesList([]));
     } finally {
       setTimeout(() => {
+        setEmployeeLoader(false);
         setDetailedLoading(false);
       }, 300);
     }
@@ -450,6 +519,7 @@ const Activity = () => {
 
   const handleRefresh = () => {
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    const managerTeamId = localStorage.getItem("managerTeamId");
 
     const today = new Date();
     const givenDate = new Date(selectedDates[1]);
@@ -478,20 +548,28 @@ const Activity = () => {
       isPreviousChange === false
     ) {
       return;
-    } else {
-      setTeamId(null);
-      setUserId(null);
-      setUserList(nonChangeUserList);
-      setSelectedDates(PreviousandCurrentDate);
-      getActivityBreakdownData(
-        organizationId,
-        null,
-        null,
-        PreviousandCurrentDate[0],
-        PreviousandCurrentDate[1],
-        activePage
-      );
     }
+
+    if (
+      managerTeamId &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setUserList(nonChangeUserList);
+    setSelectedDates(PreviousandCurrentDate);
+    getActivityBreakdownData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      PreviousandCurrentDate[0],
+      PreviousandCurrentDate[1],
+      activePage
+    );
   };
   return (
     <div className="settings_mainContainer">
@@ -543,6 +621,7 @@ const Activity = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             {activePage === 2 ? (
@@ -599,11 +678,20 @@ const Activity = () => {
             topCategoryUsageTime={topCategoryUsageTime}
             isBreakdownEmpty={isBreakdownEmpty}
             loading={summaryLoading}
+            breakdownLoader={breakdownLoader}
+            appsLoader={appsLoader}
+            urlLoader={urlLoader}
+            categoryLoader={categoryLoader}
           />
         </div>
       ) : (
         <div>
-          <ActivityDetailed loading={detailedLoading} />
+          <ActivityDetailed
+            loading={detailedLoading}
+            worktimeLoader={worktimeLoader}
+            activityTrendLoader={activityTrendLoader}
+            employeeLoader={employeeLoader}
+          />
         </div>
       )}
       {/* </>

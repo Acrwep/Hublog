@@ -9,7 +9,12 @@ import { parseTimeToDecimal } from "../../Common/Validation";
 import CommonNodatafound from "../../Common/CommonNodatafound";
 import CommonTrendsChart from "../../Common/CommonTrendsChart";
 
-const ProductivityDetailed = ({ loading }) => {
+const ProductivityDetailed = ({
+  loading,
+  worktimeLoader,
+  productivityTrendLoader,
+  employeeLoader,
+}) => {
   const worktimeTrendsData = useSelector(
     (state) => state.productivityworktimetrends
   );
@@ -249,7 +254,7 @@ const ProductivityDetailed = ({ loading }) => {
   return (
     <div>
       <div className="devices_chartsContainer">
-        {loading ? (
+        {worktimeLoader ? (
           <Skeleton
             active
             title={{ width: 140 }}
@@ -273,7 +278,7 @@ const ProductivityDetailed = ({ loading }) => {
         )}
       </div>
       <div className="devices_chartsContainer" style={{ marginTop: "25px" }}>
-        {loading ? (
+        {productivityTrendLoader ? (
           <Skeleton
             active
             title={{ width: 140 }}
@@ -309,7 +314,7 @@ const ProductivityDetailed = ({ loading }) => {
           size="small"
           bordered="false"
           checkBox="false"
-          loading={loading}
+          loading={employeeLoader}
         />
       </div>
     </div>

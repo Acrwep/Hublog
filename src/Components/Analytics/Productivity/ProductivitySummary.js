@@ -20,6 +20,12 @@ const ProductivitySummary = ({
   topCategoryUsageTime,
   isBreakdownEmpty,
   loading,
+  breakdownLoader,
+  outliersLoader,
+  appsLoader,
+  urlLoader,
+  categoryLoader,
+  teamwiseLoader,
 }) => {
   const breakdownData = useSelector((state) => state.productivitybreakdown);
   const teamwiseData = useSelector((state) => state.teamwiseproductivity);
@@ -64,7 +70,7 @@ const ProductivitySummary = ({
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {outliersLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -86,7 +92,7 @@ const ProductivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {appsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -106,7 +112,7 @@ const ProductivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {urlLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -134,7 +140,7 @@ const ProductivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {categoryLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -158,7 +164,7 @@ const ProductivitySummary = ({
         <Row gutter={16}>
           <Col xs={24} sm={24} md={10} lg={10}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {breakdownLoader ? (
                 <Skeleton
                   active
                   title={{ width: 140 }}
@@ -222,7 +228,7 @@ const ProductivitySummary = ({
           </Col>
           <Col xs={24} sm={24} md={14} lg={14}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {outliersLoader ? (
                 <Skeleton
                   active
                   style={{ height: "45vh" }}
@@ -339,7 +345,7 @@ const ProductivitySummary = ({
 
       <div style={{ marginTop: "25px" }}>
         <div className="devices_chartsContainer">
-          {loading ? (
+          {teamwiseLoader ? (
             <div style={{ height: "45vh" }}>
               <Skeleton
                 active
