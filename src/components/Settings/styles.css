@@ -334,6 +334,25 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 12px 1px rgba(85, 226, 108, 0.507);
 }
+
+.teammembercard_managerbuttons {
+  width: 104px !important;
+  font-size: 12px !important;
+  padding: 0px !important;
+  overflow: hidden !important;
+  word-break: break-all !important;
+  background-color: #25a17d;
+  color: #ffffff;
+}
+.teammembercard_managerbuttons:hover {
+  color: #ffffff !important;
+  border-color: #009737 !important;
+  background-color: #009737 !important;
+}
+.teammembercard_managerbuttons:active {
+  transform: scale(0.9);
+  box-shadow: 3px 2px 12px 1px rgba(85, 226, 108, 0.507);
+}
 .teammember_nodata {
   font-weight: 600;
   font-size: 16px;

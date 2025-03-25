@@ -46,8 +46,10 @@ const DateWiseAttendance = ({ tList, uList }) => {
   const [presentCount, setPresentCount] = useState(null);
   const [absentList, setAbsentList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isManager, setIsManager] = useState(false);
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     if (
       datewiseAttendancePresentData.length >= 1 ||
       datewiseAttendanceAbsentData.length >= 1
@@ -60,18 +62,38 @@ const DateWiseAttendance = ({ tList, uList }) => {
           ? datewiseAttendanceUsersData
           : uList
       );
-      setTeamId(teamValue);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+        setIsManager(true);
+      } else {
+        setTeamId(teamValue);
+        setIsManager(false);
+      }
       setUserId(userValue);
       setDate(dateValue === null ? date : dateValue);
       const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+
       setOrganizationId(orgId);
       return;
     }
     setTeamList(tList);
     setUserList(uList);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+
+    if (managerTeamId) {
+      setTeamId(parseInt(managerTeamId));
+      setIsManager(true);
+    } else {
+      setTeamId(null);
+      setIsManager(false);
+    }
     setOrganizationId(orgId);
-    getDailyAttendanceData(userId, teamId, orgId, date);
+    getDailyAttendanceData(
+      userId,
+      managerTeamId ? managerTeamId : teamId,
+      orgId,
+      date
+    );
   }, []);
 
   const getDailyAttendanceData = async (
@@ -155,6 +177,8 @@ const DateWiseAttendance = ({ tList, uList }) => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     const today = new Date();
     const givenDate = new Date(date);
     let isCurrentDate = false;
@@ -172,13 +196,25 @@ const DateWiseAttendance = ({ tList, uList }) => {
     if (teamId === null && userId === null && isCurrentDate === true) {
       return;
     }
-    setTeamId(null);
+    if (managerTeamId && userId === null && isCurrentDate === true) {
+      return;
+    }
+    if (managerTeamId) {
+      setTeamId(parseInt(managerTeamId));
+    } else {
+      setTeamId(null);
+    }
     dispatch(storeDatewiseAttendanceTeamValue(null));
     setUserId(null);
     dispatch(storeDatewiseAttendanceUserValue(null));
     setDate(new Date());
     dispatch(storeDatewiseAttendanceDateValue(null));
-    getDailyAttendanceData(null, null, organizationId, new Date());
+    getDailyAttendanceData(
+      null,
+      managerTeamId ? managerTeamId : null,
+      organizationId,
+      new Date()
+    );
   };
 
   return (
@@ -195,6 +231,7 @@ const DateWiseAttendance = ({ tList, uList }) => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

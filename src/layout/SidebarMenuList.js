@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu } from "antd";
 import { SideMenuConfig } from "./SideMenuConfig";
+import { ManagerMenuConfig } from "./ManagerMenuConfig";
 
 const { SubMenu } = Menu;
 
@@ -12,9 +13,14 @@ const SidebarMenuList = () => {
   const [roleId, setRoleId] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [managerStatus, setManagerStatus] = useState("");
 
   useEffect(() => {
     const accessToken = localStorage.getItem("Accesstoken");
+    const mangrStatus = localStorage.getItem("managerStatus");
+    console.log("managerstatus", mangrStatus);
+    setManagerStatus(mangrStatus);
+
     if (accessToken === null) {
       navigate("/login");
       return;
@@ -28,7 +34,11 @@ const SidebarMenuList = () => {
     setLastName(userDetails.last_Name);
     setRoleId(parseInt(userDetails.roleId));
 
-    if (userDetails.roleId === 3 && pathName === "") {
+    if (
+      userDetails.roleId === 3 &&
+      managerStatus === false &&
+      pathName === ""
+    ) {
       setSelectedKey("userdetail");
       return;
     }
@@ -84,7 +94,9 @@ const SidebarMenuList = () => {
             style={{
               marginBottom: "12px",
               display:
-                roleId === 3 && ["Real Time", "Analytics"].includes(item.title)
+                roleId === 3 &&
+                managerStatus === "false" &&
+                ["Real Time", "Analytics"].includes(item.title)
                   ? "none"
                   : "block",
             }}
@@ -131,6 +143,7 @@ const SidebarMenuList = () => {
             padding: "0px 24px",
             display:
               roleId === 3 &&
+              managerStatus === "false" &&
               [
                 "Dashboard",
                 "Attendance",
@@ -150,7 +163,9 @@ const SidebarMenuList = () => {
             <Link style={{ cursor: "default" }}>{item.title}</Link>
           ) : (
             <Link to={`/${item.path}`}>
-              {roleId === 3 && item.title === "User Detail"
+              {roleId === 3 &&
+              managerStatus === "false" &&
+              item.title === "User Detail"
                 ? firstName + " " + lastName
                 : item.title}
             </Link>
@@ -167,7 +182,9 @@ const SidebarMenuList = () => {
       selectedKeys={[selectedKey]}
       onClick={handleMenuClick}
     >
-      {renderMenuItems(SideMenuConfig)}
+      {renderMenuItems(
+        managerStatus === "true" ? ManagerMenuConfig : SideMenuConfig
+      )}
     </Menu>
   );
 };

@@ -19,7 +19,7 @@ import {
   getUsers,
   getUsersByTeamId,
 } from "../APIservice.js/action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   storeAttendanceAndBreakSummary,
   storeAttendanceTrends,
@@ -54,7 +54,17 @@ const Attendance = () => {
   const [totalBreakDuration, setTotalBreakDuration] = useState("");
   const [totalWorkingtime, setTotalWorkingtime] = useState();
   const [attendancedetailLoading, setAttendancedetailLoading] = useState(true);
+  const [isManager, setIsManager] = useState(false);
+
+  //loader usestates
   const [summaryLoading, setSummaryLoading] = useState(true);
+  const [todayAttendanceLoader, setTodayAttendanceLoader] = useState(true);
+  const [breakdownLoader, setBreakdownLoader] = useState(true);
+  const [breakTrendLoader, setBreakTrendLoader] = useState(true);
+  const [lateArrivalLoader, setLateArrivalLoader] = useState(true);
+
+  const [trendsLoader, setTrendsLoader] = useState(false);
+  const [employeeListLoader, setEmployeeListLoader] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const handlePageChange = (pageNumber) => {
@@ -80,13 +90,19 @@ const Attendance = () => {
 
   useEffect(() => {
     setActivePage(1);
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
-  useEffect(() => {
-    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-    getAttendanceDashboardData(null, null, orgId);
-  }, []);
+  // useEffect(() => {
+  //   const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+  //   getAttendanceDashboardData(null, null, orgId);
+  // }, []);
 
   const getTeamData = async () => {
     //empty the datewise attendance tab redux values
@@ -98,6 +114,8 @@ const Attendance = () => {
     dispatch(storeDatewiseAttendanceAbsentData(emptyData));
     dispatch(storeDatewiseAttendanceUsersData(emptyData));
 
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousandCurrentDate);
 
@@ -107,14 +125,22 @@ const Attendance = () => {
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       console.log("teams error", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
-      }, 500);
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
+      }, 300);
     }
   };
 
@@ -132,39 +158,36 @@ const Attendance = () => {
       setUserList([]);
     } finally {
       setTimeout(() => {
-        getTodayAttendanceData();
+        getAttendanceDashboardData(null, null, orgId, null, null, activePage);
       }, 350);
     }
   };
 
-  const getTodayAttendanceData = async (teamid) => {
-    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-
-    const currentDate = new Date();
-    const payload = {
-      organizationId: orgId,
-      ...(teamid && { teamId: teamid }),
-      startDate: moment(currentDate).format("YYYY-MM-DD"),
-      endDate: moment(currentDate).format("YYYY-MM-DD"),
-    };
+  //get team members by team id api function
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
 
     try {
-      const response = await getAttendanceSummary(payload);
-      console.log("today attendance response", response);
-      const details = response?.data;
-
-      dispatch(storeTodayAttendance(details));
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
     } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      const details = null;
-      dispatch(storeTodayAttendance(details));
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
+      setNonChangeUserList(teamMembersList);
     } finally {
       setTimeout(() => {
-        if (teamid) {
-          return;
-        }
-        getAttendanceDashboardData(null, null, orgId, null, null, activePage);
-      }, 500);
+        getAttendanceDashboardData(
+          null,
+          managerTeamId,
+          orgId,
+          null,
+          null,
+          activePage
+        );
+      }, 350);
     }
   };
 
@@ -213,6 +236,10 @@ const Attendance = () => {
 
     if (pageNumber === 1) {
       setSummaryLoading(true);
+      setTodayAttendanceLoader(true);
+      setBreakdownLoader(true);
+      setBreakTrendLoader(true);
+      setLateArrivalLoader(true);
       const payload = {
         ...(userid && { userId: userid }),
         ...(teamid && { teamId: teamid }),
@@ -257,7 +284,8 @@ const Attendance = () => {
         dispatch(storeAttendanceActivityLevel(details));
       } finally {
         setTimeout(() => {
-          getAttendanceBreakTrendaData(
+          setBreakdownLoader(false);
+          getTodayAttendanceData(
             teamid,
             orgId,
             startdate === undefined || startdate === null
@@ -267,42 +295,44 @@ const Attendance = () => {
               ? PreviousandCurrentDate[1]
               : enddate
           );
-        }, 350);
+        }, 300);
       }
     }
     if (pageNumber === 2) {
       setAttendancedetailLoading(true);
+      setTrendsLoader(true);
+      setEmployeeListLoader(true);
       // dispatch(storeAttendanceTrends([]));
       if (userid) {
         setSelectUser(true);
       } else {
         setSelectUser(false);
       }
+
       const payload = {
         ...(userid && { userId: userid }),
         ...(teamid && { teamId: teamid }),
         organizationId: orgId,
-        fromDate:
-          startdate === undefined || startdate === null
-            ? PreviousandCurrentDate[0]
-            : startdate,
-        toDate:
-          enddate === undefined || enddate === null
-            ? PreviousandCurrentDate[1]
-            : enddate,
+        startDate: startdate,
+        endDate: enddate,
       };
       try {
-        const response = await getActivityEmployeeslist(payload);
-        const activityEmployeedata = response?.data?.data;
-        console.log("activity employee response", activityEmployeedata);
-        dispatch(storeAttendanceAndBreakSummary(activityEmployeedata));
+        const response = await getAttendanceTrends(payload);
+        console.log("attendance trends", response);
+        const details = response?.data?.attendanceSummaries;
+        if (details) {
+          dispatch(storeAttendanceTrends(details));
+        } else {
+          dispatch(storeAttendanceTrends([]));
+        }
       } catch (error) {
         CommonToaster(error.response?.data?.message, "error");
         const details = [];
-        dispatch(storeAttendanceAndBreakSummary(details));
+        dispatch(storeAttendanceTrends(details));
       } finally {
         setTimeout(() => {
-          getAttendanceTrendsData(
+          setTrendsLoader(false);
+          getEmployeeListData(
             userid,
             teamid,
             orgId,
@@ -311,6 +341,33 @@ const Attendance = () => {
           );
         }, 350);
       }
+    }
+  };
+
+  const getTodayAttendanceData = async (teamid, orgId, startdate, enddate) => {
+    const currentDate = new Date();
+    const payload = {
+      organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
+      startDate: moment(currentDate).format("YYYY-MM-DD"),
+      endDate: moment(currentDate).format("YYYY-MM-DD"),
+    };
+
+    try {
+      const response = await getAttendanceSummary(payload);
+      console.log("today attendance response", response);
+      const details = response?.data;
+
+      dispatch(storeTodayAttendance(details));
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      const details = null;
+      dispatch(storeTodayAttendance(details));
+    } finally {
+      setTimeout(() => {
+        setTodayAttendanceLoader(false);
+        getAttendanceBreakTrendaData(teamid, orgId, startdate, enddate);
+      }, 300);
     }
   };
 
@@ -344,6 +401,7 @@ const Attendance = () => {
       dispatch(storeAttendanceBreakTrends(details));
     } finally {
       setTimeout(() => {
+        setBreakTrendLoader(false);
         getLateArrivalsData(teamid, orgId, startdate, enddate);
       }, 350);
     }
@@ -368,13 +426,14 @@ const Attendance = () => {
       setLatePercentage(null);
     } finally {
       setTimeout(() => {
+        setLateArrivalLoader(false);
         setLoading(false);
         setSummaryLoading(false);
       }, 350);
     }
   };
 
-  const getAttendanceTrendsData = async (
+  const getEmployeeListData = async (
     userid,
     teamid,
     orgId,
@@ -385,26 +444,22 @@ const Attendance = () => {
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
       organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
+      fromDate: startdate,
+      toDate: enddate,
     };
     try {
-      const response = await getAttendanceTrends(payload);
-      console.log("attendance trends", response);
-      const details = response?.data?.attendanceSummaries;
-      if (details) {
-        dispatch(storeAttendanceTrends(details));
-      } else {
-        dispatch(storeAttendanceTrends([]));
-      }
+      const response = await getActivityEmployeeslist(payload);
+      const activityEmployeedata = response?.data?.data;
+      console.log("activity employee response", activityEmployeedata);
+      dispatch(storeAttendanceAndBreakSummary(activityEmployeedata));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       const details = [];
-      dispatch(storeAttendanceTrends(details));
+      dispatch(storeAttendanceAndBreakSummary(details));
     } finally {
       setTimeout(() => {
-        setAttendancedetailLoading(false);
-      }, 350);
+        setEmployeeListLoader(false);
+      }, 300);
     }
   };
 
@@ -422,18 +477,18 @@ const Attendance = () => {
       setUserList(teamMembersList);
       const userIdd = null;
       setUserId(userIdd);
+      setTodayAttendanceLoader(true);
+      setBreakdownLoader(true);
+      setBreakTrendLoader(true);
+      setLateArrivalLoader(true);
       getAttendanceDashboardData(
         userIdd,
         value,
         organizationId,
         selectedDates[0],
         selectedDates[1],
-        activePage,
-        "trigger"
+        activePage
       );
-      setTimeout(() => {
-        getTodayAttendanceData(value);
-      }, 300);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
@@ -469,6 +524,8 @@ const Attendance = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
@@ -500,19 +557,41 @@ const Attendance = () => {
     ) {
       return;
     }
+
+    if (
+      managerTeamId &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+
     if (activePage === 1) {
       setSummaryLoading(true);
+      setTodayAttendanceLoader(true);
+      setBreakdownLoader(true);
+      setBreakTrendLoader(true);
+      setLateArrivalLoader(true);
     } else {
-      setAttendancedetailLoading(true);
+      setTrendsLoader(true);
+      setEmployeeListLoader(true);
     }
     setAttendancedetailLoading(true);
     setUserList(nonChangeUserList);
     setSelectUser(false);
     setUserId(null);
-    setTeamId(null);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
     setSelectedDates(PreviousandCurrentDate);
     setTimeout(() => {
-      getTodayAttendanceData(null);
+      getAttendanceDashboardData(
+        null,
+        managerTeamId ? managerTeamId : null,
+        organizationId,
+        PreviousandCurrentDate[0],
+        PreviousandCurrentDate[1],
+        activePage
+      );
     }, 300);
   };
   return (
@@ -575,6 +654,7 @@ const Attendance = () => {
                   placeholder="All Teams"
                   onChange={handleTeam}
                   value={teamId}
+                  disabled={isManager}
                 />
               </div>
               {activePage === 2 ? (
@@ -628,6 +708,10 @@ const Attendance = () => {
               totalWorkingtime={totalWorkingtime}
               totalBreakDuration={totalBreakDuration}
               loading={summaryLoading}
+              todayAttendanceLoader={todayAttendanceLoader}
+              breakdownLoader={breakdownLoader}
+              breakTrendLoader={breakTrendLoader}
+              lateArrivalLoader={lateArrivalLoader}
             />
             {/* Add your content for page 1 here */}
           </div>
@@ -639,6 +723,8 @@ const Attendance = () => {
               uList={userList}
               selectUser={selectUser}
               loading={attendancedetailLoading}
+              trendsLoader={trendsLoader}
+              employeeListLoader={employeeListLoader}
             />
           </div>
         )}

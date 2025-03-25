@@ -36,6 +36,8 @@ const Team = ({ loading }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeTeamModal, setChangeTeamModal] = useState(false);
   const [addTeamModal, setAddTeamModal] = useState(false);
+  const [managerModal, setManagerModal] = useState(false);
+  const [removeManager, setRemoveManager] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [teamMembersList, setTeamMembersList] = useState([]);
   const [name, setName] = useState("");
@@ -95,7 +97,9 @@ const Team = ({ loading }) => {
       const response = await getShifts(orgId);
       console.log("shift response", response);
       const allShiftDetails = response.data;
-      const activeShiftDetails = allShiftDetails.filter((f)=> f.status===true);
+      const activeShiftDetails = allShiftDetails.filter(
+        (f) => f.status === true
+      );
       setShiftList(activeShiftDetails);
     } catch (error) {
       setShiftList([]);
@@ -149,6 +153,7 @@ const Team = ({ loading }) => {
     setChangeTeamError("");
     setIsModalOpen(false);
     setChangeTeamModal(false);
+    setManagerModal(false);
     setEdit(false);
     setAddTeamModal(false);
     setStatus(true);
@@ -241,6 +246,7 @@ const Team = ({ loading }) => {
       teamName: "",
       employeeID: userDetails.employeeID,
       active: userDetails.active,
+      managerStatus: userDetails.managerStatus,
     };
     console.log("payloaddd", request);
     setTeamMemberLoading(true);
@@ -364,6 +370,52 @@ const Team = ({ loading }) => {
   const handleAddteam = (item) => {
     setuserDetails(item);
     setAddTeamModal(true);
+  };
+
+  //handle make manager
+  const handleMakeManager = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const request = {
+      id: userDetails.id,
+      first_Name: userDetails.first_Name,
+      last_Name: userDetails.last_Name,
+      email: userDetails.email,
+      dob: userDetails.dob,
+      doj: userDetails.doj,
+      phone: userDetails.phone,
+      usersName: userDetails.usersName,
+      password: userDetails.password,
+      gender: userDetails.gender,
+      organizationId: parseInt(orgId),
+      roleName: "",
+      roleId: userDetails.roleId,
+      designationName: userDetails.designationName,
+      designationId: userDetails.designationId,
+      teamId: userDetails.teamId,
+      teamName: "",
+      employeeID: userDetails.employeeID,
+      active: userDetails.active,
+      managerStatus: userDetails.managerStatus === false ? true : false,
+    };
+    console.log("payloaddd", request);
+    setTeamMemberLoading(true);
+    try {
+      const response = await updateUser(request);
+      console.log("user update response", response);
+      if (userDetails.managerStatus === false) {
+        CommonToaster("Manager added", "success");
+      } else {
+        CommonToaster("Manager removed", "success");
+      }
+      getUsersDataByTeamId(teamId);
+      formReset();
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
+        getUsersData(teamId, "dispatch");
+      }, 500);
+    }
   };
 
   return (
@@ -505,8 +557,25 @@ const Team = ({ loading }) => {
                   ) : (
                     <Row gutter={16} className="teammember_changeteamrow">
                       <Col span={12}>
-                        <Button className="teammembercard_buttons">
-                          Make Manager
+                        <Button
+                          className={
+                            item.managerStatus === true
+                              ? "teammembercard_managerbuttons"
+                              : "teammembercard_buttons"
+                          }
+                          onClick={() => {
+                            if (item.managerStatus === true) {
+                              setRemoveManager(true);
+                            } else {
+                              setRemoveManager(false);
+                            }
+                            setManagerModal(true);
+                            setuserDetails(item);
+                          }}
+                        >
+                          {item.managerStatus === false
+                            ? "Make Manager"
+                            : "Manager"}
                         </Button>
                       </Col>
                       <Col
@@ -728,6 +797,30 @@ const Team = ({ loading }) => {
             {userDetails?.last_Name || userDetails?.lastName || ""}
           </span>
           {" in this team"}
+        </p>
+      </Modal>
+
+      {/* manager modal */}
+      <Modal
+        open={managerModal}
+        onCancel={formReset}
+        style={{ top: "25%" }}
+        footer={[
+          <button
+            className="designation_submitbutton"
+            onClick={handleMakeManager}
+          >
+            Yes
+          </button>,
+        ]}
+      >
+        <p className="addmodaltitle">
+          {removeManager ? "Are you sure to remove " : "Are you sure to make "}
+          <span style={{ fontSize: "16px", fontWeight: 600 }}>
+            {userDetails?.first_Name || userDetails?.firstName || ""}{" "}
+            {userDetails?.last_Name || userDetails?.lastName || ""}
+          </span>
+          {" as manager"}
         </p>
       </Modal>
     </div>

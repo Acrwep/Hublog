@@ -38,6 +38,7 @@ import { getCurrentandPreviousweekDate } from "../Common/Validation";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import DashboardChart from "./DashboardChart";
 import { parseTimeToDecimal } from "../Common/Validation";
+import { useSelector } from "react-redux";
 // import { Progress } from 'antd';
 // import { DatePicker } from 'antd';
 
@@ -57,8 +58,16 @@ const Dashboard = () => {
   const [activityTrendsData, setActivityTrendsData] = useState([]);
   const [goalsAchieversData, setGoalsAchieversData] = useState([]);
   const [notGoalsAchieversData, setNotGoalsAchieversData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
+  //loader usestates
   const [loading, setLoading] = useState(true);
-  const [filterLoading, setFilterLoading] = useState(true);
+  const [todayAttendanceLoader, setTodayAttendanceLoader] = useState(true);
+  const [attendanceChartLoader, setAttendanceChartLoader] = useState(true);
+  const [proOutliersLoader, setProOutliersLoader] = useState(true);
+  const [actOutliersLoader, setActOutliersLoader] = useState(true);
+  const [proTrendLoader, setProTrendLoader] = useState(true);
+  const [actTrendLoader, setActTrendLoader] = useState(true);
+  const [goalsLoading, setGoalsLoading] = useState(true);
   // Sample data for charts
 
   const formatTimeInHours = (value) => {
@@ -226,31 +235,47 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamsData();
   }, []);
 
   const getTeamsData = async () => {
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     setOrganizationId(orgId);
-    setTeamId(null);
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousandCurrentDate);
+    setTeamId(null);
 
     try {
       const response = await getTeams(orgId);
       setTeamList(response?.data || []);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
-        getTodayAttendanceData(null, orgId);
+        if (managerTeamId) {
+          getTodayAttendanceData(managerTeamId, orgId);
+        } else {
+          getTodayAttendanceData(null, orgId);
+        }
       }, 300);
     }
   };
-  const getTodayAttendanceData = async (teamid, orgId, startdate, enddate) => {
-    setFilterLoading(true);
-    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
+  const getTodayAttendanceData = async (teamid, orgId, startdate, enddate) => {
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     const currentDate = new Date();
     const payload = {
       organizationId: orgId,
@@ -271,7 +296,8 @@ const Dashboard = () => {
       setTodayAttendanceSeries([]);
     } finally {
       setTimeout(() => {
-        getProductivityOutliersData(
+        setTodayAttendanceLoader(false);
+        getSummaryAttendanceTrendsData(
           orgId,
           teamid ? teamid : null,
           startdate != undefined || startdate != null
@@ -281,6 +307,42 @@ const Dashboard = () => {
             ? enddate
             : PreviousandCurrentDate[1]
         );
+      }, 300);
+    }
+  };
+
+  const getSummaryAttendanceTrendsData = async (
+    orgId,
+    teamid,
+    startdate,
+    enddate
+  ) => {
+    const payload = {
+      ...(teamid && { teamId: teamid }),
+      organizationId: orgId,
+      startDate: startdate,
+      endDate: enddate,
+    };
+    try {
+      const response = await getAttendanceTrends(payload);
+      console.log("dashboard response", response);
+      const details = response?.data;
+      if (
+        details?.Title ===
+        "Conversion failed when converting date and/or time from character string."
+      ) {
+        setDashboardData([]);
+      } else {
+        //dashboard chart handling
+        setDashboardData(details?.attendanceSummaries || []);
+      }
+    } catch (error) {
+      CommonToaster(error.response?.data?.message, "error");
+      setDashboardData([]);
+    } finally {
+      setTimeout(() => {
+        setAttendanceChartLoader(false);
+        getProductivityOutliersData(orgId, teamid, startdate, enddate);
       }, 300);
     }
   };
@@ -316,6 +378,7 @@ const Dashboard = () => {
       setLeastproductivityTeams([]);
     } finally {
       setTimeout(() => {
+        setProOutliersLoader(false);
         getActivityOutlisersData(orgId, teamid, startDate, endDate);
       }, 300);
     }
@@ -345,43 +408,9 @@ const Dashboard = () => {
       setLeastactivityTeams([]);
     } finally {
       setTimeout(() => {
-        getSummaryAttendanceTrendsData(orgId, teamid, startDate, endDate);
+        setActOutliersLoader(false);
+        getProductiveTrendData(orgId, teamid, startDate, endDate);
       }, 100);
-    }
-  };
-
-  const getSummaryAttendanceTrendsData = async (
-    orgId,
-    teamid,
-    startdate,
-    enddate
-  ) => {
-    const payload = {
-      ...(teamid && { teamId: teamid }),
-      organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getAttendanceTrends(payload);
-      console.log("dashboard response", response);
-      const details = response?.data;
-      if (
-        details?.Title ===
-        "Conversion failed when converting date and/or time from character string."
-      ) {
-        setDashboardData([]);
-      } else {
-        //dashboard chart handling
-        setDashboardData(details?.attendanceSummaries || []);
-      }
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      setDashboardData([]);
-    } finally {
-      setTimeout(() => {
-        getProductiveTrendData(orgId, teamid, startdate, enddate);
-      }, 300);
     }
   };
 
@@ -403,6 +432,7 @@ const Dashboard = () => {
       setProductivityTrendData([]);
     } finally {
       setTimeout(() => {
+        setProTrendLoader(false);
         getActivityTrendData(orgId, teamid, startDate, endDate);
       }, 300);
     }
@@ -426,6 +456,7 @@ const Dashboard = () => {
       setActivityTrendsData([]);
     } finally {
       setTimeout(() => {
+        setActTrendLoader(false);
         getGoalsData(orgId, teamid, startDate, endDate);
       }, 300);
     }
@@ -452,7 +483,7 @@ const Dashboard = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-        setFilterLoading(false);
+        setGoalsLoading(false);
       }, 300);
     }
   };
@@ -460,7 +491,12 @@ const Dashboard = () => {
   //team onchange
   const handleTeam = (value) => {
     setTeamId(value);
-    setFilterLoading(true);
+    setTodayAttendanceLoader(true);
+    setAttendanceChartLoader(true);
+    setProOutliersLoader(true);
+    setActOutliersLoader(true);
+    setProTrendLoader(true);
+    setActTrendLoader(true);
     getTodayAttendanceData(
       value,
       organizationId,
@@ -474,11 +510,19 @@ const Dashboard = () => {
     const startDate = dateStrings[0];
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
+      setTodayAttendanceLoader(true);
+      setAttendanceChartLoader(true);
+      setProOutliersLoader(true);
+      setActOutliersLoader(true);
+      setProTrendLoader(true);
+      setActTrendLoader(true);
       getTodayAttendanceData(teamId, organizationId, startDate, endDate);
     }
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
@@ -509,12 +553,23 @@ const Dashboard = () => {
     ) {
       return;
     }
-    setFilterLoading(true);
-    setTeamId(null);
+
+    if (managerTeamId && isCurrentDate === true && isPreviousChange === false) {
+      return;
+    }
+    setGoalsLoading(true);
+    setTodayAttendanceLoader(true);
+    setAttendanceChartLoader(true);
+    setProOutliersLoader(true);
+    setActOutliersLoader(true);
+    setProTrendLoader(true);
+    setActTrendLoader(true);
+
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
     setSelectedDates(PreviousandCurrentDate);
     setTimeout(() => {
       getTodayAttendanceData(
-        null,
+        managerTeamId ? managerTeamId : null,
         organizationId,
         PreviousandCurrentDate[0],
         PreviousandCurrentDate[1]
@@ -541,6 +596,7 @@ const Dashboard = () => {
               placeholder="All Teams"
               onChange={handleTeam}
               value={teamId}
+              disabled={isManager}
             />
           </div>
         </Col>
@@ -576,7 +632,7 @@ const Dashboard = () => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              {filterLoading ? (
+              {todayAttendanceLoader ? (
                 <Skeleton
                   active
                   title={{ width: 140 }}
@@ -588,22 +644,6 @@ const Dashboard = () => {
                 <>
                   <p className="devices_chartheading">Today's Attendance</p>
 
-                  {/* <Row style={{ marginTop: "15px", marginBottom: "20px" }}>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p className="totalactive_timeheading">
-                        On time arrivals
-                      </p>
-                      <p className="totalactive_time">
-                        {todatAttendanceData?.onTimeArrivals || 0}
-                      </p>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12}>
-                      <p className="totalactive_timeheading">Late arrivals</p>
-                      <p className="totalactive_time">
-                        {todatAttendanceData?.lateArrivals || 0}
-                      </p>
-                    </Col>
-                  </Row> */}
                   <div className="attendance_todayattendance_chartcontainer">
                     {todayAttendanceSeries.length >= 1 ? (
                       <CommonDonutChart
@@ -623,12 +663,7 @@ const Dashboard = () => {
           </Col>
           <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
-              {filterLoading ? (
-                // <div style={{ height: "50vh" }}>
-                //   <div className="screenshots_spinContainer">
-                //     <Spin />
-                //   </div>
-                // </div>
+              {attendanceChartLoader ? (
                 <Skeleton
                   active
                   style={{ height: "50vh" }}
@@ -655,7 +690,7 @@ const Dashboard = () => {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={24} lg={7}>
             <div className="devices_chartsContainer">
-              {filterLoading ? (
+              {goalsLoading ? (
                 <Skeleton
                   active
                   style={{ height: "45vh" }}
@@ -762,7 +797,7 @@ const Dashboard = () => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={9}>
             <div className="devices_chartsContainer">
-              {filterLoading ? (
+              {proOutliersLoader ? (
                 <Skeleton
                   active
                   style={{ height: "45vh" }}
@@ -877,7 +912,7 @@ const Dashboard = () => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={8}>
             <div className="devices_chartsContainer">
-              {filterLoading ? (
+              {actOutliersLoader ? (
                 <Skeleton
                   active
                   style={{ height: "45vh" }}
@@ -1004,7 +1039,7 @@ const Dashboard = () => {
             className="devices_chartsContainer"
             style={{ marginTop: "25px" }}
           >
-            {filterLoading ? (
+            {proTrendLoader ? (
               <Skeleton
                 active
                 title={{ width: 140 }}
@@ -1035,7 +1070,7 @@ const Dashboard = () => {
             className="devices_chartsContainer"
             style={{ marginTop: "25px" }}
           >
-            {filterLoading ? (
+            {actTrendLoader ? (
               <Skeleton
                 active
                 title={{ width: 140 }}

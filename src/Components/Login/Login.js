@@ -8,9 +8,11 @@ import "../Common/commonstyles.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import { emailValidator } from "../Common/Validation";
 import CommonSpinner from "../Common/CommonSpinner";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -69,6 +71,12 @@ const Login = () => {
 
       //store role Id
       localStorage.setItem("roleId", loginUserInformation.roleId);
+      localStorage.setItem("managerStatus", loginUserInformation.managerStatus);
+      if (loginUserInformation.managerStatus === true) {
+        localStorage.setItem("managerTeamId", loginUserInformation.teamId);
+      } else {
+        localStorage.setItem("managerTeamId", null);
+      }
 
       //store login information
       localStorage.setItem(
@@ -79,9 +87,19 @@ const Login = () => {
       const event = new Event("localStorageUpdated");
       window.dispatchEvent(event);
 
-      if (loginUserInformation.roleId === 3) {
+      if (
+        loginUserInformation.roleId === 3 &&
+        loginUserInformation.managerStatus === false
+      ) {
         setTimeout(() => {
           navigate("/userdetail");
+        }, 500);
+      } else if (
+        loginUserInformation.roleId === 3 &&
+        loginUserInformation.managerStatus === true
+      ) {
+        setTimeout(() => {
+          navigate("/dashboard");
         }, 500);
       } else {
         setTimeout(() => {

@@ -14,7 +14,16 @@ const AttendanceSummary = ({
   totalWorkingtime,
   totalBreakDuration,
   loading,
+  todayAttendanceLoader,
+  breakdownLoader,
+  breakTrendLoader,
+  lateArrivalLoader,
 }) => {
+  // const [cardsLoader, setCardsLoader] = useState(true);
+  // const [todayChartLoader, setTodayChartLoader] = useState(true);
+  // const [breakChartLoader, setBreakChartLoader] = useState(true);
+  // const [lateChartLoader, setLateChartLoader] = useState(true);
+
   const attendanceActivityLevelData = useSelector(
     (state) => state.attendanceactivitylevel
   );
@@ -201,7 +210,7 @@ const AttendanceSummary = ({
       <Row gutter={16}>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {breakdownLoader ? (
               <div style={{ padding: "6px 0px" }}>
                 <Skeleton
                   active
@@ -231,7 +240,7 @@ const AttendanceSummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {breakdownLoader ? (
               <div style={{ padding: "6px 0px" }}>
                 <Skeleton
                   active
@@ -255,7 +264,7 @@ const AttendanceSummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {breakdownLoader ? (
               <div style={{ padding: "6px 0px" }}>
                 <Skeleton
                   active
@@ -277,7 +286,7 @@ const AttendanceSummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {loading ? (
+            {breakdownLoader ? (
               <div style={{ padding: "6px 0px" }}>
                 <Skeleton
                   active
@@ -303,7 +312,7 @@ const AttendanceSummary = ({
         <Row gutter={16}>
           <Col xs={24} sm={24} md={7} lg={7}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {todayAttendanceLoader ? (
                 <div style={{ height: "50vh" }}>
                   <Skeleton
                     active
@@ -345,7 +354,7 @@ const AttendanceSummary = ({
 
           <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
-              {loading ? (
+              {breakdownLoader ? (
                 <Skeleton
                   active
                   title={{ width: 190 }}
@@ -374,7 +383,7 @@ const AttendanceSummary = ({
       <Row gutter={16} style={{ marginTop: "25px" }}>
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="devices_chartsContainer">
-            {loading ? (
+            {breakTrendLoader ? (
               <div style={{ height: "40vh" }}>
                 <Skeleton
                   active
@@ -405,7 +414,7 @@ const AttendanceSummary = ({
         </Col>
         <Col xs={24} sm={24} md={12} lg={12}>
           <div className="devices_chartsContainer">
-            {loading ? (
+            {lateArrivalLoader ? (
               <Skeleton
                 active
                 title={{ width: 190 }}

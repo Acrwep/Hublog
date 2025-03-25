@@ -106,6 +106,7 @@ import Congrats from "../Components/Freetrial/Congrats.js";
 import UsercreateMail from "../Components/MailTemplates/UsercreateMail.js";
 //forgot password
 import ForgotPassword from "../Components/ForgotPassword/ForgotPassword.js";
+import { ManagerMenuConfig } from "./ManagerMenuConfig.js";
 
 const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
@@ -125,6 +126,7 @@ function SidebarMenu() {
   const [lastName, setLastName] = useState("");
   const [fullName, setFullName] = useState("");
   const [userRole, setUserRole] = useState(false);
+  const [isManager, setIsManager] = useState(false);
   const [showPages, setShowPages] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -153,6 +155,10 @@ function SidebarMenu() {
     //the useEffect call only when login
     const handleStorageUpdate = () => {
       const accessToken = localStorage.getItem("Accesstoken");
+      const managerStatus = localStorage.getItem("managerStatus");
+      console.log("managerstatus sidemenu", managerStatus);
+
+      setIsManager(managerStatus);
       if (accessToken === null) {
         navigation("/login");
         setShowPages(false);
@@ -179,16 +185,35 @@ function SidebarMenu() {
       if (accessToken) {
         setShowPages(true);
         if (location.pathname === "/") {
-          if (convertLoginInfoAsJson.roleId === 3) {
+          if (
+            convertLoginInfoAsJson.roleId === 3 &&
+            managerStatus === "false"
+          ) {
             navigation("/userdetail");
+            setUserRole(true);
+          } else if (
+            convertLoginInfoAsJson.roleId === 3 &&
+            managerStatus === "true"
+          ) {
+            navigation("/dashboard");
             setUserRole(true);
           } else {
             navigation("/dashboard");
             setUserRole(false);
           }
         } else {
-          if (convertLoginInfoAsJson.roleId === 3) {
+          console.log("aiiii", managerStatus, convertLoginInfoAsJson.roleId);
+          if (
+            convertLoginInfoAsJson.roleId === 3 &&
+            managerStatus === "false"
+          ) {
             navigation("/userdetail");
+            setUserRole(true);
+          } else if (
+            convertLoginInfoAsJson.roleId === 3 &&
+            managerStatus === "true"
+          ) {
+            navigation("/dashboard");
             setUserRole(true);
           } else {
             navigation("/dashboard");
@@ -200,7 +225,8 @@ function SidebarMenu() {
       //handle header menulist
       if (
         convertLoginInfoAsJson != null &&
-        convertLoginInfoAsJson.roleId === 3
+        convertLoginInfoAsJson.roleId === 3 &&
+        managerStatus === "false"
       ) {
         let userMenuList = [];
         userMenuList.push(
@@ -219,6 +245,58 @@ function SidebarMenu() {
         );
         setSidemenuList(userMenuList);
         setDummySidemenuList(userMenuList);
+      } else if (
+        convertLoginInfoAsJson != null &&
+        convertLoginInfoAsJson.roleId === 3 &&
+        managerStatus === "true"
+      ) {
+        const menuList = Object.values(ManagerMenuConfig).map((item) => {
+          return { ...item };
+        });
+
+        const filterItems = menuList.filter((f) => !f.submenu);
+        filterItems.push(
+          {
+            title: "Livestream",
+            icon: <CiStreamOn size={17} />,
+            path: "livestream",
+          },
+          { title: "Field", icon: <GrMapLocation size={17} />, path: "field" },
+          {
+            title: "Timeline",
+            icon: <VscGraphLine size={17} />,
+            path: "timeline",
+          },
+          {
+            title: "Activity",
+            icon: <FiActivity size={17} />,
+            path: "activity",
+          },
+          {
+            title: "Productivity",
+            icon: <MdRocketLaunch size={17} />,
+            path: "productivity",
+          },
+          {
+            title: "Screenshots",
+            icon: <MdScreenshotMonitor size={17} />,
+            path: "screenshots",
+          },
+          {
+            title: "App $ URLs",
+            icon: <FaAppStore size={17} />,
+            path: "apps&urls",
+          },
+          {
+            title: "Wellness",
+            icon: <GiLotus size={17} />,
+            path: "wellness",
+          }
+        );
+        console.log("filterItems", filterItems);
+
+        setSidemenuList(filterItems);
+        setDummySidemenuList(filterItems);
       } else {
         const menuList = Object.values(SideMenuConfig).map((item) => {
           return { ...item };

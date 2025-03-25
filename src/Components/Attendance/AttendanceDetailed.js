@@ -14,7 +14,12 @@ import Desktopicon from "../../assets/images/computer.png";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import DashboardChart from "../Dashboard/DashboardChart";
 
-const AttendanceDetailed = ({ loading, uList, selectUser }) => {
+const AttendanceDetailed = ({
+  loading,
+  uList,
+  trendsLoader,
+  employeeListLoader,
+}) => {
   const employeeAttendanceList = useSelector(
     (state) => state.attendanceandbreaksummary
   );
@@ -273,7 +278,7 @@ const AttendanceDetailed = ({ loading, uList, selectUser }) => {
   return (
     <div>
       <div className="devices_chartsContainer">
-        {loading ? (
+        {trendsLoader ? (
           <Skeleton
             active
             style={{ height: "50vh" }}
@@ -305,7 +310,7 @@ const AttendanceDetailed = ({ loading, uList, selectUser }) => {
             bordered="false"
             checkBox="false"
             size="small"
-            loading={loading}
+            loading={employeeListLoader}
           />
         </div>
       </div>
