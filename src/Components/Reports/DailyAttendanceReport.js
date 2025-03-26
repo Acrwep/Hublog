@@ -32,6 +32,7 @@ const DailyAttendanceReport = () => {
   const [organizationId, setOrganizationId] = useState(null);
   const [userName, setUserName] = useState("");
   const [data, setData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -123,25 +124,40 @@ const DailyAttendanceReport = () => {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
     setLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -162,6 +178,26 @@ const DailyAttendanceReport = () => {
       setTimeout(() => {
         getDailyAttendanceData(userId, teamId, orgId, date);
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getDailyAttendanceData(userId, managerTeamId, orgId, date);
+      }, 350);
     }
   };
 
@@ -222,6 +258,7 @@ const DailyAttendanceReport = () => {
 
   const handleRefresh = () => {
     const today = new Date();
+    const managerTeamId = localStorage.getItem("managerTeamId");
 
     const givenDate = new Date(date);
     let isDateChange = false;
@@ -237,13 +274,20 @@ const DailyAttendanceReport = () => {
 
     if (isDateChange === false && teamId === null && userId === null) {
       return;
-    } else {
-      setTeamId(null);
-      setUserId(null);
-      setDate(today);
-      setUserList(nonChangeUserList);
-      getDailyAttendanceData(null, null, organizationId, today);
     }
+    if (isDateChange === false && managerTeamId && userId === null) {
+      return;
+    }
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setDate(today);
+    setUserList(nonChangeUserList);
+    getDailyAttendanceData(
+      null,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      organizationId,
+      today
+    );
   };
 
   return (
@@ -274,6 +318,7 @@ const DailyAttendanceReport = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

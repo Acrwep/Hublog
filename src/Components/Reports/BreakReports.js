@@ -29,6 +29,7 @@ const BreakReports = () => {
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [data, setData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -96,26 +97,41 @@ const BreakReports = () => {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
     setLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
-      }, 500);
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
+      }, 300);
     }
   };
 
@@ -135,6 +151,27 @@ const BreakReports = () => {
       setTimeout(() => {
         getBreakReportData(userId, teamId, orgId, date);
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getBreakReportData(userId, managerTeamId, orgId, date);
+      }, 350);
     }
   };
 
@@ -195,6 +232,7 @@ const BreakReports = () => {
 
   const handleRefresh = () => {
     const today = new Date();
+    const managerTeamId = localStorage.getItem("managerTeamId");
 
     const givenDate = new Date(date);
     let isDateChange = false;
@@ -210,13 +248,20 @@ const BreakReports = () => {
 
     if (isDateChange === false && teamId === null && userId === null) {
       return;
-    } else {
-      setTeamId(null);
-      setUserId(null);
-      setDate(today);
-      setUserList(nonChangeUserList);
-      getBreakReportData(null, null, organizationId, today);
     }
+    if (isDateChange === false && managerTeamId && userId === null) {
+      return;
+    }
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setDate(today);
+    setUserList(nonChangeUserList);
+    getBreakReportData(
+      null,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      organizationId,
+      today
+    );
   };
 
   return (
@@ -247,6 +292,7 @@ const BreakReports = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

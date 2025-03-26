@@ -32,6 +32,7 @@ import {
   getActivityEmployeeslist,
   getWellnessEmployeeDetails,
   getWellnessWorktimeTrends,
+  getUsersByTeamId,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -107,6 +108,7 @@ const UserDetail = () => {
     useState(true);
   const [activityLoading, setActivityLoading] = useState(true);
   const [activityFilterLoading, setActivityFilterLoading] = useState(true);
+  const [isManager, setIsManager] = useState(false);
 
   const handlePageChange = (id) => {
     // if (id === 3) {
@@ -117,15 +119,23 @@ const UserDetail = () => {
 
   const [userList, setUserList] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [defaultUserId, setDefaultUserId] = useState(null);
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     setAttendanceFilterLoading(true);
     setBreakFilterLoading(true);
     setWellnessFilterLoading(true);
     setAppsFilterLoading(true);
     setProductivityFilterLoading(true);
     setActivityFilterLoading(true);
-    getUsersData();
+    if (managerTeamId) {
+      setIsManager(true);
+      getUsersDataByTeamId();
+    } else {
+      setIsManager(false);
+      getUsersData();
+    }
   }, [activePage]);
 
   const parseTimeToDecimal = (timeString) => {
@@ -168,9 +178,68 @@ const UserDetail = () => {
         setFullName(userDetail[0].full_Name);
         setEmail(userDetail[0].email);
         setUserId(userDetail[0].id);
+        setDefaultUserId(userDetail[0].id);
       }
       getuserDetailsData(
         userId === null ? userDetail[0].id : userId,
+        orgId,
+        PreviousandCurrentDate.length >= 1
+          ? PreviousandCurrentDate[0]
+          : selectedDates[0],
+        PreviousandCurrentDate.length >= 1
+          ? PreviousandCurrentDate[1]
+          : selectedDates[1]
+      );
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const getUserInfofromLocal = localStorage.getItem("LoginUserInfo");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
+    if (getUserInfofromLocal) {
+      const loginUserDetails = JSON.parse(getUserInfofromLocal);
+      setFirstName(loginUserDetails.first_Name);
+      setLastName(loginUserDetails.last_Name);
+      setRoleId(parseInt(loginUserDetails.roleId));
+    } else {
+      setFirstName("");
+      setLastName("");
+      setRoleId(null);
+    }
+    let PreviousandCurrentDate = [];
+    if (initialLoading === true) {
+      PreviousandCurrentDate = getCurrentandPreviousweekDate();
+      setSelectedDates(PreviousandCurrentDate);
+    }
+    const orgId = localStorage.getItem("organizationId");
+    setOrganizationId(orgId);
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const userDetail = response?.data?.team?.users;
+      setUserList(userDetail);
+
+      const loginUserData = localStorage.getItem("LoginUserInfo");
+      const convertAsJson = JSON.parse(loginUserData);
+      console.log("loginuser", convertAsJson);
+
+      if (userId) {
+        const findSelectedUser = userList.find((f) => f.id === userId);
+        setUserId(userId);
+        setFullName(
+          findSelectedUser.first_Name + " " + findSelectedUser.last_Name
+        );
+        setEmail(findSelectedUser.email);
+      } else {
+        setFullName(convertAsJson.first_Name + " " + convertAsJson.last_Name);
+        setEmail(convertAsJson.email);
+        setUserId(convertAsJson.id);
+        setDefaultUserId(convertAsJson.id);
+      }
+      getuserDetailsData(
+        userId === null ? convertAsJson.id : userId,
         orgId,
         PreviousandCurrentDate.length >= 1
           ? PreviousandCurrentDate[0]
@@ -658,23 +727,25 @@ const UserDetail = () => {
     } else {
       isPreviousChange = true;
     }
-    const defaultUser = userList.find((f, index) => index === 0);
-    console.log("defaultuser", defaultUser);
 
     if (
-      userId === defaultUser.id &&
+      userId === defaultUserId &&
       isCurrentDate === true &&
       isPreviousChange === false
     ) {
       return;
     }
 
-    setUserId(defaultUser.id);
-    setFullName(defaultUser.full_Name);
-    setEmail(defaultUser.email);
+    const loginUserData = localStorage.getItem("LoginUserInfo");
+    const convertAsJson = JSON.parse(loginUserData);
+    console.log("loginuser", convertAsJson);
+
+    setUserId(defaultUserId);
+    setFullName(convertAsJson.first_Name + " " + convertAsJson.last_Name);
+    setEmail(convertAsJson.email);
     setSelectedDates(PreviousandCurrentDate);
     getuserDetailsData(
-      defaultUser.id,
+      defaultUserId,
       organizationId,
       PreviousandCurrentDate[0],
       PreviousandCurrentDate[1]
@@ -706,12 +777,12 @@ const UserDetail = () => {
       <div className="userdetail_userselectContainer">
         <Row>
           <Col xs={24} sm={24} md={12} lg={12}>
-            {roleId === 3 ? (
+            {roleId === 3 && isManager === false ? (
               ""
             ) : (
               <CommonSelectField
                 placeholder="Select Users"
-                disabled={roleId === 3 ? true : false}
+                disabled={roleId === 3 && isManager === false ? true : false}
                 value={userId}
                 options={userList}
                 onChange={handleUser}

@@ -32,28 +32,44 @@ const MonthlyAttendanceReport = () => {
   const [data, setData] = useState([]);
   const [monthName, setMonthName] = useState("");
   const [year, setYear] = useState();
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
     setLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -84,6 +100,37 @@ const MonthlyAttendanceReport = () => {
           currentYear
         );
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        const currentMonthName = moment().format("MMMM"); // get current month name
+        const currentYear = moment().year(); // get current year
+        setMonthName(currentMonthName);
+        setYear(currentYear);
+        getMonthlyAttendanceData(
+          userId,
+          managerTeamId,
+          orgId,
+          currentMonthName,
+          currentYear
+        );
+      }, 350);
     }
   };
 
@@ -171,7 +218,7 @@ const MonthlyAttendanceReport = () => {
       item.logs.forEach((log) => {
         const logDate = moment(log.date).format("DD"); // Format log date
         if (currentMonthDates.includes(logDate)) {
-          if (log.total_time === "00:00"||log.total_time===null) {
+          if (log.total_time === "00:00" || log.total_time === null) {
             rowData[logDate] = null;
           } else {
             const [hour, minute] = log.total_time.split(":");
@@ -192,7 +239,11 @@ const MonthlyAttendanceReport = () => {
           const sundayLog = item.logs.find(
             (log) => moment(log.date).format("DD") === date
           );
-          if (sundayLog && sundayLog.total_time !== "00:00:00"&&sundayLog.total_time !== null) {
+          if (
+            sundayLog &&
+            sundayLog.total_time !== "00:00:00" &&
+            sundayLog.total_time !== null
+          ) {
             const [hour, minute] = sundayLog.total_time.split(":");
             rowData[date] = `${hour}h:${minute}m`; // Show the time for Sundays if not "00:00"
           } else {
@@ -389,6 +440,7 @@ const MonthlyAttendanceReport = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const currentMonthName = moment().format("MMMM");
     const currentYear = moment().year();
     let isMonthChange = false;
@@ -402,21 +454,23 @@ const MonthlyAttendanceReport = () => {
 
     if (isMonthChange === false && teamId === null && userId === null) {
       return;
-    } else {
-      setTeamId(null);
-      setUserId(null);
-      setDate(dayJs());
-      setUserList(nonChangeUserList);
-      setMonthName(currentMonthName);
-      setYear(currentYear);
-      getMonthlyAttendanceData(
-        null,
-        null,
-        organizationId,
-        currentMonthName,
-        currentYear
-      );
     }
+    if (isMonthChange === false && managerTeamId && userId === null) {
+      return;
+    }
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setDate(dayJs());
+    setUserList(nonChangeUserList);
+    setMonthName(currentMonthName);
+    setYear(currentYear);
+    getMonthlyAttendanceData(
+      null,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      organizationId,
+      currentMonthName,
+      currentYear
+    );
   };
 
   return (
@@ -447,6 +501,7 @@ const MonthlyAttendanceReport = () => {
                 options={teamList}
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>
