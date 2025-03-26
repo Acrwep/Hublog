@@ -75,7 +75,7 @@ const Login = () => {
       if (loginUserInformation.managerStatus === true) {
         localStorage.setItem("managerTeamId", loginUserInformation.teamId);
       } else {
-        localStorage.setItem("managerTeamId", null);
+        localStorage.removeItem("managerTeamId");
       }
 
       //store login information

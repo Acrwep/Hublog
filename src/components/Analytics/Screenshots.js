@@ -27,6 +27,7 @@ const Screenshots = () => {
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [defaultUserId, setDefaultUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [userName, setUserName] = useState("");
@@ -40,30 +41,46 @@ const Screenshots = () => {
   const [currentIndex, setCurrentIndex] = useState(0); // New state for the current image index
   const [hidePreviousbutton, setHidePreviousbutton] = useState(false);
   const [hideNextbutton, setHideNextbutton] = useState(false);
+  const [isManager, setIsManager] = useState(false);
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
 
   const getUsersData = async () => {
-    let userIdd = null;
+    let defalutUserId = null;
     const orgId = localStorage.getItem("organizationId");
     try {
       const response = await getUsers(orgId);
@@ -71,15 +88,48 @@ const Screenshots = () => {
 
       setUserList(usersList);
       setNonChangeUserList(usersList);
-      userIdd = usersList[0].id;
       setUserId(usersList[0].id);
+      defalutUserId = usersList[0].id;
+      setDefaultUserId(defalutUserId);
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
       setUserList([]);
     } finally {
       setTimeout(() => {
-        getScreenShotsData(userIdd, orgId, date);
+        getScreenShotsData(defalutUserId, orgId, date);
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    let defalutUserId = null;
+    const currentDate = new Date();
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+
+      const loginUserData = localStorage.getItem("LoginUserInfo");
+      const convertAsJson = JSON.parse(loginUserData);
+      console.log("loginuser", convertAsJson);
+      const loginUserId = convertAsJson.id;
+
+      if (teamMembersList.length >= 1) {
+        setUserId(loginUserId);
+        defalutUserId = loginUserId;
+        setDefaultUserId(loginUserId);
+      } else {
+        setUserId(null);
+      }
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+    } finally {
+      setTimeout(() => {
+        getScreenShotsData(defalutUserId, orgId, date);
+      }, 350);
     }
   };
 
@@ -234,6 +284,7 @@ const Screenshots = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const today = new Date();
     const givenDate = new Date(date);
     let isCurrentDate = false;
@@ -248,21 +299,19 @@ const Screenshots = () => {
       isCurrentDate = false;
     }
 
-    const defaultUser = nonChangeUserList.find((f, index) => index === 0);
-    console.log("defaultuser", defaultUser);
-
-    if (
-      teamId === null &&
-      userId === defaultUser.id &&
-      isCurrentDate === true
-    ) {
+    if (teamId === null && userId === defaultUserId && isCurrentDate === true) {
       return;
     }
-    setTeamId(null);
+
+    if (managerTeamId && userId === defaultUserId && isCurrentDate === true) {
+      return;
+    }
+
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
     setUserList(nonChangeUserList);
-    setUserId(defaultUser.id);
+    setUserId(defaultUserId);
     setDate(today);
-    getScreenShotsData(defaultUser.id, organizationId, today);
+    getScreenShotsData(defaultUserId, organizationId, today);
   };
 
   return (
@@ -283,6 +332,7 @@ const Screenshots = () => {
                 value={teamId}
                 placeholder="Select Team"
                 onChange={handleTeam}
+                disabled={isManager}
               />
             </div>
             <div className="screenshot_selectfields">

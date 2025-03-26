@@ -275,6 +275,7 @@ const Dashboard = () => {
   };
 
   const getTodayAttendanceData = async (teamid, orgId, startdate, enddate) => {
+    console.log("teamIddddddd", teamid);
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     const currentDate = new Date();
     const payload = {

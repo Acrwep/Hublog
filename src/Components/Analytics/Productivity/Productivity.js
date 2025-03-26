@@ -62,9 +62,9 @@ const Productivity = () => {
   const [isManager, setIsManager] = useState(false);
 
   //loader usestates
-  const [breakdownLoader, setBreakdownLoader] = useState(false);
-  const [outliersLoader, setOutliersLoader] = useState(false);
-  const [teamwiseLoader, setTeamwiseLoader] = useState(false);
+  const [breakdownLoader, setBreakdownLoader] = useState(true);
+  const [outliersLoader, setOutliersLoader] = useState(true);
+  const [teamwiseLoader, setTeamwiseLoader] = useState(true);
   const [appsLoader, setAppsLoader] = useState(true);
   const [urlLoader, setUrlLoader] = useState(true);
   const [categoryLoader, setCategoryLoader] = useState(true);
@@ -564,6 +564,7 @@ const Productivity = () => {
 
   const handleRefresh = () => {
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    const managerTeamId = localStorage.getItem("managerTeamId");
 
     const today = new Date();
     const givenDate = new Date(selectedDates[1]);
@@ -586,7 +587,7 @@ const Productivity = () => {
       isPreviousChange = true;
     }
     if (
-      teamId === null &&
+      managerTeamId &&
       userId === null &&
       isCurrentDate === true &&
       isPreviousChange === false
@@ -602,13 +603,13 @@ const Productivity = () => {
     ) {
       return;
     }
-    setTeamId(null);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
     setUserId(null);
     setUserList(nonChangeUserList);
     setSelectedDates(PreviousandCurrentDate);
     getBreakdownData(
       organizationId,
-      null,
+      managerTeamId ? parseInt(managerTeamId) : null,
       null,
       PreviousandCurrentDate[0],
       PreviousandCurrentDate[1],
