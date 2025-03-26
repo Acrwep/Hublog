@@ -61,6 +61,7 @@ const Wellness = () => {
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [detailedLoading, setDetailedLoading] = useState(true);
   const [organizationId, setOrganizationId] = useState(null);
+  const [isManager, setIsManager] = useState(false);
 
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
@@ -72,8 +73,8 @@ const Wellness = () => {
     } else {
       getWellnessSummaryData(
         organizationId,
-        null,
-        null,
+        teamId,
+        userId,
         date,
         selectedDates[0],
         selectedDates[1],
@@ -83,23 +84,38 @@ const Wellness = () => {
   };
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       console.log("teams error", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -136,6 +152,38 @@ const Wellness = () => {
           activePage
         );
       }, 300);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    const currentDate = new Date();
+    setDate(currentDate);
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
+      setNonChangeUserList(teamMembersList);
+    } finally {
+      setTimeout(() => {
+        getWellnessSummaryData(
+          orgId,
+          managerTeamId,
+          null,
+          currentDate,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1],
+          activePage
+        );
+      }, 350);
     }
   };
 
@@ -449,6 +497,7 @@ const Wellness = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
@@ -495,24 +544,33 @@ const Wellness = () => {
       userId === null
     ) {
       return;
-    } else {
-      setTeamId(null);
-      setUserId(null);
-      const currentDate = new Date();
-      setDate(currentDate);
-      setUserList(nonChangeUserList);
-      const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
-      setSelectedDates(PreviousAndCurrentDate);
-      getWellnessSummaryData(
-        organizationId,
-        null,
-        null,
-        currentDate,
-        PreviousAndCurrentDate[0],
-        PreviousAndCurrentDate[1],
-        activePage
-      );
     }
+
+    if (
+      isDateChange === false &&
+      summaryCurrentDateChange === false &&
+      isPreviousChange === false &&
+      managerTeamId &&
+      userId === null
+    ) {
+      return;
+    }
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    const currentDate = new Date();
+    setDate(currentDate);
+    setUserList(nonChangeUserList);
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
+    getWellnessSummaryData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      currentDate,
+      PreviousAndCurrentDate[0],
+      PreviousAndCurrentDate[1],
+      activePage
+    );
   };
   return (
     <div className="settings_mainContainer">
@@ -563,6 +621,7 @@ const Wellness = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             {activePage === 2 ? (

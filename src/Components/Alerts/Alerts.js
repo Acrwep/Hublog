@@ -21,6 +21,7 @@ const Alerts = () => {
   const [userList, setUserList] = useState([]);
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [alertData, setAlertData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [

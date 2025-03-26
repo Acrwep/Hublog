@@ -229,7 +229,7 @@ const Apps$Url = () => {
       setTimeout(() => {
         getTopAppUsageData(
           null,
-          null,
+          managerTeamId,
           orgId,
           PreviousAndCurrentDate[0],
           PreviousAndCurrentDate[1]

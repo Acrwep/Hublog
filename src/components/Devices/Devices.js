@@ -40,7 +40,7 @@ const Devices = () => {
   const [devicesData, setDevicesData] = useState([]);
   const [statusOfDeviceSeries, setStatusOfDeviceSeries] = useState([]);
   const [platformSeries, setPlatformSeries] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isManager, setIsManager] = useState(false);
   const [tableLoading, setTableloading] = useState(true);
 
   const columns = [
@@ -113,28 +113,42 @@ const Devices = () => {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
-    setLoading(true);
     setTeamId(null);
     setUserId(null);
     setPlatformId(null);
     setSystemId(null);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
-      }, 500);
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
+      }, 300);
     }
   };
 
@@ -151,6 +165,26 @@ const Devices = () => {
     } finally {
       setTimeout(() => {
         getDeviceData(orgId);
+      }, 300);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
+      setNonChangeUserList(teamMembersList);
+    } finally {
+      setTimeout(() => {
+        getDeviceData(orgId, managerTeamId);
       }, 350);
     }
   };
@@ -204,7 +238,6 @@ const Devices = () => {
       setDevicesData([]);
     } finally {
       setTimeout(() => {
-        setLoading(false);
         setTableloading(false);
       }, 300);
     }
@@ -254,6 +287,8 @@ const Devices = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
     if (
       teamId === null &&
       userId === null &&
@@ -261,15 +296,22 @@ const Devices = () => {
       systemId === null
     ) {
       return;
-    } else {
-      setTableloading(true);
-      setTeamId(null);
-      setUserList(nonChangeUserList);
-      setUserId(null);
-      setPlatformId(null);
-      setSystemId(null);
-      getDeviceData(organizationId, null, null, null, null);
     }
+    if (
+      managerTeamId &&
+      userId === null &&
+      platformId === null &&
+      systemId === null
+    ) {
+      return;
+    }
+    setTableloading(true);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserList(nonChangeUserList);
+    setUserId(null);
+    setPlatformId(null);
+    setSystemId(null);
+    getDeviceData(organizationId, managerTeamId, null, null, null);
   };
 
   return (
@@ -293,6 +335,7 @@ const Devices = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div className="devicereport_selectfieldContainers">

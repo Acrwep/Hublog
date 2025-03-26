@@ -56,6 +56,7 @@ export default function ManualTime() {
   const [modalImageName, setModalImageName] = useState("");
   const [organizationId, setOrganizationId] = useState(null);
   const [data, setData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -160,6 +161,12 @@ export default function ManualTime() {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
@@ -167,18 +174,27 @@ export default function ManualTime() {
     setLoading(true);
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -207,6 +223,33 @@ export default function ManualTime() {
           PreviousAndCurrentDate[1]
         );
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      const teamMembersList = [];
+      setNonChangeUserList(teamMembersList);
+    } finally {
+      setTimeout(() => {
+        getManualtimeData(
+          orgId,
+          null,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1]
+        );
+      }, 350);
     }
   };
 
@@ -352,6 +395,7 @@ export default function ManualTime() {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
@@ -382,20 +426,27 @@ export default function ManualTime() {
       isPreviousChange === false
     ) {
       return;
-    } else {
-      setLoading(true);
-      setTeamId(null);
-      setUserId(null);
-      setUserList(nonChangeUserList);
-      setSelectedDates(PreviousandCurrentDate);
-      getManualtimeData(
-        organizationId,
-        null,
-        null,
-        PreviousandCurrentDate[0],
-        PreviousandCurrentDate[1]
-      );
     }
+    if (
+      managerTeamId &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+    setLoading(true);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setUserList(nonChangeUserList);
+    setSelectedDates(PreviousandCurrentDate);
+    getManualtimeData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      PreviousandCurrentDate[0],
+      PreviousandCurrentDate[1]
+    );
   };
   const handleCancel = () => {
     formRestart();
@@ -506,6 +557,7 @@ export default function ManualTime() {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>
