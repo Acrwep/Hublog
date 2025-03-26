@@ -12,6 +12,7 @@ import {
   getUrlsUsage,
   getTopUrlsUsage,
   getTopCategoryUsage,
+  getTopAppAndUrlsUsage,
 } from "../APIservice.js/action";
 import Loader from "../Common/Loader";
 import CommonNodatafound from "../Common/CommonNodatafound";
@@ -43,8 +44,7 @@ const Apps$Url = () => {
   const [topCategoryUsageTime, setTopCategoryUsageTime] = useState("");
   const [isManager, setIsManager] = useState(false);
   //loader usestates
-  const [topAppLoader, setTopAppLoader] = useState(true);
-  const [topUrlLoader, setTopUrlLoader] = useState(true);
+  const [topappsLoader, setTopappsLoader] = useState(true);
   const [topCategoryLoader, setTopCategoryLoader] = useState(true);
   const [appUsageLoader, setAppUsageLoader] = useState(true);
   const [urlUsageLoader, setUrlUsageLoader] = useState(true);
@@ -198,7 +198,7 @@ const Apps$Url = () => {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getTopAppUsageData(
+        getTopAppAndUrlData(
           null,
           null,
           orgId,
@@ -220,6 +220,7 @@ const Apps$Url = () => {
       const response = await getUsersByTeamId(managerTeamId);
       const teamMembersList = response?.data?.team?.users;
       setUserList(teamMembersList);
+      setUserId(null);
       setNonChangeUserList(teamMembersList);
     } catch (error) {
       CommonToaster(error?.message, "error");
@@ -227,7 +228,7 @@ const Apps$Url = () => {
       setNonChangeUserList(teamMembersList);
     } finally {
       setTimeout(() => {
-        getTopAppUsageData(
+        getTopAppAndUrlData(
           null,
           managerTeamId,
           orgId,
@@ -238,74 +239,42 @@ const Apps$Url = () => {
     }
   };
 
-  const getTopAppUsageData = async (
+  const getTopAppAndUrlData = async (
     userid,
     teamid,
     orgId,
     startdate,
     enddate
   ) => {
-    setTopAppLoader(true);
-    setTopUrlLoader(true);
+    setTopappsLoader(true);
     setTopCategoryLoader(true);
     setAppUsageLoader(true);
     setUrlUsageLoader(true);
     const payload = {
+      organizationId: orgId,
       ...(userid && { userId: userid }),
       ...(teamid && { teamId: teamid }),
-      organizationId: orgId,
       startDate: startdate,
       endDate: enddate,
     };
     try {
-      const response = await getTopAppsUsage(payload);
-      const TopAppsUsageData = response.data;
-      if (TopAppsUsageData.applicationName != null) {
+      const response = await getTopAppAndUrlsUsage(payload);
+      const TopAppandUrlData = response.data;
+      if (TopAppandUrlData.applicationName != null) {
         setTopAppName(
-          TopAppsUsageData.applicationName[0].toUpperCase() +
-            TopAppsUsageData.applicationName.slice(1)
+          TopAppandUrlData.applicationName[0].toUpperCase() +
+            TopAppandUrlData.applicationName.slice(1)
         );
-        const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
+        const [hours, minutes] = TopAppandUrlData.appMaxUsage.split(":");
         setTopAppUsageTime(hours + "h:" + minutes + "m");
-        return;
       } else {
         setTopAppName("-");
         setTopAppUsageTime("-");
       }
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      setTopAppName("-");
-      setTopAppUsageTime("-");
-    } finally {
-      setTimeout(() => {
-        setTopAppLoader(false);
-        getTopUrlUsageData(userid, teamid, orgId, startdate, enddate);
-      }, 500);
-    }
-  };
 
-  const getTopUrlUsageData = async (
-    userid,
-    teamid,
-    orgId,
-    startdate,
-    enddate
-  ) => {
-    const payload = {
-      ...(userid && { userId: userid }),
-      ...(teamid && { teamId: teamid }),
-      organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getTopUrlsUsage(payload);
-      const TopUrlsUsageData = response.data;
-      console.log("top url usage response", TopUrlsUsageData);
-      if (TopUrlsUsageData.url) {
-        setTopUrlName(TopUrlsUsageData.url);
-
-        const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
+      if (TopAppandUrlData.url != null) {
+        setTopUrlName(TopAppandUrlData.url);
+        const [hours, minutes] = TopAppandUrlData.urlMaxUsage.split(":");
         setTopUrlUsageTime(hours + "h:" + minutes + "m");
       } else {
         setTopUrlName("-");
@@ -313,13 +282,15 @@ const Apps$Url = () => {
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
+      setTopAppName("-");
+      setTopAppUsageTime("-");
       setTopUrlName("-");
       setTopUrlUsageTime("-");
     } finally {
       setTimeout(() => {
-        setTopUrlLoader(false);
+        setTopappsLoader(false);
         getTopCategoryUsageData(userid, teamid, orgId, startdate, enddate);
-      }, 500);
+      }, 100);
     }
   };
 
@@ -427,7 +398,7 @@ const Apps$Url = () => {
 
       setUserList(teamMembersList);
       setUserId(userid);
-      getTopAppUsageData(
+      getTopAppAndUrlData(
         userid,
         value,
         organizationId,
@@ -445,13 +416,13 @@ const Apps$Url = () => {
     const startDate = dateStrings[0];
     const endDate = dateStrings[1];
     if (dateStrings[0] != "" && dateStrings[1] != "") {
-      getTopAppUsageData(userId, teamId, organizationId, startDate, endDate);
+      getTopAppAndUrlData(userId, teamId, organizationId, startDate, endDate);
     }
   };
 
   const handleUser = (value) => {
     setUserId(value);
-    getTopAppUsageData(
+    getTopAppAndUrlData(
       value,
       teamId,
       organizationId,
@@ -503,8 +474,7 @@ const Apps$Url = () => {
     ) {
       return;
     }
-    setTopAppLoader(true);
-    setTopUrlLoader(true);
+    setTopappsLoader(true);
     setTopCategoryLoader(true);
     setAppUsageLoader(true);
     setUrlUsageLoader(true);
@@ -512,7 +482,7 @@ const Apps$Url = () => {
     setUserId(null);
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousandCurrentDate);
-    getTopAppUsageData(
+    getTopAppAndUrlData(
       null,
       managerTeamId ? parseInt(managerTeamId) : null,
       orgId,
@@ -576,7 +546,7 @@ const Apps$Url = () => {
       <Row gutter={16}>
         <Col xs={24} sm={24} md={7} lg={7}>
           <div className="userproductivity_topContainers">
-            {topAppLoader ? (
+            {topappsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -597,7 +567,7 @@ const Apps$Url = () => {
         </Col>
         <Col xs={24} sm={24} md={10} lg={10}>
           <div className="userproductivity_topContainers">
-            {topUrlLoader ? (
+            {topappsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}

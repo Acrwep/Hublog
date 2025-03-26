@@ -22,8 +22,7 @@ const ActivitySummary = ({
   isBreakdownEmpty,
   loading,
   breakdownLoader,
-  appsLoader,
-  urlLoader,
+  topappsLoader,
   categoryLoader,
 }) => {
   const breakdownData = useSelector((state) => state.activitybreakdown);
@@ -61,6 +60,10 @@ const ActivitySummary = ({
     { id: 3, name: "SEO", percentage: 75 },
   ];
 
+  useEffect(() => {
+    console.log("topurllll", topUrlName);
+  }, []);
+
   return (
     <div>
       <Row gutter={16}>
@@ -94,7 +97,7 @@ const ActivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {appsLoader ? (
+            {topappsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -114,7 +117,7 @@ const ActivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {urlLoader ? (
+            {topappsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -131,7 +134,11 @@ const ActivitySummary = ({
                     {topUrlName === "-"
                       ? topUrlName
                       : `${
-                          topUrlName === "localhost" ? "http://" : "https://"
+                          topUrlName === "-" || topUrlName === ""
+                            ? ""
+                            : topUrlName === "localhost"
+                            ? "http://"
+                            : "https://"
                         }${topUrlName}`}
                   </p>
                 </Tooltip>

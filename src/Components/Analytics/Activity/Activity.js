@@ -17,6 +17,7 @@ import {
   getActivityTrend,
   getProductivityWorktimeTrends,
   getTeams,
+  getTopAppAndUrlsUsage,
   getTopAppsUsage,
   getTopCategoryUsage,
   getTopUrlsUsage,
@@ -61,8 +62,7 @@ const Activity = () => {
 
   //loader usestates
   const [breakdownLoader, setBreakdownLoader] = useState(true);
-  const [appsLoader, setAppsLoader] = useState(true);
-  const [urlLoader, setUrlLoader] = useState(true);
+  const [topappsLoader, setTopappsLoader] = useState(true);
   const [categoryLoader, setCategoryLoader] = useState(true);
   const [worktimeLoader, setWorktimeLoader] = useState(true);
   const [activityTrendLoader, setActivityTrendLoader] = useState(true);
@@ -196,8 +196,7 @@ const Activity = () => {
     if (pageNumber === 1) {
       setSummaryLoading(true);
       setBreakdownLoader(true);
-      setAppsLoader(true);
-      setUrlLoader(true);
+      setTopappsLoader(true);
       setCategoryLoader(true);
       const payload = {
         organizationId: orgId,
@@ -266,7 +265,7 @@ const Activity = () => {
       } finally {
         setTimeout(() => {
           setBreakdownLoader(false);
-          getTopAppUsageData(orgId, teamid, startDate, endDate);
+          getTopAppAndUrlData(orgId, teamid, startDate, endDate);
         }, 100);
       }
     } else {
@@ -299,7 +298,7 @@ const Activity = () => {
     }
   };
 
-  const getTopAppUsageData = async (orgId, teamid, startdate, enddate) => {
+  const getTopAppAndUrlData = async (orgId, teamid, startdate, enddate) => {
     const payload = {
       organizationId: orgId,
       ...(teamid && { teamId: teamid }),
@@ -307,48 +306,23 @@ const Activity = () => {
       endDate: enddate,
     };
     try {
-      const response = await getTopAppsUsage(payload);
-      const TopAppsUsageData = response.data;
-      if (TopAppsUsageData.applicationName != null) {
+      const response = await getTopAppAndUrlsUsage(payload);
+      const TopAppandUrlData = response.data;
+      if (TopAppandUrlData.applicationName != null) {
         setTopAppName(
-          TopAppsUsageData.applicationName[0].toUpperCase() +
-            TopAppsUsageData.applicationName.slice(1)
+          TopAppandUrlData.applicationName[0].toUpperCase() +
+            TopAppandUrlData.applicationName.slice(1)
         );
-
-        const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
+        const [hours, minutes] = TopAppandUrlData.appMaxUsage.split(":");
         setTopAppUsageTime(hours + "h:" + minutes + "m");
-        return;
       } else {
         setTopAppName("-");
         setTopAppUsageTime("-");
       }
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      setTopAppName("-");
-      setTopAppUsageTime("-");
-    } finally {
-      setTimeout(() => {
-        setAppsLoader(false);
-        getTopUrlUsageData(orgId, teamid, startdate, enddate);
-      }, 100);
-    }
-  };
 
-  const getTopUrlUsageData = async (orgId, teamid, startdate, enddate) => {
-    const payload = {
-      organizationId: orgId,
-      ...(teamid && { teamId: teamid }),
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getTopUrlsUsage(payload);
-      const TopUrlsUsageData = response.data;
-
-      if (TopUrlsUsageData.url) {
-        setTopUrlName(TopUrlsUsageData.url);
-
-        const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
+      if (TopAppandUrlData.url != null) {
+        setTopUrlName(TopAppandUrlData.url);
+        const [hours, minutes] = TopAppandUrlData.urlMaxUsage.split(":");
         setTopUrlUsageTime(hours + "h:" + minutes + "m");
       } else {
         setTopUrlName("-");
@@ -356,11 +330,13 @@ const Activity = () => {
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
+      setTopAppName("-");
+      setTopAppUsageTime("-");
       setTopUrlName("-");
       setTopUrlUsageTime("-");
     } finally {
       setTimeout(() => {
-        setUrlLoader(false);
+        setTopappsLoader(false);
         getTopCategoryUsageData(orgId, teamid, startdate, enddate);
       }, 100);
     }
@@ -679,8 +655,7 @@ const Activity = () => {
             isBreakdownEmpty={isBreakdownEmpty}
             loading={summaryLoading}
             breakdownLoader={breakdownLoader}
-            appsLoader={appsLoader}
-            urlLoader={urlLoader}
+            topappsLoader={topappsLoader}
             categoryLoader={categoryLoader}
           />
         </div>

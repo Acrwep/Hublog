@@ -33,6 +33,7 @@ import {
   getWellnessEmployeeDetails,
   getWellnessWorktimeTrends,
   getUsersByTeamId,
+  getTopAppAndUrlsUsage,
 } from "../APIservice.js/action";
 import CommonSelectField from "../../Components/Common/CommonSelectField";
 import CommonDoubleDatePicker from "../../Components/Common/CommonDoubleDatePicker";
@@ -364,7 +365,7 @@ const UserDetail = () => {
         setIsBreakdownEmpty(true);
       } finally {
         setTimeout(() => {
-          getTopAppUsageData(userId, orgId, startdate, enddate);
+          getTopAppAndUrlData(userId, orgId, startdate, enddate);
         }, 300);
       }
     }
@@ -405,7 +406,7 @@ const UserDetail = () => {
         setActivityBreakdownAverageTime("-");
       } finally {
         setTimeout(() => {
-          getTopAppUsageData(userId, orgId, startdate, enddate);
+          getTopAppAndUrlData(userId, orgId, startdate, enddate);
         }, 300);
       }
     }
@@ -427,7 +428,7 @@ const UserDetail = () => {
         CommonToaster(error.response?.data?.message, "error");
       } finally {
         setTimeout(() => {
-          getTopAppUsageData(userId, orgId, startdate, enddate);
+          getTopAppAndUrlData(userId, orgId, startdate, enddate);
         }, 500);
       }
     }
@@ -481,7 +482,7 @@ const UserDetail = () => {
     }
   };
 
-  const getTopAppUsageData = async (userid, orgId, startdate, enddate) => {
+  const getTopAppAndUrlData = async (userid, orgId, startdate, enddate) => {
     const payload = {
       ...(userid && { userId: userid }),
       organizationId: orgId,
@@ -489,35 +490,44 @@ const UserDetail = () => {
       endDate: enddate,
     };
     try {
-      const response = await getTopAppsUsage(payload);
-      const TopAppsUsageData = response.data;
-      if (TopAppsUsageData.applicationName != null) {
+      const response = await getTopAppAndUrlsUsage(payload);
+      const TopAppandUrlData = response.data;
+      if (TopAppandUrlData.applicationName != null) {
         setTopAppName(
-          TopAppsUsageData.applicationName[0].toUpperCase() +
-            TopAppsUsageData.applicationName.slice(1)
+          TopAppandUrlData.applicationName[0].toUpperCase() +
+            TopAppandUrlData.applicationName.slice(1)
         );
-
-        const [hours, minutes] = TopAppsUsageData.maxUsage.split(":");
+        const [hours, minutes] = TopAppandUrlData.appMaxUsage.split(":");
         setTopAppUsageTime(hours + "h:" + minutes + "m");
-        return;
       } else {
         setTopAppName("-");
         setTopAppUsageTime("-");
+      }
+
+      if (TopAppandUrlData.url != null) {
+        setTopUrlName(TopAppandUrlData.url);
+        const [hours, minutes] = TopAppandUrlData.urlMaxUsage.split(":");
+        setTopUrlUsageTime(hours + "h:" + minutes + "m");
+      } else {
+        setTopUrlName("-");
+        setTopUrlUsageTime("-");
       }
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTopAppName("-");
       setTopAppUsageTime("-");
+      setTopUrlName("-");
+      setTopUrlUsageTime("-");
     } finally {
       setTimeout(() => {
         getUrlsUsageData(userid, orgId, startdate, enddate);
-      }, 500);
+      }, 100);
     }
   };
 
   const getUrlsUsageData = async (userid, orgId, startdate, enddate) => {
     if (activePage === 4 || activePage === 5) {
-      getTopUrlUsageData(userid, orgId, startdate, enddate);
+      getTopCategoryUsageData(userid, orgId, startdate, enddate);
       return;
     }
     const payload = {
@@ -532,37 +542,6 @@ const UserDetail = () => {
       dispatch(storeuserUrlsUsage(UrlsData));
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
-    } finally {
-      setTimeout(() => {
-        getTopUrlUsageData(userid, orgId, startdate, enddate);
-      }, 500);
-    }
-  };
-
-  const getTopUrlUsageData = async (userid, orgId, startdate, enddate) => {
-    const payload = {
-      ...(userid && { userId: userid }),
-      organizationId: orgId,
-      startDate: startdate,
-      endDate: enddate,
-    };
-    try {
-      const response = await getTopUrlsUsage(payload);
-      const TopUrlsUsageData = response.data;
-
-      if (TopUrlsUsageData.url) {
-        setTopUrlName(TopUrlsUsageData.url);
-
-        const [hours, minutes] = TopUrlsUsageData.maxUsage.split(":");
-        setTopUrlUsageTime(hours + "h:" + minutes + "m");
-      } else {
-        setTopUrlName("-");
-        setTopUrlUsageTime("-");
-      }
-    } catch (error) {
-      CommonToaster(error.response?.data?.message, "error");
-      setTopUrlName("-");
-      setTopUrlUsageTime("-");
     } finally {
       setTimeout(() => {
         getTopCategoryUsageData(userid, orgId, startdate, enddate);

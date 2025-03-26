@@ -22,8 +22,7 @@ const ProductivitySummary = ({
   loading,
   breakdownLoader,
   outliersLoader,
-  appsLoader,
-  urlLoader,
+  topappsLoader,
   categoryLoader,
   teamwiseLoader,
 }) => {
@@ -92,7 +91,7 @@ const ProductivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {appsLoader ? (
+            {topappsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}
@@ -112,7 +111,7 @@ const ProductivitySummary = ({
         </Col>
         <Col xs={24} sm={24} md={6} lg={6}>
           <div className="userproductivity_topContainers">
-            {urlLoader ? (
+            {topappsLoader ? (
               <Skeleton
                 active
                 title={{ height: "13px", borderRadius: "12px" }}

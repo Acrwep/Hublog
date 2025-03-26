@@ -182,10 +182,20 @@ export const getScreenShots = async (userId, organizationId, date) => {
     throw error;
   }
 };
-//apps
+//apps and urls
 export const getAppsUsage = async (payload) => {
   try {
     const response = await api.get(`/api/AppsUrls/GetAppUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getUrlsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetUrlUsage`, {
       params: payload,
     });
     return response;
@@ -203,10 +213,9 @@ export const getTopAppsUsage = async (payload) => {
     throw error;
   }
 };
-//urls
-export const getUrlsUsage = async (payload) => {
+export const getTopUrlsUsage = async (payload) => {
   try {
-    const response = await api.get(`/api/AppsUrls/GetUrlUsage`, {
+    const response = await api.get(`/api/AppsUrls/GetTopUrlUsage`, {
       params: payload,
     });
     return response;
@@ -214,9 +223,9 @@ export const getUrlsUsage = async (payload) => {
     throw error;
   }
 };
-export const getTopUrlsUsage = async (payload) => {
+export const getTopAppAndUrlsUsage = async (payload) => {
   try {
-    const response = await api.get(`/api/AppsUrls/GetTopUrlUsage`, {
+    const response = await api.get(`/api/AppsUrls/GetTopAppAndUrlUsage`, {
       params: payload,
     });
     return response;
