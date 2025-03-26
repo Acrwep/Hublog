@@ -10,7 +10,12 @@ import DownloadTableAsCSV from "../Common/DownloadTableAsCSV";
 import CommonAvatar from "../Common/CommonAvatar";
 import "./styles.css";
 import CommonSelectField from "../Common/CommonSelectField";
-import { getAlerts, getUsers } from "../APIservice.js/action";
+import {
+  getAlerts,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
 import { checkMatchingwithCurrentDate } from "../Common/Validation";
 import moment from "moment";
@@ -21,7 +26,11 @@ const AlertReport = () => {
   const [organizationId, setOrganizationId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userList, setUserList] = useState([]);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
+  const [teamId, setTeamId] = useState(null);
+  const [teamList, setTeamList] = useState([]);
   const [alertData, setAlertData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -64,12 +73,43 @@ const AlertReport = () => {
   ];
 
   useEffect(() => {
-    getUsersData();
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
+    getTeamData();
   }, []);
 
-  const getUsersData = async () => {
+  const getTeamData = async () => {
     setLoading(true);
-    setUserId(null);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
+    try {
+      const response = await getTeams(parseInt(orgId));
+      const teamList = response.data;
+      setTeamList(teamList);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
+    } catch (error) {
+      CommonToaster(error?.response?.data?.message, "error");
+    } finally {
+      setTimeout(() => {
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
+      }, 500);
+    }
+  };
+
+  const getUsersData = async () => {
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
     const orgId = localStorage.getItem("organizationId");
@@ -78,6 +118,7 @@ const AlertReport = () => {
       const response = await getUsers(orgId);
       const allUsers = response?.data;
       setUserList(allUsers);
+      setUserId(null);
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
       setUserList([]);
@@ -88,9 +129,30 @@ const AlertReport = () => {
     }
   };
 
-  const getAlertsData = async (orgId, userid, triggertime) => {
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setUserId(null);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getAlertsData(orgId, managerTeamId);
+      }, 350);
+    }
+  };
+
+  const getAlertsData = async (orgId, teamid, userid, triggertime) => {
     const payload = {
       organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
       ...(userid && { userId: userid }),
       triggeredTime: moment(triggertime ? triggertime : date).format(
         "YYYY-MM-DD"
@@ -116,26 +178,57 @@ const AlertReport = () => {
     console.log(date, dateString);
     setDate(date); // Update the state when the date changes
     setLoading(true);
-    getAlertsData(organizationId, userId, date);
+    getAlertsData(organizationId, teamId, userId, date);
+  };
+
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+
+      setUserList(teamMembersList);
+      const userIdd = null;
+      setUserId(userIdd);
+      getAlertsData(userIdd, value, organizationId, date);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
   };
 
   const handleUser = (value) => {
     setUserId(value);
     setLoading(true);
-    getAlertsData(organizationId, value, date);
+    getAlertsData(organizationId, teamId, value, date);
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const today = new Date();
     const isCurrentdate = checkMatchingwithCurrentDate(date);
-    if (isCurrentdate && userId === null) {
+    if (isCurrentdate && teamId === null && userId === null) {
       return;
-    } else {
-      setLoading(true);
-      setDate(today);
-      setUserId(null);
-      getAlertsData(organizationId, null, today);
     }
+    if (isCurrentdate && managerTeamId && userId === null) {
+      return;
+    }
+    setLoading(true);
+    setDate(today);
+    setUserId(null);
+    setUserList(nonChangeUserList);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    getAlertsData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      today
+    );
   };
 
   return (
@@ -160,13 +253,23 @@ const AlertReport = () => {
             className="field_selectfielsContainer"
             style={{ display: "flex" }}
           >
-            <CommonSelectField
-              options={userList}
-              placeholder="All Users"
-              onChange={handleUser}
-              value={userId}
-              style={{ width: "170px" }}
-            />
+            <div className="field_teamselectfieldContainer">
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+                disabled={isManager}
+              />
+            </div>
+            <div className="devicereport_selectfieldContainers">
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />
+            </div>
           </div>
         </Col>
         <Col

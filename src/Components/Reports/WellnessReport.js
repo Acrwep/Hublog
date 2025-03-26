@@ -30,6 +30,7 @@ const WellnessReport = () => {
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
   const [tableData, setTableData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -119,6 +120,12 @@ const WellnessReport = () => {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
@@ -126,24 +133,33 @@ const WellnessReport = () => {
     setLoading(true);
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
 
   const getUsersData = async () => {
     const orgId = localStorage.getItem("organizationId");
-    setOrganizationId(orgId);
     const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousAndCurrentDate);
     try {
@@ -166,6 +182,35 @@ const WellnessReport = () => {
           PreviousAndCurrentDate[1]
         );
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setUserId(null);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getWellnessData(
+          orgId,
+          managerTeamId,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1]
+        );
+      }, 350);
     }
   };
 
@@ -246,6 +291,7 @@ const WellnessReport = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
@@ -276,20 +322,27 @@ const WellnessReport = () => {
       isPreviousChange === false
     ) {
       return;
-    } else {
-      setLoading(true);
-      setTeamId(null);
-      setUserId(null);
-      setSelectedDates(PreviousandCurrentDate);
-      setUserList(nonChangeUserList);
-      getWellnessData(
-        organizationId,
-        null,
-        null,
-        PreviousandCurrentDate[0],
-        PreviousandCurrentDate[1]
-      );
     }
+    if (
+      managerTeamId &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+    setLoading(true);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setSelectedDates(PreviousandCurrentDate);
+    setUserList(nonChangeUserList);
+    getWellnessData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      PreviousandCurrentDate[0],
+      PreviousandCurrentDate[1]
+    );
   };
 
   return (
@@ -320,6 +373,7 @@ const WellnessReport = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

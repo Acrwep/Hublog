@@ -40,6 +40,7 @@ const DeviceReport = () => {
   ];
   const [systemId, setSystemId] = useState(null);
   const [devicesData, setDevicesData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [tableLoading, setTableloading] = useState(true);
 
   const columns = [
@@ -119,6 +120,12 @@ const DeviceReport = () => {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
@@ -129,18 +136,27 @@ const DeviceReport = () => {
     setSystemId(null);
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-      setOrganizationId(orgId);
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -151,6 +167,7 @@ const DeviceReport = () => {
       const response = await getUsers(orgId);
       const allUsers = response?.data;
       setUserList(allUsers);
+      setUserId(null);
       setNonChangeUserList(allUsers);
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
@@ -158,6 +175,27 @@ const DeviceReport = () => {
     } finally {
       setTimeout(() => {
         getDeviceData(orgId);
+      }, 350);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setUserId(null);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getDeviceData(orgId, managerTeamId);
       }, 350);
     }
   };
@@ -233,6 +271,7 @@ const DeviceReport = () => {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     if (
       teamId === null &&
       userId === null &&
@@ -240,15 +279,28 @@ const DeviceReport = () => {
       systemId === null
     ) {
       return;
-    } else {
-      setTableloading(true);
-      setTeamId(null);
-      setUserList(nonChangeUserList);
-      setUserId(null);
-      setPlatformId(null);
-      setSystemId(null);
-      getDeviceData(organizationId, null, null, null, null);
     }
+    if (
+      managerTeamId &&
+      userId === null &&
+      platformId === null &&
+      systemId === null
+    ) {
+      return;
+    }
+    setTableloading(true);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserList(nonChangeUserList);
+    setUserId(null);
+    setPlatformId(null);
+    setSystemId(null);
+    getDeviceData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      null,
+      null
+    );
   };
 
   return (
@@ -279,6 +331,7 @@ const DeviceReport = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div className="devicereport_selectfieldContainers">

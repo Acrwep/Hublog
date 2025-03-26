@@ -48,7 +48,7 @@ export default function DynamicReport() {
   const [reportNameError, setReportNameError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [validationTrigger, setValidationTrigger] = useState(false);
-
+  const [isManager, setIsManager] = useState(false);
   //userinfo useStates
   const [firstNameStatus, setFirstNameStatus] = useState(true);
   const [lastNameStatus, setLastNameStatus] = useState(true);
@@ -367,6 +367,12 @@ export default function DynamicReport() {
   };
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
@@ -374,24 +380,33 @@ export default function DynamicReport() {
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
     try {
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       console.log("teams error", error);
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 300);
     }
   };
 
   const getUsersData = async () => {
     const orgId = localStorage.getItem("organizationId");
-    setOrganizationId(orgId);
     const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
     setSelectedDates(PreviousAndCurrentDate);
     try {
@@ -414,6 +429,35 @@ export default function DynamicReport() {
           PreviousAndCurrentDate[1]
         );
       }, 300);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    const PreviousAndCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousAndCurrentDate);
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setUserId(null);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getDynamicReportData(
+          orgId,
+          managerTeamId,
+          null,
+          PreviousAndCurrentDate[0],
+          PreviousAndCurrentDate[1]
+        );
+      }, 350);
     }
   };
 
@@ -737,6 +781,7 @@ export default function DynamicReport() {
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
 
     const today = new Date();
@@ -766,37 +811,44 @@ export default function DynamicReport() {
       isPreviousChange === false
     ) {
       return;
-    } else {
-      setActivePage(1);
-      setTeamId(null);
-      setUserId(null);
-      setUserList(nonChangeUserList);
-      setSelectedDates(PreviousandCurrentDate);
-      //checkbox handling
-      setFirstNameStatus(true);
-      setLastNameStatus(true);
-      setEmployeeIdStatus(true);
-      setEmailStatus(true);
-      setTeamNameStatus(false);
-      setTotalWorkingtimeStatus(true);
-      setTotalOnlinetimeStatus(true);
-      setTotalBreaktimeStatus(true);
-      setAverageBreaktimeStatus(false);
-      setPunchIntimeStatus(false);
-      setPunchOuttimeStatus(false);
-      setTotalActivetimeStatus(true);
-      setActivityPercentStatus(true);
-      setAverageActivetimeStatus(false);
-      setTotalIdletimeStatus(false);
-      setAverageIdletimeStatus(false);
-      setTotalProductivetimeStatus(true);
-      setProductivePercentStatus(true);
-      setAverageProductivetimeStatus(false);
-      setTotalNeutraltimeStatus(false);
-      setAverageNeutraltimeStatus(false);
-      setTotalUnproductivetimeStatus(false);
-      setAverageUnproductivetimeStatus(false);
     }
+    if (
+      managerTeamId &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false
+    ) {
+      return;
+    }
+    setActivePage(1);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    setUserId(null);
+    setUserList(nonChangeUserList);
+    setSelectedDates(PreviousandCurrentDate);
+    //checkbox handling
+    setFirstNameStatus(true);
+    setLastNameStatus(true);
+    setEmployeeIdStatus(true);
+    setEmailStatus(true);
+    setTeamNameStatus(false);
+    setTotalWorkingtimeStatus(true);
+    setTotalOnlinetimeStatus(true);
+    setTotalBreaktimeStatus(true);
+    setAverageBreaktimeStatus(false);
+    setPunchIntimeStatus(false);
+    setPunchOuttimeStatus(false);
+    setTotalActivetimeStatus(true);
+    setActivityPercentStatus(true);
+    setAverageActivetimeStatus(false);
+    setTotalIdletimeStatus(false);
+    setAverageIdletimeStatus(false);
+    setTotalProductivetimeStatus(true);
+    setProductivePercentStatus(true);
+    setAverageProductivetimeStatus(false);
+    setTotalNeutraltimeStatus(false);
+    setAverageNeutraltimeStatus(false);
+    setTotalUnproductivetimeStatus(false);
+    setAverageUnproductivetimeStatus(false);
   };
 
   const handleDownload = () => {
@@ -911,6 +963,7 @@ export default function DynamicReport() {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

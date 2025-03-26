@@ -7,7 +7,12 @@ import CommonTable from "../Common/CommonTable";
 import "./styles.css";
 import { CommonToaster } from "../Common/CommonToaster";
 import moment from "moment";
-import { getAlerts, getTeams, getUsers } from "../APIservice.js/action";
+import {
+  getAlerts,
+  getTeams,
+  getUsers,
+  getUsersByTeamId,
+} from "../APIservice.js/action";
 import CommonSelectField from "../Common/CommonSelectField";
 import { checkMatchingwithCurrentDate } from "../Common/Validation";
 import CommonAvatar from "../Common/CommonAvatar";
@@ -57,25 +62,38 @@ const Alerts = () => {
   ];
 
   useEffect(() => {
-    getUsersData();
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
+    getTeamData();
   }, []);
 
   const getTeamData = async () => {
     setLoading(true);
-    setTeamId(null);
-    setUserId(null);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    setOrganizationId(orgId);
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-      setOrganizationId(orgId);
       const response = await getTeams(parseInt(orgId));
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error?.response?.data?.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -100,9 +118,30 @@ const Alerts = () => {
     }
   };
 
-  const getAlertsData = async (orgId, userid, triggertime) => {
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setUserId(null);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getAlertsData(orgId, managerTeamId);
+      }, 350);
+    }
+  };
+
+  const getAlertsData = async (orgId, teamid, userid, triggertime) => {
     const payload = {
       organizationId: orgId,
+      ...(teamid && { teamId: teamid }),
       ...(userid && { userId: userid }),
       triggeredTime: moment(triggertime ? triggertime : date).format(
         "YYYY-MM-DD"
@@ -128,26 +167,57 @@ const Alerts = () => {
     console.log(date, dateString);
     setDate(date); // Update the state when the date changes
     setLoading(true);
-    getAlertsData(organizationId, userId, date);
+    getAlertsData(organizationId, teamId, userId, date);
+  };
+
+  const handleTeam = async (value) => {
+    setTeamId(value);
+    try {
+      const response = await getUsersByTeamId(value);
+      const teamMembersList = response?.data?.team?.users;
+      if (teamMembersList.length <= 0) {
+        setUserList([]);
+        setUserId(null);
+        return;
+      }
+
+      setUserList(teamMembersList);
+      const userIdd = null;
+      setUserId(userIdd);
+      getAlertsData(userIdd, value, organizationId, date);
+    } catch (error) {
+      CommonToaster(error.response.data.message, "error");
+      setUserList([]);
+    }
   };
 
   const handleUser = (value) => {
     setUserId(value);
     setLoading(true);
-    getAlertsData(organizationId, value, date);
+    getAlertsData(organizationId, teamId, value, date);
   };
 
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const today = new Date();
     const isCurrentdate = checkMatchingwithCurrentDate(date);
-    if (isCurrentdate && userId === null) {
+    if (isCurrentdate && teamId === null && userId === null) {
       return;
-    } else {
-      setLoading(true);
-      setDate(today);
-      setUserId(null);
-      getAlertsData(organizationId, null, today);
     }
+    if (isCurrentdate && managerTeamId && userId === null) {
+      return;
+    }
+    setLoading(true);
+    setDate(today);
+    setUserId(null);
+    setUserList(nonChangeUserList);
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
+    getAlertsData(
+      organizationId,
+      managerTeamId ? parseInt(managerTeamId) : null,
+      null,
+      today
+    );
   };
 
   return (
@@ -165,13 +235,23 @@ const Alerts = () => {
             className="field_selectfielsContainer"
             style={{ display: "flex" }}
           >
-            <CommonSelectField
-              options={userList}
-              placeholder="All Users"
-              onChange={handleUser}
-              value={userId}
-              style={{ width: "170px" }}
-            />
+            <div className="field_teamselectfieldContainer">
+              <CommonSelectField
+                options={teamList}
+                placeholder="All Teams"
+                onChange={handleTeam}
+                value={teamId}
+                disabled={isManager}
+              />
+            </div>
+            <div className="devicereport_selectfieldContainers">
+              <CommonSelectField
+                options={userList}
+                placeholder="Select User"
+                onChange={handleUser}
+                value={userId}
+              />
+            </div>
           </div>
         </Col>
         <Col

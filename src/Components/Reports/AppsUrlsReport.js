@@ -30,6 +30,7 @@ const AppsUrlsReport = () => {
   const [userId, setUserId] = useState(null);
   const [teamId, setTeamId] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
+  const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const typeOptions = [
     { id: 1, name: "Show All" },
     {
@@ -43,6 +44,7 @@ const AppsUrlsReport = () => {
   ];
   const [typeId, setTypeId] = useState(1);
   const [data, setData] = useState([]);
+  const [isManager, setIsManager] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -112,25 +114,40 @@ const AppsUrlsReport = () => {
   ];
 
   useEffect(() => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    if (managerTeamId) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
     getTeamData();
   }, []);
 
   const getTeamData = async () => {
     setLoading(true);
+    const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const container = document.getElementById("header_collapesbuttonContainer");
     container.scrollIntoView({ behavior: "smooth" });
     try {
-      const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
       setOrganizationId(orgId);
       const response = await getTeams(orgId);
       const teamList = response.data;
       setTeamList(teamList);
-      setTeamId(null);
+      if (managerTeamId) {
+        setTeamId(parseInt(managerTeamId));
+      } else {
+        setTeamId(null);
+      }
     } catch (error) {
       CommonToaster(error.response.data.message, "error");
     } finally {
       setTimeout(() => {
-        getUsersData();
+        if (managerTeamId) {
+          getUsersDataByTeamId();
+        } else {
+          getUsersData();
+        }
       }, 500);
     }
   };
@@ -158,6 +175,36 @@ const AppsUrlsReport = () => {
           typeId
         );
       }, 500);
+    }
+  };
+
+  const getUsersDataByTeamId = async () => {
+    const orgId = localStorage.getItem("organizationId");
+    const managerTeamId = localStorage.getItem("managerTeamId");
+    const PreviousandCurrentDate = getCurrentandPreviousweekDate();
+    setSelectedDates(PreviousandCurrentDate);
+
+    try {
+      const response = await getUsersByTeamId(managerTeamId);
+      const teamMembersList = response?.data?.team?.users;
+      setUserList(teamMembersList);
+      setUserId(null);
+      setNonChangeUserList(teamMembersList);
+    } catch (error) {
+      CommonToaster(error?.message, "error");
+      setUserList([]);
+      setNonChangeUserList([]);
+    } finally {
+      setTimeout(() => {
+        getAppsandUrlsData(
+          managerTeamId,
+          userId,
+          orgId,
+          PreviousandCurrentDate[0],
+          PreviousandCurrentDate[1],
+          typeId
+        );
+      }, 350);
     }
   };
 
@@ -254,6 +301,7 @@ const AppsUrlsReport = () => {
     );
   };
   const handleRefresh = () => {
+    const managerTeamId = localStorage.getItem("managerTeamId");
     const PreviousandCurrentDate = getCurrentandPreviousweekDate();
     let isCurrentDate = false;
     let isPreviousChange = false;
@@ -280,12 +328,23 @@ const AppsUrlsReport = () => {
       return;
     }
 
-    setTeamId(null);
+    if (
+      managerTeamId &&
+      userId === null &&
+      isCurrentDate === true &&
+      isPreviousChange === false &&
+      typeId === 1
+    ) {
+      return;
+    }
+
+    setTeamId(managerTeamId ? parseInt(managerTeamId) : null);
     setUserId(null);
     setTypeId(1);
     setSelectedDates(PreviousandCurrentDate);
+    setUserList(nonChangeUserList);
     getAppsandUrlsData(
-      null,
+      managerTeamId ? parseInt(managerTeamId) : null,
       null,
       organizationId,
       PreviousandCurrentDate[0],
@@ -320,6 +379,7 @@ const AppsUrlsReport = () => {
                 placeholder="All Teams"
                 onChange={handleTeam}
                 value={teamId}
+                disabled={isManager}
               />
             </div>
             <div style={{ width: "170px" }}>

@@ -189,6 +189,7 @@ const DailyAttendanceReport = () => {
       const response = await getUsersByTeamId(managerTeamId);
       const teamMembersList = response?.data?.team?.users;
       setUserList(teamMembersList);
+      setUserId(null);
       setNonChangeUserList(teamMembersList);
     } catch (error) {
       CommonToaster(error?.message, "error");
