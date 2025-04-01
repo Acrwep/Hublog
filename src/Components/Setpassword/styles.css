@@ -1,0 +1,321 @@
+.setpassword_maincontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  background-color: #fbfcfd;
+  min-height: 100vh;
+  flex-direction: column;
+}
+.emailvalidate_card {
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  box-shadow: 0 1px 8px 0 rgb(0 0 0 / 8%);
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 45%;
+  padding: 35px 50px;
+  margin: 40px 0px 60px 0px;
+  height: 100%;
+}
+@media (min-width: 320px) and (max-width: 700px) {
+  .emailvalidate_card {
+    width: 75%;
+  }
+}
+.setpassword_emailtext {
+  font-weight: 600;
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+@media (min-width: 320px) and (max-width: 420px) {
+  .setpassword_emailtext {
+    font-size: 20px;
+  }
+}
+/* div show and hide styles */
+.setpassword_inputContainer {
+  position: relative;
+}
+.setpassword_emailfielddiv_hide {
+  position: absolute;
+  transform: translateX(-30%);
+  transition: left 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+.setpassword_emailfielddiv_show {
+  transform: translateX(0%);
+  opacity: 1;
+  width: 100%;
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.setpassword_otpfielddiv_hide {
+  position: absolute;
+  transform: translateX(-30%);
+  transition: left 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+.setpassword_otpfielddiv_show {
+  transform: translateX(0%);
+  opacity: 1;
+  width: 100%;
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.setpassword_passworddiv_hide {
+  position: absolute;
+  transform: translateX(-30%);
+  transition: left 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+.setpassword_passworddiv_show {
+  transform: translateX(0%);
+  opacity: 1;
+  width: 100%;
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+/* email check and xicon styles */
+.setpassword_emailcheckicon_hide {
+  position: absolute;
+  top: 54%;
+  opacity: 0;
+  right: -22px;
+  transform: translateX(-50%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.setpassword_emailcheckicon_visible {
+  position: absolute;
+  top: 54%;
+  opacity: 1;
+  right: 20px;
+  transform: translateX(0%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.setpassword_xicon_hide {
+  position: absolute;
+  top: 54%;
+  opacity: 0;
+  right: -22px;
+  transform: translateX(-50%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.setpassword_xicon_visible {
+  position: absolute;
+  top: 54%;
+  opacity: 1;
+  right: 20px;
+  transform: translateX(0%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* other styles */
+.setpassword_inputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.setpassword_inputfield:hover {
+  border-color: #25a17d !important;
+}
+.setpassword_inputfield:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17;
+}
+
+.setpassword_errorinputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff4d4f;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.setpassword_errorinputfield:hover {
+  border-color: #ff4d4f !important;
+}
+.setpassword_errorinputfield:focus-within {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.144);
+}
+
+.setpassword_emailerror_hide {
+  color: rgb(255, 77, 79);
+  margin-top: 4px;
+  font-size: 15px;
+  position: absolute;
+  transform: translateX(-52px);
+  opacity: 0;
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.setpassword_emailerror_visible {
+  color: rgb(255, 77, 79);
+  margin-top: 4px;
+  font-size: 14px;
+  position: absolute;
+  transform: translateX(4px);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+}
+@media (min-width: 300px) and (max-width: 420px) {
+  .setpassword_emailerror_visible {
+    font-size: 12px;
+  }
+}
+.setpassword_inputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.setpassword_inputfield:hover {
+  border-color: #25a17d !important;
+}
+.setpassword_inputfield:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17;
+}
+.setpassword_errormainContainer {
+  position: absolute;
+  opacity: 0;
+  transform: translateX(-10%);
+  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+  display: none;
+}
+.setpassword_errormainContainer_show {
+  transform: translateX(0%);
+  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+  opacity: 1;
+  margin-top: 12px;
+}
+.setpassword_errordiv {
+  display: flex;
+  font-size: 14px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 9px;
+  position: relative;
+}
+.setpassword_checkicon_hide {
+  position: absolute;
+  transform: translateX(-20px);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+.setpassword_checkicon_visible {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+.setpassword_wrongicon_visible {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+.setpassword_wrongicon_hide {
+  position: absolute;
+  transform: translateX(20px);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.setpassword_emaillabel {
+  margin: 0 !important;
+  font-size: 14px;
+}
+.setpassword_retypeinputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.setpassword_retypeinputfield:hover {
+  border-color: #25a17d !important;
+}
+.setpassword_retypeinputfield:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17;
+}
+.setpassword_errorretypeinputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff4d4f;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.setpassword_errorretypeinputfield:hover {
+  border-color: #ff4d4f !important;
+}
+.setpassword_errorretypeinputfield:focus-within {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.144);
+}
+.setpassword_submitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  width: 100%;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-top: 14px;
+  padding: 7px 0px;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+.setpassword_submitbutton:hover {
+  background-color: #009737;
+}
+.setpassword_submitbutton:active {
+  transform: translateY(2px);
+}
+@media (min-width: 300px) and (max-width: 374px) {
+  .setpassword_submitbutton {
+    margin-top: 52px;
+  }
+}
+.setpassword_loadingsubmitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  width: 100%;
+  font-weight: 500;
+  border-radius: 6px;
+  margin-top: 14px;
+  padding: 7px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  opacity: 0.7;
+  cursor: default;
+}

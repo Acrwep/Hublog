@@ -41,6 +41,7 @@ const Users = ({ loading }) => {
   const dispatch = useDispatch();
   const usersList = useSelector((state) => state.users);
   const usersCount = useSelector((state) => state.userscount);
+  const activeUsersCount = useSelector((state) => state.activeuserscount);
   const userSearchValue = useSelector((state) => state.usersearchvalue);
   const designationList = useSelector((state) => state.designation);
   const activeDesignationList = useSelector((state) => state.activedesignation);
@@ -102,8 +103,12 @@ const Users = ({ loading }) => {
       key: "designationId",
       width: 260,
       render: (text, record) => {
-        const findDesign = activeDesignationList.find((f) => f.id === text);
-        return <p>{findDesign.name} </p>;
+        if (activeDesignationList.length >= 1) {
+          const findDesign = activeDesignationList.find((f) => f.id === text);
+          return <p>{findDesign.name} </p>;
+        } else {
+          return <p>-</p>;
+        }
       },
     },
     {
@@ -112,8 +117,12 @@ const Users = ({ loading }) => {
       key: "teamId",
       width: 220,
       render: (text, record) => {
-        const findTeam = teamList.find((f) => f.id === text);
-        return <p>{findTeam.name} </p>;
+        if (teamList.length >= 1) {
+          const findTeam = teamList.find((f) => f.id === text);
+          return <p>{findTeam.name} </p>;
+        } else {
+          return <p>-</p>;
+        }
       },
     },
     {
@@ -135,7 +144,7 @@ const Users = ({ loading }) => {
       dataIndex: "dob",
       key: "dob",
       render: (text, record) => {
-        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+        return <p>{text ? moment(text).format("DD/MM/YYYY") : "-"} </p>;
       },
     },
     {
@@ -143,10 +152,17 @@ const Users = ({ loading }) => {
       dataIndex: "doj",
       key: "doj",
       render: (text, record) => {
-        return <p>{moment(text).format("DD/MM/YYYY")} </p>;
+        return <p>{text ? moment(text).format("DD/MM/YYYY") : "-"} </p>;
       },
     },
-    { title: "Employee Id", dataIndex: "employeeID", key: "employeeID" },
+    {
+      title: "Employee Id",
+      dataIndex: "employeeID",
+      key: "employeeID",
+      render: (text, record) => {
+        return <p>{text ? text : "-"} </p>;
+      },
+    },
     {
       title: "Status",
       dataIndex: "active",
@@ -560,7 +576,9 @@ const Users = ({ loading }) => {
         <Loader />
       ) : (
         <div>
-          <p className="users_totoalusersheading">Total Users ({usersCount})</p>
+          <p className="users_totoalusersheading">
+            Active Users {activeUsersCount + " / " + usersCount}
+          </p>
           <Row style={{ marginTop: "10px", marginBottom: "20px" }}>
             <Col xs={24} sm={24} md={12} lg={12}>
               <CommonSearchField

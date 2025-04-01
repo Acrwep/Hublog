@@ -105,9 +105,9 @@ const SidebarMenuList = () => {
               <Menu.Item
                 key={subItem.path}
                 icon={subItem.icon}
-                disabled={[""].includes(subItem.title) ? true : false}
+                disabled={["Field"].includes(subItem.title) ? true : false}
               >
-                {[""].includes(subItem.title) ? (
+                {["Field"].includes(subItem.title) ? (
                   <Link style={{ cursor: "default" }}>{subItem.title}</Link>
                 ) : (
                   <Link to={`/${subItem.path}`}>{subItem.title}</Link>
@@ -121,23 +121,7 @@ const SidebarMenuList = () => {
         <Menu.Item
           key={item.path}
           icon={item.icon}
-          disabled={
-            [
-              "Dashboard",
-              "Attendance",
-              "Devices",
-              "Alerts",
-              "Manual Time",
-              "Notebook",
-              "Projects",
-              "User Detail",
-              "Settings",
-              "Reports",
-              "Organization",
-            ].includes(item.title)
-              ? false
-              : true
-          }
+          disabled={[""].includes(item.title) ? true : false}
           style={{
             marginBottom: "12px",
             padding: "0px 24px",

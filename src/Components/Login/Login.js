@@ -221,7 +221,7 @@ const Login = () => {
                 <div className="login_fotgotpassworddiv">
                   <p
                     className="fotgotpassword_text"
-                    onClick={() => navigate("/forgotpassword")}
+                    onClick={() => navigate("/setpassword")}
                   >
                     Forgot Password?
                   </p>

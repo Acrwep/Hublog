@@ -363,140 +363,26 @@
     width: 90%;
   }
 }
-/* setpassword styles */
-.setpassword_card {
-  border: 1px solid rgba(26, 26, 26, 0.1);
-  box-shadow: 0 1px 8px 0 rgb(0 0 0 / 8%);
-  background-color: #ffffff;
-  border-radius: 8px;
-  width: 45%;
-  padding: 35px 60px;
-  margin: 40px 0px 60px 0px;
-  position: relative;
-  height: 230px;
-}
-.errorsetpassword_card {
-  border: 1px solid rgba(26, 26, 26, 0.1);
-  box-shadow: 0 1px 8px 0 rgb(0 0 0 / 8%);
-  background-color: #ffffff;
-  border-radius: 8px;
-  width: 45%;
-  padding: 35px 60px;
-  margin: 40px 0px 60px 0px;
-  position: relative;
-  height: 400px;
-}
-@media (min-width: 300px) and (max-width: 700px) {
-  .setpassword_card {
-    width: 80%;
-  }
-}
-@media (min-width: 1000px) and (max-width: 1024px) {
-  .errorsetpassword_card {
-    height: 446px;
-  }
-}
-.setpassword_inputfield {
-  height: 36px;
-  background-color: #ffffff;
-  background-image: none;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d9d9d9;
-  border-radius: 6px;
-  transition: all 0.2s;
-  width: 100%;
-  margin-top: 19px;
-  margin-bottom: 20px;
-}
-.setpassword_inputfield:hover {
-  border-color: #25a17d !important;
-}
-.setpassword_inputfield:focus-within {
-  border-color: #25a17d !important;
-  box-shadow: 0 0 0 2px #25a17e17;
-}
-.setpassword_submitbuttonContainer {
-  position: absolute;
-  bottom: 34px;
-  width: 80%;
-}
-.setpassword_initialsubmitbuttonContainer {
-  position: absolute;
-  bottom: 34px;
-  width: 81%;
-}
-@media (min-width: 375px) and (max-width: 999px) {
-  .setpassword_initialsubmitbuttonContainer {
-    width: 66%;
-  }
-}
-@media (min-width: 1000px) and (max-width: 1024px) {
-  .setpassword_initialsubmitbuttonContainer {
-    width: 75%;
-  }
-}
-.setpassword_submitbutton {
+.loadingfreetrial_submitbutton {
   color: #fff;
   background-color: #25a17d;
+  opacity: 0.8;
   box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
-  width: 100%;
-  font-weight: 600;
+  font-size: 15px;
+  width: 42%;
   border-radius: 6px;
-  margin-top: 22px;
-  padding: 7px 0px;
-  display: flex;
-  justify-content: center;
+  margin-top: 30px;
+  padding: 9px 4px;
+  cursor: default;
+  font-size: 12px;
 }
-.setpassword_submitbutton:hover {
-  background-color: #009737;
+@media (min-width: 300px) and (max-width: 990px) {
+  .loadingfreetrial_submitbutton {
+    width: 90%;
+  }
 }
-.setpassword_submitbutton:active {
-  transform: translateY(2px);
-}
-.setpassword_errordiv {
-  display: flex;
-  font-size: 14px;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 9px;
-  position: relative;
-}
-.setpassword_checkicon_hide {
-  position: absolute;
-  transform: translateX(-20px);
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  opacity: 0;
-}
-.setpassword_checkicon_visible {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-}
-.setpassword_wrongicon_visible {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-}
-.setpassword_wrongicon_hide {
-  position: absolute;
-  transform: translateX(20px);
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  opacity: 0;
-}
-.setpassword_errormainContainer {
-  position: absolute;
-  opacity: 0;
-  transform: translateX(-10%);
-  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
-}
-.setpassword_errormainContainer_show {
-  transform: translateX(0%);
-  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
-  opacity: 1;
-}
-
 /* setpassword styles */
+/* congrats styles */
 .congrats_card {
   border: 1px solid rgba(26, 26, 26, 0.1);
   box-shadow: 0 1px 8px 0 rgb(0 0 0 / 8%);

@@ -132,6 +132,18 @@ const usersCountSlice = createSlice({
   },
 });
 
+const activeUsersCount = 0;
+const activeUsersCountSlice = createSlice({
+  name: "activeuserscount",
+  initialState: usersCount,
+  reducers: {
+    storeActiveUsersCount(state, action) {
+      state = action.payload;
+      return state;
+    },
+  },
+});
+
 const usersForTeamstabSlice = createSlice({
   name: "usersforteamstab",
   initialState,
@@ -758,6 +770,7 @@ export const { storeuserAppsUsage } = userAppsUsageSlice.actions;
 export const { storeuserUrlsUsage } = userurlsUsageSlice.actions;
 export const { storeUsers } = usersSlice.actions;
 export const { storeUsersCount } = usersCountSlice.actions;
+export const { storeActiveUsersCount } = activeUsersCountSlice.actions;
 export const { storeUsersForTeamsTab } = usersForTeamstabSlice.actions;
 export const { storeUserSearchValue } = userSearchValueSlice.actions;
 export const { storeDesignation } = designationSlice.actions;
@@ -847,6 +860,7 @@ export const userAppUsageReducer = userAppsUsageSlice.reducer;
 export const userUrlUsageReducer = userurlsUsageSlice.reducer;
 export const usersReducer = usersSlice.reducer;
 export const usersCountReducer = usersCountSlice.reducer;
+export const activeUsersCountReducer = activeUsersCountSlice.reducer;
 export const usersforteamstabReducer = usersForTeamstabSlice.reducer;
 export const userSearchValueReducer = userSearchValueSlice.reducer;
 export const designationReducer = designationSlice.reducer;

@@ -104,7 +104,24 @@ export const LoginApi = async (loginCredential) => {
     const response = await api.post("/api/Login/login", loginCredential);
     return response;
   } catch (error) {
-    console.log("crossss", error);
+    throw error;
+  }
+};
+
+//signup
+export const createOrganization = async (payload) => {
+  try {
+    const response = await api.post("/api/Organization/insert", payload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getOrganizations = async () => {
+  try {
+    const response = await api.get("/api/Organization/getall");
+    return response;
+  } catch (error) {
     throw error;
   }
 };
@@ -560,10 +577,10 @@ export const getWellnessRules = async (organizationId) => {
     throw error;
   }
 };
-export const createWellnessRules = async (organizationId, wellnesspayload) => {
+export const createWellnessRules = async (wellnesspayload) => {
   try {
     const response = await api.post(
-      `/api/Wellness/InsertWellness?organizationId=${organizationId}`,
+      "/api/Wellness/insertWellness",
       wellnesspayload
     );
     return response;
@@ -756,6 +773,16 @@ export const getDeviceInfoCount = async (payload) => {
   }
 };
 //settings productivity rules
+export const createDefaultAppsandUrls = async (organizationId) => {
+  try {
+    const response = await api.post(
+      `/api/AppsUrls/InsertDefaultAppsAndUrlsRecords/${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 export const getCategories = async (payload) => {
   try {
     const response = await api.get("/api/Productivity/Category", {
@@ -1054,6 +1081,25 @@ export const getPunchInUsers = async (payload) => {
     const response = await api.get("/api/Users/GetPunchIn_Users", {
       params: payload,
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//otp verification
+export const sendOTP = async (payload) => {
+  try {
+    const response = await api.post("/api/OTP/send-otp", payload);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const OtpValidate = async (payload) => {
+  try {
+    const response = await api.post("/api/OTP/validate-otp", payload);
     return response;
   } catch (error) {
     throw error;

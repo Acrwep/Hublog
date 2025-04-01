@@ -4,6 +4,7 @@ const emailRegex = /^[a-zA-Z0-9._-]{2,}@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/;
 const mobileRegex = /^[0-9]+$/;
 const domainRegex =
   /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$/;
+const urlRegex = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(:\d+)?(\/[^\s]*)?$/i;
 
 export const nameValidator = (name) => {
   let error = "";
@@ -57,6 +58,14 @@ export const mobileValidator = (mobile) => {
   if (!mobile || mobile.length <= 0) error = " is required";
   else if (!mobileRegex.test(mobile) || mobile.length < 10)
     error = " is not valid";
+  return error;
+};
+
+export const urlValidator = (url) => {
+  let error = "";
+
+  if (!url || url.length <= 0) error = " is required";
+  else if (!urlRegex.test(url) || url.length < 3) error = " is not valid";
   return error;
 };
 

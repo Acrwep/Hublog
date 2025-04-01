@@ -19,11 +19,6 @@ const AttendanceSummary = ({
   breakTrendLoader,
   lateArrivalLoader,
 }) => {
-  // const [cardsLoader, setCardsLoader] = useState(true);
-  // const [todayChartLoader, setTodayChartLoader] = useState(true);
-  // const [breakChartLoader, setBreakChartLoader] = useState(true);
-  // const [lateChartLoader, setLateChartLoader] = useState(true);
-
   const attendanceActivityLevelData = useSelector(
     (state) => state.attendanceactivitylevel
   );
@@ -107,6 +102,13 @@ const AttendanceSummary = ({
         },
         toolbar: {
           show: false, // Show toolbar (can be set to false to hide all)
+        },
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 500, // Reduce animation time
+          animateGradually: { enabled: false },
+          dynamicAnimation: { enabled: false }, // Prevents slow rendering of one chart at a time
         },
       },
       stroke: {
@@ -355,13 +357,15 @@ const AttendanceSummary = ({
           <Col xs={24} sm={24} md={17} lg={17}>
             <div className="devices_chartsContainer">
               {breakdownLoader ? (
-                <Skeleton
-                  active
-                  title={{ width: 190 }}
-                  paragraph={{
-                    rows: 0,
-                  }}
-                />
+                <div style={{ height: "50vh" }}>
+                  <Skeleton
+                    active
+                    title={{ width: 190 }}
+                    paragraph={{
+                      rows: 0,
+                    }}
+                  />
+                </div>
               ) : (
                 <>
                   <p className="devices_chartheading">

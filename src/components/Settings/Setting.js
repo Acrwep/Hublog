@@ -36,6 +36,7 @@ import {
   addteamMembers,
   storeActiveDesignation,
   storeActiveTeam,
+  storeActiveUsersCount,
   storeAlertRules,
   storeBreakSearchValue,
   storeCategories,
@@ -154,7 +155,9 @@ const Settings = () => {
     try {
       const response = await getAllUsers(orgId);
       const usersList = response.data;
+      const activeUsersList = usersList.filter((f) => f.active === true);
       dispatch(storeUsersCount(usersList.length));
+      dispatch(storeActiveUsersCount(activeUsersList.length));
       dispatch(storeUsers(usersList));
       dispatch(storeUsersForTeamsTab(usersList));
     } catch (error) {

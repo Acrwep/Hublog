@@ -100,12 +100,11 @@ import Downloads from "../Components/Login/downloads";
 import Productdemo from "../Components/Freetrial/Productdemo.js";
 import Freetrial from "../Components/Freetrial/Freetrial.js";
 import Demo from "../Components/Typescript/demo.tsx";
-import Setpassword from "../Components/Freetrial/Setpassword.js";
 import Congrats from "../Components/Freetrial/Congrats.js";
 //mail templates
 import UsercreateMail from "../Components/MailTemplates/UsercreateMail.js";
 //forgot password
-import ForgotPassword from "../Components/ForgotPassword/ForgotPassword.js";
+import Setpassword from "../Components/Setpassword/Setpassword.js";
 import { ManagerMenuConfig } from "./ManagerMenuConfig.js";
 
 const { Header, Sider, Content } = Layout;
@@ -411,15 +410,12 @@ function SidebarMenu() {
       } else if (location.pathname === "/freetrial") {
         setShowPages(false);
         navigation("/freetrial");
-      } else if (location.pathname === "/setpassword") {
-        setShowPages(false);
-        navigation("/setpassword");
       } else if (location.pathname === "/congrats") {
         setShowPages(false);
         navigation("/congrats");
-      } else if (location.pathname === "/forgotpassword") {
+      } else if (location.pathname === "/setpassword") {
         setShowPages(false);
-        navigation("/forgotpassword");
+        navigation("/setpassword");
       } else {
         setShowPages(false);
         navigation("/login");
@@ -576,12 +572,6 @@ function SidebarMenu() {
         <div>
           <Routes>
             <Route path="/setpassword" element={<Setpassword />} />
-          </Routes>
-        </div>
-      ) : location.pathname === "/forgotpassword" ? (
-        <div>
-          <Routes>
-            <Route path="/forgotpassword" element={<ForgotPassword />} />
           </Routes>
         </div>
       ) : location.pathname === "/typescript" ? (

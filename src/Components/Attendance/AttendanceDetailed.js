@@ -32,6 +32,11 @@ const AttendanceDetailed = ({
   const [organizationId, setOrganizationId] = useState("");
   const [calendarDate, setCalendarDate] = useState(dayJs());
   const [drawerTableLoading, setDrawerTableLoading] = useState(false);
+  const [showChart, setShowChart] = useState(true);
+
+  useEffect(() => {
+    setShowChart(trendsLoader);
+  }, [trendsLoader]);
 
   const columns = [
     {
@@ -277,8 +282,8 @@ const AttendanceDetailed = ({
 
   return (
     <div>
-      <div className="devices_chartsContainer">
-        {trendsLoader ? (
+      <div className="devices_chartsContainer" style={{ position: "relative" }}>
+        {showChart ? (
           <Skeleton
             active
             style={{ height: "50vh" }}
@@ -289,12 +294,14 @@ const AttendanceDetailed = ({
           />
         ) : (
           <>
-            <p className="devices_chartheading">Attendance Trends</p>
-            {attendanceTrendsData.length >= 1 ? (
-              <DashboardChart data={attendanceTrendsData} />
-            ) : (
-              <CommonNodatafound />
-            )}
+            <div style={{ height: "100%" }}>
+              <p className="devices_chartheading">Attendance Trends</p>
+              {attendanceTrendsData.length >= 1 ? (
+                <DashboardChart data={attendanceTrendsData} />
+              ) : (
+                <CommonNodatafound />
+              )}
+            </div>
           </>
         )}
       </div>

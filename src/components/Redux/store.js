@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import {
   usersReducer,
   usersCountReducer,
+  activeUsersCountReducer,
   attendanceActivityLevelReducer,
   todayattendanceReducer,
   attendancetrendsReducer,
@@ -72,6 +73,7 @@ export const store = configureStore({
   reducer: {
     users: usersReducer,
     userscount: usersCountReducer,
+    activeuserscount: activeUsersCountReducer,
     usersforteamstabs: usersforteamstabReducer,
     usersearchvalue: userSearchValueReducer,
     designation: designationReducer,

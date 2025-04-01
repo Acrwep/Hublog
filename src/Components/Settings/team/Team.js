@@ -60,10 +60,10 @@ const Team = ({ loading }) => {
 
   useEffect(() => {
     if (loading === false) {
-      setTeamId(teamList[0].id);
-      setTeamName(teamList[0].name);
-      getUsersDataByTeamId(teamList[0].id);
-      getUsersData(teamList[0].id, "notdispatch");
+      setTeamId(teamList.length >= 1 ? teamList[0].id : null);
+      setTeamName(teamList.length >= 1 ? teamList[0].name : "");
+      getUsersDataByTeamId(teamList.length >= 1 ? teamList[0].id : null);
+      getUsersData(teamList.length >= 1 ? teamList[0].id : null, "notdispatch");
     }
   }, [loading]);
 

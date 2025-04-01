@@ -292,6 +292,16 @@ const Dashboard = () => {
       let todaySeries = [];
       todaySeries.push(details?.presentCount || 0, details?.absentCount || 0);
       setTodayAttendanceSeries(todaySeries);
+      getGoalsData(
+        orgId,
+        teamid,
+        startdate != undefined || startdate != null
+          ? startdate
+          : PreviousandCurrentDate[0],
+        enddate != undefined || enddate != null
+          ? enddate
+          : PreviousandCurrentDate[1]
+      );
     } catch (error) {
       CommonToaster(error.response?.data?.message, "error");
       setTodayAttendanceSeries([]);
@@ -458,7 +468,6 @@ const Dashboard = () => {
     } finally {
       setTimeout(() => {
         setActTrendLoader(false);
-        getGoalsData(orgId, teamid, startDate, endDate);
       }, 300);
     }
   };
@@ -498,6 +507,7 @@ const Dashboard = () => {
     setActOutliersLoader(true);
     setProTrendLoader(true);
     setActTrendLoader(true);
+    setGoalsLoading(true);
     getTodayAttendanceData(
       value,
       organizationId,
@@ -517,6 +527,7 @@ const Dashboard = () => {
       setActOutliersLoader(true);
       setProTrendLoader(true);
       setActTrendLoader(true);
+      setGoalsLoading(true);
       getTodayAttendanceData(teamId, organizationId, startDate, endDate);
     }
   };
