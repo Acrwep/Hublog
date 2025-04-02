@@ -783,11 +783,11 @@ export const createDefaultAppsandUrls = async (organizationId) => {
     throw error;
   }
 };
-export const getCategories = async (payload) => {
+export const getCategories = async (organizationId) => {
   try {
-    const response = await api.get("/api/Productivity/Category", {
-      params: payload,
-    });
+    const response = await api.get(
+      `/api/Productivity/Category?organizationId=${organizationId}`
+    );
     return response;
   } catch (error) {
     throw error;

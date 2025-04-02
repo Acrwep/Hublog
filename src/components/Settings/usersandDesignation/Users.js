@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Space, Dropdown, Input, Modal, Drawer } from "antd";
+import { Row, Col, Space, Dropdown, Input, Spin, Drawer } from "antd";
 import CommonTable from "../../../Components/Common/CommonTable";
 import CommonInputField from "../../../Components/Common/CommonInputField";
 import "../styles.css";
@@ -36,6 +36,7 @@ import {
   storeUsersForTeamsTab,
 } from "../../Redux/slice";
 import CommonWarningModal from "../../Common/CommonWarningModal";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Users = ({ loading }) => {
   const dispatch = useDispatch();
@@ -84,6 +85,7 @@ const Users = ({ loading }) => {
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const [validationTrigger, setValidationTrigger] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const columns = [
     {
@@ -104,8 +106,10 @@ const Users = ({ loading }) => {
       width: 260,
       render: (text, record) => {
         if (activeDesignationList.length >= 1) {
+          console.log("activedesign list", activeDesignationList);
           const findDesign = activeDesignationList.find((f) => f.id === text);
-          return <p>{findDesign.name} </p>;
+          console.log("activedesign item", findDesign);
+          return <p>{findDesign ? findDesign.name : "-"} </p>;
         } else {
           return <p>-</p>;
         }
@@ -119,7 +123,7 @@ const Users = ({ loading }) => {
       render: (text, record) => {
         if (teamList.length >= 1) {
           const findTeam = teamList.find((f) => f.id === text);
-          return <p>{findTeam.name} </p>;
+          return <p>{findTeam ? findTeam.name : "-"} </p>;
         } else {
           return <p>-</p>;
         }
@@ -480,7 +484,7 @@ const Users = ({ loading }) => {
     const teamName = selectedTeam.name;
 
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
-
+    setButtonLoading(true);
     const request = {
       first_Name: firstName,
       last_Name: lastName,
@@ -500,6 +504,7 @@ const Users = ({ loading }) => {
       teamName: teamName,
       employeeID: employeeId,
       active: true,
+      managerStatus: false,
       ...(edit && { id: userId }),
     };
     console.log("user payload", request);
@@ -515,6 +520,7 @@ const Users = ({ loading }) => {
       } finally {
         setTimeout(() => {
           setTableLoading(false);
+          setButtonLoading(false);
         }, 350);
       }
     } else {
@@ -529,6 +535,7 @@ const Users = ({ loading }) => {
       } finally {
         setTimeout(() => {
           setTableLoading(false);
+          setButtonLoading(false);
         }, 350);
       }
     }
@@ -816,13 +823,28 @@ const Users = ({ loading }) => {
           </Col>
         </Row>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <button
-            className="org_createbutton"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          {buttonLoading ? (
+            <button className="users_loadingsubmitbutton">
+              <Spin
+                indicator={
+                  <LoadingOutlined
+                    spin
+                    style={{ marginRight: "9px", color: "#ffffff" }}
+                  />
+                }
+                size="small"
+              />{" "}
+              Loading
+            </button>
+          ) : (
+            <button
+              className="users_submitbutton"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          )}
         </div>
       </Drawer>
     </div>

@@ -13,8 +13,9 @@ export default function Categories({ loading }) {
   const [updateLoading, setUpdateLoading] = useState(false);
 
   const getCategoryData = async () => {
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getCategories();
+      const response = await getCategories(orgId);
       const categoriesList = response?.data;
       dispatch(storeCategories(categoriesList));
     } catch (error) {

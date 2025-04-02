@@ -121,7 +121,7 @@ export default function Setpassword() {
       email: email,
     };
     try {
-      const response = await sendOTP(payload);
+      await sendOTP(payload);
       setShowEmailField(false);
       setShowCodeField(true);
       CommonToaster("OTP is sent to your email", "success");
@@ -263,15 +263,7 @@ export default function Setpassword() {
     <div className="setpassword_maincontainer">
       <img src={hublogLogo} className="freetrial_hubloglogo" />
       <div className="emailvalidate_card">
-        <p
-          className="setpassword_emailtext"
-          // onClick={() => {
-          //   setShowPasswordField(!showPasswordField);
-          //   setShowEmailField(false);
-          // }}
-        >
-          Set password
-        </p>
+        <p className="setpassword_emailtext">Set password</p>
 
         <div style={{ position: "relative" }}>
           <div

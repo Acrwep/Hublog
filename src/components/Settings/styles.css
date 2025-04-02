@@ -171,8 +171,23 @@
   box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
   font-size: 14px;
   height: 32px;
-  width: 120px;
+  width: 125px;
+  font-weight: 600;
   border-radius: 6px;
+  margin-top: 30px;
+}
+.users_loadingsubmitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  width: 125px;
+  font-weight: 500;
+  border-radius: 6px;
+  margin-top: 30px;
+  opacity: 0.7;
+  cursor: default;
 }
 .users_submitbutton:hover {
   background-color: #009737;
@@ -591,6 +606,9 @@
 .settings_mappingaddbutton:hover {
   border-color: #009737 !important;
   color: #25a17d !important;
+}
+.settings_mappingaddbutton:active {
+  transform: translateY(2px);
 }
 .settingsmapping_categoryfieldlabel {
   font-weight: 500 !important;

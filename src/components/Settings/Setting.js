@@ -144,6 +144,9 @@ const Settings = () => {
     dispatch(storeMappingSearchValue(searchValue));
     dispatch(storeMappingShowId(1));
     dispatch(storeMappingStatusId(1));
+    dispatch(storeDesignation([]));
+    dispatch(storeActiveDesignation([]));
+    dispatch(storeTeams([]));
     //call user get api function
     getUsersData();
   }, []);
@@ -275,11 +278,11 @@ const Settings = () => {
   //productivity rules
   const getCategoryData = async () => {
     setProductivityRulesLoading(true);
+    const orgId = localStorage.getItem("organizationId");
     try {
-      const response = await getCategories();
+      const response = await getCategories(orgId);
       const categoriesList = response?.data;
       console.log("categories response", categoriesList);
-      categoriesList.pop();
       dispatch(storeCategories(categoriesList));
     } catch (error) {
       dispatch(storeCategories([]));

@@ -74,9 +74,17 @@ const Team = ({ loading }) => {
       const teamMembersList = response?.data?.team?.users;
       setTeamMembersList(teamMembersList);
     } catch (error) {
-      CommonToaster(error?.message, "error");
+      console.log("getteamserror", error);
       const teamMembersList = [];
       setTeamMembersList(teamMembersList);
+      if (
+        error?.response?.data?.title ===
+        "One or more validation errors occurred."
+      ) {
+        return;
+      } else {
+        CommonToaster(error?.message, "error");
+      }
     } finally {
       setTimeout(() => {
         if (triggerShiftApi === true) {
