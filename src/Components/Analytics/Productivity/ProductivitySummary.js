@@ -123,15 +123,17 @@ const ProductivitySummary = ({
             ) : (
               <>
                 <p>Top URL</p>
-                <Tooltip placement="top" title={`https://${topUrlName}`}>
-                  <p className="userproductivity_contents">
-                    {topUrlName === "-"
-                      ? topUrlName
-                      : `${
-                          topUrlName === "localhost" ? "http://" : "https://"
-                        }${topUrlName}`}
-                  </p>
-                </Tooltip>
+                {topUrlName === "-" ? (
+                  <p className="userproductivity_contents">-</p>
+                ) : (
+                  <Tooltip placement="top" title={`https://${topUrlName}`}>
+                    <p className="userproductivity_contents">
+                      {`${
+                        topUrlName === "localhost" ? "http://" : "https://"
+                      }${topUrlName}`}
+                    </p>
+                  </Tooltip>
+                )}
                 <p className="userproductivity_hours">{topUrlUsageTime}</p>
               </>
             )}

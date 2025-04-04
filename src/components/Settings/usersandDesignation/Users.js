@@ -834,7 +834,7 @@ const Users = ({ loading }) => {
                 }
                 size="small"
               />{" "}
-              Loading
+              Loading...
             </button>
           ) : (
             <button

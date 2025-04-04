@@ -11,6 +11,7 @@ import { FaDesktop } from "react-icons/fa";
 import "../styles.css";
 import {
   createImbuildAppsandUrls,
+  deleteImbuildAppOrUrl,
   getImbuildAppsandUrls,
   updateImbuildAppsandUrls,
 } from "../../APIservice.js/action";
@@ -23,7 +24,8 @@ import {
   storeMappingStatusId,
 } from "../../Redux/slice";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
-import CommonAddButton from "../../Common/CommonAddButton";
+import { RiDeleteBinLine } from "react-icons/ri";
+import CommonWarningModal from "../../Common/CommonWarningModal";
 
 export default function Mapping() {
   const dispatch = useDispatch();
@@ -108,7 +110,37 @@ export default function Mapping() {
             value={record.categoryId}
             onChange={(value) => handleCategory(value, record.id)}
             style={{ width: "170px" }}
+            allowClear
           />
+        );
+      },
+    },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      key: "delete",
+      width: 60,
+      render: (text, record) => {
+        return (
+          <div className="mapping_tabledeletebuttonContainer">
+            <RiDeleteBinLine
+              size={18}
+              color="#d32215"
+              onClick={() => {
+                CommonWarningModal({
+                  title: (
+                    <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                      {"Do you want to delete "}
+                      <span style={{ fontWeight: "600", fontSize: "15px" }}>
+                        {record.name}
+                      </span>
+                    </p>
+                  ),
+                  onDelete: () => handleDelete(record.id),
+                });
+              }}
+            />
+          </div>
         );
       },
     },
@@ -124,7 +156,7 @@ export default function Mapping() {
     console.log(value);
     setLoading(true);
     const payload = {
-      categoryId: value,
+      categoryId: value === undefined ? null : value,
     };
     console.log("payload", payload);
     try {
@@ -141,6 +173,19 @@ export default function Mapping() {
         dispatch(storeMappingSearchValue(""));
         dispatch(storeMappingShowId(1));
         dispatch(storeMappingStatusId(1));
+        getImbuildAppsandUrlsData();
+      }, 350);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteImbuildAppOrUrl(id);
+      CommonToaster("Deleted", "success");
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+    } finally {
+      setTimeout(() => {
         getImbuildAppsandUrlsData();
       }, 350);
     }

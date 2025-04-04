@@ -615,6 +615,15 @@
   margin-bottom: 6px !important;
   margin-top: 22px;
 }
+.mapping_tabledeletebuttonContainer {
+  width: 100%;
+  padding: 0px 12px;
+  cursor: pointer;
+  transition: all ease-in-out 0.3s;
+}
+.mapping_tabledeletebuttonContainer:hover {
+  transform: scale(1.1);
+}
 /* settings alert rules style */
 .setting_alertrules_heading {
   font-weight: 600 !important;

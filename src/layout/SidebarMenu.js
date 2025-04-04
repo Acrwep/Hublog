@@ -44,7 +44,7 @@ import {
 } from "@ant-design/icons";
 import { BiSpreadsheet } from "react-icons/bi";
 //login and signup
-import Signup from "../Components/Signup/Signup.tsx";
+import Signup from "../Components/Signup/Signup.js";
 import Login from "../Components/Login/Login";
 //dashboard
 import Dashboard from "../Components/Dashboard/Dashboard";
@@ -97,10 +97,8 @@ import Billing from "../Components/Licence/Billing.js";
 import Organization from "../Components/Organization/Organization.js";
 //other pages
 import Downloads from "../Components/Login/downloads";
-import Productdemo from "../Components/Freetrial/Productdemo.js";
-import Freetrial from "../Components/Freetrial/Freetrial.js";
-import Demo from "../Components/Typescript/demo.tsx";
-import Congrats from "../Components/Freetrial/Congrats.js";
+import Productdemo from "../Components/Signup/Productdemo.js";
+import Congrats from "../Components/Signup/Congrats.js";
 //mail templates
 import UsercreateMail from "../Components/MailTemplates/UsercreateMail.js";
 //forgot password
@@ -407,9 +405,9 @@ function SidebarMenu() {
       } else if (location.pathname === "/productdemo") {
         setShowPages(false);
         navigation("/productdemo");
-      } else if (location.pathname === "/freetrial") {
+      } else if (location.pathname === "/signup") {
         setShowPages(false);
-        navigation("/freetrial");
+        navigation("/signup");
       } else if (location.pathname === "/congrats") {
         setShowPages(false);
         navigation("/congrats");
@@ -562,22 +560,10 @@ function SidebarMenu() {
             <Route path="/productdemo" element={<Productdemo />} />
           </Routes>
         </div>
-      ) : location.pathname === "/freetrial" ? (
-        <div>
-          <Routes>
-            <Route path="/freetrial" element={<Freetrial />} />
-          </Routes>
-        </div>
       ) : location.pathname === "/setpassword" ? (
         <div>
           <Routes>
             <Route path="/setpassword" element={<Setpassword />} />
-          </Routes>
-        </div>
-      ) : location.pathname === "/typescript" ? (
-        <div>
-          <Routes>
-            <Route path="/typescript" element={<Demo />} />
           </Routes>
         </div>
       ) : location.pathname === "/congrats" ? (

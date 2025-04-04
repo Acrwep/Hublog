@@ -97,6 +97,11 @@ export default function Setpassword() {
 
   const handleEmailSubmit = async () => {
     setEmailValidationStatus(true);
+    if (email.length <= 0) {
+      setIconVisible(true);
+      setEmailError("Email is required.");
+      return;
+    }
     setEmailSubmitLoading(true);
     try {
       const response = await userEmailValidate(email);
@@ -112,7 +117,9 @@ export default function Setpassword() {
       setEmailError(error?.response?.data?.message);
       setIsEmailValidate(false);
       setIconVisible(true);
-      setEmailSubmitLoading(false);
+      setTimeout(() => {
+        setEmailSubmitLoading(false);
+      }, 300);
     }
   };
 
@@ -619,7 +626,7 @@ export default function Setpassword() {
                   }
                   size="default"
                 />{" "}
-                Loading
+                Loading...
               </button>
             ) : (
               <button
@@ -643,7 +650,7 @@ export default function Setpassword() {
                   }
                   size="default"
                 />{" "}
-                Loading
+                Loading...
               </button>
             ) : (
               <button
@@ -667,7 +674,7 @@ export default function Setpassword() {
                   }
                   size="default"
                 />{" "}
-                Loading
+                Loading...
               </button>
             ) : (
               <button

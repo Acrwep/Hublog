@@ -99,6 +99,7 @@ const ShowModal = () => {
 };
 
 //api functions
+//login
 export const LoginApi = async (loginCredential) => {
   try {
     const response = await api.post("/api/Login/login", loginCredential);
@@ -125,8 +126,18 @@ export const getOrganizations = async () => {
     throw error;
   }
 };
-//dashboard
 
+//dashboard goals
+export const getGoalsDetails = async (goalspayload) => {
+  try {
+    const response = await api.get("/api/Goal/GetGoalsDetails", {
+      params: goalspayload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //Attendance dashboard
 export const getAttendanceSummary = async (payload) => {
   try {
@@ -187,79 +198,7 @@ export const getAttendanceBreakTrends = async (payload) => {
     throw error;
   }
 };
-//analytics
-//screenshot
-export const getScreenShots = async (userId, organizationId, date) => {
-  try {
-    const response = await api.get(
-      `/api/Screenshot/GetUserScreenShots?userId=${userId}&organizationId=${organizationId}&date=${date}`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-//apps and urls
-export const getAppsUsage = async (payload) => {
-  try {
-    const response = await api.get(`/api/AppsUrls/GetAppUsage`, {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getUrlsUsage = async (payload) => {
-  try {
-    const response = await api.get(`/api/AppsUrls/GetUrlUsage`, {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getTopAppsUsage = async (payload) => {
-  try {
-    const response = await api.get(`/api/AppsUrls/GetTopAppUsage`, {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getTopUrlsUsage = async (payload) => {
-  try {
-    const response = await api.get(`/api/AppsUrls/GetTopUrlUsage`, {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getTopAppAndUrlsUsage = async (payload) => {
-  try {
-    const response = await api.get(`/api/AppsUrls/GetTopAppAndUrlUsage`, {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getTopCategoryUsage = async (payload) => {
-  try {
-    const response = await api.get(`/api/AppsUrls/GetTopCategory`, {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
+
 // designation
 export const getDesignation = async (organizationId, name) => {
   try {
@@ -305,6 +244,7 @@ export const deleteDesignation = async (organizationId, designationId) => {
     throw error;
   }
 };
+
 //teams
 export const getTeams = async (organizationId) => {
   try {
@@ -343,6 +283,7 @@ export const deleteTeam = async (teamId) => {
     throw error;
   }
 };
+
 //role
 export const getRole = async () => {
   try {
@@ -368,6 +309,7 @@ export const updateRole = async (teamID, rolepayload) => {
     throw error;
   }
 };
+
 //users
 export const getAllUsers = async (organizationId, name) => {
   try {
@@ -419,6 +361,7 @@ export const updateUser = async (userpayload) => {
     throw error;
   }
 };
+
 //userdetail attendance
 export const getUserAttendance = async (payload) => {
   try {
@@ -440,7 +383,6 @@ export const getUserPunchInOutDetails = async (payload) => {
     throw error;
   }
 };
-// ?userId=${userId}&startDate=${startDate}&endDate=${endDate}
 //userdetail break
 export const getUserBreak = async (userId, startDate, endDate) => {
   try {
@@ -629,6 +571,90 @@ export const getGoals = async (organizationId) => {
     throw error;
   }
 };
+//settings productivity rules
+export const createDefaultCategories = async (organizationId) => {
+  try {
+    const response = await api.post(
+      `/api/Productivity/InsertDefaultCategoryRecords/${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getCategories = async (organizationId) => {
+  try {
+    const response = await api.get(
+      `/api/Productivity/Category?organizationId=${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteImbuildAppOrUrl = async (Id) => {
+  try {
+    const response = await api.delete(
+      `/api/Productivity/DeleteImbuildAppOrUrl?id=${Id}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createDefaultAppsandUrls = async (organizationId) => {
+  try {
+    const response = await api.post(
+      `/api/Productivity/InsertDefaultAppsAndUrlsRecords/${organizationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const assignProductivityStatus = async (categoryId, productivityId) => {
+  try {
+    const response = await api.put(
+      `/api/Productivity/UpdateProductivityId?categoryId=${categoryId}&productivityId=${productivityId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const createImbuildAppsandUrls = async (payload) => {
+  try {
+    const response = await api.post(
+      "/api/Productivity/AddImbuildAppsAndUrls",
+      payload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getImbuildAppsandUrls = async (payload) => {
+  try {
+    const response = await api.get("/api/Productivity/GetImbuildAppsAndUrls", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateImbuildAppsandUrls = async (id, payload) => {
+  try {
+    const response = await api.put(
+      `/api/Productivity/InsertImbuildAppsAndUrls/${id}`,
+      payload
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //reports
 //daily attendance report
 export const getDailyAttendanceReport = async (reportPayload) => {
@@ -772,51 +798,23 @@ export const getDeviceInfoCount = async (payload) => {
     throw error;
   }
 };
-//settings productivity rules
-export const createDefaultAppsandUrls = async (organizationId) => {
-  try {
-    const response = await api.post(
-      `/api/AppsUrls/InsertDefaultAppsAndUrlsRecords/${organizationId}`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getCategories = async (organizationId) => {
+
+//analytics --- module api's --- start
+//screenshot
+export const getScreenShots = async (userId, organizationId, date) => {
   try {
     const response = await api.get(
-      `/api/Productivity/Category?organizationId=${organizationId}`
+      `/api/Screenshot/GetUserScreenShots?userId=${userId}&organizationId=${organizationId}&date=${date}`
     );
     return response;
   } catch (error) {
     throw error;
   }
 };
-export const updateProductivity = async (categoryId, productivityId) => {
+//apps and urls
+export const getAppsUsage = async (payload) => {
   try {
-    const response = await api.put(
-      `/api/Productivity/UpdateProductivityId?categoryId=${categoryId}&productivityId=${productivityId}`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const createImbuildAppsandUrls = async (payload) => {
-  try {
-    const response = await api.post(
-      "/api/Productivity/AddImbuildAppsAndUrls",
-      payload
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getImbuildAppsandUrls = async (payload) => {
-  try {
-    const response = await api.get("/api/Productivity/GetImbuildAppsAndUrls", {
+    const response = await api.get(`/api/AppsUrls/GetAppUsage`, {
       params: payload,
     });
     return response;
@@ -824,12 +822,51 @@ export const getImbuildAppsandUrls = async (payload) => {
     throw error;
   }
 };
-export const updateImbuildAppsandUrls = async (id, payload) => {
+export const getUrlsUsage = async (payload) => {
   try {
-    const response = await api.put(
-      `/api/Productivity/InsertImbuildAppsAndUrls/${id}`,
-      payload
-    );
+    const response = await api.get(`/api/AppsUrls/GetUrlUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getTopAppsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopAppUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getTopUrlsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopUrlUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getTopAppAndUrlsUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopAppAndUrlUsage`, {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getTopCategoryUsage = async (payload) => {
+  try {
+    const response = await api.get(`/api/AppsUrls/GetTopCategory`, {
+      params: payload,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -902,17 +939,6 @@ export const getProductivityEmployeesList = async (payload) => {
     throw error;
   }
 };
-//alerts
-export const getAlerts = async (payload) => {
-  try {
-    const response = await api.get("/api/Alert/GetAlert", {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
 //activity
 export const getActivityBreakdown = async (payload) => {
   try {
@@ -937,17 +963,6 @@ export const getActivityTrend = async (payload) => {
 export const getActivityEmployeeslist = async (payload) => {
   try {
     const response = await api.get("/api/Activity/GetActivityEmployeeList", {
-      params: payload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-//manual time
-export const getManualtime = async (payload) => {
-  try {
-    const response = await api.get("/api/Manual_Time/get_Manual_Time", {
       params: payload,
     });
     return response;
@@ -990,6 +1005,30 @@ export const getWellnessEmployeeDetails = async (payload) => {
 export const getEmployeeTimeline = async (payload) => {
   try {
     const response = await api.get("/api/Activity/GetEmployeeTimeLine", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//analytics --- module api's --- end
+
+//alerts
+export const getAlerts = async (payload) => {
+  try {
+    const response = await api.get("/api/Alert/GetAlert", {
+      params: payload,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//manual time
+export const getManualtime = async (payload) => {
+  try {
+    const response = await api.get("/api/Manual_Time/get_Manual_Time", {
       params: payload,
     });
     return response;
@@ -1040,17 +1079,7 @@ export const deleteProject = async (deletepayload) => {
     throw error;
   }
 };
-//goals
-export const getGoalsDetails = async (goalspayload) => {
-  try {
-    const response = await api.get("/api/Goal/GetGoalsDetails", {
-      params: goalspayload,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
+
 //forgot password
 export const userEmailValidate = async (email) => {
   try {

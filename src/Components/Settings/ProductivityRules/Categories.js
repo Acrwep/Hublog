@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Row, Col, Divider, Spin } from "antd";
 import "../styles.css";
 import Loader from "../../Common/Loader";
-import { getCategories, updateProductivity } from "../../APIservice.js/action";
+import {
+  getCategories,
+  assignProductivityStatus,
+} from "../../APIservice.js/action";
 import { CommonToaster } from "../../Common/CommonToaster";
 import { useDispatch, useSelector } from "react-redux";
 import { storeCategories } from "../../Redux/slice";
@@ -30,7 +33,7 @@ export default function Categories({ loading }) {
   const handleProductive = async (categoryId) => {
     setUpdateLoading(true);
     try {
-      const response = await updateProductivity(categoryId, 1);
+      const response = await assignProductivityStatus(categoryId, 1);
       CommonToaster("Category updated", "success");
     } catch (error) {
       console.log("update productivity error", error);
@@ -45,7 +48,7 @@ export default function Categories({ loading }) {
   const handleNeutral = async (categoryId) => {
     setUpdateLoading(true);
     try {
-      const response = await updateProductivity(categoryId, 2);
+      const response = await assignProductivityStatus(categoryId, 2);
       CommonToaster("Category updated", "success");
     } catch (error) {
       console.log("update productivity error", error);
@@ -60,7 +63,7 @@ export default function Categories({ loading }) {
   const handleUnproductive = async (categoryId) => {
     setUpdateLoading(true);
     try {
-      const response = await updateProductivity(categoryId, 3);
+      const response = await assignProductivityStatus(categoryId, 3);
       CommonToaster("Category updated", "success");
     } catch (error) {
       console.log("update productivity error", error);

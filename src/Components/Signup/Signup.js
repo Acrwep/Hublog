@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import hublogLogo from "../../assets/images/logo-re-3.png";
 import "./styles.css";
-import { Row, Col, Checkbox, Input, Spin } from "antd";
+import { Row, Col, Checkbox, Input, Spin, Modal } from "antd";
 import { Country } from "country-state-city";
 import CommonInputField from "../Common/CommonInputField";
 import CommonSelectField from "../Common/CommonSelectField";
@@ -17,9 +17,11 @@ import {
 } from "../Common/Validation";
 import { CommonToaster } from "../Common/CommonToaster";
 import { LoadingOutlined } from "@ant-design/icons";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import {
   createAlertRules,
   createDefaultAppsandUrls,
+  createDefaultCategories,
   createGoals,
   createOrganization,
   createUser,
@@ -27,7 +29,7 @@ import {
   getOrganizations,
 } from "../APIservice.js/action";
 
-export default function Freetrial() {
+export default function Signup() {
   const navigation = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
@@ -51,6 +53,7 @@ export default function Freetrial() {
   const [policyStatus, setPolicyStatus] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [validationStatus, setValidationStatus] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const countrylist = Country.getAllCountries();
@@ -251,7 +254,19 @@ export default function Freetrial() {
 
     try {
       await createGoals(payload);
-      CommonToaster("Organization created", "success");
+    } catch (error) {
+      CommonToaster("Unable to create. Try again later", "error");
+    } finally {
+      setTimeout(() => {
+        createCategoriesSettings(orgId);
+      }, 300);
+    }
+  };
+
+  const createCategoriesSettings = async (orgId) => {
+    try {
+      await createDefaultCategories(orgId);
+      setIsModalOpen(true);
     } catch (error) {
       CommonToaster("Unable to create. Try again later", "error");
     } finally {
@@ -289,7 +304,12 @@ export default function Freetrial() {
       <img src={hublogLogo} className="freetrial_hubloglogo" />
 
       <div className="freetrial_card">
-        <p className="freetrial_signuptext">Sign Up</p>
+        <p
+          className="freetrial_signuptext"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Sign Up
+        </p>
         <Row gutter={16} style={{ marginTop: "16px" }}>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <CommonInputField
@@ -512,6 +532,44 @@ export default function Freetrial() {
           )}
         </div>
       </div>
+
+      <Modal
+        title={false}
+        open={isModalOpen}
+        closeIcon={false}
+        footer={[
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <button
+              className="signup_modalokbutton"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Ok
+            </button>
+          </div>,
+        ]}
+        centered
+      >
+        <div className="signup_successmodalContainer">
+          <IoMdCheckmarkCircleOutline size={45} color="#009737" />
+          <p className="signupmodal_successheading">SUCCESS</p>
+
+          <div className="signup_modalcontentContainer">
+            <p className="signupmodal_contentheading">
+              Account Created Successfully!
+            </p>
+            <p className="signup_modalcontent">
+              Your account has been created! Please verify your email and set
+              your password to get started.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
