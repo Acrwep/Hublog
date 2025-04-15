@@ -47,7 +47,8 @@
   flex-direction: column;
 }
 .login_logo {
-  width: 160px;
+  width: 220px;
+  margin-bottom: 3px;
 }
 .circle {
   position: absolute;
