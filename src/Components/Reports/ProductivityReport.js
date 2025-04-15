@@ -51,8 +51,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Attendance",
-      dataIndex: "AttendanceCount",
-      key: "AttendanceCount",
+      dataIndex: "attendanceCount",
+      key: "attendanceCount",
       width: 140,
       render: (text, record) => {
         if (text === null) {
@@ -64,8 +64,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Team Name",
-      dataIndex: "Team_Name",
-      key: "Team_Name",
+      dataIndex: "team_Name",
+      key: "team_Name",
       hidden: true,
     },
     {
@@ -80,8 +80,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Online time",
-      dataIndex: "OnlineDuration",
-      key: "OnlineDuration",
+      dataIndex: "onlineDuration",
+      key: "onlineDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -90,8 +90,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Break time",
-      dataIndex: "BreakDuration",
-      key: "BreakDuration",
+      dataIndex: "breakDuration",
+      key: "breakDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -100,8 +100,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Productivity time",
-      dataIndex: "TotalProductiveDuration",
-      key: "TotalProductiveDuration",
+      dataIndex: "totalProductiveDuration",
+      key: "totalProductiveDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -110,8 +110,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Neutral time",
-      dataIndex: "TotalNeutralDuration",
-      key: "TotalNeutralDuration",
+      dataIndex: "totalNeutralDuration",
+      key: "totalNeutralDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -120,8 +120,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Unproductivity time",
-      dataIndex: "TotalUnproductiveDuration",
-      key: "TotalUnproductiveDuration",
+      dataIndex: "totalUnproductiveDuration",
+      key: "totalUnproductiveDuration",
       width: 170,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -130,8 +130,8 @@ const ProductivityReport = () => {
     },
     {
       title: "Productivity",
-      dataIndex: "PercentageProductiveDuration",
-      key: "PercentageProductiveDuration",
+      dataIndex: "percentageProductiveDuration",
+      key: "percentageProductiveDuration",
       width: 150,
       fixed: "right",
       render: (text) => {

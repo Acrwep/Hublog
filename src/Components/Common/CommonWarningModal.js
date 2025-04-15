@@ -14,7 +14,7 @@ const CommonWarningModal = ({ onDelete, title }) => {
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          marginTop: "12px",
+          marginTop: "16px",
         }}
         aria-hidden="false"
       >

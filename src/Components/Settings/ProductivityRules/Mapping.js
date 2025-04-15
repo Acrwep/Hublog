@@ -178,19 +178,6 @@ export default function Mapping() {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await deleteImbuildAppOrUrl(id);
-      CommonToaster("Deleted", "success");
-    } catch (error) {
-      CommonToaster(error?.response?.data, "error");
-    } finally {
-      setTimeout(() => {
-        getImbuildAppsandUrlsData();
-      }, 350);
-    }
-  };
-
   const getImbuildAppsandUrlsData = async () => {
     const orgId = localStorage.getItem("organizationId");
     const payload = {
@@ -205,7 +192,9 @@ export default function Mapping() {
     } catch (error) {
       dispatch(storeImbuildAppsandUrls([]));
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
   };
 
@@ -223,7 +212,7 @@ export default function Mapping() {
     formReset();
   };
 
-  const handleOk = async () => {
+  const handleAdd = async () => {
     setValidationTrigger(true);
     const orgId = localStorage.getItem("organizationId");
     const nameValidate = descriptionValidator(name);
@@ -245,6 +234,7 @@ export default function Mapping() {
       const response = await createImbuildAppsandUrls(request);
       setIsModalOpen(false);
       CommonToaster("Created", "success");
+      setLoading(true);
       getImbuildAppsandUrlsData();
       formReset();
     } catch (error) {
@@ -254,6 +244,20 @@ export default function Mapping() {
       setTimeout(() => {
         setLoading(false);
       }, 1000);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      await deleteImbuildAppOrUrl(id);
+      CommonToaster("Deleted", "success");
+      setTimeout(() => {
+        getImbuildAppsandUrlsData();
+      }, 350);
+    } catch (error) {
+      CommonToaster(error?.response?.data, "error");
+      setLoading(false);
     }
   };
 
@@ -430,10 +434,10 @@ export default function Mapping() {
       <Modal
         title="Add App or Url"
         open={isModalOpen}
-        onOk={handleOk}
+        onOk={handleAdd}
         onCancel={handleCancel}
         footer={[
-          <button className="designation_submitbutton" onClick={handleOk}>
+          <button className="designation_submitbutton" onClick={handleAdd}>
             Submit
           </button>,
         ]}
