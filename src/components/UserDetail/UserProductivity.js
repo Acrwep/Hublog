@@ -41,8 +41,8 @@ export default function UserProductivity({
     },
     {
       title: "Attendance",
-      dataIndex: "AttendanceCount",
-      key: "AttendanceCount",
+      dataIndex: "attendanceCount",
+      key: "attendanceCount",
       width: 140,
       render: (text, record) => {
         if (text === null) {
@@ -64,8 +64,8 @@ export default function UserProductivity({
     },
     {
       title: "Online time",
-      dataIndex: "OnlineDuration",
-      key: "OnlineDuration",
+      dataIndex: "onlineDuration",
+      key: "onlineDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -74,8 +74,8 @@ export default function UserProductivity({
     },
     {
       title: "Break time",
-      dataIndex: "BreakDuration",
-      key: "BreakDuration",
+      dataIndex: "breakDuration",
+      key: "breakDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -84,8 +84,8 @@ export default function UserProductivity({
     },
     {
       title: "Productivity time",
-      dataIndex: "TotalProductiveDuration",
-      key: "TotalProductiveDuration",
+      dataIndex: "totalProductiveDuration",
+      key: "totalProductiveDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -94,8 +94,8 @@ export default function UserProductivity({
     },
     {
       title: "Neutral time",
-      dataIndex: "TotalNeutralDuration",
-      key: "TotalNeutralDuration",
+      dataIndex: "totalNeutralDuration",
+      key: "totalNeutralDuration",
       width: 160,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -104,8 +104,8 @@ export default function UserProductivity({
     },
     {
       title: "Unproductivity time",
-      dataIndex: "TotalUnproductiveDuration",
-      key: "TotalUnproductiveDuration",
+      dataIndex: "totalUnproductiveDuration",
+      key: "totalUnproductiveDuration",
       width: 170,
       render: (text, record) => {
         const [hours, minutes, seconds] = text.split(":");
@@ -114,8 +114,8 @@ export default function UserProductivity({
     },
     {
       title: "Productivity",
-      dataIndex: "PercentageProductiveDuration",
-      key: "PercentageProductiveDuration",
+      dataIndex: "percentageProductiveDuration",
+      key: "percentageProductiveDuration",
       width: 150,
       fixed: "right",
       render: (text) => {
