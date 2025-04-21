@@ -143,7 +143,7 @@ export default function Signup() {
       planStartDate: convertToBackendFormat(todayFormatted),
       planEndDate: convertToBackendFormat(tomorrowFormatted),
       paidAmount: 0.0,
-      subject: "Welcome to Hublog!",
+      subject: "Welcome to Workstatus!",
     };
 
     console.log("payload", payload);
@@ -182,7 +182,7 @@ export default function Signup() {
       organizationId: parseInt(orgId),
       roleId: 2,
       active: true,
-      subject: "Welcome to Hublog!",
+      subject: "Welcome to Workstatus!",
     };
     try {
       await createUser(request);
@@ -306,7 +306,7 @@ export default function Signup() {
       <div className="freetrial_card">
         <p
           className="freetrial_signuptext"
-          onClick={() => setIsModalOpen(true)}
+          // onClick={() => setIsModalOpen(true)}
         >
           Sign Up
         </p>

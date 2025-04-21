@@ -70,7 +70,7 @@ export default function CommonSelectField({
         placeholder={placeholder}
         showSearch={true}
         disabled={disabled}
-        allowClear={false}
+        allowClear={allowClear ? allowClear : false}
         filterOption={(input, option) =>
           option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }

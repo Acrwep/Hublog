@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Modal, Button, Space, Dropdown, Skeleton } from "antd";
+import { Row, Col, Modal, Button, Space, Dropdown, Skeleton, Spin } from "antd";
 import CommonInputField from "../../Common/CommonInputField";
 import { descriptionValidator, selectValidator } from "../../Common/Validation";
 import { storeActiveTeam, storeTeams } from "../../Redux/slice";
@@ -24,6 +24,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { storeUsers, storeUsersForTeamsTab } from "../../Redux/slice";
 import CommonWarningModal from "../../Common/CommonWarningModal";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Team = ({ loading }) => {
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ const Team = ({ loading }) => {
   const [userDetails, setuserDetails] = useState("");
   const [teamMemberLoading, setTeamMemberLoading] = useState(true);
   const [triggerShiftApi, setTriggerShiftApi] = useState(true);
+  const [submitLoader, setSubmitLoader] = useState(false);
 
   useEffect(() => {
     if (loading === false) {
@@ -145,6 +147,7 @@ const Team = ({ loading }) => {
 
   //team select onchange function
   const handleTeam = (item) => {
+    setTeamMemberLoading(true);
     const selectedTeam = teamList.find((f) => f.id === item);
     setTeamName(selectedTeam.name);
     setTeamId(item);
@@ -157,6 +160,8 @@ const Team = ({ loading }) => {
     setNameError("");
     setDescription("");
     setDescriptionError("");
+    setShiftId(null);
+    setShiftIdError("");
     setChangeTeamId("");
     setChangeTeamError("");
     setIsModalOpen(false);
@@ -193,6 +198,7 @@ const Team = ({ loading }) => {
       parentid: 1,
     };
     console.log("payload", request);
+    setSubmitLoader(true);
     if (edit) {
       try {
         const response = await updateTeams(teamId, request);
@@ -210,6 +216,10 @@ const Team = ({ loading }) => {
         } else {
           CommonToaster(Error, "error");
         }
+      } finally {
+        setTimeout(() => {
+          setSubmitLoader(false);
+        }, 300);
       }
     } else {
       try {
@@ -219,6 +229,10 @@ const Team = ({ loading }) => {
         formReset();
       } catch (error) {
         CommonToaster(error?.response?.data, "error");
+      } finally {
+        setTimeout(() => {
+          setSubmitLoader(false);
+        }, 300);
       }
     }
   };
@@ -426,6 +440,9 @@ const Team = ({ loading }) => {
     }
   };
 
+  const handleDummy = () => {
+    return;
+  };
   return (
     // <>
     //   {loading ? (
@@ -707,8 +724,28 @@ const Team = ({ loading }) => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <button className="designation_submitbutton" onClick={handleOk}>
-            Submit
+          <button
+            className={
+              submitLoader
+                ? "designation_loadingsubmitbutton"
+                : "designation_submitbutton"
+            }
+            onClick={submitLoader === false ? handleOk : handleDummy}
+          >
+            {submitLoader ? (
+              <Spin
+                indicator={
+                  <LoadingOutlined
+                    spin
+                    style={{ marginRight: "9px", color: "#ffffff" }}
+                  />
+                }
+                size="small"
+              />
+            ) : (
+              ""
+            )}{" "}
+            {submitLoader ? "Loading..." : "Submit"}
           </button>,
         ]}
       >
@@ -745,6 +782,7 @@ const Team = ({ loading }) => {
           error={shiftIdError}
           mandatory
           style={{ marginTop: "22px", marginBottom: "22px" }}
+          // allowClear
         />
         <CommonSelectField
           label="Status"

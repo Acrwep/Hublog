@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Modal, Space, Dropdown, Button } from "antd";
+import { Row, Col, Modal, Space, Dropdown, Spin } from "antd";
 import CommonSearchField from "../../Common/CommonSearchbar";
 import "../styles.css";
 import moment from "moment";
@@ -27,6 +27,7 @@ import {
   storeDesignationSearchValue,
 } from "../../Redux/slice";
 import CommonSelectField from "../../Common/CommonSelectField";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Designation({ loading }) {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ export default function Designation({ loading }) {
   const [edit, setEdit] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const [validationTrigger, setValidationTrigger] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
 
   const columns = [
     { title: "Name", dataIndex: "name", key: "name", width: "200px" },
@@ -220,6 +222,7 @@ export default function Designation({ loading }) {
     setDescriptionError(descriptionValidate);
 
     if (nameValidate || descriptionValidate) return;
+    setSubmitLoader(true);
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
     const request = {
       name: name,
@@ -248,6 +251,7 @@ export default function Designation({ loading }) {
         }
       } finally {
         setTimeout(() => {
+          setSubmitLoader(false);
           setTableLoading(false);
         }, 1000);
       }
@@ -262,6 +266,7 @@ export default function Designation({ loading }) {
         CommonToaster(error.response.data.message, "error");
       } finally {
         setTimeout(() => {
+          setSubmitLoader(false);
           setTableLoading(false);
         }, 1000);
       }
@@ -325,6 +330,10 @@ export default function Designation({ loading }) {
     }
   };
 
+  const handleDummy = () => {
+    return;
+  };
+
   return (
     <>
       {loading === true ? (
@@ -371,8 +380,28 @@ export default function Designation({ loading }) {
             onOk={handleOk}
             onCancel={handleCancel}
             footer={[
-              <button className="designation_submitbutton" onClick={handleOk}>
-                Submit
+              <button
+                className={
+                  submitLoader
+                    ? "designation_loadingsubmitbutton"
+                    : "designation_submitbutton"
+                }
+                onClick={submitLoader === false ? handleOk : handleDummy}
+              >
+                {submitLoader ? (
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        spin
+                        style={{ marginRight: "9px", color: "#ffffff" }}
+                      />
+                    }
+                    size="small"
+                  />
+                ) : (
+                  ""
+                )}{" "}
+                {submitLoader ? "Loading..." : "Submit"}
               </button>,
             ]}
           >

@@ -205,7 +205,7 @@ const Screenshots = () => {
 
   const updateModalContent = (index) => {
     const selectedItem = screenshotData[index];
-    const base64String = `data:image/jpeg;base64,${selectedItem.imageData}`;
+    const base64String = `data:image/jpeg;base64,${selectedItem.base64String}`;
     setImage(base64String);
     setScrnShotDate(selectedItem.screenShotDate);
     const filterUser = userList.find((f) => f.id === selectedItem.userId);
@@ -254,7 +254,7 @@ const Screenshots = () => {
 
     screenshotData.forEach((item, index) => {
       // Only take the Base64 content, remove the "data:image/jpeg;base64," prefix
-      const base64String = item.imageData.replace(
+      const base64String = item.base64String.replace(
         /^data:image\/(png|jpeg);base64,/,
         ""
       );
@@ -389,7 +389,7 @@ const Screenshots = () => {
                 <>
                   {screenshotData &&
                     screenshotData.map((item, index) => {
-                      const base64String = `data:image/jpeg;base64,${item.imageData}`;
+                      // const base64String = `data:image/jpeg;base64,${item.imageData}`;
                       return (
                         <React.Fragment key={index}>
                           <Col
@@ -402,7 +402,7 @@ const Screenshots = () => {
                           >
                             <div className="screenshot_imageandbuttnContainer">
                               <img
-                                src={base64String}
+                                src={`data:image/jpeg;base64,${item.base64String}`}
                                 className="screenshot_images"
                                 alt="Base64 Image"
                                 style={{ cursor: "pointer" }}
@@ -417,7 +417,7 @@ const Screenshots = () => {
                               </div>
                               <div className="screenshotimage_buttonContainer">
                                 <a
-                                  href={base64String}
+                                  href={`data:image/jpeg;base64,${item.base64String}`}
                                   download="Screenshot.png"
                                 >
                                   <MdOutlineFileDownload size={24} />

@@ -291,6 +291,19 @@
   transform: scale(0.9);
   box-shadow: 3px 2px 22px 1px rgba(85, 226, 108, 0.507);
 }
+.designation_loadingsubmitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  font-size: 14px;
+  height: 32px;
+  padding: 0px 12px;
+  width: max-content;
+  border-radius: 6px;
+  margin-top: 10px;
+  opacity: 0.7;
+  cursor: default;
+}
 /* teams */
 .totalcreatedteam_text {
   font-weight: 600;
