@@ -201,7 +201,6 @@ const Activity = () => {
       const payload = {
         organizationId: orgId,
         ...(teamid && { teamId: teamid }),
-        ...(userid && { userId: userid }),
         fromDate: startDate,
         toDate: endDate,
       };

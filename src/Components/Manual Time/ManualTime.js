@@ -500,10 +500,21 @@ export default function ManualTime() {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL;
+      const subDomain = localStorage.getItem("subDomain");
+      let APIURL = "";
+
+      if (process.env.NODE_ENV === "production") {
+        APIURL = `https://${
+          subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+        }workstatus.qubinex.com:8086`; // production
+      } else {
+        APIURL = `https://${
+          subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+        }localhost:7263`; //dev
+      }
       const AccessToken = localStorage.getItem("Accesstoken");
       const response = await axios.post(
-        `${API_URL}/api/Manual_Time/InsertManualTime`,
+        `${APIURL}/api/Manual_Time/InsertManualTime`,
         formData,
         {
           headers: {

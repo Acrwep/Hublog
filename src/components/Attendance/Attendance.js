@@ -260,8 +260,9 @@ const Attendance = () => {
         const details = response?.data;
 
         //top cards handling
+        console.log(details.overallAttendancePercentage, "eeeeeeee");
         setAttendancePercentage(
-          details.overallAttendancePercentage !== undefined
+          details.overallAttendancePercentage != undefined
             ? parseInt(details.overallAttendancePercentage)
             : "-"
         );

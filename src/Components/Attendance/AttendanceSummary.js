@@ -228,9 +228,7 @@ const AttendanceSummary = ({
                   Attendance %
                 </p>
                 <p className="attendancesummary_percentage">
-                  {!attendancePercentage
-                    ? "-"
-                    : attendancePercentage === "-"
+                  {attendancePercentage === "-"
                     ? "-"
                     : attendancePercentage === 0
                     ? "0%"

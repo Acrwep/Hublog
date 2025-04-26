@@ -365,3 +365,158 @@
   );
   border-radius: 120px 0 0 120px;
 }
+
+/* portal page styles */
+.portal_card {
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  box-shadow: 0 1px 8px 0 rgb(0 0 0 / 8%);
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 42%;
+  padding: 35px 50px;
+  margin: 40px 0px 60px 0px;
+}
+.portal_inputfielddiv {
+  transform: translateX(0%);
+  opacity: 1;
+  width: 100%;
+  margin-top: 16px;
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.portal_inputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.portal_inputfield:hover {
+  border-color: #25a17d !important;
+}
+.portal_inputfield:focus-within {
+  border-color: #25a17d !important;
+  box-shadow: 0 0 0 2px #25a17e17;
+}
+
+.portal_errorinputfield {
+  height: 36px;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff4d4f;
+  border-radius: 6px;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 6px;
+}
+.portal_errorinputfield:hover {
+  border-color: #ff4d4f !important;
+}
+.portal_errorinputfield:focus-within {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.144);
+}
+
+.portal_emailerror_hide {
+  color: rgb(255, 77, 79);
+  margin-top: 4px;
+  font-size: 15px;
+  position: absolute;
+  transform: translateX(-52px);
+  opacity: 0;
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.portal_emailerror_visible {
+  color: rgb(255, 77, 79);
+  margin-top: 4px;
+  font-size: 14px;
+  position: absolute;
+  transform: translateX(4px);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+}
+@media (min-width: 300px) and (max-width: 420px) {
+  .portal_emailerror_visible {
+    font-size: 12px;
+  }
+}
+
+.portal_emailcheckicon_hide {
+  position: absolute;
+  top: 34%;
+  opacity: 0;
+  right: -22px;
+  transform: translateX(-50%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.portal_emailcheckicon_visible {
+  position: absolute;
+  top: 34%;
+  opacity: 1;
+  right: 20px;
+  transform: translateX(0%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.portal_xicon_hide {
+  position: absolute;
+  top: 34%;
+  opacity: 0;
+  right: -22px;
+  transform: translateX(-50%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.portal_xicon_visible {
+  position: absolute;
+  top: 34%;
+  opacity: 1;
+  right: 20px;
+  transform: translateX(0%);
+  transition: right 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+.portal_submitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  width: 100%;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 7px 0px;
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+.portal_submitbutton:hover {
+  background-color: #009737;
+}
+.portal_submitbutton:active {
+  transform: translateY(2px);
+}
+@media (min-width: 300px) and (max-width: 374px) {
+  .portal_submitbutton {
+    margin-top: 52px;
+  }
+}
+.portal_loadingsubmitbutton {
+  color: #fff;
+  background-color: #25a17d;
+  box-shadow: 0 2px 0 rgba(88, 5, 255, 0.06);
+  width: 100%;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 7px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 36px;
+  opacity: 0.7;
+  cursor: default;
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import logoImg from "../../assets/images/logo-re-3.png";
 import { useNavigate } from "react-router-dom";
-import { LoginApi } from "../APIservice.js/action";
+import { getOrganizations, LoginApi } from "../APIservice.js/action";
 import { Input, Row, Col } from "antd";
 import "./login.css";
 import "../Common/commonstyles.css";
@@ -23,9 +23,20 @@ const Login = () => {
   const [validationTrigger, setValidationTrigger] = useState(false);
 
   useEffect(() => {
-    localStorage.removeItem("Accesstoken");
-    localStorage.clear();
-    sessionStorage.clear();
+    const params = new URLSearchParams(window.location.search);
+    const receivedValue = params.get("domain");
+    console.log("receiveeeeee", receivedValue, typeof receivedValue);
+
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+
+    if (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) {
+      if (receivedValue) {
+        localStorage.setItem("subDomain", receivedValue);
+        window.location.reload();
+      } else {
+        window.location.href = process.env.REACT_APP_PORTAL_URL;
+      }
+    }
   }, []);
 
   const handleLogin = async (e) => {
@@ -68,7 +79,6 @@ const Login = () => {
         "organizationId",
         loginUserInformation.organizationId
       );
-
       //store role Id
       localStorage.setItem("roleId", loginUserInformation.roleId);
       localStorage.setItem("managerStatus", loginUserInformation.managerStatus);
@@ -99,23 +109,45 @@ const Login = () => {
         loginUserInformation.managerStatus === true
       ) {
         setTimeout(() => {
-          navigate("/dashboard");
+          // navigate("/dashboard");
         }, 500);
       } else {
         setTimeout(() => {
           navigate("/dashboard");
         }, 500);
       }
+
+      getOrganizationData(loginUserInformation.organizationId);
     } catch (error) {
       console.log("login error", error);
       CommonToaster(
         error.response?.data || "Something went wrong. Please try again later.",
         "error"
       );
+      setTimeout(() => {
+        setButtonDisable(false);
+      }, 300);
+    }
+  };
+
+  const getOrganizationData = async (organizationId) => {
+    try {
+      const response = await getOrganizations();
+      console.log("organization response", response);
+      const allOrganizations = response?.data;
+
+      const filterLoginOrganization = allOrganizations.filter(
+        (f) => f.id === organizationId
+      );
+
+      const subDomain = filterLoginOrganization[0].domain;
+      localStorage.setItem("subDomain", subDomain);
+    } catch (error) {
+      console.log("error", error);
     } finally {
       setTimeout(() => {
         setButtonDisable(false);
-      }, 500);
+      }, 300);
     }
   };
 

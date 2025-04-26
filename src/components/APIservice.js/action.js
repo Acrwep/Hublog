@@ -5,21 +5,34 @@ import "../Common/commonstyles.css";
 let isModalVisible = false;
 let modalInstance = null; // Track modal instance for manual control
 
-const API_URL = process.env.REACT_APP_API_URL;
+const subDomain = localStorage.getItem("subDomain");
+let APIURL = "";
+
+if (process.env.NODE_ENV === "production") {
+  APIURL = `https://${
+    subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+  }workstatus.qubinex.com:8086`; // production
+} else {
+  APIURL = `https://${
+    subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+  }localhost:7263`; //dev
+}
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: APIURL,
   headers: {
     "Content-Type": "application/json",
   },
+  credentials: "include",
 });
 
 api.interceptors.request.use(
   (config) => {
     const AccessToken = localStorage.getItem("Accesstoken");
+    const subDomain = localStorage.getItem("subDomain");
 
-    console.log("AccessToken", AccessToken);
+    console.log("AccessToken", AccessToken, subDomain);
     if (AccessToken) {
       const expired = isTokenExpired(AccessToken);
       if (expired === true) {
@@ -121,6 +134,17 @@ export const createOrganization = async (payload) => {
 export const getOrganizations = async () => {
   try {
     const response = await api.get("/api/Organization/getall");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const checkDomain = async (domain) => {
+  try {
+    const response = await api.get(
+      `/api/Organization/CheckDomain?domain=${domain}`
+    );
     return response;
   } catch (error) {
     throw error;

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu } from "antd";
 import { SideMenuConfig } from "./SideMenuConfig";
 import { ManagerMenuConfig } from "./ManagerMenuConfig";
+import { checkDomain } from "../Components/APIservice.js/action";
 
 const { SubMenu } = Menu;
 
@@ -17,14 +18,24 @@ const SidebarMenuList = () => {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("Accesstoken");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
     const mangrStatus = localStorage.getItem("managerStatus");
     console.log("managerstatus", mangrStatus);
     setManagerStatus(mangrStatus);
 
-    if (accessToken === null) {
+    checkDomainName();
+
+    if (
+      (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
+      location.pathname !== "/portal"
+    ) {
+      window.location.href = process.env.REACT_APP_PORTAL_URL;
+      return;
+    } else if (accessToken === null) {
       navigate("/login");
       return;
     }
+
     const pathName = location.pathname.split("/")[1];
     console.log("Current PathName", pathName);
 
@@ -67,6 +78,35 @@ const SidebarMenuList = () => {
     }
     setSelectedKey(pathName);
   }, [location.pathname]);
+
+  const getSubdomain = () => {
+    const hostName = window.location.hostname;
+    const domain = "localtest.me";
+
+    if (hostName.endsWith(domain)) {
+      const hostNameParts = hostName.split(".");
+      const domainParts = domain.split(".");
+      const subdomainParts = hostNameParts.slice(
+        0,
+        hostNameParts.length - domainParts.length
+      );
+      const subdomain = subdomainParts.join(".");
+      return subdomain || null;
+    } else {
+      return null;
+    }
+  };
+
+  const checkDomainName = async () => {
+    const subdomain = getSubdomain();
+    try {
+      const response = await checkDomain(subdomain);
+      console.log("domain response", response);
+    } catch (error) {
+      console.log("domain rror", error);
+      window.location.href = process.env.REACT_APP_PORTAL_URL;
+    }
+  };
 
   const handleMenuClick = (e) => {
     if (

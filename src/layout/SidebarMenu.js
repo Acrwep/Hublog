@@ -46,6 +46,7 @@ import { BiSpreadsheet } from "react-icons/bi";
 //login and signup
 import Signup from "../Components/Signup/Signup.js";
 import Login from "../Components/Login/Login";
+import Portal from "../Components/Login/Portal.js";
 //dashboard
 import Dashboard from "../Components/Dashboard/Dashboard";
 //attendance
@@ -132,7 +133,7 @@ function SidebarMenu() {
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    navigation("/login");
+    window.location.href = process.env.REACT_APP_PORTAL_URL;
   };
 
   useEffect(() => {
@@ -151,12 +152,20 @@ function SidebarMenu() {
   useEffect(() => {
     //the useEffect call only when login
     const handleStorageUpdate = () => {
+      const getSubDomainfromLocal = localStorage.getItem("subDomain");
       const accessToken = localStorage.getItem("Accesstoken");
       const managerStatus = localStorage.getItem("managerStatus");
       console.log("managerstatus sidemenu", managerStatus);
 
       setIsManager(managerStatus);
-      if (accessToken === null) {
+
+      if (
+        (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
+        location.pathname !== "/portal"
+      ) {
+        window.location.href = process.env.REACT_APP_PORTAL_URL;
+        return;
+      } else if (accessToken === null) {
         navigation("/login");
         setShowPages(false);
         return;
@@ -378,8 +387,16 @@ function SidebarMenu() {
     const convertLoginInfoAsJson = JSON.parse(getItem);
 
     const accessToken = localStorage.getItem("Accesstoken");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
     console.log("Access Token:::::", accessToken);
-    if (accessToken) {
+
+    if (
+      (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
+      location.pathname !== "/portal"
+    ) {
+      window.location.href = process.env.REACT_APP_PORTAL_URL;
+      return;
+    } else if (accessToken) {
       setShowPages(true);
       if (location.pathname === "/") {
         if (convertLoginInfoAsJson.roleId === 3) {
@@ -402,6 +419,9 @@ function SidebarMenu() {
         setShowPages(false);
         navigation("/usercreatemail");
         return;
+      } else if (location.pathname === "/portal") {
+        setShowPages(false);
+        navigation("/portal");
       } else if (location.pathname === "/productdemo") {
         setShowPages(false);
         navigation("/productdemo");
@@ -416,6 +436,7 @@ function SidebarMenu() {
         navigation("/setpassword");
       } else {
         setShowPages(false);
+        console.log("aiiiiiiiiiiiii");
         navigation("/login");
         return;
       }
@@ -538,6 +559,10 @@ function SidebarMenu() {
             <Route path="/login" element={<Login />} />
           </Routes>
         </div>
+      ) : location.pathname === "/portal" ? (
+        <Routes>
+          <Route path="/portal" element={<Portal />} />
+        </Routes>
       ) : location.pathname === "/signup" ? (
         <Routes>
           <Route path="/signup" element={<Signup />} />

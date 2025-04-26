@@ -125,10 +125,21 @@ const LiveStream = () => {
     } else {
       setLiveData(userList);
     }
-    const API_URL = process.env.REACT_APP_API_URL;
+    const subDomain = localStorage.getItem("subDomain");
+    let APIURL = "";
+
+    if (process.env.NODE_ENV === "production") {
+      APIURL = `https://${
+        subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+      }workstatus.qubinex.com:8086`; // production
+    } else {
+      APIURL = `https://${
+        subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+      }localhost:7263`; //dev
+    }
 
     const connection = new HubConnectionBuilder()
-      .withUrl(`${API_URL}/livestreamHub`, {
+      .withUrl(`${APIURL}/livestreamHub`, {
         withCredentials: true,
       })
       .withAutomaticReconnect([0, 2000, 5000, 10000])
