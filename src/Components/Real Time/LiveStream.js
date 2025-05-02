@@ -7,7 +7,6 @@ import CommonSelectField from "../Common/CommonSelectField";
 import CommonAvatar from "../Common/CommonAvatar";
 import PrismaZoom from "react-prismazoom";
 import { FaEye } from "react-icons/fa";
-import { HubConnectionBuilder } from "@microsoft/signalr";
 import CommonNodatafound from "../Common/CommonNodatafound";
 import { CommonToaster } from "../Common/CommonToaster";
 import {
@@ -37,6 +36,7 @@ const LiveStream = () => {
   const [screenShot, setScreenShot] = useState("");
   const [filterLoading, setFilterLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const reconnectAttempts = useRef(0);
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
@@ -125,88 +125,127 @@ const LiveStream = () => {
     } else {
       setLiveData(userList);
     }
+
     const subDomain = localStorage.getItem("subDomain");
     let APIURL = "";
 
     if (process.env.NODE_ENV === "production") {
-      APIURL = `https://${
+      console.log("proooooooooo", process.env.NODE_ENV);
+      APIURL = `wss://${
         subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-      }workstatus.qubinex.com:8086`; // production
+      }workstatus.qubinex.com:8086/livestreamHub`;
     } else {
-      APIURL = `https://${
+      console.log("devvvvvvvvv", process.env.NODE_ENV);
+      APIURL = `wss://${
         subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-      }localhost:7263`; //dev
+      }localhost:7263/ws/livestream`;
     }
 
-    const connection = new HubConnectionBuilder()
-      .withUrl(`${APIURL}/livestreamHub`, {
-        withCredentials: true,
-      })
-      .withAutomaticReconnect([0, 2000, 5000, 10000])
-      .build();
+    const ws = new WebSocket(APIURL);
+    let dataReceived = false;
 
-    let dataReceived = false; // Track if data has been received
-
-    // Start the connection
-    connection
-      .start()
-      .then(() => {
-        console.log("Connected to SignalR");
-        // Now you can listen for events
+    const reconnect = () => {
+      if (reconnectAttempts.current < 5) {
         setTimeout(() => {
-          if (!dataReceived) {
-            console.warn("No data received from SignalR within 4 seconds.");
-            setFilterLoading(false);
-          }
-        }, 4000);
-        connection.on(
-          "ReceiveLiveData",
-          (
-            userIdReceived,
-            organizationIdReceived,
-            activeApp,
-            activeUrl,
-            liveStreamStatus,
-            activeAppLogo,
-            activeScreenshot
-          ) => {
-            dataReceived = true;
+          reconnectAttempts.current++;
+          setConnection(null); // Reset
+        }, 2000 * reconnectAttempts.current); // Exponential backoff
+      }
+    };
 
-            setLiveData((prevData) =>
-              prevData.map(
-                (user) =>
-                  user.id === userIdReceived
-                    ? {
-                        ...user,
-                        activeApp,
-                        activeUrl,
-                        liveStreamStatus,
-                        activeAppLogo,
-                        activeScreenshot,
-                      }
-                    : user // Keep other users' data unchanged
-              )
-            );
+    // 👇 Buffered logic
+    let buffer = [];
+    let flushTimeout = null;
 
-            // Live screenshot handling
-            const clickedUser = clickedUserList.find(
-              (c) => c.id === userIdReceived
-            );
-            if (clickedUser) {
-              setScreenShot(activeScreenshot);
+    const flushBuffer = () => {
+      if (buffer.length > 0) {
+        setLiveData((prevData) => {
+          const updated = [...prevData];
+          buffer.forEach((incoming) => {
+            const index = updated.findIndex((u) => u.id === incoming.userId);
+            if (index !== -1) {
+              updated[index] = {
+                ...updated[index],
+                activeApp: incoming.activeApp,
+                activeUrl: incoming.activeUrl,
+                liveStreamStatus: incoming.liveStreamStatus,
+                activeAppLogo: incoming.activeAppLogo,
+                activeScreenshot: incoming.activeScreenshot,
+              };
             }
+          });
+          return updated;
+        });
 
-            setTimeout(() => setFilterLoading(false), 300);
+        // Handle screenshot updates for clicked users
+        buffer.forEach((incoming) => {
+          const clickedUser = clickedUserList.find(
+            (c) => c.id === incoming.userId
+          );
+          if (clickedUser) {
+            setScreenShot(incoming.activeScreenshot);
           }
-        );
-      })
-      .catch((err) => console.error("Error while starting connection: " + err));
+        });
 
-    setConnection(connection);
+        setTimeout(() => setFilterLoading(false), 300);
+        buffer = [];
+      }
+    };
 
-    // Cleanup the connection when the component is unmounted
+    ws.onopen = () => {
+      console.log("WebSocket connected");
+      reconnectAttempts.current = 0;
+
+      setTimeout(() => {
+        if (!dataReceived) {
+          console.log("No data received from WebSocket within 4 seconds.");
+          setFilterLoading(false);
+        }
+      }, 4000);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("data:", data);
+        buffer.push(data);
+        dataReceived = true;
+
+        if (!flushTimeout) {
+          flushTimeout = setTimeout(() => {
+            flushBuffer();
+            flushTimeout = null;
+          }, 100); // debounce time — can be tweaked
+        }
+      } catch (err) {
+        console.error("WebSocket message parsing error:", err);
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+      reconnect();
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket disconnected");
+      flushBuffer();
+      reconnect();
+    };
+
+    setConnection(ws);
+
     return () => {
-      connection.stop();
+      console.log("Cleaning up WebSocket...");
+      if (flushTimeout) clearTimeout(flushTimeout);
+
+      // Flush buffer before closing
+      flushBuffer();
+
+      // Close WebSocket gracefully
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close(1000, "Client closing");
+      }
     };
   }, [userList, particularUserList, clickedUserList]);
 
@@ -277,7 +316,12 @@ const LiveStream = () => {
         <div className="settings_iconContainer">
           <CiStreamOn size={20} />
         </div>
-        <h2 className="allpage_mainheadings">Livestream</h2>
+        <h2
+          className="allpage_mainheadings"
+          onClick={() => console.log("liveeee", liveData)}
+        >
+          Livestream
+        </h2>
       </div>
 
       {/* <p>Live Data</p>

@@ -30,6 +30,7 @@ import {
 } from "../../APIservice.js/action";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  storeActiveUsersCount,
   storeUsers,
   storeUsersCount,
   storeUserSearchValue,
@@ -296,6 +297,8 @@ const Users = ({ loading }) => {
       console.log("users response", response?.data);
       const allUsers = response?.data;
       dispatch(storeUsersCount(allUsers.length));
+      const activeUsersList = allUsers.filter((f) => f.active === true);
+      dispatch(storeActiveUsersCount(activeUsersList.length));
       dispatch(storeUsers(allUsers));
       dispatch(storeUsersForTeamsTab(allUsers));
       //null the search value

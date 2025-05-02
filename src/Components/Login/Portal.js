@@ -42,13 +42,16 @@ export default function Portal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIconVisible(true);
+    setButtonLoading(true);
     const domainValidate = addressValidator(domain);
 
     setDomainError(domainValidate);
 
-    if (domainValidate) return;
+    if (domainValidate) {
+      setButtonLoading(false);
+      return;
+    }
 
-    setButtonLoading(true);
     try {
       const response = await checkDomain(domain);
       console.log("domain response", response);
@@ -86,6 +89,7 @@ export default function Portal() {
                   ? "portal_inputfield"
                   : "portal_errorinputfield"
               }
+              name="domain"
               type="text"
               onChange={handleDomain}
               value={domain}
@@ -103,7 +107,7 @@ export default function Portal() {
               size={19}
               color="#009737"
               className={
-                iconVisible && domainError === ""
+                iconVisible && buttonLoading === false && domainError === ""
                   ? "portal_emailcheckicon_visible"
                   : "portal_emailcheckicon_hide"
               }
@@ -113,7 +117,7 @@ export default function Portal() {
               size={19}
               color="rgb(252, 48, 52)"
               className={
-                iconVisible && domainError != ""
+                iconVisible && buttonLoading === false && domainError != ""
                   ? "portal_xicon_visible"
                   : "portal_xicon_hide"
               }
