@@ -33,6 +33,7 @@ const DailyAttendanceReport = () => {
   const [userName, setUserName] = useState("");
   const [data, setData] = useState([]);
   const [isManager, setIsManager] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -125,6 +126,8 @@ const DailyAttendanceReport = () => {
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -302,7 +305,7 @@ const DailyAttendanceReport = () => {
 
       <div
         className="dailyreports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Daily Attendance Report</p>

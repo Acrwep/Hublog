@@ -24,6 +24,7 @@ const ProjectReport = () => {
     { id: 3, name: "Closed" },
   ];
   const [statusFilter, setStatusFilter] = useState();
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(true);
 
   const columns = [
@@ -54,6 +55,8 @@ const ProjectReport = () => {
   ];
 
   useEffect(() => {
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     getProjectsData(null, null);
   }, []);
 
@@ -148,7 +151,7 @@ const ProjectReport = () => {
 
       <div
         className="reports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Project Report</p>

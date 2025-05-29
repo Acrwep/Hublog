@@ -5,8 +5,6 @@ import { SideMenuConfig } from "./SideMenuConfig";
 import { ManagerMenuConfig } from "./ManagerMenuConfig";
 import { checkDomain } from "../Components/APIservice.js/action";
 
-const { SubMenu } = Menu;
-
 const SidebarMenuList = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,10 +13,13 @@ const SidebarMenuList = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [managerStatus, setManagerStatus] = useState("");
+  const [subDomain, setSubdomain] = useState("");
 
   useEffect(() => {
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
     const mangrStatus = localStorage.getItem("managerStatus");
     console.log("managerstatus", mangrStatus);
+    setSubdomain(getSubDomainfromLocal);
     setManagerStatus(mangrStatus);
 
     // checkDomainName();
@@ -34,7 +35,14 @@ const SidebarMenuList = () => {
     //   return;
     // }
 
-    const pathName = location.pathname.split("/")[1];
+    const pathNameSplit = location.pathname.split("/");
+    console.log("splitttttt", pathNameSplit);
+    let pathName;
+    if (pathNameSplit.length >= 2) {
+      pathName = pathNameSplit[2];
+    } else {
+      pathName = pathNameSplit[0];
+    }
     console.log("Current PathName", pathName);
 
     const getItem = localStorage.getItem("LoginUserInfo");
@@ -57,19 +65,19 @@ const SidebarMenuList = () => {
       return;
     }
     if (
-      pathName === "breakreports" ||
-      pathName === "dailyattendancereport" ||
-      pathName === "monthlyattendancereport" ||
-      pathName === "monthlyinandoutreport" ||
-      pathName === "activityreport" ||
-      pathName === "productivityreport" ||
-      pathName === "wellnessreport" ||
-      pathName === "teamsinsightreport" ||
-      pathName === "appsurlsreport" ||
-      pathName === "projectreport" ||
-      pathName === "logsreport" ||
-      pathName === "alertreport" ||
-      pathName === "devicereport"
+      pathName.includes("breakreports") ||
+      pathName.includes("dailyattendancereport") ||
+      pathName.includes("monthlyattendancereport") ||
+      pathName.includes("monthlyinandoutreport") ||
+      pathName.includes("activityreport") ||
+      pathName.includes("productivityreport") ||
+      pathName.includes("wellnessreport") ||
+      pathName.includes("teamsinsightreport") ||
+      pathName.includes("appsurlsreport") ||
+      pathName.includes("projectreport") ||
+      pathName.includes("logsreport") ||
+      pathName.includes("alertreport") ||
+      pathName.includes("devicereport")
     ) {
       setSelectedKey("reports");
       return;
@@ -107,17 +115,17 @@ const SidebarMenuList = () => {
   };
 
   const handleMenuClick = (e) => {
-    if (
-      e.key === "attendance" ||
-      e.key === "devices" ||
-      e.key === "manualtime" ||
-      e.key === "alerts" ||
-      e.key === "reports" ||
-      e.key === "projects"
-    ) {
-      return;
-    }
-    navigate(`/${e.key}`);
+    // if (
+    //   e.key === "attendance" ||
+    //   e.key === "devices" ||
+    //   e.key === "manualtime" ||
+    //   e.key === "alerts" ||
+    //   e.key === "reports" ||
+    //   e.key === "projects"
+    // ) {
+    //   return;
+    // }
+    navigate(`/${subDomain}/${e.key}`);
   };
 
   const renderMenuItems = (menuConfig) => {

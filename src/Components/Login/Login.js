@@ -99,27 +99,10 @@ const Login = () => {
       const event = new Event("localStorageUpdated");
       window.dispatchEvent(event);
 
-      if (
-        loginUserInformation.roleId === 3 &&
-        loginUserInformation.managerStatus === false
-      ) {
-        setTimeout(() => {
-          navigate("/userdetail");
-        }, 500);
-      } else if (
-        loginUserInformation.roleId === 3 &&
-        loginUserInformation.managerStatus === true
-      ) {
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 500);
-      } else {
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 500);
-      }
-
-      // getOrganizationData(loginUserInformation.organizationId);
+      getOrganizationData(
+        loginUserInformation.organizationId,
+        loginUserInformation
+      );
     } catch (error) {
       console.log("login error", error);
       CommonToaster(
@@ -132,7 +115,7 @@ const Login = () => {
     }
   };
 
-  const getOrganizationData = async (organizationId) => {
+  const getOrganizationData = async (organizationId, loginUserInformation) => {
     try {
       const response = await getOrganizations();
       console.log("organization response", response);
@@ -144,6 +127,26 @@ const Login = () => {
 
       const subDomain = filterLoginOrganization[0].domain;
       localStorage.setItem("subDomain", subDomain);
+
+      if (
+        loginUserInformation.roleId === 3 &&
+        loginUserInformation.managerStatus === false
+      ) {
+        setTimeout(() => {
+          navigate("/userdetail");
+        }, 500);
+      } else if (
+        loginUserInformation.roleId === 3 &&
+        loginUserInformation.managerStatus === true
+      ) {
+        setTimeout(() => {
+          navigate(`/${subDomain}/dashboard`);
+        }, 500);
+      } else {
+        setTimeout(() => {
+          navigate(`/${subDomain}/dashboard`);
+        }, 500);
+      }
     } catch (error) {
       console.log("error", error);
     } finally {

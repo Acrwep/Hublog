@@ -31,6 +31,7 @@ const WellnessReport = () => {
   const [organizationId, setOrganizationId] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [isManager, setIsManager] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -121,6 +122,8 @@ const WellnessReport = () => {
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -356,7 +359,7 @@ const WellnessReport = () => {
 
       <div
         className="reports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Wellness Report</p>

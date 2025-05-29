@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { FiCoffee, FiActivity } from "react-icons/fi";
@@ -20,6 +20,12 @@ import "./styles.css";
 
 const Reports = () => {
   const navigation = useNavigate();
+  const [subdomain, setSubdomain] = useState("");
+
+  useEffect(() => {
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
+  }, []);
 
   return (
     <div className="settings_mainContainer">
@@ -36,7 +42,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/breakreports")}
+              onClick={() => navigation(`/${subdomain}/breakreports`)}
             >
               <div className="reports_iconContainer">
                 <FiCoffee size={26} />
@@ -50,7 +56,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/dailyattendancereport")}
+              onClick={() => navigation(`/${subdomain}/dailyattendancereport`)}
             >
               <div className="reports_dailyiconContainer">
                 <MdAccessTimeFilled size={26} />
@@ -65,7 +71,9 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/monthlyattendancereport")}
+              onClick={() =>
+                navigation(`/${subdomain}/monthlyattendancereport`)
+              }
             >
               <div className="reports_monthlyiconContainer">
                 <MdCalendarMonth size={26} />
@@ -80,7 +88,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/monthlyinandoutreport")}
+              onClick={() => navigation(`/${subdomain}/monthlyinandoutreport`)}
             >
               <div className="reports_inouticonContainer">
                 <PiArrowsLeftRightBold size={26} />
@@ -102,7 +110,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/lateattendancereport")}
+              onClick={() => navigation(`/${subdomain}/lateattendancereport`)}
             >
               <div className="reports_lateiconContainer">
                 <TbClockCancel size={26} />
@@ -121,7 +129,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/appsurlsreport")}
+              onClick={() => navigation(`/${subdomain}/appsurlsreport`)}
             >
               <div className="reports_appsiconContainer">
                 <TbAppsFilled size={26} />
@@ -136,7 +144,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/activityreport")}
+              onClick={() => navigation(`/${subdomain}/activityreport`)}
             >
               <div className="reports_activityiconContainer">
                 <FiActivity size={26} />
@@ -150,7 +158,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/productivityreport")}
+              onClick={() => navigation(`/${subdomain}/productivityreport`)}
             >
               <div className="reports_producticonContainer">
                 <BsFillRocketTakeoffFill size={26} />
@@ -164,7 +172,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/wellnessreport")}
+              onClick={() => navigation(`/${subdomain}/wellnessreport`)}
             >
               <div className="reports_wellnessiconContainer">
                 <GiLotus size={26} />
@@ -215,7 +223,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/alertreport")}
+              onClick={() => navigation(`/${subdomain}/alertreport`)}
             >
               <div className="reports_alerticonContainer">
                 <BiSolidBell size={26} />
@@ -230,7 +238,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/projectreport")}
+              onClick={() => navigation(`/${subdomain}/projectreport`)}
             >
               <div className="reports_projecticonContainer">
                 <FaBusinessTime size={26} />
@@ -244,7 +252,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/devicereport")}
+              onClick={() => navigation(`/${subdomain}/devicereport`)}
             >
               <div className="reports_deviceiconContainer">
                 <TbDeviceDesktopMinus size={26} />
@@ -258,7 +266,7 @@ const Reports = () => {
           <Col xs={24} sm={24} md={12} lg={6}>
             <div
               className="reports_card"
-              onClick={() => navigation("/dynamicreport")}
+              onClick={() => navigation(`/${subdomain}/dynamicreport`)}
             >
               <div className="reports_dynamiciconContainer">
                 <MdDynamicFeed size={26} />

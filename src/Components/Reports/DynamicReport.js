@@ -83,6 +83,7 @@ export default function DynamicReport() {
   const [averageUnproductivetimeStatus, setAverageUnproductivetimeStatus] =
     useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(true);
 
   const text = `
@@ -368,6 +369,8 @@ export default function DynamicReport() {
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -946,7 +949,7 @@ export default function DynamicReport() {
       </Row>
       <div
         className="reports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Dynamic Report</p>

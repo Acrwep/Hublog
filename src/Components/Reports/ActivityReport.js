@@ -31,6 +31,7 @@ const ActivityReport = () => {
   const [nonChangeUserList, setNonChangeUserList] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [isManager, setIsManager] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(true);
 
   const columns = [
@@ -149,6 +150,8 @@ const ActivityReport = () => {
   ];
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -390,7 +393,7 @@ const ActivityReport = () => {
 
       <div
         className="reports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Activity Report</p>

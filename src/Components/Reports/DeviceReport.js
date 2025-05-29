@@ -41,6 +41,7 @@ const DeviceReport = () => {
   const [systemId, setSystemId] = useState(null);
   const [devicesData, setDevicesData] = useState([]);
   const [isManager, setIsManager] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [tableLoading, setTableloading] = useState(true);
 
   const columns = [
@@ -121,6 +122,8 @@ const DeviceReport = () => {
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -314,7 +317,7 @@ const DeviceReport = () => {
 
       <div
         className="reports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Device Report</p>

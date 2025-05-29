@@ -33,10 +33,13 @@ const MonthlyAttendanceReport = () => {
   const [monthName, setMonthName] = useState("");
   const [year, setYear] = useState();
   const [isManager, setIsManager] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -485,7 +488,7 @@ const MonthlyAttendanceReport = () => {
 
       <div
         className="dailyreports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Monthly Attendance Report</p>

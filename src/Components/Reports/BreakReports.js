@@ -30,6 +30,7 @@ const BreakReports = () => {
   const [organizationId, setOrganizationId] = useState(null);
   const [data, setData] = useState([]);
   const [isManager, setIsManager] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [loading, setLoading] = useState(false);
 
   const columns = [
@@ -98,6 +99,8 @@ const BreakReports = () => {
 
   useEffect(() => {
     const managerTeamId = localStorage.getItem("managerTeamId");
+    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    setSubdomain(getSubDomainfromLocal);
     if (managerTeamId) {
       setIsManager(true);
     } else {
@@ -275,7 +278,7 @@ const BreakReports = () => {
 
       <div
         className="reports_backContainer"
-        onClick={() => navigation("/reports")}
+        onClick={() => navigation(`/${subdomain}/reports`)}
       >
         <FaArrowLeft size={16} />
         <p style={{ marginLeft: "12px" }}>Break Report</p>

@@ -201,14 +201,14 @@ function SidebarMenu() {
             convertLoginInfoAsJson.roleId === 3 &&
             managerStatus === "true"
           ) {
-            navigate("/dashboard");
+            navigate(`${getSubDomainfromLocal}/dashboard`);
             setUserRole(true);
           } else {
-            navigate("/dashboard");
+            navigate(`${getSubDomainfromLocal}/dashboard`);
             setUserRole(false);
           }
         } else {
-          navigate(location.pathname);
+          navigate(`${getSubDomainfromLocal}${location.pathname}`);
         }
       } else {
         if (location.pathname === "/downloads") {
@@ -627,61 +627,88 @@ function SidebarMenu() {
               }}
             >
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/attendance" element={<Attendance />} />
-                <Route path="/livestream" element={<LiveStream />} />
-                <Route path="/field" element={<Field />} />
-                <Route path="/timeline" element={<Timelines />} />
-                <Route path="/activity" element={<Activity />} />
-                <Route path="/productivity" element={<Productivity />} />
-                <Route path="/screenshots" element={<Screenshots />} />
-                <Route path="/wellness" element={<Wellness />} />
-                <Route path="/apps&urls" element={<Apps$Url />} />
-
-                <Route path="/devices" element={<Devices />} />
-                <Route path="/manualtime" element={<ManualTime />} />
-                <Route path="/alerts" element={<Alerts />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/breakreports" element={<BreakReports />} />
+                <Route path="/:domain/dashboard" element={<Dashboard />} />
+                <Route path="/:domain/attendance" element={<Attendance />} />
+                <Route path="/:domain/livestream" element={<LiveStream />} />
+                <Route path="/:domain/field" element={<Field />} />
+                <Route path="/:domain/timeline" element={<Timelines />} />
+                <Route path="/:domain/activity" element={<Activity />} />
                 <Route
-                  path="/dailyattendancereport"
+                  path="/:domain/productivity"
+                  element={<Productivity />}
+                />
+                <Route path="/:domain/screenshots" element={<Screenshots />} />
+                <Route path="/:domain/wellness" element={<Wellness />} />
+                <Route path="/:domain/apps&urls" element={<Apps$Url />} />
+
+                <Route path="/:domain/devices" element={<Devices />} />
+                <Route path="/:domain/manualtime" element={<ManualTime />} />
+                <Route path="/:domain/alerts" element={<Alerts />} />
+                <Route path="/:domain/reports" element={<Reports />} />
+                <Route
+                  path="/:domain/breakreports"
+                  element={<BreakReports />}
+                />
+                <Route
+                  path="/:domain/dailyattendancereport"
                   element={<DailyAttendanceReport />}
                 />
                 <Route
-                  path="/monthlyattendancereport"
+                  path="/:domain/monthlyattendancereport"
                   element={<MonthlyAttendanceReport />}
                 />
                 <Route
-                  path="/monthlyinandoutreport"
+                  path="/:domain/monthlyinandoutreport"
                   element={<MonthlyInandOutReport />}
                 />
                 <Route
-                  path="/lateattendancereport"
+                  path="/:domain/lateattendancereport"
                   element={<LateAttendanceReport />}
                 />
-                <Route path="/alertreport" element={<AlertReport />} />
-                <Route path="/activityreport" element={<ActivityReport />} />
+                <Route path="/:domain/alertreport" element={<AlertReport />} />
                 <Route
-                  path="/productivityreport"
+                  path="/:domain/activityreport"
+                  element={<ActivityReport />}
+                />
+                <Route
+                  path="/:domain/productivityreport"
                   element={<ProductivityReport />}
                 />
                 <Route
-                  path="/teamsinsightreport"
+                  path="/:domain/teamsinsightreport"
                   element={<TeamsInsightReport />}
                 />
-                <Route path="/appsurlsreport" element={<AppsUrlsReport />} />
-                <Route path="/wellnessreport" element={<WellnessReport />} />
-                <Route path="/projectreport" element={<ProjectReport />} />
-                <Route path="/logsreport" element={<LogsReport />} />
-                <Route path="/devicereport" element={<DeviceReport />} />
-                <Route path="/dynamicreport" element={<DynamicReport />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/notebook" element={<Notebook />} />
-                <Route path="/userdetail" element={<UserDetail />} />
+                <Route
+                  path="/:domain/appsurlsreport"
+                  element={<AppsUrlsReport />}
+                />
+                <Route
+                  path="/:domain/wellnessreport"
+                  element={<WellnessReport />}
+                />
+                <Route
+                  path="/:domain/projectreport"
+                  element={<ProjectReport />}
+                />
+                <Route path="/:domain/logsreport" element={<LogsReport />} />
+                <Route
+                  path="/:domain/devicereport"
+                  element={<DeviceReport />}
+                />
+                <Route
+                  path="/:domain/dynamicreport"
+                  element={<DynamicReport />}
+                />
+                <Route path="/:domain/projects" element={<Projects />} />
+                <Route path="/:domain/notebook" element={<Notebook />} />
+                <Route path="/:domain/userdetail" element={<UserDetail />} />
 
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/billing" element={<Billing />} />
-                <Route path="/organization" element={<Organization />} />
+                <Route path="/:domain/settings" element={<Settings />} />
+                <Route path="/:domain/billing" element={<Billing />} />
+                <Route
+                  path="/:domain/organization"
+                  element={<Organization />}
+                />
 
                 {/* Catch-all route for unmatched paths */}
                 <Route path="*" element={<Navigate to="/dashboard" />} />
