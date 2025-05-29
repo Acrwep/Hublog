@@ -39,7 +39,6 @@ function App() {
           pauseOnFocusLoss={true}
           draggable={false}
           pauseOnHover={true}
-          pau
           theme="light"
         />
       </div>

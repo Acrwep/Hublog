@@ -110,7 +110,7 @@ const { Header, Sider, Content } = Layout;
 function SidebarMenu() {
   // const accessToken = localStorage.getItem("Accesstoken");
   // console.log("Access Token:::::", accessToken);
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   // const userInformation = useSelector((state) => state.userInfo);
 
@@ -133,7 +133,8 @@ function SidebarMenu() {
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    window.location.href = process.env.REACT_APP_PORTAL_URL;
+    // window.location.href = process.env.REACT_APP_PORTAL_URL;
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -150,7 +151,6 @@ function SidebarMenu() {
   }, []);
 
   useEffect(() => {
-    //the useEffect call only when login
     const handleStorageUpdate = () => {
       const getSubDomainfromLocal = localStorage.getItem("subDomain");
       const accessToken = localStorage.getItem("Accesstoken");
@@ -159,17 +159,17 @@ function SidebarMenu() {
 
       setIsManager(managerStatus);
 
-      if (
-        (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
-        location.pathname !== "/portal"
-      ) {
-        window.location.href = process.env.REACT_APP_PORTAL_URL;
-        return;
-      } else if (accessToken === null) {
-        navigation("/login");
-        setShowPages(false);
-        return;
-      }
+      // if (
+      //   (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
+      //   location.pathname !== "/portal"
+      // ) {
+      //   window.location.href = process.env.REACT_APP_PORTAL_URL;
+      //   return;
+      // } else if (accessToken === null) {
+      //   navigate("/login");
+      //   setShowPages(false);
+      //   return;
+      // }
       //handle login userinformation
       const getItem = localStorage.getItem("LoginUserInfo");
       const convertLoginInfoAsJson = JSON.parse(getItem);
@@ -187,7 +187,7 @@ function SidebarMenu() {
         setFullName("");
       }
 
-      //handle navigation by accesstoken
+      //handle navigate by accesstoken
       if (accessToken) {
         setShowPages(true);
         if (location.pathname === "/") {
@@ -195,36 +195,50 @@ function SidebarMenu() {
             convertLoginInfoAsJson.roleId === 3 &&
             managerStatus === "false"
           ) {
-            navigation("/userdetail");
+            navigate("/userdetail");
             setUserRole(true);
           } else if (
             convertLoginInfoAsJson.roleId === 3 &&
             managerStatus === "true"
           ) {
-            navigation("/dashboard");
+            navigate("/dashboard");
             setUserRole(true);
           } else {
-            navigation("/dashboard");
+            navigate("/dashboard");
             setUserRole(false);
           }
         } else {
-          console.log("aiiii", managerStatus, convertLoginInfoAsJson.roleId);
-          if (
-            convertLoginInfoAsJson.roleId === 3 &&
-            managerStatus === "false"
-          ) {
-            navigation("/userdetail");
-            setUserRole(true);
-          } else if (
-            convertLoginInfoAsJson.roleId === 3 &&
-            managerStatus === "true"
-          ) {
-            navigation("/dashboard");
-            setUserRole(true);
-          } else {
-            navigation("/dashboard");
-            setUserRole(false);
-          }
+          navigate(location.pathname);
+        }
+      } else {
+        if (location.pathname === "/downloads") {
+          setShowPages(false);
+          navigate("/downloads");
+          return;
+        }
+        if (location.pathname === "/usercreatemail") {
+          setShowPages(false);
+          navigate("/usercreatemail");
+          return;
+        } else if (location.pathname === "/portal") {
+          setShowPages(false);
+          navigate("/portal");
+        } else if (location.pathname === "/productdemo") {
+          setShowPages(false);
+          navigate("/productdemo");
+        } else if (location.pathname === "/signup") {
+          setShowPages(false);
+          navigate("/signup");
+        } else if (location.pathname === "/congrats") {
+          setShowPages(false);
+          navigate("/congrats");
+        } else if (location.pathname === "/setpassword") {
+          setShowPages(false);
+          navigate("/setpassword");
+        } else {
+          setShowPages(false);
+          navigate("/login");
+          return;
         }
       }
 
@@ -368,7 +382,7 @@ function SidebarMenu() {
   useEffect(() => {
     //handle navigate to login page when token expire
     const handleTokenExpire = () => {
-      navigation("/login");
+      navigate("/login");
     };
 
     window.addEventListener("tokenExpireUpdated", handleTokenExpire);
@@ -379,112 +393,6 @@ function SidebarMenu() {
     return () => {
       window.removeEventListener("tokenExpireUpdated", handleTokenExpire);
     };
-  }, []);
-
-  useEffect(() => {
-    //handle login userinformation
-    const getItem = localStorage.getItem("LoginUserInfo");
-    const convertLoginInfoAsJson = JSON.parse(getItem);
-
-    const accessToken = localStorage.getItem("Accesstoken");
-    const getSubDomainfromLocal = localStorage.getItem("subDomain");
-    console.log("Access Token:::::", accessToken);
-
-    if (
-      (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
-      location.pathname !== "/portal"
-    ) {
-      window.location.href = process.env.REACT_APP_PORTAL_URL;
-      return;
-    } else if (accessToken) {
-      setShowPages(true);
-      if (location.pathname === "/") {
-        if (convertLoginInfoAsJson.roleId === 3) {
-          navigation("/userdetail");
-          setUserRole(true);
-        } else {
-          navigation("/dashboard");
-          setUserRole(false);
-        }
-      } else {
-        navigation(location.pathname);
-      }
-    } else {
-      if (location.pathname === "/downloads") {
-        setShowPages(false);
-        navigation("/downloads");
-        return;
-      }
-      if (location.pathname === "/usercreatemail") {
-        setShowPages(false);
-        navigation("/usercreatemail");
-        return;
-      } else if (location.pathname === "/portal") {
-        setShowPages(false);
-        navigation("/portal");
-      } else if (location.pathname === "/productdemo") {
-        setShowPages(false);
-        navigation("/productdemo");
-      } else if (location.pathname === "/signup") {
-        setShowPages(false);
-        navigation("/signup");
-      } else if (location.pathname === "/congrats") {
-        setShowPages(false);
-        navigation("/congrats");
-      } else if (location.pathname === "/setpassword") {
-        setShowPages(false);
-        navigation("/setpassword");
-      } else {
-        setShowPages(false);
-        console.log("aiiiiiiiiiiiii");
-        navigation("/login");
-        return;
-      }
-    }
-
-    // const getItem = localStorage.getItem("LoginUserInfo");
-    // const convertLoginInfoAsJson = JSON.parse(getItem);
-    // console.log("logininfoooooooo", convertLoginInfoAsJson);
-    // setLoginUserInfo(convertLoginInfoAsJson);
-
-    // const menuList = Object.values(SideMenuConfig).map((item) => {
-    //   return { ...item };
-    // });
-
-    // const filterItems = menuList.filter((f) => !f.submenu);
-    // filterItems.push(
-    //   { title: "Livestream", icon: <CiStreamOn size={17} /> },
-    //   { title: "Field", icon: <GrMapLocation size={17} /> },
-    //   {
-    //     title: "Timeline",
-    //     icon: <VscGraphLine size={17} />,
-    //   },
-    //   {
-    //     title: "Activity",
-    //     icon: <FiActivity size={17} />,
-    //   },
-    //   {
-    //     title: "Productivity",
-    //     icon: <MdRocketLaunch size={17} />,
-    //   },
-    //   {
-    //     title: "Screenshots",
-    //     icon: <MdScreenshotMonitor size={17} />,
-    //   },
-    //   {
-    //     title: "App $ URLs",
-    //     icon: <FaAppStore size={17} />,
-    //   },
-    //   {
-    //     title: "Wellness",
-    //     icon: <GiLotus size={17} />,
-    //     path: "wellness",
-    //   }
-    // );
-    // console.log("filterItems", filterItems);
-
-    // setSidemenuList(filterItems);
-    // setDummySidemenuList(filterItems);
   }, []);
 
   const handleSearch = (e) => {
@@ -502,11 +410,10 @@ function SidebarMenu() {
   };
 
   const handleSearchLists = (item) => {
-    // const removespace = title.split(" ").join("");
-    // console.log("spaceeeee", removespace);
-    navigation(`/${item.path}`);
+    navigate(`/${item.path}`);
     setSearch("");
   };
+
   const CustomDropdownContent = () => (
     <div className="header_logoutmenuContainer">
       <div className="headerlogoutmenu_avatercontainer">
@@ -535,7 +442,7 @@ function SidebarMenu() {
           <Divider style={{ margin: "0" }} />
           <div
             className="headerlogoutmenu_logiconContainer"
-            onClick={() => navigation("/billing")}
+            onClick={() => navigate("/billing")}
           >
             <BiSpreadsheet size={22} style={{ marginRight: "27px" }} />
             <p className="header_logoutmenulogout">Billing</p>

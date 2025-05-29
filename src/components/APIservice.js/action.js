@@ -9,13 +9,15 @@ const subDomain = localStorage.getItem("subDomain");
 let APIURL = "";
 
 if (process.env.NODE_ENV === "production") {
-  APIURL = `https://${
-    subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-  }workstatus.qubinex.com:8086`; // production
+  // APIURL = `https://${
+  //   subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+  // }workstatus.qubinex.com:8086`;
+  APIURL = "https://workstatus.qubinex.com:8086";
 } else {
-  APIURL = `https://${
-    subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-  }localhost:7263`; //dev
+  // APIURL = `https://${
+  //   subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+  // }localhost:7263`;
+  APIURL = "https://localhost:7263";
 }
 
 // Create an Axios instance

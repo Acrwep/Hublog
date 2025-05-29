@@ -17,24 +17,22 @@ const SidebarMenuList = () => {
   const [managerStatus, setManagerStatus] = useState("");
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("Accesstoken");
-    const getSubDomainfromLocal = localStorage.getItem("subDomain");
     const mangrStatus = localStorage.getItem("managerStatus");
     console.log("managerstatus", mangrStatus);
     setManagerStatus(mangrStatus);
 
-    checkDomainName();
+    // checkDomainName();
 
-    if (
-      (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
-      location.pathname !== "/portal"
-    ) {
-      window.location.href = process.env.REACT_APP_PORTAL_URL;
-      return;
-    } else if (accessToken === null) {
-      navigate("/login");
-      return;
-    }
+    // if (
+    //   (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) &&
+    //   location.pathname !== "/portal"
+    // ) {
+    //   window.location.href = process.env.REACT_APP_PORTAL_URL;
+    //   return;
+    // } else if (accessToken === null) {
+    //   navigate("/login");
+    //   return;
+    // }
 
     const pathName = location.pathname.split("/")[1];
     console.log("Current PathName", pathName);
@@ -125,77 +123,60 @@ const SidebarMenuList = () => {
   const renderMenuItems = (menuConfig) => {
     return Object.entries(menuConfig).map(([key, item]) => {
       if (item.submenu) {
-        return (
-          <SubMenu
-            key={key}
-            icon={item.icon}
-            title={item.title}
-            // disabled={["Real Time"].includes(item.title) ? true : false}
-            style={{
-              marginBottom: "12px",
-              display:
-                roleId === 3 &&
-                managerStatus === "false" &&
-                ["Real Time", "Analytics"].includes(item.title)
-                  ? "none"
-                  : "block",
-            }}
-          >
-            {item.submenu.map((subItem) => (
-              <Menu.Item
-                key={subItem.path}
-                icon={subItem.icon}
-                disabled={["Field"].includes(subItem.title) ? true : false}
-              >
-                {["Field"].includes(subItem.title) ? (
-                  <Link style={{ cursor: "default" }}>{subItem.title}</Link>
-                ) : (
-                  <Link to={`/${subItem.path}`}>{subItem.title}</Link>
-                )}
-              </Menu.Item>
-            ))}
-          </SubMenu>
-        );
+        return {
+          key,
+          icon: item.icon,
+          label: item.title,
+          children: item.submenu.map((subItem) => ({
+            key: subItem.path,
+            icon: subItem.icon,
+            label: ["Field"].includes(subItem.title) ? (
+              <span style={{ cursor: "default" }}>{subItem.title}</span>
+            ) : (
+              <Link to={`/${subItem.path}`}>{subItem.title}</Link>
+            ),
+            disabled: ["Field"].includes(subItem.title),
+          })),
+          style:
+            roleId === 3 &&
+            managerStatus === "false" &&
+            ["Real Time", "Analytics"].includes(item.title)
+              ? { display: "none" }
+              : {},
+        };
       }
-      return (
-        <Menu.Item
-          key={item.path}
-          icon={item.icon}
-          disabled={[""].includes(item.title) ? true : false}
-          style={{
-            marginBottom: "12px",
-            padding: "0px 24px",
-            display:
-              roleId === 3 &&
-              managerStatus === "false" &&
-              [
-                "Dashboard",
-                "Attendance",
-                "Devices",
-                "Manual Time",
-                "Alerts",
-                "Reports",
-                "Projects",
-                "Settings",
-                "Organization",
-              ].includes(item.title)
-                ? "none"
-                : "block",
-          }}
-        >
-          {[""].includes(item.title) ? (
-            <Link style={{ cursor: "default" }}>{item.title}</Link>
+
+      return {
+        key: item.path,
+        icon: item.icon,
+        label:
+          roleId === 3 &&
+          managerStatus === "false" &&
+          item.title === "User Detail" ? (
+            `${firstName} ${lastName}`
+          ) : item.title === "" ? (
+            <span style={{ cursor: "default" }}>{item.title}</span>
           ) : (
-            <Link to={`/${item.path}`}>
-              {roleId === 3 &&
-              managerStatus === "false" &&
-              item.title === "User Detail"
-                ? firstName + " " + lastName
-                : item.title}
-            </Link>
-          )}
-        </Menu.Item>
-      );
+            <Link to={`/${item.path}`}>{item.title}</Link>
+          ),
+        style:
+          roleId === 3 &&
+          managerStatus === "false" &&
+          [
+            "Dashboard",
+            "Attendance",
+            "Devices",
+            "Manual Time",
+            "Alerts",
+            "Reports",
+            "Projects",
+            "Settings",
+            "Organization",
+          ].includes(item.title)
+            ? { display: "none" }
+            : { marginBottom: "12px", padding: "0px 24px" },
+        disabled: item.title === "",
+      };
     });
   };
 
@@ -205,11 +186,10 @@ const SidebarMenuList = () => {
       mode="inline"
       selectedKeys={[selectedKey]}
       onClick={handleMenuClick}
-    >
-      {renderMenuItems(
+      items={renderMenuItems(
         managerStatus === "true" ? ManagerMenuConfig : SideMenuConfig
       )}
-    </Menu>
+    />
   );
 };
 

@@ -126,19 +126,12 @@ const LiveStream = () => {
       setLiveData(userList);
     }
 
-    const subDomain = localStorage.getItem("subDomain");
     let APIURL = "";
 
     if (process.env.NODE_ENV === "production") {
-      console.log("proooooooooo", process.env.NODE_ENV);
-      APIURL = `wss://${
-        subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-      }workstatus.qubinex.com:8086/livestreamHub`;
+      APIURL = "https://workstatus.qubinex.com:8086";
     } else {
-      console.log("devvvvvvvvv", process.env.NODE_ENV);
-      APIURL = `wss://${
-        subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-      }localhost:7263/ws/livestream`;
+      APIURL = "https://localhost:7263";
     }
 
     const ws = new WebSocket(APIURL);

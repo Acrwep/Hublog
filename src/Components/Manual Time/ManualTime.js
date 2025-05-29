@@ -500,17 +500,12 @@ export default function ManualTime() {
     }
 
     try {
-      const subDomain = localStorage.getItem("subDomain");
       let APIURL = "";
 
       if (process.env.NODE_ENV === "production") {
-        APIURL = `https://${
-          subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-        }workstatus.qubinex.com:8086`; // production
+        APIURL = "https://workstatus.qubinex.com:8086";
       } else {
-        APIURL = `https://${
-          subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-        }localhost:7263`; //dev
+        APIURL = "https://localhost:7263";
       }
       const AccessToken = localStorage.getItem("Accesstoken");
       const response = await axios.post(

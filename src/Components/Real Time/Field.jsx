@@ -10,7 +10,6 @@ import CommonSelectField from "../Common/CommonSelectField";
 import { MdOutlineFileDownload } from "react-icons/md";
 import CommonDoubleDatePicker from "../Common/CommonDoubleDatePicker";
 import CommonAvatar from "../Common/CommonAvatar";
-import { HubConnectionBuilder } from "@microsoft/signalr";
 import { getTeams, getUsers, getUsersByTeamId } from "../APIservice.js/action";
 import { CommonToaster } from "../Common/CommonToaster";
 import { MdLocationOff } from "react-icons/md";
@@ -74,102 +73,102 @@ const Field = () => {
     }
   };
 
-  useEffect(() => {
-    const subDomain = localStorage.getItem("subDomain");
-    let APIURL = "";
+  // useEffect(() => {
+  //   const subDomain = localStorage.getItem("subDomain");
+  //   let APIURL = "";
 
-    if (process.env.NODE_ENV === "production") {
-      APIURL = `https://${
-        subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-      }workstatus.qubinex.com:8086`; // production
-    } else {
-      APIURL = `https://${
-        subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
-      }localhost:7263`; //dev
-    }
+  //   if (process.env.NODE_ENV === "production") {
+  //     APIURL = `https://${
+  //       subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+  //     }workstatus.qubinex.com:8086`; // production
+  //   } else {
+  //     APIURL = `https://${
+  //       subDomain !== "null" && subDomain !== null ? subDomain + "." : ""
+  //     }localhost:7263`; //dev
+  //   }
 
-    const connection = new HubConnectionBuilder()
-      .withUrl(`${APIURL}/livestreamHub`, {
-        withCredentials: true,
-      })
-      .withAutomaticReconnect([0, 2000, 5000, 10000])
-      .build();
+  //   const connection = new HubConnectionBuilder()
+  //     .withUrl(`${APIURL}/livestreamHub`, {
+  //       withCredentials: true,
+  //     })
+  //     .withAutomaticReconnect([0, 2000, 5000, 10000])
+  //     .build();
 
-    let dataReceived = false; // Track if data has been received
+  //   let dataReceived = false; // Track if data has been received
 
-    setLatitude("");
-    setLongitude("");
-    setFilterLoading(true);
-    // Start the connection
-    connection
-      .start()
-      .then(() => {
-        console.log("Connected to SignalR");
-        // Now you can listen for events
-        setTimeout(() => {
-          if (!dataReceived) {
-            console.warn("No data received from SignalR within 4 seconds.");
-            setFilterLoading(false);
-            setLatitude("");
-            setLongitude("");
-          }
-        }, 4000);
-        connection.on(
-          "ReceiveLiveData",
-          (
-            userIdReceived,
-            organizationIdReceived,
-            activeApp,
-            activeUrl,
-            liveStreamStatus,
-            activeAppLogo,
-            activeScreenshot,
-            latitudeReceived,
-            longitudeReceived
-          ) => {
-            dataReceived = true;
+  //   setLatitude("");
+  //   setLongitude("");
+  //   setFilterLoading(true);
+  //   // Start the connection
+  //   connection
+  //     .start()
+  //     .then(() => {
+  //       console.log("Connected to SignalR");
+  //       // Now you can listen for events
+  //       setTimeout(() => {
+  //         if (!dataReceived) {
+  //           console.warn("No data received from SignalR within 4 seconds.");
+  //           setFilterLoading(false);
+  //           setLatitude("");
+  //           setLongitude("");
+  //         }
+  //       }, 4000);
+  //       connection.on(
+  //         "ReceiveLiveData",
+  //         (
+  //           userIdReceived,
+  //           organizationIdReceived,
+  //           activeApp,
+  //           activeUrl,
+  //           liveStreamStatus,
+  //           activeAppLogo,
+  //           activeScreenshot,
+  //           latitudeReceived,
+  //           longitudeReceived
+  //         ) => {
+  //           dataReceived = true;
 
-            console.log(
-              "latttttttttt",
-              latitude,
-              longitude,
-              clickedUserId,
-              userIdReceived
-            );
-            // if (clickedUserId !== userIdReceived) {
-            //   setLatitude("");
-            //   setFilterLoading(false);
-            //   setLongitude("");
-            //   return;
-            // }
+  //           console.log(
+  //             "latttttttttt",
+  //             latitude,
+  //             longitude,
+  //             clickedUserId,
+  //             userIdReceived
+  //           );
+  //           // if (clickedUserId !== userIdReceived) {
+  //           //   setLatitude("");
+  //           //   setFilterLoading(false);
+  //           //   setLongitude("");
+  //           //   return;
+  //           // }
 
-            if (clickedUserId === userIdReceived) {
-              dataReceived = true; // Mark that data was received
+  //           if (clickedUserId === userIdReceived) {
+  //             dataReceived = true; // Mark that data was received
 
-              if (latitudeReceived && longitudeReceived) {
-                console.log("Updating location for clicked user.");
-                setLatitude(latitudeReceived);
-                setLongitude(longitudeReceived);
-              } else {
-                console.warn("No location data available for this user.");
-                setLatitude(""); // Reset if no lat/lng is available
-                setLongitude("");
-              }
-            }
+  //             if (latitudeReceived && longitudeReceived) {
+  //               console.log("Updating location for clicked user.");
+  //               setLatitude(latitudeReceived);
+  //               setLongitude(longitudeReceived);
+  //             } else {
+  //               console.warn("No location data available for this user.");
+  //               setLatitude(""); // Reset if no lat/lng is available
+  //               setLongitude("");
+  //             }
+  //           }
 
-            setTimeout(() => setFilterLoading(false), 300);
-          }
-        );
-      })
-      .catch((err) => console.error("Error while starting connection: " + err));
+  //           setTimeout(() => setFilterLoading(false), 300);
+  //         }
+  //       );
+  //     })
+  //     .catch((err) => console.error("Error while starting connection: " + err));
 
-    setConnection(connection);
+  //   setConnection(connection);
 
-    // Cleanup the connection when the component is unmounted
-    return () => {
-      connection.stop();
-    };
-  }, [userList, clickedUserId]);
+  //   // Cleanup the connection when the component is unmounted
+  //   return () => {
+  //     connection.stop();
+  //   };
+  // }, [userList, clickedUserId]);
 
   const handleUser = (value) => {
     setFilterLoading(true);

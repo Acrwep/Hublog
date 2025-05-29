@@ -23,20 +23,22 @@ const Login = () => {
   const [validationTrigger, setValidationTrigger] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const receivedValue = params.get("domain");
-    console.log("receiveeeeee", receivedValue, typeof receivedValue);
+    localStorage.clear();
+    sessionStorage.clear();
+    // const params = new URLSearchParams(window.location.search);
+    // const receivedValue = params.get("domain");
+    // console.log("receiveeeeee", receivedValue, typeof receivedValue);
 
-    const getSubDomainfromLocal = localStorage.getItem("subDomain");
+    // const getSubDomainfromLocal = localStorage.getItem("subDomain");
 
-    if (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) {
-      if (receivedValue) {
-        localStorage.setItem("subDomain", receivedValue);
-        window.location.reload();
-      } else {
-        window.location.href = process.env.REACT_APP_PORTAL_URL;
-      }
-    }
+    // if (getSubDomainfromLocal === "null" || getSubDomainfromLocal === null) {
+    //   if (receivedValue) {
+    //     localStorage.setItem("subDomain", receivedValue);
+    //     window.location.reload();
+    //   } else {
+    //     window.location.href = process.env.REACT_APP_PORTAL_URL;
+    //   }
+    // }
   }, []);
 
   const handleLogin = async (e) => {
@@ -109,7 +111,7 @@ const Login = () => {
         loginUserInformation.managerStatus === true
       ) {
         setTimeout(() => {
-          // navigate("/dashboard");
+          navigate("/dashboard");
         }, 500);
       } else {
         setTimeout(() => {
@@ -117,7 +119,7 @@ const Login = () => {
         }, 500);
       }
 
-      getOrganizationData(loginUserInformation.organizationId);
+      // getOrganizationData(loginUserInformation.organizationId);
     } catch (error) {
       console.log("login error", error);
       CommonToaster(
