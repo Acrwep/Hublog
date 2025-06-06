@@ -279,6 +279,10 @@
   border-color: #ff4d4f !important;
   box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.144);
 }
+.setpassword_buttonContainer {
+  position: relative;
+  z-index: 1;
+}
 .setpassword_submitbutton {
   color: #fff;
   background-color: #25a17d;
@@ -287,9 +291,10 @@
   font-weight: 600;
   border-radius: 6px;
   margin-top: 14px;
-  padding: 7px 0px;
+  height: 38px;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 40px;
 }
 .setpassword_submitbutton:hover {
@@ -311,7 +316,7 @@
   font-weight: 500;
   border-radius: 6px;
   margin-top: 14px;
-  padding: 7px 0px;
+  height: 38px;
   display: flex;
   justify-content: center;
   align-items: center;

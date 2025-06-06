@@ -50,12 +50,8 @@ export default function Setpassword() {
   const [passwordValidationStatus, setPasswordValidationStatus] =
     useState(false);
 
-  const [showEmailField, setShowEmailField] = useState(true);
-  const [showCodeField, setShowCodeField] = useState(false);
-  const [showPasswordField, setShowPasswordField] = useState(false);
-  const [emailSubmitLoading, setEmailSubmitLoading] = useState(false);
-  const [otpSubmitLoading, setOtpSubmitLoading] = useState(false);
-  const [passwordSubmitLoading, setPasswordSubmitLoading] = useState(false);
+  const [page, setPage] = useState("email");
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const handleEmail = async (e) => {
     setEmail(e.target.value);
@@ -95,14 +91,15 @@ export default function Setpassword() {
     }
   };
 
-  const handleEmailSubmit = async () => {
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
     setEmailValidationStatus(true);
     if (email.length <= 0) {
       setIconVisible(true);
       setEmailError("Email is required.");
       return;
     }
-    setEmailSubmitLoading(true);
+    setButtonLoading(true);
     try {
       const response = await userEmailValidate(email);
       console.log(response);
@@ -118,7 +115,7 @@ export default function Setpassword() {
       setIsEmailValidate(false);
       setIconVisible(true);
       setTimeout(() => {
-        setEmailSubmitLoading(false);
+        setButtonLoading(false);
       }, 300);
     }
   };
@@ -129,28 +126,26 @@ export default function Setpassword() {
     };
     try {
       await sendOTP(payload);
-      setShowEmailField(false);
-      setShowCodeField(true);
+      setPage("otp");
       CommonToaster("OTP is sent to your email", "success");
     } catch (error) {
       console.log(error);
       CommonToaster("Unable to send OTP. Try agin later", "error");
     } finally {
-      setEmailSubmitLoading(false);
+      setButtonLoading(false);
     }
   };
 
-  const handleOTPSubmit = async () => {
-    setOtpIconVisible(true);
+  const handleOTPSubmit = async (e) => {
+    e.preventDefault();
     setOtpValidationStatus(true);
     if (otp.length <= 0) {
+      setOtpIconVisible(true);
       setOtpError("otp is required");
       return;
-    } else {
-      setOtpError("");
     }
-
-    setOtpSubmitLoading(true);
+    setOtpIconVisible(true);
+    setButtonLoading(true);
     const payload = {
       emailId: email,
       otp: otp,
@@ -158,19 +153,26 @@ export default function Setpassword() {
     try {
       const response = await OtpValidate(payload);
       console.log(response);
-      setShowCodeField(false);
-      setShowPasswordField(true);
+      if (response?.data?.Title === "Invalid OTP") {
+        setOtpError("otp is not valid");
+        setButtonLoading(false);
+      } else {
+        setOtpError("");
+        setButtonLoading(false);
+        setPage("password");
+      }
     } catch (error) {
       console.log(error);
       setOtpError("otp is not valid");
     } finally {
       setTimeout(() => {
-        setOtpSubmitLoading(false);
+        setButtonLoading(false);
       }, 300);
     }
   };
 
-  const handlePasswordSubmit = async () => {
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
     setPasswordValidationStatus(true);
     setPasswordErrorVisible(true);
     setconfirmIconVisible(true);
@@ -248,7 +250,7 @@ export default function Setpassword() {
     )
       return;
 
-    setPasswordSubmitLoading(true);
+    setButtonLoading(true);
     const payload = {
       email: email,
       newPassword: password,
@@ -262,7 +264,7 @@ export default function Setpassword() {
     } catch (error) {
       CommonToaster(error?.response?.data?.message);
     } finally {
-      setPasswordSubmitLoading(false);
+      setButtonLoading(false);
     }
   };
 
@@ -272,329 +274,43 @@ export default function Setpassword() {
       <div className="emailvalidate_card">
         <p className="setpassword_emailtext">Set password</p>
 
-        <div style={{ position: "relative" }}>
-          <div
-            className={
-              showEmailField
-                ? "setpassword_emailfielddiv_show"
-                : "setpassword_emailfielddiv_hide"
-            }
-          >
-            <p className="setpassword_emaillabel">Email</p>
-            <Input
-              className={
-                emailError === ""
-                  ? "setpassword_inputfield"
-                  : "setpassword_errorinputfield"
-              }
-              onChange={handleEmail}
-              value={email}
-            />
-            <p
-              className={
-                emailError === ""
-                  ? "setpassword_emailerror_hide"
-                  : "setpassword_emailerror_visible"
-              }
-            >
-              {emailError === "Email is required."
-                ? "Email is required"
-                : "Email is not valid"}
-            </p>
-            <FaCircleCheck
-              size={19}
-              color="#009737"
-              className={
-                iconVisible && isEmailValidate
-                  ? "setpassword_emailcheckicon_visible"
-                  : "setpassword_emailcheckicon_hide"
-              }
-            />
-
-            <FaCircleXmark
-              size={19}
-              color="rgb(252, 48, 52)"
-              className={
-                iconVisible && isEmailValidate === false
-                  ? "setpassword_xicon_visible"
-                  : "setpassword_xicon_hide"
-              }
-            />
-          </div>
-
-          <div
-            className={
-              showCodeField
-                ? "setpassword_otpfielddiv_show"
-                : "setpassword_otpfielddiv_hide"
-            }
-          >
-            <p className="setpassword_emaillabel">OTP</p>
-            <Input
-              className={
-                otpError === ""
-                  ? "setpassword_inputfield"
-                  : "setpassword_errorinputfield"
-              }
-              onChange={handleOTP}
-              value={otp}
-              maxLength={6}
-            />
-            <p
-              className={
-                otpError === ""
-                  ? "setpassword_emailerror_hide"
-                  : "setpassword_emailerror_visible"
-              }
-            >
-              {otpError}
-            </p>
-            <FaCircleCheck
-              size={19}
-              color="#009737"
-              className={
-                otpIconVisible && otpError === ""
-                  ? "setpassword_emailcheckicon_visible"
-                  : "setpassword_emailcheckicon_hide"
-              }
-            />
-
-            <FaCircleXmark
-              size={19}
-              color="rgb(252, 48, 52)"
-              className={
-                otpIconVisible && otpError != ""
-                  ? "setpassword_xicon_visible"
-                  : "setpassword_xicon_hide"
-              }
-            />
-          </div>
-        </div>
-
-        <div style={{ position: "relative" }}>
-          <div
-            className={
-              showPasswordField
-                ? "setpassword_passworddiv_show"
-                : "setpassword_passworddiv_hide"
-            }
-          >
-            <div style={{ marginTop: "22px" }}>
-              <p className="setpassword_emaillabel">Password</p>
-              <Input.Password
-                className="setpassword_inputfield"
-                name="password"
-                visibilityToggle={{
-                  visible: passwordVisible,
-                  onVisibleChange: setPasswordVisible,
-                }}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setPasswordErrorVisible(true);
-                  if (passwordValidationStatus === true) {
-                    if (confirmPassword.length <= 0) {
-                      setConfirmPassowrdError("Confirm password is required");
-                    } else if (e.target.value === confirmPassword) {
-                      setConfirmPassowrdError("");
-                    } else {
-                      setConfirmPassowrdError("Password is mismatch");
-                    }
-                  }
-                  // Validation checks
-                  const isTooShort = e.target.value.length < 8;
-                  const isMissingLowercase = !/[a-z]/.test(e.target.value);
-                  const isMissingUppercase = !/[A-Z]/.test(e.target.value);
-                  const isMissingNumber = !/\d/.test(e.target.value);
-                  const isMissingSpecialChar = !/[\W_]/.test(e.target.value);
-
-                  // Construct error messages
-                  const newErrors = {
-                    lengthError: isTooShort
-                      ? "❌ Password must be at least 8 characters long."
-                      : "",
-                    lowercaseError: isMissingLowercase
-                      ? "❌ Password must contain at least one lowercase letter."
-                      : "",
-                    uppercaseError: isMissingUppercase
-                      ? "❌ Password must contain at least one uppercase letter."
-                      : "",
-                    numberError: isMissingNumber
-                      ? "❌ Password must contain at least one digit."
-                      : "",
-                    specialCharacterError: isMissingSpecialChar
-                      ? "❌ Password must contain at least one special character (!@#$%^&* etc.)."
-                      : "",
-                  };
-
-                  // Update password error state in one go
-                  setPasswordError([newErrors]);
-
-                  // Update validation state
-                  setIsEightcharacters(isTooShort ? false : true);
-                  setIsContainlowercase(isMissingLowercase ? false : true);
-                  setIsContainuppercase(isMissingUppercase ? false : true);
-                  setIsContainNumber(isMissingNumber ? false : true);
-                  setIsContainSpecial(isMissingSpecialChar ? false : true);
-                }}
-              />
-
-              <div
-                style={{
-                  height: "auto",
-                }}
-              >
-                <div
-                  className={
-                    passwordErrorVisible
-                      ? "setpassword_errormainContainer_show"
-                      : "setpassword_errormainContainer"
-                  }
-                >
-                  <div className="setpassword_errordiv">
-                    <FaCheck
-                      color="#25a17d"
-                      size={16}
-                      className={
-                        isEightcharacters
-                          ? "setpassword_checkicon_visible"
-                          : "setpassword_checkicon_hide"
-                      }
-                    />
-                    <FaXmark
-                      color="#ff4d4f"
-                      size={16}
-                      className={
-                        isEightcharacters === false
-                          ? "setpassword_wrongicon_visible"
-                          : "setpassword_wrongicon_hide"
-                      }
-                    />
-                    <p>Password must be at least 8 characters long.</p>
-                  </div>
-
-                  <div className="setpassword_errordiv">
-                    <FaCheck
-                      color="#25a17d"
-                      size={16}
-                      className={
-                        isContainlowercase
-                          ? "setpassword_checkicon_visible"
-                          : "setpassword_checkicon_hide"
-                      }
-                    />
-                    <FaXmark
-                      color="#ff4d4f"
-                      size={16}
-                      className={
-                        isContainlowercase === false
-                          ? "setpassword_wrongicon_visible"
-                          : "setpassword_wrongicon_hide"
-                      }
-                    />
-                    <p>Password must contain at least one lowercase letter.</p>
-                  </div>
-
-                  <div className="setpassword_errordiv">
-                    <FaCheck
-                      color="#25a17d"
-                      size={16}
-                      className={
-                        isContainuppercase
-                          ? "setpassword_checkicon_visible"
-                          : "setpassword_checkicon_hide"
-                      }
-                    />
-                    <FaXmark
-                      color="#ff4d4f"
-                      size={16}
-                      className={
-                        isContainuppercase === false
-                          ? "setpassword_wrongicon_visible"
-                          : "setpassword_wrongicon_hide"
-                      }
-                    />
-                    <p>Password must contain at least one uppercase letter.</p>
-                  </div>
-
-                  <div className="setpassword_errordiv">
-                    <FaCheck
-                      color="#25a17d"
-                      size={16}
-                      className={
-                        isContainNumber
-                          ? "setpassword_checkicon_visible"
-                          : "setpassword_checkicon_hide"
-                      }
-                    />
-                    <FaXmark
-                      color="#ff4d4f"
-                      size={16}
-                      className={
-                        isContainNumber === false
-                          ? "setpassword_wrongicon_visible"
-                          : "setpassword_wrongicon_hide"
-                      }
-                    />
-                    <p>Password must contain at least one digit.</p>
-                  </div>
-
-                  <div className="setpassword_errordiv">
-                    <FaCheck
-                      color="#25a17d"
-                      size={16}
-                      className={
-                        isContainSpecial
-                          ? "setpassword_checkicon_visible"
-                          : "setpassword_checkicon_hide"
-                      }
-                    />
-                    <FaXmark
-                      color="#ff4d4f"
-                      size={16}
-                      className={
-                        isContainSpecial === false
-                          ? "setpassword_wrongicon_visible"
-                          : "setpassword_wrongicon_hide"
-                      }
-                    />
-                    <p>
-                      Password must contain at least one special character
-                      (!@#$%^&* etc.).
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+        <form>
+          <div style={{ position: "relative" }}>
             <div
-              className="setpassword_inputContainer"
-              style={{ marginTop: passwordErrorVisible ? "16px" : "22px" }}
+              className={
+                page === "email"
+                  ? "setpassword_emailfielddiv_show"
+                  : "setpassword_emailfielddiv_hide"
+              }
             >
-              <p className="setpassword_emaillabel">Confirm password</p>
+              <p className="setpassword_emaillabel">Email</p>
               <Input
                 className={
-                  confirmPassowrdError === ""
-                    ? "setpassword_retypeinputfield"
-                    : "setpassword_errorretypeinputfield"
+                  emailError === ""
+                    ? "setpassword_inputfield"
+                    : "setpassword_errorinputfield"
                 }
-                onChange={handleRetypePassword}
-                value={confirmPassword}
+                name="email"
+                type="email"
+                onChange={handleEmail}
+                value={email}
               />
               <p
                 className={
-                  confirmPassowrdError === ""
+                  emailError === ""
                     ? "setpassword_emailerror_hide"
                     : "setpassword_emailerror_visible"
                 }
               >
-                {confirmPassowrdError != "" ? confirmPassowrdError : ""}
+                {emailError === "Email is required."
+                  ? "Email is required"
+                  : "Email is not valid"}
               </p>
               <FaCircleCheck
                 size={19}
                 color="#009737"
                 className={
-                  confirmIconVisible && confirmPassowrdError === ""
+                  iconVisible && isEmailValidate
                     ? "setpassword_emailcheckicon_visible"
                     : "setpassword_emailcheckicon_hide"
                 }
@@ -604,90 +320,384 @@ export default function Setpassword() {
                 size={19}
                 color="rgb(252, 48, 52)"
                 className={
-                  confirmIconVisible && confirmPassowrdError != ""
+                  iconVisible && isEmailValidate === false
+                    ? "setpassword_xicon_visible"
+                    : "setpassword_xicon_hide"
+                }
+              />
+            </div>
+
+            <div
+              className={
+                page === "otp"
+                  ? "setpassword_otpfielddiv_show"
+                  : "setpassword_otpfielddiv_hide"
+              }
+            >
+              <p className="setpassword_emaillabel">OTP</p>
+              <Input
+                className={
+                  otpError === ""
+                    ? "setpassword_inputfield"
+                    : "setpassword_errorinputfield"
+                }
+                onChange={handleOTP}
+                value={otp}
+                maxLength={6}
+              />
+              <p
+                className={
+                  otpError === ""
+                    ? "setpassword_emailerror_hide"
+                    : "setpassword_emailerror_visible"
+                }
+              >
+                {otpError}
+              </p>
+              <FaCircleCheck
+                size={19}
+                color="#009737"
+                className={
+                  otpIconVisible && otpError === ""
+                    ? "setpassword_emailcheckicon_visible"
+                    : "setpassword_emailcheckicon_hide"
+                }
+              />
+
+              <FaCircleXmark
+                size={19}
+                color="rgb(252, 48, 52)"
+                className={
+                  otpIconVisible && otpError != ""
                     ? "setpassword_xicon_visible"
                     : "setpassword_xicon_hide"
                 }
               />
             </div>
           </div>
-        </div>
 
-        {showEmailField ? (
-          <div>
-            {emailSubmitLoading ? (
-              <button className="setpassword_loadingsubmitbutton">
-                <Spin
-                  indicator={
-                    <LoadingOutlined
-                      spin
-                      style={{ marginRight: "9px", color: "#ffffff" }}
-                    />
-                  }
-                  size="default"
-                />{" "}
-                Loading...
-              </button>
-            ) : (
-              <button
-                className="setpassword_submitbutton"
-                onClick={handleEmailSubmit}
+          <div style={{ position: "relative" }}>
+            <div
+              className={
+                page === "password"
+                  ? "setpassword_passworddiv_show"
+                  : "setpassword_passworddiv_hide"
+              }
+            >
+              <div style={{ marginTop: "22px" }}>
+                <p className="setpassword_emaillabel">Password</p>
+                <Input.Password
+                  className="setpassword_inputfield"
+                  name="password"
+                  visibilityToggle={{
+                    visible: passwordVisible,
+                    onVisibleChange: setPasswordVisible,
+                  }}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordErrorVisible(true);
+                    if (passwordValidationStatus === true) {
+                      if (confirmPassword.length <= 0) {
+                        setConfirmPassowrdError("Confirm password is required");
+                      } else if (e.target.value === confirmPassword) {
+                        setConfirmPassowrdError("");
+                      } else {
+                        setConfirmPassowrdError("Password is mismatch");
+                      }
+                    }
+                    // Validation checks
+                    const isTooShort = e.target.value.length < 8;
+                    const isMissingLowercase = !/[a-z]/.test(e.target.value);
+                    const isMissingUppercase = !/[A-Z]/.test(e.target.value);
+                    const isMissingNumber = !/\d/.test(e.target.value);
+                    const isMissingSpecialChar = !/[\W_]/.test(e.target.value);
+
+                    // Construct error messages
+                    const newErrors = {
+                      lengthError: isTooShort
+                        ? "❌ Password must be at least 8 characters long."
+                        : "",
+                      lowercaseError: isMissingLowercase
+                        ? "❌ Password must contain at least one lowercase letter."
+                        : "",
+                      uppercaseError: isMissingUppercase
+                        ? "❌ Password must contain at least one uppercase letter."
+                        : "",
+                      numberError: isMissingNumber
+                        ? "❌ Password must contain at least one digit."
+                        : "",
+                      specialCharacterError: isMissingSpecialChar
+                        ? "❌ Password must contain at least one special character (!@#$%^&* etc.)."
+                        : "",
+                    };
+
+                    // Update password error state in one go
+                    setPasswordError([newErrors]);
+
+                    // Update validation state
+                    setIsEightcharacters(isTooShort ? false : true);
+                    setIsContainlowercase(isMissingLowercase ? false : true);
+                    setIsContainuppercase(isMissingUppercase ? false : true);
+                    setIsContainNumber(isMissingNumber ? false : true);
+                    setIsContainSpecial(isMissingSpecialChar ? false : true);
+                  }}
+                />
+
+                <div
+                  style={{
+                    height: "auto",
+                  }}
+                >
+                  <div
+                    className={
+                      passwordErrorVisible
+                        ? "setpassword_errormainContainer_show"
+                        : "setpassword_errormainContainer"
+                    }
+                  >
+                    <div className="setpassword_errordiv">
+                      <FaCheck
+                        color="#25a17d"
+                        size={16}
+                        className={
+                          isEightcharacters
+                            ? "setpassword_checkicon_visible"
+                            : "setpassword_checkicon_hide"
+                        }
+                      />
+                      <FaXmark
+                        color="#ff4d4f"
+                        size={16}
+                        className={
+                          isEightcharacters === false
+                            ? "setpassword_wrongicon_visible"
+                            : "setpassword_wrongicon_hide"
+                        }
+                      />
+                      <p>Password must be at least 8 characters long.</p>
+                    </div>
+
+                    <div className="setpassword_errordiv">
+                      <FaCheck
+                        color="#25a17d"
+                        size={16}
+                        className={
+                          isContainlowercase
+                            ? "setpassword_checkicon_visible"
+                            : "setpassword_checkicon_hide"
+                        }
+                      />
+                      <FaXmark
+                        color="#ff4d4f"
+                        size={16}
+                        className={
+                          isContainlowercase === false
+                            ? "setpassword_wrongicon_visible"
+                            : "setpassword_wrongicon_hide"
+                        }
+                      />
+                      <p>
+                        Password must contain at least one lowercase letter.
+                      </p>
+                    </div>
+
+                    <div className="setpassword_errordiv">
+                      <FaCheck
+                        color="#25a17d"
+                        size={16}
+                        className={
+                          isContainuppercase
+                            ? "setpassword_checkicon_visible"
+                            : "setpassword_checkicon_hide"
+                        }
+                      />
+                      <FaXmark
+                        color="#ff4d4f"
+                        size={16}
+                        className={
+                          isContainuppercase === false
+                            ? "setpassword_wrongicon_visible"
+                            : "setpassword_wrongicon_hide"
+                        }
+                      />
+                      <p>
+                        Password must contain at least one uppercase letter.
+                      </p>
+                    </div>
+
+                    <div className="setpassword_errordiv">
+                      <FaCheck
+                        color="#25a17d"
+                        size={16}
+                        className={
+                          isContainNumber
+                            ? "setpassword_checkicon_visible"
+                            : "setpassword_checkicon_hide"
+                        }
+                      />
+                      <FaXmark
+                        color="#ff4d4f"
+                        size={16}
+                        className={
+                          isContainNumber === false
+                            ? "setpassword_wrongicon_visible"
+                            : "setpassword_wrongicon_hide"
+                        }
+                      />
+                      <p>Password must contain at least one digit.</p>
+                    </div>
+
+                    <div className="setpassword_errordiv">
+                      <FaCheck
+                        color="#25a17d"
+                        size={16}
+                        className={
+                          isContainSpecial
+                            ? "setpassword_checkicon_visible"
+                            : "setpassword_checkicon_hide"
+                        }
+                      />
+                      <FaXmark
+                        color="#ff4d4f"
+                        size={16}
+                        className={
+                          isContainSpecial === false
+                            ? "setpassword_wrongicon_visible"
+                            : "setpassword_wrongicon_hide"
+                        }
+                      />
+                      <p>
+                        Password must contain at least one special character
+                        (!@#$%^&* etc.).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="setpassword_inputContainer"
+                style={{ marginTop: passwordErrorVisible ? "16px" : "22px" }}
               >
-                Generate OTP
-              </button>
-            )}
-          </div>
-        ) : showCodeField ? (
-          <div>
-            {otpSubmitLoading ? (
-              <button className="setpassword_loadingsubmitbutton">
-                <Spin
-                  indicator={
-                    <LoadingOutlined
-                      spin
-                      style={{ marginRight: "9px", color: "#ffffff" }}
-                    />
+                <p className="setpassword_emaillabel">Confirm password</p>
+                <Input.Password
+                  className={
+                    confirmPassowrdError === ""
+                      ? "setpassword_retypeinputfield"
+                      : "setpassword_errorretypeinputfield"
                   }
-                  size="default"
-                />{" "}
-                Loading...
-              </button>
-            ) : (
-              <button
-                className="setpassword_submitbutton"
-                onClick={handleOTPSubmit}
-              >
-                <IoChevronForward size={24} />
-              </button>
-            )}
-          </div>
-        ) : showPasswordField ? (
-          <div>
-            {passwordSubmitLoading ? (
-              <button className="setpassword_loadingsubmitbutton">
-                <Spin
-                  indicator={
-                    <LoadingOutlined
-                      spin
-                      style={{ marginRight: "9px", color: "#ffffff" }}
-                    />
+                  onChange={handleRetypePassword}
+                  value={confirmPassword}
+                />
+                <p
+                  className={
+                    confirmPassowrdError === ""
+                      ? "setpassword_emailerror_hide"
+                      : "setpassword_emailerror_visible"
                   }
-                  size="default"
-                />{" "}
-                Loading...
-              </button>
-            ) : (
-              <button
-                className="setpassword_submitbutton"
-                onClick={handlePasswordSubmit}
-              >
-                <IoChevronForward size={24} />
-              </button>
-            )}
+                >
+                  {confirmPassowrdError != "" ? confirmPassowrdError : ""}
+                </p>
+                <FaCircleCheck
+                  size={19}
+                  color="#009737"
+                  className={
+                    confirmIconVisible && confirmPassowrdError === ""
+                      ? "setpassword_emailcheckicon_visible"
+                      : "setpassword_emailcheckicon_hide"
+                  }
+                />
+
+                <FaCircleXmark
+                  size={19}
+                  color="rgb(252, 48, 52)"
+                  className={
+                    confirmIconVisible && confirmPassowrdError != ""
+                      ? "setpassword_xicon_visible"
+                      : "setpassword_xicon_hide"
+                  }
+                />
+              </div>
+            </div>
           </div>
-        ) : (
-          ""
-        )}
+
+          {page === "email" ? (
+            <div className="setpassword_buttonContainer">
+              {buttonLoading ? (
+                <button className="setpassword_loadingsubmitbutton">
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        spin
+                        style={{ marginRight: "9px", color: "#ffffff" }}
+                      />
+                    }
+                    size="default"
+                  />{" "}
+                </button>
+              ) : (
+                <button
+                  className="setpassword_submitbutton"
+                  onClick={handleEmailSubmit}
+                  type="submit"
+                >
+                  Generate OTP
+                </button>
+              )}
+            </div>
+          ) : page === "otp" ? (
+            <div className="setpassword_buttonContainer">
+              {buttonLoading ? (
+                <button className="setpassword_loadingsubmitbutton">
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        spin
+                        style={{ marginRight: "9px", color: "#ffffff" }}
+                      />
+                    }
+                    size="default"
+                  />{" "}
+                </button>
+              ) : (
+                <button
+                  className="setpassword_submitbutton"
+                  type="submit"
+                  onClick={handleOTPSubmit}
+                >
+                  <IoChevronForward size={24} />
+                </button>
+              )}
+            </div>
+          ) : page === "password" ? (
+            <div className="setpassword_buttonContainer">
+              {buttonLoading ? (
+                <button className="setpassword_loadingsubmitbutton">
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        spin
+                        style={{ marginRight: "9px", color: "#ffffff" }}
+                      />
+                    }
+                    size="default"
+                  />{" "}
+                </button>
+              ) : (
+                <button
+                  className="setpassword_submitbutton"
+                  type="submit"
+                  onClick={handlePasswordSubmit}
+                >
+                  <IoChevronForward size={24} />
+                </button>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
+        </form>
       </div>
     </div>
   );

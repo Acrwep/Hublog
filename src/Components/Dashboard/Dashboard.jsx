@@ -110,7 +110,7 @@ const Dashboard = () => {
   ];
 
   const activityTrendXasis = activityTrendsData.map((item) =>
-    moment(item.date, "MM/DD/YYYY HH:mm:ss").format("DD/MM/YYYY")
+    moment(item.Date).format("DD/MM/YYYY")
   );
 
   const activityTrendSeries = [

@@ -107,9 +107,7 @@ const Users = ({ loading }) => {
       width: 260,
       render: (text, record) => {
         if (activeDesignationList.length >= 1) {
-          console.log("activedesign list", activeDesignationList);
           const findDesign = activeDesignationList.find((f) => f.id === text);
-          console.log("activedesign item", findDesign);
           return <p>{findDesign ? findDesign.name : "-"} </p>;
         } else {
           return <p>-</p>;
@@ -481,7 +479,7 @@ const Users = ({ loading }) => {
     const selectedDesignation = designationList.find(
       (design) => design.id === designation
     );
-    const designationName = selectedDesignation.name;
+    const designationName = selectedDesignation ? selectedDesignation.name : "";
 
     const selectedTeam = teamList.find((t) => t.id === team);
     const teamName = selectedTeam.name;
@@ -798,6 +796,7 @@ const Users = ({ loading }) => {
               onChange={(value) => setDesignation(value)}
               options={activeDesignationList}
               value={designation}
+              allowClear
             />
           </Col>
         </Row>

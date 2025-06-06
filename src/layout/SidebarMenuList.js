@@ -39,7 +39,8 @@ const SidebarMenuList = () => {
     console.log("splitttttt", pathNameSplit);
     let pathName;
     if (pathNameSplit.length >= 2) {
-      pathName = pathNameSplit[2];
+      const lastIndex = pathNameSplit.length - 1;
+      pathName = pathNameSplit[lastIndex];
     } else {
       pathName = pathNameSplit[0];
     }
@@ -150,7 +151,7 @@ const SidebarMenuList = () => {
             managerStatus === "false" &&
             ["Real Time", "Analytics"].includes(item.title)
               ? { display: "none" }
-              : {},
+              : { marginBottom: "12px", display: "block" },
         };
       }
 

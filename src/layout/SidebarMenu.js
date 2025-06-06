@@ -124,6 +124,7 @@ function SidebarMenu() {
   const [lastName, setLastName] = useState("");
   const [fullName, setFullName] = useState("");
   const [userRole, setUserRole] = useState(false);
+  const [subdomain, setSubdomain] = useState("");
   const [isManager, setIsManager] = useState(false);
   const [showPages, setShowPages] = useState(false);
   const {
@@ -153,6 +154,7 @@ function SidebarMenu() {
   useEffect(() => {
     const handleStorageUpdate = () => {
       const getSubDomainfromLocal = localStorage.getItem("subDomain");
+      setSubdomain(getSubDomainfromLocal);
       const accessToken = localStorage.getItem("Accesstoken");
       const managerStatus = localStorage.getItem("managerStatus");
       console.log("managerstatus sidemenu", managerStatus);
@@ -711,7 +713,10 @@ function SidebarMenu() {
                 />
 
                 {/* Catch-all route for unmatched paths */}
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                <Route
+                  path="*"
+                  element={<Navigate to={`/${subdomain}/dashboard`} />}
+                />
               </Routes>
             </Content>
           </Layout>

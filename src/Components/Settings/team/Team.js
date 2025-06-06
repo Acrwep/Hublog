@@ -46,7 +46,6 @@ const Team = ({ loading }) => {
   const [description, setDescription] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [shiftId, setShiftId] = useState(null);
-  const [shiftIdError, setShiftIdError] = useState(null);
   const [status, setStatus] = useState(true);
   const statusList = [
     { id: true, name: "Active" },
@@ -161,7 +160,6 @@ const Team = ({ loading }) => {
     setDescription("");
     setDescriptionError("");
     setShiftId(null);
-    setShiftIdError("");
     setChangeTeamId("");
     setChangeTeamError("");
     setIsModalOpen(false);
@@ -180,13 +178,11 @@ const Team = ({ loading }) => {
   const handleOk = async () => {
     const nameValidate = descriptionValidator(name);
     const descriptionValidate = descriptionValidator(description);
-    const shiftValidate = selectValidator(shiftId);
 
     setNameError(nameValidate);
     setDescriptionError(descriptionValidate);
-    setShiftIdError(shiftValidate);
 
-    if (nameValidate || descriptionValidate || shiftValidate) return;
+    if (nameValidate || descriptionValidate) return;
     const orgId = localStorage.getItem("organizationId"); //get orgId from localstorage
 
     const request = {
@@ -194,7 +190,7 @@ const Team = ({ loading }) => {
       description: description,
       active: status,
       organizationId: parseInt(orgId),
-      shiftId: shiftId,
+      shiftId: shiftId ? shiftId : null,
       parentid: 1,
     };
     console.log("payload", request);
@@ -776,11 +772,9 @@ const Team = ({ loading }) => {
           options={shiftsList}
           onChange={(value) => {
             setShiftId(value);
-            setShiftIdError(selectValidator(value));
           }}
           value={shiftId}
-          error={shiftIdError}
-          mandatory
+          allowClear
           style={{ marginTop: "22px", marginBottom: "22px" }}
           // allowClear
         />
