@@ -210,7 +210,8 @@ function SidebarMenu() {
             setUserRole(false);
           }
         } else {
-          navigate(`${getSubDomainfromLocal}${location.pathname}`);
+          console.log("main loaddddd", getSubDomainfromLocal);
+          navigate(`${location.pathname}`);
         }
       } else {
         if (location.pathname === "/downloads") {

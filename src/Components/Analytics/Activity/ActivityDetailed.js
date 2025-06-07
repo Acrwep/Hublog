@@ -28,7 +28,7 @@ const ActivityDetailed = ({
   );
 
   const activityTrendXasis = activityTrendsData.map((item) =>
-    moment(item.Date, "MM/DD/YYYY HH:mm:ss").format("DD/MM/YYYY")
+    moment(item.Date).format("DD/MM/YYYY")
   );
 
   const activityWorktimeTrendsSeries = [
