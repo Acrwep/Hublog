@@ -131,7 +131,7 @@ const LiveStream = () => {
     if (process.env.NODE_ENV === "production") {
       APIURL = "https://workstatus.qubinex.com:8086";
     } else {
-      APIURL = "https://localhost:7263";
+      APIURL = "wss://localhost:7263/ws/livestream";
     }
 
     const ws = new WebSocket(APIURL);
@@ -303,6 +303,45 @@ const LiveStream = () => {
     }
   };
 
+  const sendScreenshotRequest = () => {
+    let APIURL =
+      process.env.NODE_ENV === "production"
+        ? "wss://workstatus.qubinex.com:8086/ws/livestream"
+        : "wss://localhost:7263/ws/livestream";
+
+    const ws = new WebSocket(APIURL);
+
+    ws.onopen = () => {
+      const payload = {
+        type: "requestScreenshot",
+        userId: 18, // Make sure this matches the user you want
+      };
+      ws.send(JSON.stringify(payload));
+      console.log("Screenshot request sent", payload);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "screenshot") {
+          // Handle the screenshot binary data
+          console.log("Received screenshot", data);
+          // You'll need to handle the binary data here
+        }
+      } catch (err) {
+        console.error("Error parsing message:", err);
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket closed");
+    };
+  };
+
   return (
     <div className="settings_mainContainer">
       <div className="settings_headingContainer">
@@ -315,6 +354,7 @@ const LiveStream = () => {
         >
           Livestream
         </h2>
+        <button onClick={sendScreenshotRequest}>Send Request</button>
       </div>
 
       {/* <p>Live Data</p>
